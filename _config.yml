@@ -20,15 +20,17 @@
 
 title: Young Woo Choi
 email: ywchoi.ys@gmail.com
-description: Postdoctoral research in condensed matter physics and material science.
+description: Postdoctoral researcher in condensed matter physics and material science.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://yw-choi.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: jekyllrb
 github_username: yw-choi
 
 # Build settings
-theme: minimal-mistakes-jekyll
-minimal_mistakes_skin: "contrast"
+# theme: minimal-mistakes-jekyll
+# minimal_mistakes_skin: "contrast"
+# theme: jekyll-theme-cayman
+google_analytics: G-77M1E3YSKJ
 
 plugins:
   - jekyll-seo-tag
