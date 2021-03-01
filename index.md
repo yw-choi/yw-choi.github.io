@@ -2,122 +2,74 @@
 layout: default
 ---
 
-Text can be **bold**, _italic_, or ~~strikethrough~~.
-
-[Link to another page](./another-page.html).
-
-There should be whitespace between paragraphs.
-
-There should be whitespace between paragraphs. We recommend including a README, or a file with information about your project.
-
-# Header 1
-
-This is a normal paragraph following a header. GitHub is a code hosting platform for version control and collaboration. It lets you and others work together on projects from anywhere.
-
-## Header 2
-
-> This is a blockquote following a header.
->
-> When something is important enough, you do it even if the odds are not in your favor.
-
-### Header 3
-
-```js
-// Javascript code with syntax highlighting.
-var fun = function lang(l) {
-  dateformat.i18n = require('./lang/' + l)
-  return true;
-}
-```
-
-```ruby
-# Ruby code with syntax highlighting
-GitHubPages::Dependencies.gems.each do |gem, version|
-  s.add_dependency(gem, "= #{version}")
-end
-```
-
-#### Header 4
-
-*   This is an unordered list following a header.
-*   This is an unordered list following a header.
-*   This is an unordered list following a header.
-
-##### Header 5
-
-1.  This is an ordered list following a header.
-2.  This is an ordered list following a header.
-3.  This is an ordered list following a header.
-
-###### Header 6
-
-| head1        | head two          | three |
-|:-------------|:------------------|:------|
-| ok           | good swedish fish | nice  |
-| out of stock | good and plenty   | nice  |
-| ok           | good `oreos`      | hmm   |
-| ok           | good `zoute` drop | yumm  |
-
-### There's a horizontal rule below this.
-
-* * *
-
-### Here is an unordered list:
-
-*   Item foo
-*   Item bar
-*   Item baz
-*   Item zip
-
-### And an ordered list:
-
-1.  Item one
-1.  Item two
-1.  Item three
-1.  Item four
-
-### And a nested list:
-
-- level 1 item
-  - level 2 item
-  - level 2 item
-    - level 3 item
-    - level 3 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-
-### Small image
-
-![Octocat](https://github.githubassets.com/images/icons/emoji/octocat.png)
-
-### Large image
-
-![Branching](https://guides.github.com/activities/hello-world/branching.png)
+## About
+Hello, I am a postdoctoral researcher at Yonsei University in South Korea. I am interested in *ab initio* computational approaches to condensed matter physics and material science.
 
 
-### Definition lists can be used with HTML syntax.
+## Experience
 
-<dl>
-<dt>Name</dt>
-<dd>Godzilla</dd>
-<dt>Born</dt>
-<dd>1952</dd>
-<dt>Birthplace</dt>
-<dd>Japan</dd>
-<dt>Color</dt>
-<dd>Green</dd>
-</dl>
+**Postdoctoral Researcher** \
+Department of Physics, Yonsei University, Seoul, Korea \
+Mar 2021 - present
 
-```
-Long, single-line code blocks should not wrap. They should horizontally scroll if they are too long. This line should be long enough to demonstrate this.
-```
+## Education
 
-```
-The final element.
-```
+**Ph.D. in Physics** \
+Department of Physics, Yonsei University, Seoul, Korea \
+(Advisor: [Prof. Hyoung Joon Choi](https://web.yonsei.ac.kr/choi/index.html)) \
+Mar 2016 - Feb 2021
+
+**B.S. in Physics** \
+Department of Physics, Yonsei University, Seoul, Korea \
+(Mandatory military service from Oct 2012 to Jul 2014) \
+Mar 2010 - Feb 2016
+
+## Research Interests
+***Ab initio* calculation of electronic and transport properties of low-dimensional materials** \
+Moiré superlattices, twisted graphene layers, 2D semiconductors, Fe-based superconductors
+
+**Computational study on many-body interactions in solids** \
+Electron-phonon interaction, electron correlation, GW, DFT+DMFT
+
+**Development of electronic-structure methods using high-performance computing** \
+Massively parallel *ab initio* calculation, large-scale tight-binding calculation
+
+## Publications
+
+1.	Strong electron-phonon coupling, electron-hole asymmetry, and nonadiabaticity in magic-angle twisted bilayer graphene, \
+Young Woo Choi and Hyoung Joon Choi, \
+Physical Review B 98, 241412(R) (2018). [arXiv:1809.08407]
+2.	Intrinsic band gap and electrically tunable flat bands in twisted double bilayer graphene, \
+Young Woo Choi and Hyoung Joon Choi, \
+Physical Review B 100, 201402(R) (2019). [arXiv:1903.00852]
+3.	Role of Electric Fields on Enhanced Electron Correlation in Surface-Doped FeSe, \
+Young Woo Choi and Hyoung Joon Choi, \
+Physical Review Letters 122, 046401 (2019). [arXiv:1901.04062]
+
+## International Conference Presentations
+1.	Atomistic study of electron-phonon coupling in magic-angle twisted bilayer graphene.
+Contributed talk, American Physical Society March Meeting, Boston, MA, USA, March 4-8, 2019.
+2.	Role of the charge-transfer induced electric field in potassium-dosed FeSe layers.
+Contributed talk, American Physical Society March Meeting, Los Angeles, CA, USA, March 5-9, 2018.
+3.	Effects of the potassium dosing on the electronic correlation in FeSe: DFT+DMFT study.
+Contributed talk, American Physical Society March Meeting, New Orleans, LA, USA, Mar 13-17, 2017.
+4.	Atomistic Study of Electronic Structure and Electron-Phonon Coupling in Twisted Graphene Layers.
+Poster, The 22nd Asian Workshop on First-Principles Electronic Structure Calculations, Osaka, Japan, October 28-30, 2019
+5.	Atomistic Study of Electronic and Phononic Properties of Twisted Graphene Layers.
+Contributed talk, The 14th Asia Pacific Physics Conference, Kuching, Malaysia, November 17-21, 2019.
+
+## Computational Skills
+Ab initio electronic structure calculation
+– SIESTA, Quantum ESPRESSO, EPW, BerkeleyGW, WIEN2k+EDMFT
+Numerical Computing
+– Experienced: Fortran, Python, MPI, Mathematica / – Basic: C++, Julia
+General Computing
+– Linux cluster operation & maintenance / – Web programming: PHP, MySQL, HTML, CSS, JavaScript
+
+## Teaching Experience
+TA, Quantum Mechanics (Graduate Course), Spring 2016, Fall 2016, Spring 2017, Spring 2018, Fall 2018
+TA, Statistical Mechanics (Undergraduate Course), Fall 2019, Fall 2020
+TA, Thermal Physics (Undergraduate Course), Spring 2020
+TA, Introduction to medical physics (Graduate Course), Fall 2017
+
+
