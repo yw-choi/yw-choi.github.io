@@ -33,9 +33,11 @@
             {{ sidebar.email }}
           </li>
 
+          {% if sidebar.phone %}
           <li class="phone"><i class="fa fa-phone fa-lg fa-fw"></i>
             {{ sidebar.phone }}
           </li>
+          {% endif %}
 
           <li class="google-scholar"><i class="fa fa-graduation-cap fa-lg fa-fw"></i>
             <a href="{{ sidebar.google-scholar }}" target="_blank">Google Scholar</a>
