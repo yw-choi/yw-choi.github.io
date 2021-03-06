@@ -5,6 +5,10 @@ layout: default
 ## About
 Hello, I am a postdoctoral researcher at Yonsei University in South Korea. I am interested in *ab initio* computational approaches to condensed matter physics and material science.
 
+I am still working on this homepage. Meanwhile, please refer to my full CV in
+the following link:
+
+[CV](/assets/files/CV_ywchoi.pdf)
 
 ## Experience
 
