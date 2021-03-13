@@ -13,30 +13,30 @@ the following link:
 
 ## Experience
 
-#### Postdoctoral Researcher
+**Postdoctoral Researcher** \
 Department of Physics, Yonsei University, Seoul, Korea \
 Mar 2021 - present
 
 ## Education
 
-#### Ph.D. in Physics
+**Ph.D. in Physics** \
 Department of Physics, Yonsei University, Seoul, Korea \
 (Advisor: [Prof. Hyoung Joon Choi](https://web.yonsei.ac.kr/choi/index.html)) \
 Mar 2016 - Feb 2021
 
-#### B.S. in Physics
+**B.S. in Physics** \
 Department of Physics, Yonsei University, Seoul, Korea \
 (Mandatory military service from Oct 2012 to Jul 2014) \
 Mar 2010 - Feb 2016
 
 ## Research Interests
-#### *Ab initio* calculation of electronic and transport properties of low-dimensional materials
+***Ab initio* calculation of electronic and transport properties of low-dimensional materials** \
 Moiré superlattices, twisted graphene layers, 2D semiconductors, Fe-based superconductors
 
-#### Computational study on many-body interactions in solids
+**Computational study on many-body interactions in solids** \
 Electron-phonon interaction, electron correlation, GW, DFT+DMFT
 
-#### Development of electronic-structure methods using high-performance computing
+**Development of electronic-structure methods using high-performance computing** \
 Massively parallel *ab initio* calculation, large-scale tight-binding calculation
 
 ## Publications
@@ -48,7 +48,7 @@ in twisted double bilayer graphene, \
 [[arXiv:1903.00852]](https://arxiv.org/abs/1903.00852){:target="_blank"}.
 
 2\. **Young Woo Choi** and Hyoung Joon Choi, \
-Role of electric fields on enhanced electron correlation in surface-doped FeSe, \
+Role of Electric Fields on Enhanced Electron Correlation in Surface-Doped FeSe, \
 [Physical Review Letters **122**, 046401 (2019)](https://doi.org/10.1103/physrevlett.122.046401){:target="_blank"}
 [[arXiv:1901.04062]](https://arxiv.org/abs/1901.04062){:target="_blank"}.
 
@@ -82,28 +82,28 @@ New Orleans, LA, USA, Mar 13-17, 2017.
 
 
 ## Computational Skills
-#### Ab initio electronic structure calculation
-- SIESTA, Quantum ESPRESSO, EPW, BerkeleyGW, WIEN2k+EDMFT
+**Ab initio electronic structure calculation**\
+SIESTA, Quantum ESPRESSO, EPW, BerkeleyGW, WIEN2k+EDMFT
 
-#### Numerical Computing
-- Fortran, Python, MPI, Mathematica, C++, Julia
+**Numerical programming** \
+Fortran, Python, MPI, Mathematica, C++, Julia
 
-#### General Computing
-- Linux cluster operation & maintenance
-- Web programming
+**General programming** \
+Linux cluster operation & maintenance
+Web programming
 
 ## Teaching Experience
 
-#### TA, Quantum Mechanics (Graduate Course)
+**TA, Quantum Mechanics (Graduate Course)** \
 Spring 2016, Fall 2016, Spring 2017, Spring 2018, Fall 2018
 
-#### TA, Statistical Mechanics (Undergraduate Course)
+**TA, Statistical Mechanics (Undergraduate Course)** \
 Fall 2019, Fall 2020
 
-#### TA, Thermal Physics (Undergraduate Course)
+**TA, Thermal Physics (Undergraduate Course)** \
 Spring 2020
 
-#### TA, Introduction to medical physics (Graduate Course)
+**TA, Introduction to medical physics (Graduate Course)** \
 Fall 2017
 
 
