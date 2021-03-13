@@ -72,11 +72,11 @@ Osaka, Japan, October 28-30, 2019.
 Atomistic study of electron-phonon coupling in magic-angle twisted bilayer graphene, \
 Boston, MA, USA, March 4-8, 2019.
 
-2\.	**Contributed talk, American Physical Society March Meeting**, \
+2\.	**Contributed talk, 2018 American Physical Society March Meeting**, \
 Role of the charge-transfer induced electric field in potassium-dosed FeSe layers, \
 Los Angeles, CA, USA, March 5-9, 2018.
 
-1\.	**Contributed talk, American Physical Society March Meeting**, \
+1\.	**Contributed talk, 2017 American Physical Society March Meeting**, \
 Effects of the potassium dosing on the electronic correlation in FeSe: DFT+DMFT study.
 New Orleans, LA, USA, Mar 13-17, 2017.
 
