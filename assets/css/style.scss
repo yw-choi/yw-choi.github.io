@@ -4,4 +4,25 @@
 
 @charset "utf-8";
 
-@import "default";
+body {
+  margin-top: 3em;
+  background: #f5f5f5
+}
+
+.container {
+  width: 21cm;
+  padding: 4em;
+
+  background: white;
+}
+
+.contact-list {
+  list-style-type: none;
+}
+
+@media print {
+  body {
+    margin: 0px;
+    background: white;
+  }
+}

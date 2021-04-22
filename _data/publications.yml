@@ -1,0 +1,31 @@
+
+- order: 3
+  title: >-
+    Intrinsic band gap and electrically tunable flat bands in
+    twisted double bilayer graphene
+  author: Young Woo Choi and Hyoung Joon Choi
+  journal: Physical Review B **100**, 201402(R)
+  year: 2019
+  doi: 10.1103/physrevb.100.201402
+  arxiv: 1903.00852
+
+- order: 2
+  title: >-
+    Role of electric fields on enhanced electron correlation in surface-doped FeSe
+  author: Young Woo Choi and Hyoung Joon Choi
+  journal: Physical Review Letters **122**, 046401
+  year: 2019
+  doi: 10.1103/physrevlett.122.046401
+  arxiv: 1901.04062
+
+- order: 1
+  title: >-
+    Strong electron-phonon coupling, electron-hole asymmetry, and
+    nonadiabaticity in magic-angle twisted bilayer graphene
+  author: Young Woo Choi and Hyoung Joon Choi
+  journal: Physical Review B **98**, 241412(R)
+  year: 2018
+  doi: 10.1103/physrevb.98.241412
+  arxiv: 1809.08407
+
+
