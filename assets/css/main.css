@@ -6,16 +6,20 @@ body {
 }
 
 .container {
-  width: 21cm;
+  /*width: 21cm;*/
   padding: 4em;
-
   background: white;
 }
 
 .contact-list {
   list-style-type: none;
+  padding-left: 0;
 }
-
+#profile-image-container img {
+  width: 100%;
+  max-width: 150px;
+  margin-bottom: 20px;
+}
 #profile-container {
   margin-bottom: 20px;
 }
