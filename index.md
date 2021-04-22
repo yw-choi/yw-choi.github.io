@@ -4,7 +4,7 @@ layout: default
 
 <div id="profile-container" class="row">
   <div id="profile-image-container" class="col-3 justify-content-md-center">
-    <img class="mx-auto d-block img-fluid" src="{{ site.baseurl }}/assets/images/profile.png" alt="profile picture" />
+    <img class="mx-auto d-block img-fluid" src="{{ site.baseurl }}/assets/images/profile.jpg" alt="profile picture" />
   </div>
   <div class="col-9">
     <div class="row">
