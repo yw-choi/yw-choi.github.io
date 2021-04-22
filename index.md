@@ -15,7 +15,7 @@ layout: default
     <div class="row">
       <div class="col-6">
         Postdoctoral Researcher<br>
-        Department of Physics<br> 
+        Department of Physics<br>
         Yonsei University, Seoul, Korea
       </div>
       <div class="contact-container col-6">
@@ -42,8 +42,8 @@ Hi, I'm a postdoctoral researcher interested in condensed matter physics and mat
 I mainly study how electrons behave in solids and nanomaterials by using first-principles calculation,
 which is a ground-up approach to understanding and predicting material properties based on quantum-mechanical methods.
 
-I'm currently in [Prof. Hyoung Joon Choi's group](http://web.yonsei.ac.kr/choi/members.html) at Yonsei University until May 2021,
-and joining as a postdoc to [Prof. Marvin Cohen's group](http://cohen.berkeley.edu) at UC Berkeley starting from June 2021.
+I am currently in [Prof. Hyoung Joon Choi's group](http://web.yonsei.ac.kr/choi/members.html) at Yonsei University until May 2021,
+and will be joining [Prof. Marvin Cohen's group](http://cohen.berkeley.edu) at UC Berkeley as a postdoc starting in June 2021.
 
 ## Education
 
