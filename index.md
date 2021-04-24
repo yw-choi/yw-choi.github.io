@@ -6,19 +6,19 @@ layout: default
   <div id="profile-image-container" class="col-lg-2 justify-content-md-center">
     <img class="mx-auto d-block img-fluid" src="{{ site.baseurl }}/assets/images/profile.jpg" alt="profile picture" />
   </div>
-  <div class="col-md-10">
+  <div class="col-lg-10 col-md-12">
     <div class="row">
       <div class="col-12">
         <h1>Young Woo Choi</h1>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-lg-6 col-md-7">
         Postdoctoral Researcher<br>
         Department of Physics<br>
         Yonsei University, Seoul, Korea
       </div>
-      <div class="contact-container col-md-6">
+      <div class="contact-container col-lg-6 col-md-5">
         <ul class="contact-list">
           <li class="email">
             <i class="fa fa-envelope fa-lg fa-fw"></i> ywchoi@yonsei.ac.kr
