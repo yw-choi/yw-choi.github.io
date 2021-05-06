@@ -81,7 +81,7 @@ Dichotomy of Electron-Phonon Coupling in Graphene Moiré Flat Bands, \
 
 4\. **Young Woo Choi** and Hyoung Joon Choi, \
 Anisotropic Pseudospin Tunneling in Two-Dimensional Black Phosphorus Junctions, \
-[2D Materials (in press)](https://doi.org/10.1088/2053-1583/abf810){:target="_blank"}.
+[2D Materials **8**, 035024 (2021)](https://doi.org/10.1088/2053-1583/abf810){:target="_blank"}.
 
 3\. **Young Woo Choi** and Hyoung Joon Choi, \
 Intrinsic band gap and electrically tunable flat bands
