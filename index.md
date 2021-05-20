@@ -42,9 +42,6 @@ Hi, I'm a postdoctoral researcher interested in condensed matter physics and mat
 I mainly study how electrons behave in solids and nanomaterials by using first-principles calculation,
 which is a ground-up approach to understanding and predicting material properties based on quantum-mechanical methods.
 
-I am currently in [Prof. Hyoung Joon Choi's group](http://web.yonsei.ac.kr/choi/members.html) at Yonsei University until May 2021,
-and will be joining [Prof. Marvin Cohen's group](http://cohen.berkeley.edu) at UC Berkeley as a postdoc starting in June 2021.
-
 ## Education
 
 **Ph.D. in Physics** \
