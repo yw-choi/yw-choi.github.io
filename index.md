@@ -60,8 +60,12 @@ Mar 2010 - Feb 2016
 ## Experience
 
 **Postdoctoral Researcher** \
+Department of Physics, University of California, Berkeley, USA \
+June 2021 - present
+
+**Postdoctoral Researcher** \
 Department of Physics, Yonsei University, Seoul, Korea \
-Mar 2021 - present
+Mar 2021 - May 2021
 
 ## Research Interests
 ***Ab initio* calculation of electronic properties of low-dimensional materials** \
@@ -134,30 +138,41 @@ Spring 2020
 **TA, Introduction to medical physics (Graduate Course)** \
 Fall 2017
 
+## Invited Talks
+2\.
+**Electronic structure and electron-phonon coupling in graphene moiré flat bands**, \
+Invited talk, \
+Soongsil University, Seoul, May 13, 2021.
+
+1\.
+**Atomistic study of electron-phonon interaction  in magic-angle twisted bilayer graphene**, \
+Invited talk, \
+University of Seoul, February 15, 2019.
+
 ## International Conference Presentations
 
 6\.
-**Atomistic study of electron-phonon coupling in twisted graphene layers**,
+**Atomistic study of electron-phonon coupling in twisted graphene layers**, \
 Contributed talk, \
 American Physical Society March Meeting (online), USA, March 15-19, 2021.
 
 5\.
-**Atomistic study of Electronic and Phononic Properties of Twisted Graphene Layers**,
+**Atomistic study of Electronic and Phononic Properties of Twisted Graphene Layers**, \
 Contributed talk, \
 The 14th Asia Pacific Physics Conference, Kuching, Malaysia, November 17-21, 2019.
 
 4\.
-**Atomistic Study of Electronic Structure and Electron-Phonon Coupling in Twisted Graphene Layers**,
+**Atomistic Study of Electronic Structure and Electron-Phonon Coupling in Twisted Graphene Layers**, \
 Poster, \
 The 22nd Asian Workshop on First-Principles Electronic Structure Calculations, Osaka University, Japan, October 28–30, 2019.
 
 3\.
-**Atomistic study of electron-phonon coupling in magic-angle twisted bilayer graphene**,
+**Atomistic study of electron-phonon coupling in magic-angle twisted bilayer graphene**, \
 Contributed talk, \
 American Physical Society March Meeting, Boston, MA, USA, March 4-8, 2019.
 
 2\.
-**Role of the charge-transfer induced electric field in potassium-dosed FeSe layers**,
+**Role of the charge-transfer induced electric field in potassium-dosed FeSe layers**, \
 Contributed talk, \
 American Physical Society March Meeting, Los Angeles, CA, USA, March 5-9, 2018.
 
