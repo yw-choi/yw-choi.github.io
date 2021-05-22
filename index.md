@@ -16,7 +16,7 @@ layout: default
       <div class="col-lg-6 col-md-7">
         Postdoctoral Researcher<br>
         Department of Physics<br>
-        Yonsei University, Seoul, Korea
+        University of California, Berkeley, CA, USA
       </div>
       <div class="contact-container col-lg-6 col-md-5">
         <ul class="contact-list">
@@ -57,7 +57,7 @@ Mar 2010 - Feb 2016
 ## Experience
 
 **Postdoctoral Researcher** \
-Department of Physics, University of California, Berkeley, USA \
+Department of Physics, University of California, Berkeley, CA, USA \
 June 2021 - present
 
 **Postdoctoral Researcher** \
