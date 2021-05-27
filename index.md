@@ -16,12 +16,12 @@ layout: default
       <div class="col-lg-6 col-md-7">
         Postdoctoral Researcher<br>
         Department of Physics<br>
-        University of California, Berkeley, CA, USA
+        University of California, Berkeley
       </div>
       <div class="contact-container col-lg-6 col-md-5">
         <ul class="contact-list">
           <li class="email">
-            <i class="fa fa-envelope fa-lg fa-fw"></i> ywchoi@yonsei.ac.kr
+            <i class="fa fa-envelope fa-lg fa-fw"></i> ywchoi@berkeley.edu
           </li>
           <li class="google-scholar">
             <i class="fa fa-graduation-cap fa-lg fa-fw"></i>
@@ -42,6 +42,18 @@ Hi, I'm a postdoctoral researcher interested in condensed matter physics and mat
 I mainly study how electrons behave in solids and nanomaterials by using first-principles calculation,
 which is a ground-up approach to understanding and predicting material properties based on quantum-mechanical methods.
 
+## Experience
+
+**Postdoctoral Researcher** \
+Department of Physics, University of California, Berkeley \
+(Advisor: [Prof. Marvin L. Cohen](http://cohen.berkeley.edu)) \
+June 2021 - present
+
+**Postdoctoral Researcher** \
+Department of Physics, Yonsei University, Seoul, Korea \
+(Advisor: [Prof. Hyoung Joon Choi](https://web.yonsei.ac.kr/choi/index.html)) \
+Mar 2021 - May 2021
+
 ## Education
 
 **Ph.D. in Physics** \
@@ -53,16 +65,6 @@ Mar 2016 - Feb 2021
 Department of Physics, Yonsei University, Seoul, Korea \
 (Mandatory military service from Oct 2012 to Jul 2014) \
 Mar 2010 - Feb 2016
-
-## Experience
-
-**Postdoctoral Researcher** \
-Department of Physics, University of California, Berkeley, CA, USA \
-June 2021 - present
-
-**Postdoctoral Researcher** \
-Department of Physics, Yonsei University, Seoul, Korea \
-Mar 2021 - May 2021
 
 ## Research Interests
 ***Ab initio* calculation of electronic properties of low-dimensional materials** \
