@@ -48,10 +48,16 @@ Department of Physics, University of California, Berkeley \
 June 2021 - present
 - Investigate atomic and electronic structure of nanomaterials using first-principles calculations.
 
-**Postdoctoral Researcher** \
+**Graduate Student Researcher** \
 Department of Physics, Yonsei University, Seoul, Korea \
 (Advisor: [Prof. Hyoung Joon Choi](https://web.yonsei.ac.kr/choi/index.html)) \
-Mar 2021 - May 2021
+Mar 2021 - Feb 2021
+- Investigated electronic and transport properties of low-dimensional materials based on first-principles calculations.
+  - Moiré superlattices, 2D semiconductors, Fe-based superconductors
+- Developed massively parallel electronic-structure calculation methods using high-performance computing.
+  - Massively parallel density functional theory, large-scale tight-binding approach
+- Published 5 first-author papers with 130 citations in total as of July 2021.
+- Presented at 6 international and 14 domestic conferences.
 
 ## Education
 
@@ -59,12 +65,6 @@ Mar 2021 - May 2021
 Department of Physics, Yonsei University, Seoul, Korea \
 (Advisor: [Prof. Hyoung Joon Choi](https://web.yonsei.ac.kr/choi/index.html)) \
 Mar 2016 - Feb 2021
-- Investigated electronic and transport properties of low-dimensional materials based on first-principles calculations.
-  - Moiré superlattices, 2D semiconductors, Fe-based superconductors
-- Developed massively parallel electronic-structure calculation methods using high-performance computing.
-  - Massively parallel density functional theory, large-scale tight-binding approach
-- Published 5 first-author papers with 130 citations in total as of July 2021.
-- Presented at 6 international and 14 domestic conferences.
 
 **B.S. in Physics** \
 Department of Physics, Yonsei University, Seoul, Korea \
