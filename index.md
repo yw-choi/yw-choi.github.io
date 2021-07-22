@@ -51,7 +51,7 @@ June 2021 - present
 **Graduate Student Researcher** \
 Department of Physics, Yonsei University, Seoul, Korea \
 (Advisor: [Prof. Hyoung Joon Choi](https://web.yonsei.ac.kr/choi/index.html)) \
-Mar 2021 - Feb 2021
+Mar 2016 - Feb 2021
 - Investigated electronic and transport properties of low-dimensional materials based on first-principles calculations.
   - Moiré superlattices, 2D semiconductors, Fe-based superconductors
 - Developed massively parallel electronic-structure calculation methods using high-performance computing.
