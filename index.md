@@ -38,7 +38,8 @@ layout: default
 </div>
 
 ## About
-I’m a postdoctoral researcher in condensed matter physics. I mainly study quantum-mechanical properties of solids and nanomaterials by using first-principles calculation, which is a ground-up approach to understanding and predicting material properties. I’m also interested in development of numerical methods harnessing the power of high-performance computations.
+
+I'm a postdoctoral researcher in computational condensed matter physics. I study a broad range of materials and nanostructures by using first-principles calculation, which is a ground-up approach to understanding and predicting material properties based on quantum mechanics. I’m also interested in development of numerical methods harnessing the power of high-performance computations.
 
 ## Experience
 
@@ -46,12 +47,14 @@ I’m a postdoctoral researcher in condensed matter physics. I mainly study quan
 Department of Physics, University of California, Berkeley \
 (Advisor: [Prof. Marvin L. Cohen](http://cohen.berkeley.edu)) \
 June 2021 - present
+
 - Investigate atomic and electronic structure of nanomaterials using first-principles calculations.
 
 **Graduate Student Researcher** \
 Department of Physics, Yonsei University, Seoul, Korea \
 (Advisor: [Prof. Hyoung Joon Choi](https://web.yonsei.ac.kr/choi/index.html)) \
 Mar 2016 - Feb 2021
+
 - Investigated electronic and transport properties of low-dimensional materials based on first-principles calculations.
   - Moiré superlattices, 2D semiconductors, Fe-based superconductors
 - Developed massively parallel electronic-structure calculation methods using high-performance computing.
@@ -72,14 +75,15 @@ Department of Physics, Yonsei University, Seoul, Korea \
 Mar 2010 - Feb 2016
 
 ## Research Interests
-***Ab initio* calculation of electronic properties of low-dimensional materials** \
+
+**_Ab initio_ calculation of electronic properties of low-dimensional materials** \
 Moiré materials, twisted graphene layers, 2D semiconductors, Fe-based superconductors
 
 **Computational study on many-body interactions in solids** \
 Electron-phonon interaction, electron correlation, GW, DFT+DMFT
 
 **Development of electronic-structure methods using high-performance computing** \
-Massively parallel *ab initio* calculation, large-scale tight-binding calculation
+Massively parallel _ab initio_ calculation, large-scale tight-binding calculation
 
 ## Publications
 
@@ -89,26 +93,27 @@ Dichotomy of Electron-Phonon Coupling in Graphene Moiré Flat Bands, \
 
 4\. **Young Woo Choi** and Hyoung Joon Choi, \
 Anisotropic Pseudospin Tunneling in Two-Dimensional Black Phosphorus Junctions, \
-[2D Materials **8**, 035024 (2021)](https://doi.org/10.1088/2053-1583/abf810){:target="_blank"}.
+[2D Materials **8**, 035024 (2021)](https://doi.org/10.1088/2053-1583/abf810){:target="\_blank"}.
 
 3\. **Young Woo Choi** and Hyoung Joon Choi, \
 Intrinsic band gap and electrically tunable flat bands
 in twisted double bilayer graphene, \
-[Physical Review B **100**, 201402(R) (2019)](https://doi.org/10.1103/PhysRevB.100.201402){:target="_blank"}
+[Physical Review B **100**, 201402(R) (2019)](https://doi.org/10.1103/PhysRevB.100.201402){:target="\_blank"}
 [[arXiv:1903.00852]](https://arxiv.org/abs/1903.00852){:target="_blank"}.
 
 2\. **Young Woo Choi** and Hyoung Joon Choi, \
 Role of Electric Fields on Enhanced Electron Correlation in Surface-Doped FeSe, \
-[Physical Review Letters **122**, 046401 (2019)](https://doi.org/10.1103/physrevlett.122.046401){:target="_blank"}
+[Physical Review Letters **122**, 046401 (2019)](https://doi.org/10.1103/physrevlett.122.046401){:target="\_blank"}
 [[arXiv:1901.04062]](https://arxiv.org/abs/1901.04062){:target="_blank"}.
 
 1\. **Young Woo Choi** and Hyoung Joon Choi, \
 Strong electron-phonon coupling, electron-hole asymmetry, and
 nonadiabaticity in magic-angle twisted bilayer graphene, \
-[Physical Review B **98**, 241412(R) (2018)](https://doi.org/10.1103/physrevb.98.241412){:target="_blank"}
+[Physical Review B **98**, 241412(R) (2018)](https://doi.org/10.1103/physrevb.98.241412){:target="\_blank"}
 [[arXiv:1809.08407]](https://arxiv.org/abs/1809.08407){:target="_blank"}.
 
 ## Honors and Awards
+
 **Global Ph.D. Fellowship**, National Research Foundation, 2017-2020 \
 **Yonsei Alumni Scholarship**, 2012, 2014-2015 \
 **Excellent Paper Award**, Korea Institute of Science and Technology Information, 2019 \
@@ -119,7 +124,8 @@ nonadiabaticity in magic-angle twisted bilayer graphene, \
 **Best Presentation Award**, KIAS Physics Winter Camp, 2016
 
 ## Computational Skills
-***Ab initio* electronic structure calculation** \
+
+**_Ab initio_ electronic structure calculation** \
 SIESTA, Quantum ESPRESSO, EPW, BerkeleyGW, WIEN2k+EDMFT
 
 **Numerical programming** \
@@ -143,6 +149,7 @@ Spring 2020
 Fall 2017
 
 ## Invited Talks
+
 2\.
 **Electronic structure and electron-phonon coupling in graphene moiré flat bands**, \
 Invited talk, \
@@ -186,6 +193,7 @@ Contributed talk, \
 American Physical Society March Meeting, New Orleans, LA, USA, March 13-17, 2017.
 
 ## Domestic Conference Presentations
+
 14\.
 **Crucial role of sublattice polarization on electron-phonon coupling in twisted graphene layers**, \
 Contributed talk, \
