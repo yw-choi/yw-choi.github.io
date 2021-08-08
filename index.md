@@ -39,7 +39,7 @@ layout: default
 
 ## About
 
-I'm a postdoctoral researcher in computational condensed matter physics. I study a broad range of materials and nanostructures by using first-principles calculation, which is a ground-up approach to understanding and predicting material properties based on quantum mechanics. I’m also interested in development of numerical methods harnessing the power of high-performance computations.
+I'm a postdoctoral researcher in computational condensed matter physics. I study a broad range of materials and nanostructures by using first-principles calculation, which is a ground-up approach to understanding and predicting material properties based on quantum mechanics. I’m also interested in the development of numerical methods harnessing the power of high-performance computations.
 
 ## Experience
 
