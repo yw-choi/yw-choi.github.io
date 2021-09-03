@@ -89,7 +89,7 @@ Massively parallel _ab initio_ calculation, large-scale tight-binding calculatio
 
 5\. **Young Woo Choi** and Hyoung Joon Choi, \
 Dichotomy of Electron-Phonon Coupling in Graphene Moiré Flat Bands, \
-[[arXiv:2103.16132]](https://arxiv.org/abs/2103.16132){:target="_blank"}.
+Physical Review Letters (accepted) [[arXiv:2103.16132]](https://arxiv.org/abs/2103.16132){:target="_blank"}.
 
 4\. **Young Woo Choi** and Hyoung Joon Choi, \
 Anisotropic Pseudospin Tunneling in Two-Dimensional Black Phosphorus Junctions, \
