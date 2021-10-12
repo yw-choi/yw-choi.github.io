@@ -43,34 +43,21 @@ I'm a postdoctoral researcher in computational condensed matter physics. I study
 
 ## Experience
 
-**Postdoctoral Researcher** \
-Department of Physics, University of California, Berkeley \
+**Postdoctoral Researcher**, Department of Physics, University of California, Berkeley \
 (Advisor: [Prof. Marvin L. Cohen](http://cohen.berkeley.edu)) \
-June 2021 - present
+Jun 2021 - present
 
-- Investigate atomic and electronic structure of nanomaterials using first-principles calculations.
-
-**Graduate Student Researcher** \
-Department of Physics, Yonsei University, Seoul, Korea \
+**Postdoctoral Researcher**, Department of Physics, Yonsei University, Seoul, Korea \
 (Advisor: [Prof. Hyoung Joon Choi](https://web.yonsei.ac.kr/choi/index.html)) \
-Mar 2016 - Feb 2021
-
-- Investigated electronic and transport properties of low-dimensional materials based on first-principles calculations.
-  - Moiré superlattices, 2D semiconductors, Fe-based superconductors
-- Developed massively parallel electronic-structure calculation methods using high-performance computing.
-  - Massively parallel density functional theory, large-scale tight-binding approach
-- Published 5 first-author papers with 130 citations in total as of July 2021.
-- Presented at 6 international and 14 domestic conferences.
+Mar 2021 - May 2021
 
 ## Education
 
-**Ph.D. in Physics** \
-Department of Physics, Yonsei University, Seoul, Korea \
+**Ph.D. in Physics**, Department of Physics, Yonsei University, Seoul, Korea \
 (Advisor: [Prof. Hyoung Joon Choi](https://web.yonsei.ac.kr/choi/index.html)) \
 Mar 2016 - Feb 2021
 
-**B.S. in Physics** \
-Department of Physics, Yonsei University, Seoul, Korea \
+**B.S. in Physics**, Department of Physics, Yonsei University, Seoul, Korea \
 (Mandatory military service from Oct 2012 to Jul 2014) \
 Mar 2010 - Feb 2016
 
@@ -89,28 +76,29 @@ Massively parallel _ab initio_ calculation, large-scale tight-binding calculatio
 
 5\. **Young Woo Choi** and Hyoung Joon Choi, \
 Dichotomy of Electron-Phonon Coupling in Graphene Moiré Flat Bands, \
-Physical Review Letters (accepted) [[arXiv:2103.16132]](https://arxiv.org/abs/2103.16132){:target="_blank"}.
+[Physical Review Letters **127**, 167001 (2021)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.127.167001){:target="\_blank"}
+[\[arXiv:2103.16132\]](https://arxiv.org/abs/2103.16132){:target="\_blank"}.
 
 4\. **Young Woo Choi** and Hyoung Joon Choi, \
 Anisotropic Pseudospin Tunneling in Two-Dimensional Black Phosphorus Junctions, \
-[2D Materials **8**, 035024 (2021)](https://doi.org/10.1088/2053-1583/abf810){:target="\_blank"}.
+[2D Materials **8**, 035024 (2021)](https://doi.org/10.1088/2053-1583/abf810){:target="\_blank"} [\[arXiv:2109.00897\]](https://arxiv.org/abs/2109.00897){:target="\_blank"}.
 
 3\. **Young Woo Choi** and Hyoung Joon Choi, \
 Intrinsic band gap and electrically tunable flat bands
 in twisted double bilayer graphene, \
 [Physical Review B **100**, 201402(R) (2019)](https://doi.org/10.1103/PhysRevB.100.201402){:target="\_blank"}
-[[arXiv:1903.00852]](https://arxiv.org/abs/1903.00852){:target="_blank"}.
+[\[arXiv:1903.00852\]](https://arxiv.org/abs/1903.00852){:target="\_blank"}.
 
 2\. **Young Woo Choi** and Hyoung Joon Choi, \
 Role of Electric Fields on Enhanced Electron Correlation in Surface-Doped FeSe, \
 [Physical Review Letters **122**, 046401 (2019)](https://doi.org/10.1103/physrevlett.122.046401){:target="\_blank"}
-[[arXiv:1901.04062]](https://arxiv.org/abs/1901.04062){:target="_blank"}.
+[\[arXiv:1901.04062\]](https://arxiv.org/abs/1901.04062){:target="\_blank"}.
 
 1\. **Young Woo Choi** and Hyoung Joon Choi, \
 Strong electron-phonon coupling, electron-hole asymmetry, and
 nonadiabaticity in magic-angle twisted bilayer graphene, \
 [Physical Review B **98**, 241412(R) (2018)](https://doi.org/10.1103/physrevb.98.241412){:target="\_blank"}
-[[arXiv:1809.08407]](https://arxiv.org/abs/1809.08407){:target="_blank"}.
+[\[arXiv:1809.08407\]](https://arxiv.org/abs/1809.08407){:target="\_blank"}.
 
 ## Honors and Awards
 
@@ -136,17 +124,20 @@ Linux cluster operation & maintenance, Web programming
 
 ## Teaching Experience
 
+**TA, Quantum Mechanics (Undergraduate Course)** \
+Spring 2016, Fall 2016, Spring 2017
+
+**TA, Introduction to medical physics (Graduate Course)** \
+Fall 2017
+
 **TA, Quantum Mechanics (Graduate Course)** \
-Spring 2016, Fall 2016, Spring 2017, Spring 2018, Fall 2018
+Spring 2018, Fall 2018
 
 **TA, Statistical Mechanics (Undergraduate Course)** \
 Fall 2019, Fall 2020
 
 **TA, Thermal Physics (Undergraduate Course)** \
 Spring 2020
-
-**TA, Introduction to medical physics (Graduate Course)** \
-Fall 2017
 
 ## Invited Talks
 
