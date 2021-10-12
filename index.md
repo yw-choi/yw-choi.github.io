@@ -44,22 +44,18 @@ I'm a postdoctoral researcher in computational condensed matter physics. I study
 ## Experience
 
 **Postdoctoral Researcher**, Department of Physics, University of California, Berkeley \
-(Advisor: [Prof. Marvin L. Cohen](http://cohen.berkeley.edu)) \
-Jun 2021 - present
+Jun 2021 - present (Advisor: [Prof. Marvin L. Cohen](http://cohen.berkeley.edu))
 
 **Postdoctoral Researcher**, Department of Physics, Yonsei University, Seoul, Korea \
-(Advisor: [Prof. Hyoung Joon Choi](https://web.yonsei.ac.kr/choi/index.html)) \
-Mar 2021 - May 2021
+Mar 2021 - May 2021 (Advisor: [Prof. Hyoung Joon Choi](https://web.yonsei.ac.kr/choi/index.html))
 
 ## Education
 
 **Ph.D. in Physics**, Department of Physics, Yonsei University, Seoul, Korea \
-(Advisor: [Prof. Hyoung Joon Choi](https://web.yonsei.ac.kr/choi/index.html)) \
-Mar 2016 - Feb 2021
+Mar 2016 - Feb 2021 (Advisor: [Prof. Hyoung Joon Choi](https://web.yonsei.ac.kr/choi/index.html))
 
 **B.S. in Physics**, Department of Physics, Yonsei University, Seoul, Korea \
-(Mandatory military service from Oct 2012 to Jul 2014) \
-Mar 2010 - Feb 2016
+Mar 2010 - Feb 2016 (Mandatory military service from Oct 2012 to Jul 2014)
 
 ## Research Interests
 
