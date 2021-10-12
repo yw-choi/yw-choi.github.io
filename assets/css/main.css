@@ -1,14 +1,13 @@
 @charset "utf-8";
 
 body {
-  background: #f5f5f5
+  background: #f5f5f5;
 }
-
 .container {
   padding: 4em;
   background: white;
+  max-width: 1000px;
 }
-
 .contact-list {
   list-style-type: none;
   padding-left: 0;
@@ -20,20 +19,4 @@ body {
 }
 #profile-container {
   margin-bottom: 20px;
-}
-
-@media print {
-  body {
-    margin: 0px;
-    background: white;
-    font-size: 12px;
-  }
-  h1 {
-    font-size: 18px;
-    font-weight: bold;
-  }
-  h2 {
-    font-size: 16px;
-    font-weight: bold;
-  }
 }
