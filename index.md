@@ -137,6 +137,11 @@ Spring 2020
 
 ## Invited Talks
 
+4\.
+**Electronic-structure study of interaction effects in two-dimensional materials**, \
+Invited talk, \
+vdWMRC Satelite Session, ISPSA 2022, Jul 21, 2022.
+
 3\.
 **Introduction to first-principles density functional theory calculations**, \
 Lecture, \
