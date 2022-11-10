@@ -72,7 +72,7 @@ Massively parallel _ab initio_ calculation, large-scale tight-binding calculatio
 
 6\. **Young Woo Choi** and Marvin L. Cohen, \
 Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene, \
-Physical Review Letters (accepted).
+[Physical Review Letters **129**, 206801 (2022)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.129.206801){:target="\_blank"}
 
 5\. **Young Woo Choi** and Hyoung Joon Choi, \
 Dichotomy of Electron-Phonon Coupling in Graphene Moiré Flat Bands, \
