@@ -27,9 +27,9 @@ layout: default
             <i class="fa fa-graduation-cap fa-lg fa-fw"></i>
             <a href="https://scholar.google.co.kr/citations?hl=en&user=e4h8odoAAAAJ" target="_blank" class="link-primary">Google Scholar</a>
           </li>
-          <li class="github">
-            <i class="fa fa-github fa-lg fa-fw"></i>
-            <a href="http://github.com/yw-choi" target="_blank">yw-choi</a>
+          <li class="linkedin">
+            <i class="fa fa-linkedin fa-lg fa-fw"></i>
+            <a href="https://www.linkedin.com/in/young-woo-choi-394671210" target="_blank">LinkedIn</a>
           </li>
         </ul>
       </div><!--//contact-container-->
@@ -72,7 +72,7 @@ Massively parallel _ab initio_ calculation, large-scale tight-binding calculatio
 
 6\. **Young Woo Choi** and Marvin L. Cohen, \
 Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene, \
-[Physical Review Letters **129**, 206801 (2022)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.129.206801){:target="\_blank"}
+[Physical Review Letters **129**, 206801 (2022)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.129.206801){:target="\_blank"}.
 
 5\. **Young Woo Choi** and Hyoung Joon Choi, \
 Dichotomy of Electron-Phonon Coupling in Graphene Moiré Flat Bands, \
@@ -157,7 +157,7 @@ Invited talk, \
 Soongsil University, Seoul, May 13, 2021.
 
 1\.
-**Atomistic study of electron-phonon interaction  in magic-angle twisted bilayer graphene**, \
+**Atomistic study of electron-phonon interaction in magic-angle twisted bilayer graphene**, \
 Invited talk, \
 University of Seoul, February 15, 2019.
 
