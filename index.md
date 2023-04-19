@@ -70,12 +70,11 @@ Massively parallel _ab initio_ calculation, large-scale tight-binding calculatio
 
 ## Publications
 8\. Yangjin Lee†, **Young Woo Choi**†, Kihyun Lee, Chengyu Song, Peter Ercius, Marvin L. Cohen, Kwanpyo Kim, and Alex Zettl, († Equal Contributions) \
-Terahertz spectroscopy and DFT analysis of phonon dynamics of the layered van der Waals semiconductor Nb3X8 (X = Cl, I),
+Tuning the Sharing Modes and Composition in a Tetrahedral GeX$_2$ (X = S, Se) System via One-Dimensional Confinement, \
 [ACS Nano, accepted](){:target="\_blank"}.
 
-7\. Jangwon Kim†, Youjin Lee†, **Young Woo Choi**†, Taek Sun Jung, Suhan Son, Jonghyeon Kim, Hyoung Joon Choi, Je-Geun Park, and Jae Hoon Kim
-**Young Woo Choi** and Marvin L. Cohen, († Equal Contributions) \
-Terahertz spectroscopy and DFT analysis of phonon dynamics of the layered van der Waals semiconductor Nb3X8 (X = Cl, I),
+7\. Jangwon Kim†, Youjin Lee†, **Young Woo Choi**†, Taek Sun Jung, Suhan Son, Jonghyeon Kim, Hyoung Joon Choi, Je-Geun Park, and Jae Hoon Kim, († Equal Contributions) \
+Terahertz spectroscopy and DFT analysis of phonon dynamics of the layered van der Waals semiconductor Nb$_3$X$_8$ (X = Cl, I), \
 [ACS Omega **8**, 14190 (2023)](https://www.doi.org/10.1021/acsomega.3c01019){:target="\_blank"}.
 
 6\. **Young Woo Choi** and Marvin L. Cohen, \
