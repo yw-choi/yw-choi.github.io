@@ -47,12 +47,12 @@ I'm a postdoctoral researcher in computational condensed matter physics. I study
 Jun 2021 - present (Advisor: [Prof. Marvin L. Cohen](http://cohen.berkeley.edu))
 
 **Postdoctoral Researcher**, Department of Physics, Yonsei University, Seoul, Korea \
-Mar 2021 - May 2021 (Advisor: [Prof. Hyoung Joon Choi](https://web.yonsei.ac.kr/choi/index.html))
+Mar 2021 - May 2021 (Advisor: [Prof. Hyoung Joon Choi](https://quantum.yonsei.ac.kr))
 
 ## Education
 
 **Ph.D. in Physics**, Department of Physics, Yonsei University, Seoul, Korea \
-Mar 2016 - Feb 2021 (Advisor: [Prof. Hyoung Joon Choi](https://web.yonsei.ac.kr/choi/index.html))
+Mar 2016 - Feb 2021 (Advisor: [Prof. Hyoung Joon Choi](https://quantum.yonsei.ac.kr))
 
 **B.S. in Physics**, Department of Physics, Yonsei University, Seoul, Korea \
 Mar 2010 - Feb 2016 (Mandatory military service from Oct 2012 to Jul 2014)
@@ -69,6 +69,14 @@ Electron-phonon interaction, electron correlation, GW, DFT+DMFT
 Massively parallel _ab initio_ calculation, large-scale tight-binding calculation
 
 ## Publications
+8\. Yangjin Lee†, **Young Woo Choi**†, Kihyun Lee, Chengyu Song, Peter Ercius, Marvin L. Cohen, Kwanpyo Kim, and Alex Zettl, († Equal Contributions) \
+Terahertz spectroscopy and DFT analysis of phonon dynamics of the layered van der Waals semiconductor Nb3X8 (X = Cl, I),
+[ACS Nano, accepted](){:target="\_blank"}.
+
+7\. Jangwon Kim†, Youjin Lee†, **Young Woo Choi**†, Taek Sun Jung, Suhan Son, Jonghyeon Kim, Hyoung Joon Choi, Je-Geun Park, and Jae Hoon Kim
+**Young Woo Choi** and Marvin L. Cohen, († Equal Contributions) \
+Terahertz spectroscopy and DFT analysis of phonon dynamics of the layered van der Waals semiconductor Nb3X8 (X = Cl, I),
+[ACS Omega **8**, 14190 (2023)](https://www.doi.org/10.1021/acsomega.3c01019){:target="\_blank"}.
 
 6\. **Young Woo Choi** and Marvin L. Cohen, \
 Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene, \
@@ -139,7 +147,10 @@ Fall 2019, Fall 2020
 **TA, Thermal Physics (Undergraduate Course)** \
 Spring 2020
 
-## Invited Talks
+## Talks
+
+5\. **Exploring Novel Electronic Properties of Two-Dimensional Materials: Moiré Superlattices, Pseudospin Semiconductors, and Nanomachines**, \
+Invited talk, \
 
 4\.
 **Electronic-structure study of interaction effects in two-dimensional materials**, \
@@ -153,12 +164,12 @@ Y Physics Winter School, Yonsei University (virtual), Jan 14, 2022.
 
 2\.
 **Electronic structure and electron-phonon coupling in graphene moiré flat bands**, \
-Invited talk, \
+Seminar, \
 Soongsil University, Seoul, May 13, 2021.
 
 1\.
 **Atomistic study of electron-phonon interaction in magic-angle twisted bilayer graphene**, \
-Invited talk, \
+Seminar, \
 University of Seoul, February 15, 2019.
 
 ## International Conference Presentations
