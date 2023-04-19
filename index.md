@@ -69,13 +69,13 @@ Electron-phonon interaction, electron correlation, GW, DFT+DMFT
 Massively parallel _ab initio_ calculation, large-scale tight-binding calculation
 
 ## Publications
-8\. Yangjin Lee†, **Young Woo Choi**†, Kihyun Lee, Chengyu Song, Peter Ercius, Marvin L. Cohen, Kwanpyo Kim, and Alex Zettl, († Equal Contributions) \
-Tuning the Sharing Modes and Composition in a Tetrahedral GeX$_2$ (X = S, Se) System via One-Dimensional Confinement, \
-[ACS Nano, accepted](){:target="\_blank"}.
+8\. Yangjin Lee†, **Young Woo Choi**†, Kihyun Lee, Chengyu Song, Peter Ercius, Marvin L. Cohen, Kwanpyo Kim, and Alex Zettl,\
+Tuning the Sharing Modes and Composition in a Tetrahedral GeX<sub>2</sub> (X = S, Se) System via One-Dimensional Confinement, \
+[ACS Nano, accepted](){:target="\_blank"}. († Equal Contributions) 
 
-7\. Jangwon Kim†, Youjin Lee†, **Young Woo Choi**†, Taek Sun Jung, Suhan Son, Jonghyeon Kim, Hyoung Joon Choi, Je-Geun Park, and Jae Hoon Kim, († Equal Contributions) \
-Terahertz spectroscopy and DFT analysis of phonon dynamics of the layered van der Waals semiconductor Nb$_3$X$_8$ (X = Cl, I), \
-[ACS Omega **8**, 14190 (2023)](https://www.doi.org/10.1021/acsomega.3c01019){:target="\_blank"}.
+7\. Jangwon Kim†, Youjin Lee†, **Young Woo Choi**†, Taek Sun Jung, Suhan Son, Jonghyeon Kim, Hyoung Joon Choi, Je-Geun Park, and Jae Hoon Kim, \
+Terahertz spectroscopy and DFT analysis of phonon dynamics of the layered van der Waals semiconductor Nb<sub>3</sub>X<sub>8</sub> (X = Cl, I), \
+[ACS Omega **8**, 14190 (2023)](https://www.doi.org/10.1021/acsomega.3c01019){:target="\_blank"}. († Equal Contributions) 
 
 6\. **Young Woo Choi** and Marvin L. Cohen, \
 Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene, \
