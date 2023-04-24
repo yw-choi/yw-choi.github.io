@@ -59,14 +59,15 @@ Mar 2010 - Feb 2016 (Mandatory military service from Oct 2012 to Jul 2014)
 
 ## Research Interests
 
-**_Ab initio_ calculation of electronic properties of low-dimensional materials** \
+**_Ab initio_ calculation of electronic properties of quantum materials** \
 Moiré materials, twisted graphene layers, 2D semiconductors, Fe-based superconductors
 
 **Computational study on many-body interactions in solids** \
-Electron-phonon interaction, electron correlation, GW, DFT+DMFT
+Electron-phonon interaction, electron correlation, GW, DFT+NEGF
 
 **Development of electronic-structure methods using high-performance computing** \
-Massively parallel _ab initio_ calculation, large-scale tight-binding calculation
+Massively parallel ab initio calculation, large-scale tight-binding calculation
+
 
 ## Publications
 8\. Yangjin Lee†, **Young Woo Choi**†, Kihyun Lee, Chengyu Song, Peter Ercius, Marvin L. Cohen, Kwanpyo Kim, and Alex Zettl,\
@@ -146,136 +147,101 @@ Fall 2019, Fall 2020
 **TA, Thermal Physics (Undergraduate Course)** \
 Spring 2020
 
-## Talks
+## Invited Talks
 
-5\. **Exploring Novel Electronic Properties of Two-Dimensional Materials: Moiré Superlattices, Pseudospin Semiconductors, and Nanomachines**, \
-Invited talk, \
+3. Atomistic study of electronic properties of graphene moiré flat bands
+KAIX Future Physics Workshop, KAIST, Daejeon, Dec 26, 2022
+2. Electronic-structure study of interaction effects in two-dimensional materials
+vdWMRC Satelite Session, ISPSA 2022, Jul 21, 2022
+1. Introduction to first-principles density functional theory calculations
+Lecture
+Y Physics Winter School, Yonsei University (virtual), Jan 14, 2022
 
-4\.
-**Electronic-structure study of interaction effects in two-dimensional materials**, \
-Invited talk, \
-vdWMRC Satelite Session, ISPSA 2022, Jul 21, 2022.
+## Seminars
 
-3\.
-**Introduction to first-principles density functional theory calculations**, \
-Lecture, \
-Y Physics Winter School, Yonsei University (virtual), Jan 14, 2022.
-
-2\.
-**Electronic structure and electron-phonon coupling in graphene moiré flat bands**, \
-Seminar, \
-Soongsil University, Seoul, May 13, 2021.
-
-1\.
-**Atomistic study of electron-phonon interaction in magic-angle twisted bilayer graphene**, \
-Seminar, \
-University of Seoul, February 15, 2019.
+7. Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene
+KIAS, Seoul, Dec 22, 2022
+6. Exploring Novel Electronic Properties of Two-Dimensional Materials: Moiré Superlattices, Pseudospin Semiconductors, and Nanomachines
+KENTECH, Naju, Dec 21, 2022
+5. Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene
+Soongsil University, Seoul, Dec 15, 2022
+4. Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene
+Yonsei University, Seoul, Dec 14, 2022
+3. Exploring Novel Electronic Properties of Two-Dimensional Materials: Moiré Superlattices, Pseudospin Semiconductors, and Nanomachines
+KIST, Seoul, Dec 13, 2022
+2. Electronic structure and electron-phonon coupling in graphene moiré flat bands
+Soongsil University, Seoul, May 13, 2021
+1. Atomistic study of electron-phonon interaction in magic-angle twisted bilayer graphene
+University of Seoul, February 15, 2019
 
 ## International Conference Presentations
-
-7\.
-**Electronic Structure and Electron-Phonon Coupling in Graphene Moiré Superlattices**, \
-Contributed talk, \
-Asia-Pacific Conference on Condensed Matter Physics 2021 (online), Dec 1-3, 2021.
-
-6\.
-**Atomistic study of electron-phonon coupling in twisted graphene layers**, \
-Contributed talk, \
-American Physical Society March Meeting (online), USA, Mar 15-19, 2021.
-
-5\.
-**Atomistic study of Electronic and Phononic Properties of Twisted Graphene Layers**, \
-Contributed talk, \
-The 14th Asia Pacific Physics Conference, Kuching, Malaysia, Nov 17-21, 2019.
-
-4\.
-**Atomistic Study of Electronic Structure and Electron-Phonon Coupling in Twisted Graphene Layers**, \
-Poster, \
-The 22nd Asian Workshop on First-Principles Electronic Structure Calculations, Osaka University, Japan, Oct 28–30, 2019.
-
-3\.
-**Atomistic study of electron-phonon coupling in magic-angle twisted bilayer graphene**, \
-Contributed talk, \
-American Physical Society March Meeting, Boston, MA, USA, Mar 4-8, 2019.
-
-2\.
-**Role of the charge-transfer induced electric field in potassium-dosed FeSe layers**, \
-Contributed talk, \
-American Physical Society March Meeting, Los Angeles, CA, USA, Mar 5-9, 2018.
-
-1\.
-**Effects of the potassium dosing on the electronic correlation in FeSe : DFT+DMFT study**, \
-Contributed talk, \
-American Physical Society March Meeting, New Orleans, LA, USA, Mar 13-17, 2017.
+8. Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene
+Contributed talk
+American Physical Society March Meeting, Las Vegas, NV, USA, Mar 6-10, 2023
+7. Electronic Structure and Electron-Phonon Coupling in Graphene Moiré Superlattices
+Contributed talk
+Asia-Pacific Conference on Condensed Matter Physics 2021 (online), Dec 1-3, 2021
+6. Atomistic study of electron-phonon coupling in twisted graphene layers
+Contributed talk
+American Physical Society March Meeting (online), USA, Mar 15-19, 2021
+5. Atomistic study of Electronic and Phononic Properties of Twisted Graphene Layers
+Contributed talk
+The 14th Asia Pacific Physics Conference, Kuching, Malaysia, Nov 17-21, 2019
+4. Atomistic Study of Electronic Structure and Electron-Phonon Coupling in Twisted Graphene Layers
+Poster
+The 22nd Asian Workshop on First-Principles Electronic Structure Calculations, Osaka University, Japan, Oct 28–30, 2019
+3. Atomistic study of electron-phonon coupling in magic-angle twisted bilayer graphene
+Contributed talk
+American Physical Society March Meeting, Boston, MA, USA, Mar 4-8, 2019
+2. Role of the charge-transfer induced electric field in potassium-dosed FeSe layers
+Contributed talk
+American Physical Society March Meeting, Los Angeles, CA, USA, Mar 5-9, 2018
+1. Effects of the potassium dosing on the electronic correlation in FeSe : DFT+DMFT study
+Contributed talk
+American Physical Society March Meeting, New Orleans, LA, USA, Mar 13-17, 2017
 
 ## Domestic Conference Presentations
 
-14\.
-**Crucial role of sublattice polarization on electron-phonon coupling in twisted graphene layers**, \
-Contributed talk, \
-Korean Physical Society Spring Meeting (online), Korea, Apr 21-23, 2021.
+14. Crucial role of sublattice polarization on electron-phonon coupling in twisted graphene layers
+Contributed talk
+Korean Physical Society Spring Meeting (online), Korea, Apr 21-23, 2021
+13. Pseudospin tunneling in two-dimensional black phosphorus junctions
+Contributed talk
+Korean Physical Society Fall Meeting (online), Korea, Nov 4-6, 2020
+12. Electron-Phonon Coupling in Twisted Double Bilayer Graphene
+Contributed talk 
+The Korean Physical Society Fall Meeting, Gwangju, Korea, Oct 23-25, 2019
+11. Role of Electric Fields on Electron Correlation in Surface-Doped FeSe
+Poster
+11th International Conference on Magnetic and Superconducting Materials, Seoul, Korea, Aug 17-24, 2019
+10. Atomic and Electronic Structure of Twisted Graphene Layers
+Poster
+The 15th KIAS Electronic Structure Calculation Workshop, Korea Institute for Advanced Study, Seoul, Korea, Jul 4-5, 2019
+9. Atomistic Study on the Electronic Structure of Twisted Double Bilayer Graphene
+Contributed talk
+The Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 24-26, 2019
+8. Effects of electric fields on electron correlation in surface-doped FeSe
+Poster
+APCTP-KIAS Quantum Materials Symposium 2019, YongPyong, Korea, Feb 10-15, 2019
+7. Atomistic study of electron-phonon interaction in magic-angle twisted bilayer graphene
+Poster
+APCTP-KIAS Quantum Materials Symposium 2019, YongPyong, Korea, Feb 10-15, 2019
+6. Structural relaxation, electronic structure, and electron-phonon coupling in magic-angle twisted bilayer graphene
+Poster
+The 21st Asian Workshop on First-Principles Electronic Structure Calculations, KAIST, Daejeon, Korea, Oct 29-31, 2018
+5. Electron-phonon interactions in magic-angle twisted bilayer graphene
+Contributed talk
+The Korean Physical Society Fall Meeting, Changwon, Korea, Oct 24-26, 2018
+4. First-principles investigation of off-diagonal electron-phonon interaction in graphene
+Contributed talk
+Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 25-27, 2018
+3. First-principles study on the enhanced electronic correlation in the potassium-doped surface layer of FeSe
+Contributed talk
+Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 19-21, 2017
+2. Doping dependent electronic correlations in FeSe: DFT+DMFT study
+Poster
+The Korean Physical Society Fall Meeting, Gwangju, South Korea, Oct 19-21, 2016
+1. First-principles study of subsurface defects in topological insulator Bi2Se3 including van der Waals interaction
+Poster
+Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 20-22, 2016
 
-13\.
-**Pseudospin tunneling in two-dimensional black phosphorus junctions**, \
-Contributed talk, \
-Korean Physical Society Fall Meeting (online), Korea, Nov 4-6, 2020.
-
-12\.
-**Electron-Phonon Coupling in Twisted Double Bilayer Graphene**, \
-Contributed talk, \
-The Korean Physical Society Fall Meeting, Gwangju, Korea, Oct 23-25, 2019.
-
-11\.
-**Role of Electric Fields on Electron Correlation in Surface-Doped FeSe**, \
-Poster, \
-11th International Conference on Magnetic and Superconducting Materials, Seoul, Korea, Aug 17-24, 2019.
-
-10\.
-**Atomic and Electronic Structure of Twisted Graphene Layers**, \
-Poster, \
-The 15th KIAS Electronic Structure Calculation Workshop, Korea Institute for Advanced Study, Seoul, Korea, Jul 4-5, 2019.
-
-9\.
-**Atomistic Study on the Electronic Structure of Twisted Double Bilayer Graphene**, \
-Contributed talk, \
-The Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 24-26, 2019.
-
-8\.
-**Effects of electric fields on electron correlation in surface-doped FeSe**, \
-Poster, \
-APCTP-KIAS Quantum Materials Symposium 2019, YongPyong, Korea, Feb 10-15, 2019.
-
-7\.
-**Atomistic study of electron-phonon interaction in magic-angle twisted bilayer graphene**, \
-Poster, \
-APCTP-KIAS Quantum Materials Symposium 2019, YongPyong, Korea, Feb 10-15, 2019.
-
-6\.
-**Structural relaxation, electronic structure, and electron-phonon coupling in magic-angle twisted bilayer graphene**, \
-Poster, \
-The 21st Asian Workshop on First-Principles Electronic Structure Calculations, KAIST, Daejeon, Korea, Oct 29-31, 2018.
-
-5\.
-**Electron-phonon interactions in magic-angle twisted bilayer graphene**, \
-Contributed talk, \
-The Korean Physical Society Fall Meeting, Changwon, Korea, Oct 24-26, 2018.
-
-4\.
-**First-principles investigation of off-diagonal electron-phonon interaction in graphene**, \
-Contributed talk, \
-Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 25-27, 2018.
-
-3\.
-**First-principles study on the enhanced electronic correlation in the potassium-doped surface layer of FeSe**, \
-Contributed talk, \
-Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 19-21, 2017.
-
-2\.
-**Doping dependent electronic correlations in FeSe: DFT+DMFT study**, \
-Poster, \
-The Korean Physical Society Fall Meeting, Gwangju, South Korea, Oct 19-21, 2016.
-
-1\.
-**First-principles study of subsurface defects in topological insulator Bi2Se3 including van der Waals interaction**, \
-Poster, \
-Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 20-22, 2016.
