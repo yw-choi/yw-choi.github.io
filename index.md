@@ -25,7 +25,7 @@ layout: default
           </li>
           <li class="google-scholar">
             <i class="fa fa-graduation-cap fa-lg fa-fw"></i>
-            <a href="https://scholar.google.co.kr/citations?hl=en&user=e4h8odoAAAAJ" target="_blank" class="link-primary">Google Scholar</a>
+            <a href="https://scholar.google.co.kr/citations?hl=en&user=3LdpYjIAAAAJ" target="_blank" class="link-primary">Google Scholar</a>
           </li>
           <li class="linkedin">
             <i class="fa fa-linkedin fa-lg fa-fw"></i>
