@@ -72,7 +72,7 @@ Massively parallel ab initio calculation, large-scale tight-binding calculation
 ## Publications
 8\. Yangjin Lee†, **Young Woo Choi**†, Kihyun Lee, Chengyu Song, Peter Ercius, Marvin L. Cohen, Kwanpyo Kim, and Alex Zettl,\
 Tuning the Sharing Modes and Composition in a Tetrahedral GeX<sub>2</sub> (X = S, Se) System via One-Dimensional Confinement, \
-[ACS Nano, accepted](){:target="\_blank"}. († Equal Contributions) 
+[ACS Nano, in press (2023)](https://doi.org/10.1021/acsnano.3c01968){:target="\_blank"}. († Equal Contributions) 
 
 7\. Jangwon Kim†, Youjin Lee†, **Young Woo Choi**†, Taek Sun Jung, Suhan Son, Jonghyeon Kim, Hyoung Joon Choi, Je-Geun Park, and Jae Hoon Kim, \
 Terahertz spectroscopy and DFT analysis of phonon dynamics of the layered van der Waals semiconductor Nb<sub>3</sub>X<sub>8</sub> (X = Cl, I), \
