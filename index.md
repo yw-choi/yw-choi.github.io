@@ -70,6 +70,10 @@ Massively parallel ab initio calculation, large-scale tight-binding calculation
 
 
 ## Publications
+9\. Soo Yeon Lim†, Han-gyu Kim†, **Young Woo Choi**†, Takashi Taniguchi, Kenji Watanabe, Hyoung Joon Choi, and Hyeonsik Cheong,\
+Modulation of phonons and excitons due to moiré potentials in twisted-bilayer of WSe<sub>2</sub>/MoSe<sub>2</sub>, \
+[ACS Nano (accepted)](){:target="\_blank"}. († Equal Contributions) 
+
 8\. Yangjin Lee†, **Young Woo Choi**†, Kihyun Lee, Chengyu Song, Peter Ercius, Marvin L. Cohen, Kwanpyo Kim, and Alex Zettl,\
 Tuning the Sharing Modes and Composition in a Tetrahedral GeX<sub>2</sub> (X = S, Se) System via One-Dimensional Confinement, \
 [ACS Nano **17**, 8734 (2023)](https://doi.org/10.1021/acsnano.3c01968){:target="\_blank"}. († Equal Contributions) 
