@@ -59,14 +59,14 @@ Mar 2010 - Feb 2016 (Mandatory military service from Oct 2012 to Jul 2014)
 
 ## Research Interests
 
-**_Ab initio_ calculation of electronic properties of quantum materials** \
-Moiré materials, twisted graphene layers, 2D semiconductors, Fe-based superconductors
+**Calculation of electronic properties and many-body interactions in quantum materials** \
+Electrons and phonons in moiré materials, electron-phonon coupling and superconductivity in graphene moiré flat bands, 2D pseudospin semiconductors, Fe-based superconductors
 
-**Computational study on many-body interactions in solids** \
-Electron-phonon interaction, electron correlation, GW, DFT+NEGF
+**Design of functional nanomaterials and nanostructures for next-generation quantum devices** \
+One-dimensional van der Waals heterostructures, molecular nanomachines, pseudospin tunneling junctions, topological graphene nanoribbon devices
 
 **Development of electronic-structure methods using high-performance computing** \
-Massively parallel ab initio calculation, large-scale tight-binding calculation
+Density functional theory, large-scale tight-binding calculations, many-body perturbation theory 
 
 
 ## Publications
