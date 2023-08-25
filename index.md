@@ -114,6 +114,7 @@ nonadiabaticity in magic-angle twisted bilayer graphene, \
 
 ## Honors and Awards
 
+**Post-doctoral Training Grants**, National Research Foundation, 2023 \
 **Global Ph.D. Fellowship**, National Research Foundation, 2017-2020 \
 **Yonsei Alumni Scholarship**, 2012, 2014-2015 \
 **Excellent Paper Award**, Korea Institute of Science and Technology Information, 2019 \
