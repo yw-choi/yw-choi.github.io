@@ -71,7 +71,7 @@ Density functional theory, large-scale tight-binding calculations, many-body per
 
 ## Publications
 10\. Yangjin Lee†, **Young Woo Choi**†, Kihyun Lee, Chengyu Song, Peter Ercius, Marvin L. Cohen, Kwanpyo Kim, and Alex Zettl,\
-One-dimensional Magnetic MX<sub>3<\sub> Single-Chains (M=Cr, V and X=Cl, Br, I),
+One-dimensional Magnetic MX<sub>3</sub> Single-Chains (M=Cr, V and X=Cl, Br, I),
 Advanced Materials (accepted). († Equal Contributions) 
 
 9\. Soo Yeon Lim†, Han-gyu Kim†, **Young Woo Choi**†, Takashi Taniguchi, Kenji Watanabe, Hyoung Joon Choi, and Hyeonsik Cheong,\
