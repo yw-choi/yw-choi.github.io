@@ -70,6 +70,10 @@ Density functional theory, large-scale tight-binding calculations, many-body per
 
 
 ## Publications
+10\. Yangjin Lee†, **Young Woo Choi**†, Kihyun Lee, Chengyu Song, Peter Ercius, Marvin L. Cohen, Kwanpyo Kim, and Alex Zettl,\
+One-dimensional Magnetic MX<sub>3<\sub> Single-Chains (M=Cr, V and X=Cl, Br, I),
+Advanced Materials (accepted). († Equal Contributions) 
+
 9\. Soo Yeon Lim†, Han-gyu Kim†, **Young Woo Choi**†, Takashi Taniguchi, Kenji Watanabe, Hyoung Joon Choi, and Hyeonsik Cheong,\
 Modulation of phonons and excitons due to moiré potentials in twisted-bilayer of WSe<sub>2</sub>/MoSe<sub>2</sub>, \
 [ACS Nano **17**, 13938 (2023)](https://doi.org/10.1021/acsnano.3c03883){:target="\_blank"}. († Equal Contributions) 
