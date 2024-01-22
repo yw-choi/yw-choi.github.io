@@ -1,7 +1,7 @@
 ---
 layout: default
----
 
+---
 <div id="profile-container" class="row">
   <div id="profile-image-container" class="col-lg-2 justify-content-md-center">
     <img class="mx-auto d-block img-fluid" src="{{ site.baseurl }}/assets/images/profile.jpg" alt="profile picture" />
@@ -9,7 +9,7 @@ layout: default
   <div class="col-lg-10 col-md-12">
     <div class="row">
       <div class="col-12">
-        <h1>Young Woo Choi</h1>
+        <h3>Young Woo Choi</h3>
       </div>
     </div>
     <div class="row">
@@ -37,26 +37,23 @@ layout: default
   </div>
 </div>
 
-## About
-I study quantum materials and nanostructures by using first-principles calculations based on quantum mechanics.
+# Experience
 
-## Experience
-
-**Postdoctoral Researcher**, Department of Physics, University of California, Berkeley \
+Postdoctoral Researcher, Department of Physics, University of California, Berkeley \
 Jun 2021 - present (Advisor: [Prof. Marvin L. Cohen](http://cohen.berkeley.edu))
 
-**Postdoctoral Researcher**, Department of Physics, Yonsei University, Seoul, Korea \
+Postdoctoral Researcher, Department of Physics, Yonsei University, Seoul, Korea \
 Mar 2021 - May 2021 (Advisor: [Prof. Hyoung Joon Choi](https://quantum.yonsei.ac.kr))
 
-## Education
+# Education
 
-**Ph.D. in Physics**, Department of Physics, Yonsei University, Seoul, Korea \
+Ph.D. in Physics, Department of Physics, Yonsei University, Seoul, Korea \
 Mar 2016 - Feb 2021 (Advisor: [Prof. Hyoung Joon Choi](https://quantum.yonsei.ac.kr))
 
-**B.S. in Physics**, Department of Physics, Yonsei University, Seoul, Korea \
+B.S. in Physics, Department of Physics, Yonsei University, Seoul, Korea \
 Mar 2010 - Feb 2016 (Mandatory military service from Oct 2012 to Jul 2014)
 
-## Research Interests
+# Research Interests
 
 **Calculation of electronic properties and many-body interactions in quantum materials** \
 Electrons and phonons in moiré materials, electron-phonon coupling and superconductivity in graphene moiré flat bands, 2D pseudospin semiconductors, Fe-based superconductors
@@ -68,7 +65,7 @@ One-dimensional van der Waals heterostructures, molecular nanomachines, pseudosp
 Density functional theory, large-scale tight-binding calculations, many-body perturbation theory 
 
 
-## Publications
+# Publications
 10\. Yangjin Lee†, **Young Woo Choi**†, Kihyun Lee, Chengyu Song, Peter Ercius, Marvin L. Cohen, Kwanpyo Kim, and Alex Zettl,\
 One-dimensional Magnetic MX<sub>3</sub> Single-Chains (M=Cr, V and X=Cl, Br, I), \
 [Advanced Materials, 2307942 (2023)](https://onlinelibrary.wiley.com/doi/10.1002/adma.202307942){:target="\_blank"}. († Equal Contributions) 
@@ -115,7 +112,7 @@ nonadiabaticity in magic-angle twisted bilayer graphene, \
 [Physical Review B **98**, 241412(R) (2018)](https://doi.org/10.1103/physrevb.98.241412){:target="\_blank"}
 [\[arXiv:1809.08407\]](https://arxiv.org/abs/1809.08407){:target="\_blank"}.
 
-## Honors and Awards
+# Honors and Awards
 
 **Post-doctoral Training Grants**, National Research Foundation, 2023 \
 **Global Ph.D. Fellowship**, National Research Foundation, 2017-2020 \
@@ -127,7 +124,7 @@ nonadiabaticity in magic-angle twisted bilayer graphene, \
 **Excellent Presentation Award**, Korean Physical Society Spring Meeting, 2017 \
 **Best Presentation Award**, KIAS Physics Winter Camp, 2016
 
-## Computational Skills
+# Computational Skills
 
 **_Ab initio_ electronic structure calculation** \
 SIESTA, Quantum ESPRESSO, EPW, BerkeleyGW, WIEN2k+EDMFT
@@ -138,7 +135,7 @@ Fortran, Python, MPI, Mathematica, C++, Julia
 **General programming** \
 Linux cluster operation & maintenance, Web programming
 
-## Teaching Experience
+# Teaching Experience
 
 **TA, Quantum Mechanics (Undergraduate Course)** \
 Spring 2016, Fall 2016, Spring 2017
@@ -155,7 +152,7 @@ Fall 2019, Fall 2020
 **TA, Thermal Physics (Undergraduate Course)** \
 Spring 2020
 
-## Invited Talks
+# Invited Talks
 
 3. Atomistic study of electronic properties of graphene moiré flat bands
 KAIX Future Physics Workshop, KAIST, Daejeon, Dec 26, 2022
@@ -165,7 +162,7 @@ vdWMRC Satelite Session, ISPSA 2022, Jul 21, 2022
 Lecture
 Y Physics Winter School, Yonsei University (virtual), Jan 14, 2022
 
-## Seminars
+# Seminars
 
 7. Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene
 KIAS, Seoul, Dec 22, 2022
@@ -182,7 +179,7 @@ Soongsil University, Seoul, May 13, 2021
 1. Atomistic study of electron-phonon interaction in magic-angle twisted bilayer graphene
 University of Seoul, February 15, 2019
 
-## International Conference Presentations
+# International Conference Presentations
 8. Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene
 Contributed talk
 American Physical Society March Meeting, Las Vegas, NV, USA, Mar 6-10, 2023
@@ -208,7 +205,7 @@ American Physical Society March Meeting, Los Angeles, CA, USA, Mar 5-9, 2018
 Contributed talk
 American Physical Society March Meeting, New Orleans, LA, USA, Mar 13-17, 2017
 
-## Domestic Conference Presentations
+# Domestic Conference Presentations
 
 14. Crucial role of sublattice polarization on electron-phonon coupling in twisted graphene layers
 Contributed talk
