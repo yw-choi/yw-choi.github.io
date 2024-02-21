@@ -69,7 +69,7 @@ Density functional theory, large-scale tight-binding calculations, many-body per
 
 11\. Jeehong Park†, Soonsang Huh†, **Young Woo Choi**†, Donghee Kang, Minsoo Kim, Donghan Kim, Soohyung Park, Hyoung Joon Choi, Changyoung Kim, Yeonjin Yi, \
 Visualizing the low-energy electronic structure of prototypical hybrid halide perovskite through clear band measurements, \
-[ACS Nano (accepted)](). († Equal Contributions) 
+[ACS Nano (accepted)](https://pubs.acs.org/doi/abs/10.1021/acsnano.3c12587). († Equal Contributions) 
 
 10\. Yangjin Lee†, **Young Woo Choi**†, Kihyun Lee, Chengyu Song, Peter Ercius, Marvin L. Cohen, Kwanpyo Kim, and Alex Zettl,\
 One-dimensional Magnetic MX<sub>3</sub> Single-Chains (M=Cr, V and X=Cl, Br, I), \
