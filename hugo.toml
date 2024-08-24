@@ -1,0 +1,24 @@
+baseURL = 'https://yw-choi.github.io'
+title = 'YOUNG WOO CHOI'
+theme = 'ywchoi'
+
+[params]
+  google_analytics_tag = "G-4VEF9JDEXP"
+
+[menus]
+  [[menus.main]]
+    name = 'Home'
+    pageRef = '/'
+    weight = 10
+  [[menus.main]]
+    name = 'People'
+    pageRef = '/people'
+    weight = 20
+  [[menus.main]]
+    name = 'Research'
+    pageRef = '/research'
+    weight = 30
+  [[menus.main]]
+    name = 'Publications'
+    pageRef = '/publications'
+    weight = 40

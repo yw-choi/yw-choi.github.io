@@ -1,0 +1,19 @@
+name = 'ywchoi'
+license = ''
+licenselink = ''
+description = "Young Woo Choi's group at Sogang University"
+
+# The home page of the theme, where the source can be found
+homepage = ''
+
+# If you have a running demo of the theme
+demosite = ''
+
+# Taxonomy terms
+tags = []
+features = []
+
+# If the theme has a single author
+[author]
+  name = 'Young Woo Choi'
+  homepage = 'https://yw-choi.github.io'
