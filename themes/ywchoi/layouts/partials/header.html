@@ -1,9 +1,20 @@
 <div class="h-100 me-lg-5 mb-3 mb-lg-0">
-    <a href="/" class="fs-2 text-decoration-none text-center text-black fw-normal d-flex align-items-center">
+    <a href="/" class=" d-flex align-items-center">
         <img src="/images/logo-regular.png" height="24" alt="">
         <!-- {{ site.Title }} -->
     </a>
 </div>
 <nav class="d-flex h-100">
-    {{ partial "menu.html" (dict "menuID" "main" "page" .) }}
+    {{ $currentPage := . }}
+    {{ range site.Menus.main }}
+        {{ if or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .)}}
+            <a href="{{ .URL }}" class="fs-6 fw-light link-dark link-offset-2 link-underline-opacity-100 align-middle px-2">
+            {{ .Name }}
+            </a>
+        {{ else }}
+            <a href="{{ .URL }}" class="fs-6 fw-light link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-25-hover align-middle px-2">
+            {{ .Name }}
+            </a>
+        {{ end }}
+    {{- end }}
 </nav>
