@@ -5,16 +5,14 @@
   {{ partial "head.html" . }}
 </head>
 
-<body class="bg-white w-100 mx-auto px-3">
+<body class="bg-white mx-auto px-3">
 
-  <div class="d-flex w-100 mx-auto flex-column">
-    <header class="mb-auto d-flex flex-column flex-lg-row justify-content-lg-between py-5 align-items-center">
-      {{ partial "header.html" . }}
-    </header>
-    <main class="w-100 vh-100">
-      {{ block "main" . }}{{ end }}
-    </main>
-  </div>
+  <header class="mb-5">
+    {{ partial "header.html" . }}
+  </header>
+  <main>
+    {{ block "main" . }}{{ end }}
+  </main>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
