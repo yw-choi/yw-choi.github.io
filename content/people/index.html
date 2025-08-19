@@ -1,117 +1,252 @@
 ---
 title: People
 ---
-<style>
-    .profile-img {
-        max-width: 150px;
-        width: 100%;
-        height: auto;
-        border-radius: 50%;
-    }
 
-    .profile-info {
-        text-align: center;
-    }
-</style>
+<div class="pi-section mb-5">
+    <h3 class="fw-semibold mb-4 d-flex align-items-center">
+        <i class="bi bi-person-badge me-2 text-primary"></i>
+        Principal Investigator
+    </h3>
 
-<h3 class="fw-light mb-3">
-    Principal Investigator
-</h3>
-
-<div class="d-flex flex-wrap gap-3 justify-content-sm-start justify-content-center mb-3">
-    <div class="">
-        <img src="images/ywchoi.jpg" alt="Young Woo Choi" class="rounded-circle" width="150">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-md-3 text-center">
+                    <img src="images/ywchoi.jpg" alt="Young Woo Choi" class="rounded-circle img-fluid" style="max-width: 150px; border: 3px solid var(--primary-color);">
+                </div>
+                <div class="col-md-9">
+                    <h4 class="fw-semibold mb-3 text-primary">Young Woo Choi (최영우)</h4>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <h6 class="fw-semibold text-muted">Position</h6>
+                                <p class="mb-1">Assistant Professor</p>
+                                <p class="mb-0 text-muted">Department of Physics, Sogang University, Seoul, Korea</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <h6 class="fw-semibold text-muted">Contact</h6>
+                                <p class="mb-1"><i class="bi bi-envelope me-2"></i>ywchoi02@sogang.ac.kr</p>
+                                <p class="mb-1"><i class="bi bi-telephone me-2"></i>+82-2-705-8879</p>
+                                <p class="mb-1"><i class="bi bi-geo-alt me-2"></i>Office: F303</p>
+                                <div class="mt-2">
+                                    <a href="https://scholar.google.com/citations?user=Qv4pipEAAAAJ" class="btn btn-outline-primary btn-sm me-2" target="_blank">
+                                        <i class="bi bi-mortarboard me-1"></i>Google Scholar
+                                    </a>
+                                    <a href="/ywchoi_cv.pdf" class="btn btn-outline-secondary btn-sm" target="_blank">
+                                        <i class="bi bi-file-text me-1"></i>CV
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="d-flex flex-column justify-content-between fw-light">
-        <strong class="fs-5 mb-1">Young Woo Choi (최영우)</strong>
-        <div class="d-flex flex-wrap gap-3">
-            <div class="d-flex flex-column">
-                <span>
-                    Assistant Professor
-                </span>
-                <span>
-                    Department of Physics, Sogang University, Seoul, Korea
-                </span>
-                <span>
-                    Email: ywchoi02@sogang.ac.kr
-                </span>
-                <span>
-                    Phone: +82-2-705-8879
-                </span>
-                <span>
-                    Office: F303
-                </span>
-                <span>
-                    <a href="https://scholar.google.com/citations?user=Qv4pipEAAAAJ" class="me-1" target="_blank">Google
-                        Scholar</a>
-                    <a href="/ywchoi_cv.pdf" target="_blank">CV</a>
-                </span>
+
+    <div class="accordion mt-4" id="piDetailsAccordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#experience">
+                    Experience
+                </button>
+            </h2>
+            <div id="experience" class="accordion-collapse collapse" data-bs-parent="#piDetailsAccordion">
+                <div class="accordion-body">
+                    <div class="timeline">
+                        <div class="timeline-item mb-3">
+                            <strong>Assistant Professor</strong><br>
+                            Department of Physics, Sogang University, Seoul, Korea<br>
+                            <span class="text-muted">Sep 2024 - present</span>
+                        </div>
+                        <div class="timeline-item mb-3">
+                            <strong>Postdoctoral Researcher</strong><br>
+                            Department of Physics, University of California, Berkeley<br>
+                            <span class="text-muted">Jun 2021 - Aug 2024 (Advisor: <a href="http://cohen.berkeley.edu" target="_blank">Prof. Marvin L. Cohen</a>)</span>
+                        </div>
+                        <div class="timeline-item">
+                            <strong>Postdoctoral Researcher</strong><br>
+                            Department of Physics, Yonsei University, Seoul, Korea<br>
+                            <span class="text-muted">Mar 2021 - May 2021 (Advisor: <a href="https://quantum.yonsei.ac.kr" target="_blank">Prof. Hyoung Joon Choi</a>)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#education">
+                    Education
+                </button>
+            </h2>
+            <div id="education" class="accordion-collapse collapse" data-bs-parent="#piDetailsAccordion">
+                <div class="accordion-body">
+                    <div class="timeline">
+                        <div class="timeline-item mb-3">
+                            <strong>Ph.D. in Physics</strong><br>
+                            Department of Physics, Yonsei University, Seoul, Korea<br>
+                            <span class="text-muted">Mar 2016 - Feb 2021 (Advisor: <a href="https://quantum.yonsei.ac.kr" target="_blank">Prof. Hyoung Joon Choi</a>)</span>
+                        </div>
+                        <div class="timeline-item">
+                            <strong>B.S. in Physics</strong><br>
+                            Department of Physics, Yonsei University, Seoul, Korea<br>
+                            <span class="text-muted">Mar 2010 - Feb 2016 (Mandatory military service from Oct 2012 to Jul 2014)</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<div class="fw-light">
-    <h5 class="fw-normal">Experience</h5>
-    <p>Assistant Professor, Department of Physics, Sogang University, Seoul, Korea <br />
-        Sep 2024 - present </p>
 
-    <p>Postdoctoral Researcher, Department of Physics, University of California, Berkeley <br />
-        Jun 2021 - Aug 2024 (Advisor: <a href="http://cohen.berkeley.edu" target="_blank">Prof. Marvin L. Cohen</a>)</p>
-
-    <p>Postdoctoral Researcher, Department of Physics, Yonsei University, Seoul, Korea <br />
-        Mar 2021 - May 2021 (Advisor: <a href="https://quantum.yonsei.ac.kr" target="_blank">Prof. Hyoung Joon Choi</a>)
-    </p>
-
-    <h5 class="fw-normal">Education</h5>
-
-    <p>Ph.D. in Physics, Department of Physics, Yonsei University, Seoul, Korea <br />
-        Mar 2016 - Feb 2021 (Advisor: <a href="https://quantum.yonsei.ac.kr" target="_blank">Prof. Hyoung Joon Choi</a>)
-    </p>
-
-    <p>B.S. in Physics, Department of Physics, Yonsei University, Seoul, Korea <br />
-        Mar 2010 - Feb 2016 (Mandatory military service from Oct 2012 to Jul 2014)</p>
+<div class="team-section">
+    <h3 class="fw-semibold mb-4 d-flex align-items-center">
+        <i class="bi bi-people me-2 text-primary"></i>
+        Team Members
+    </h3>
+    
+    <div class="row g-3">
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <div class="rounded-circle bg-primary-subtle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="bi bi-person-circle fs-1 text-primary"></i>
+                        </div>
+                    </div>
+                    <h6 class="fw-semibold">Jae Ha Kim (김재하)</h6>
+                    <span class="badge bg-primary mb-2">Postdoc</span>
+                    <p class="small mb-0">
+                        <a href="mailto:kimha@sogang.ac.kr" class="text-decoration-none">
+                            <i class="bi bi-envelope me-1"></i>kimha@sogang.ac.kr
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <div class="rounded-circle bg-info-subtle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="bi bi-person-circle fs-1 text-info"></i>
+                        </div>
+                    </div>
+                    <h6 class="fw-semibold">Byeongchan Lee (이병찬)</h6>
+                    <span class="badge bg-info mb-2">Ph.D. Candidate</span>
+                    <p class="small mb-0">
+                        <a href="mailto:claude@sogang.ac.kr" class="text-decoration-none">
+                            <i class="bi bi-envelope me-1"></i>claude@sogang.ac.kr
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <div class="rounded-circle bg-success-subtle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="bi bi-person-circle fs-1 text-success"></i>
+                        </div>
+                    </div>
+                    <h6 class="fw-semibold">Seungwoo Shin (신승우)</h6>
+                    <span class="badge bg-success mb-2">M.S. Candidate</span>
+                    <p class="small mb-0">
+                        <a href="mailto:twinace98@me.com" class="text-decoration-none">
+                            <i class="bi bi-envelope me-1"></i>twinace98@me.com
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <div class="rounded-circle bg-success-subtle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="bi bi-person-circle fs-1 text-success"></i>
+                        </div>
+                    </div>
+                    <h6 class="fw-semibold">Seongbin Park (박성빈)</h6>
+                    <span class="badge bg-success mb-2">M.S. Candidate</span>
+                    <p class="small mb-0">
+                        <a href="mailto:jmn951@naver.com" class="text-decoration-none">
+                            <i class="bi bi-envelope me-1"></i>jmn951@naver.com
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <div class="rounded-circle bg-warning-subtle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="bi bi-person-circle fs-1 text-warning"></i>
+                        </div>
+                    </div>
+                    <h6 class="fw-semibold">Dongsin Kim (김동신)</h6>
+                    <span class="badge bg-warning mb-2">Undergraduate</span>
+                    <p class="small mb-0">
+                        <a href="mailto:kissday818@sogang.ac.kr" class="text-decoration-none">
+                            <i class="bi bi-envelope me-1"></i>kissday818@sogang.ac.kr
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <div class="rounded-circle bg-warning-subtle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="bi bi-person-circle fs-1 text-warning"></i>
+                        </div>
+                    </div>
+                    <h6 class="fw-semibold">Seunghee Lee (이승희)</h6>
+                    <span class="badge bg-warning mb-2">Undergraduate</span>
+                    <p class="small mb-0">
+                        <a href="mailto:seanlee0716@naver.com" class="text-decoration-none">
+                            <i class="bi bi-envelope me-1"></i>seanlee0716@naver.com
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <div class="rounded-circle bg-warning-subtle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="bi bi-person-circle fs-1 text-warning"></i>
+                        </div>
+                    </div>
+                    <h6 class="fw-semibold">Dongho Shin (신동호)</h6>
+                    <span class="badge bg-warning mb-2">Undergraduate</span>
+                    <p class="small mb-0">
+                        <a href="mailto:eastsky@sogang.ac.kr" class="text-decoration-none">
+                            <i class="bi bi-envelope me-1"></i>eastsky@sogang.ac.kr
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<h3 class="fw-light mt-5">
-    Members
-</h3>
-<p>
-    <strong>Jae Ha Kim (김재하)</strong>
-    / Postdoc
-    / <a href="mailto:kimha@sogang.ac.kr">kimha@sogang.ac.kr</a>
-</p>
-<p>
-    <strong>Byeongchan Lee (이병찬)</strong>
-    / Ph.D. Candidate
-    / <a href="mailto:claude@sogang.ac.kr">claude@sogang.ac.kr</a>
-</p>
-<p>
-    <strong>Seungwoo Shin (신승우)</strong>
-    / M.S. Candidate
-    / <a href="mailto:twinace98@me.com">twinace98@me.com</a>
-</p>
-<p>
-    <strong>Seongbin Park (박성빈)</strong>
-    / M.S. Candidate
-    / <a href="mailto:jmn951@naver.com">jmn951@naver.com</a>
-</p>
-<p>
-    <strong>Dongsin Kim (김동신)</strong>
-    / Undergraduate
-    / <a href="mailto:kissday818@sogang.ac.kr">kissday818@sogang.ac.kr</a>
-</p>
-<p>
-    <strong>Seunghee Lee (이승희)</strong>
-    / Undergraduate
-    / <a href="mailto:seanlee0716@naver.com">seanlee0716@naver.com</a>
-</p>
-<p>
-    <strong>Dongho Shin (신동호)</strong>
-    / Undergraduate
-    / <a href="mailto:eastsky@sogang.ac.kr">eastsky@sogang.ac.kr</a>
-</p>
-
-<div class="w-100 fs-6 fw-light mb-5">
-    We are looking for passionate students. Feel free to contact
-    <a href="#pi-profile">Young Woo Choi</a> if you're interested.
+<div class="join-section mt-5 p-4 rounded text-center" style="background-color: var(--bg-subtle);">
+    <h5 class="fw-semibold text-primary mb-3">Join Our Team</h5>
+    <p class="mb-3">We are looking for passionate students interested in computational quantum materials physics.</p>
+    <a href="mailto:ywchoi02@sogang.ac.kr" class="btn btn-primary">
+        <i class="bi bi-envelope me-2"></i>Contact Young Woo Choi
+    </a>
 </div>
