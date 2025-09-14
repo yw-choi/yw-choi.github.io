@@ -3,189 +3,278 @@ title: Talks
 ---  
 
 <style>
-main p::first-line {
-    color: #0d6efd;
-}
+    .talk-list li {
+        margin-bottom: 0.5em;
+    }
+    .talk-title {
+        color: #0d6efd;
+    }
 </style>
   
 ### Talks  
 
-44. Exploring low-dimensional nanomaterials through electronic structure calculations,  
-Invited talk,  
-제16회 응용물리심포지움, Busan, Korea, Aug 26, 2025.
+<ol reversed class="talk-list">
+<li>
+<span class="talk-title">Exploring low-dimensional nanomaterials through electronic structure calculations</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">제16회 응용물리심포지움, Busan, Korea, Aug 26, 2025</span>
+</li>
 
-2. Understanding quantum materials through first-principles electronic structure calculations,  
-Invited talk,  
-KIST, Seoul, Korea, Aug 6, 2025. 
+<li>
+<span class="talk-title">Understanding quantum materials through first-principles electronic structure calculations</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">KIST, Seoul, Korea, Aug 6, 2025</span>
+</li>
 
-1. Electronic-structure studies of low-dimensional nanomaterials,  
-Invited talk,  
-IBS PCS, Daejeon, Korea, Jul 16, 2025.
+<li>
+<span class="talk-title">Electronic-structure studies of low-dimensional nanomaterials</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">IBS PCS, Daejeon, Korea, Jul 16, 2025</span>
+</li>
 
-1. One-dimensional van der Waals single-chain materials,  
-Invited talk,  
-제21회 고등과학원 전자구조계산학회, KIAS, Seoul, Korea, Jul 11, 2025.  
+<li>
+<span class="talk-title">One-dimensional van der Waals single-chain materials</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">제21회 고등과학원 전자구조계산학회, KIAS, Seoul, Korea, Jul 11, 2025</span>
+</li>
 
-1. One-dimensional van der Waals single-chain materials,  
-Invited talk,  
-Sogang G-LAMP Kick-off Meeting, Sogang University, Seoul, Korea, Jun 16, 2025.
+<li>
+<span class="talk-title">One-dimensional van der Waals single-chain materials</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">Sogang G-LAMP Kick-off Meeting, Sogang University, Seoul, Korea, Jun 16, 2025</span>
+</li>
 
-1. Electronic-structure studies of low-dimensional nanomaterials,  
-Colloquium,  
-Department of Physics, Ajou University, Suwon, Korea, May 28, 2025.
+<li>
+<span class="talk-title">Electronic-structure studies of low-dimensional nanomaterials</span><br>
+<span class="talk-type">Colloquium</span><br>
+<span class="talk-venue">Department of Physics, Ajou University, Suwon, Korea, May 28, 2025</span>
+</li>
 
-1. Pairing interaction from demon modes in Sr2RuO4,   
-Contributed talk,    
-Global Physics American Physical Society Global Physics Summit, Anaheim, CA, USA, Mar 16-21, 2025.
+<li>
+<span class="talk-title">Pairing interaction from demon modes in Sr2RuO4</span><br>
+<span class="talk-type">Contributed talk</span><br>
+<span class="talk-venue">Global Physics American Physical Society Global Physics Summit, Anaheim, CA, USA, Mar 16-21, 2025</span>
+</li>
 
-1. Dynamically screened Coulomb interaction from demon mode in Sr2RuO4,  
-Invited talk,  
-The Korean Society of Superconductivity and Cryogenics, Muju, Korea, Feb 11, 2025.
+<li>
+<span class="talk-title">Dynamically screened Coulomb interaction from demon mode in Sr2RuO4</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">The Korean Society of Superconductivity and Cryogenics, Muju, Korea, Feb 11, 2025</span>
+</li>
 
-1. Revisiting electron-phonon interaction in magic-angle twisted bilayer graphene,  
-Invited talk,  
-Quantum Materials Symposium 2025, Busan, Korea, Feb 6, 2025.
+<li>
+<span class="talk-title">Revisiting electron-phonon interaction in magic-angle twisted bilayer graphene</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">Quantum Materials Symposium 2025, Busan, Korea, Feb 6, 2025</span>
+</li>
 
-1. First-principles studies of low-dimensional nanostructures,  
-Invited talk,  
-The 25th Asian Workshop on First-Principles Electronic Structure Calculations, Ulsan, Korea, Oct 28, 2024.
+<li>
+<span class="talk-title">First-principles studies of low-dimensional nanostructures</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">The 25th Asian Workshop on First-Principles Electronic Structure Calculations, Ulsan, Korea, Oct 28, 2024</span>
+</li>
 
-1. Searching for functional low-dimensional nanostructures through electronic-structure calculations,  
-Invited talk,  
-Korean Physical Society Fall Meeting, Yeosu, Korea, Oct 23, 2024.
+<li>
+<span class="talk-title">Searching for functional low-dimensional nanostructures through electronic-structure calculations</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">Korean Physical Society Fall Meeting, Yeosu, Korea, Oct 23, 2024</span>
+</li>
 
-1. Understanding quantum materials through ab initio electronic structure calculations,  
-Colloquium,  
-Department of Physics, Yonsei University, Seoul, Korea, Sep 11, 2024.
+<li>
+<span class="talk-title">Understanding quantum materials through ab initio electronic structure calculations</span><br>
+<span class="talk-type">Colloquium</span><br>
+<span class="talk-venue">Department of Physics, Yonsei University, Seoul, Korea, Sep 11, 2024</span>
+</li>
 
-1. Understanding quantum materials through ab initio electronic structure calculations,  
-Colloquium,  
-Department of Physics, Sogang University, Seoul, Korea, Sep 3, 2024.
+<li>
+<span class="talk-title">Understanding quantum materials through ab initio electronic structure calculations</span><br>
+<span class="talk-type">Colloquium</span><br>
+<span class="talk-venue">Department of Physics, Sogang University, Seoul, Korea, Sep 3, 2024</span>
+</li>
 
-1. First-principles Studies of One-dimensional Single-Chain Materials,  
-Invited talk,  
-Soongsil University, Seoul, Korea, Aug 16, 2024.
+<li>
+<span class="talk-title">First-principles Studies of One-dimensional Single-Chain Materials</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">Soongsil University, Seoul, Korea, Aug 16, 2024</span>
+</li>
   
-1.  Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene,    
-Contributed talk,  
-American Physical Society March Meeting, Las Vegas, NV, USA, Mar 6-10, 2023.  
+<li>
+<span class="talk-title">Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene</span><br>
+<span class="talk-type">Contributed talk</span><br>
+<span class="talk-venue">American Physical Society March Meeting, Las Vegas, NV, USA, Mar 6-10, 2023</span>
+</li>
 
-1. Atomistic study of electronic properties of graphene moiré flat bands,   
-Invited talk,  
-KAIST-KAIX Future of Physics Workshop, KAIST, Daejeon, Korea, Dec 26, 2022.  
+<li>
+<span class="talk-title">Atomistic study of electronic properties of graphene moiré flat bands</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">KAIST-KAIX Future of Physics Workshop, KAIST, Daejeon, Korea, Dec 26, 2022</span>
+</li>
 
-1. Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene,  
-Invited talk,
-KIAS, Seoul, Korea, Dec 22, 2022.
+<li>
+<span class="talk-title">Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">KIAS, Seoul, Korea, Dec 22, 2022</span>
+</li>
 
-1. Exploring Novel Electronic Properties of Two-Dimensional Materials: Moiré Superlattices, Pseudospin Semiconductors, and Nanomachines,  
-Invited talk,
-KENTECH, Naju, Korea, Dec 21, 2022.
+<li>
+<span class="talk-title">Exploring Novel Electronic Properties of Two-Dimensional Materials: Moiré Superlattices, Pseudospin Semiconductors, and Nanomachines</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">KENTECH, Naju, Korea, Dec 21, 2022</span>
+</li>
 
-1. Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene,  
-Invited talk,  
-Soongsil University, Seoul, Korea, Dec 15, 2022.
+<li>
+<span class="talk-title">Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">Soongsil University, Seoul, Korea, Dec 15, 2022</span>
+</li>
 
-1. Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene,  
-Invited talk,  
-Yonsei University, Seoul, Korea, Dec 14, 2022.
+<li>
+<span class="talk-title">Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">Yonsei University, Seoul, Korea, Dec 14, 2022</span>
+</li>
 
-1. Exploring Novel Electronic Properties of Two-Dimensional Materials: Moiré Superlattices, Pseudospin Semiconductors, and Nanomachines,  
-Invited talk,  
-KIST, Seoul, Korea, Dec 13, 2022.
+<li>
+<span class="talk-title">Exploring Novel Electronic Properties of Two-Dimensional Materials: Moiré Superlattices, Pseudospin Semiconductors, and Nanomachines</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">KIST, Seoul, Korea, Dec 13, 2022</span>
+</li>
 
-1. Electronic-structure study of interaction effects in two-dimensional materials: graphene moiré superlattices and surface-doped FeSe,  
-Invited talk,  
-ISPSA (online), Jul 21, 2022.
+<li>
+<span class="talk-title">Electronic-structure study of interaction effects in two-dimensional materials: graphene moiré superlattices and surface-doped FeSe</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">ISPSA (online), Jul 21, 2022</span>
+</li>
 
-1.  계산을 통해 물질의 성질을 이해하고 예측하기:제일원리 밀도범함수이론 소개,  
-Lecture,  
-Y Physics Winter School (online), Jan 14, 2022.
+<li>
+<span class="talk-title">계산을 통해 물질의 성질을 이해하고 예측하기:제일원리 밀도범함수이론 소개</span><br>
+<span class="talk-type">Lecture</span><br>
+<span class="talk-venue">Y Physics Winter School (online), Jan 14, 2022</span>
+</li>
+
+<li>
+<span class="talk-title">Electronic Structure and Electron-Phonon Coupling in Graphene Moiré Superlattices</span><br>
+<span class="talk-type">Contributed talk</span><br>
+<span class="talk-venue">Asia-Pacific Conference on Condensed Matter Physics 2021 (online), Dec 1-3, 2021</span>
+</li>
+
+<li>
+<span class="talk-title">Crucial role of sublattice polarization on electron-phonon coupling in twisted graphene layers</span><br>
+<span class="talk-type">Contributed talk</span><br>
+<span class="talk-venue">Korean Physical Society Spring Meeting (online), Korea, Apr 21-23, 2021</span>
+</li>
+
+<li>
+<span class="talk-title">Atomistic study of electron-phonon coupling in twisted graphene layers</span><br>
+<span class="talk-type">Contributed talk</span><br>
+<span class="talk-venue">American Physical Society March Meeting (online), USA, Mar 15-19, 2021</span>
+</li>
+
+<li>
+<span class="talk-title">Pseudospin tunneling in two-dimensional black phosphorus junctions</span><br>
+<span class="talk-type">Contributed talk</span><br>
+<span class="talk-venue">Korean Physical Society Fall Meeting (online), Korea, Nov 4-6, 2020</span>
+</li>  
   
-1. Electronic Structure and Electron-Phonon Coupling in Graphene Moiré Superlattices,  
-Contributed talk,  
-Asia-Pacific Conference on Condensed Matter Physics 2021 (online), Dec 1-3, 2021.  
+<li>
+<span class="talk-title">Atomistic study of Electronic and Phononic Properties of Twisted Graphene Layers</span><br>
+<span class="talk-type">Contributed talk</span><br>
+<span class="talk-venue">The 14th Asia Pacific Physics Conference, Kuching, Malaysia, Nov 17-21, 2019</span>
+</li>
+
+<li>
+<span class="talk-title">Atomistic Study of Electronic Structure and Electron-Phonon Coupling in Twisted Graphene Layers</span><br>
+<span class="talk-type">Poster</span><br>
+<span class="talk-venue">The 22nd Asian Workshop on First-Principles Electronic Structure Calculations, Osaka University, Japan, Oct 28–30, 2019</span>
+</li>
+
+<li>
+<span class="talk-title">Electron-Phonon Coupling in Twisted Double Bilayer Graphene</span><br>
+<span class="talk-type">Contributed talk</span><br>
+<span class="talk-venue">The Korean Physical Society Fall Meeting, Gwangju, Korea, Oct 23-25, 2019</span>
+</li>
+
+<li>
+<span class="talk-title">Role of Electric Fields on Electron Correlation in Surface-Doped FeSe</span><br>
+<span class="talk-type">Poster</span><br>
+<span class="talk-venue">11th International Conference on Magnetic and Superconducting Materials, Seoul, Korea, Aug 17-24, 2019</span>
+</li>
+
+<li>
+<span class="talk-title">Atomic and Electronic Structure of Twisted Graphene Layers</span><br>
+<span class="talk-type">Poster</span><br>
+<span class="talk-venue">The 15th KIAS Electronic Structure Calculation Workshop, Korea Institute for Advanced Study, Seoul, Korea, Jul 4-5, 2019</span>
+</li>
+
+<li>
+<span class="talk-title">Atomistic Study on the Electronic Structure of Twisted Double Bilayer Graphene</span><br>
+<span class="talk-type">Contributed talk</span><br>
+<span class="talk-venue">The Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 24-26, 2019</span>
+</li>  
   
-1. Crucial role of sublattice polarization on electron-phonon coupling in twisted graphene layers,  
-Contributed talk,  
-Korean Physical Society Spring Meeting (online), Korea, Apr 21-23, 2021.  
+<li>
+<span class="talk-title">Effects of electric fields on electron correlation in surface-doped FeSe</span><br>
+<span class="talk-type">Poster</span><br>
+<span class="talk-venue">APCTP-KIAS Quantum Materials Symposium 2019, YongPyong, Korea, Feb 10-15, 2019</span>
+</li>
+
+<li>
+<span class="talk-title">Atomistic study of electron-phonon interaction in magic-angle twisted bilayer graphene</span><br>
+<span class="talk-type">Poster</span><br>
+<span class="talk-venue">APCTP-KIAS Quantum Materials Symposium 2019, YongPyong, Korea, Feb 10-15, 2019</span>
+</li>
+
+<li>
+<span class="talk-title">Atomistic study of electron-phonon coupling in magic-angle twisted bilayer graphene</span><br>
+<span class="talk-type">Contributed talk</span><br>
+<span class="talk-venue">American Physical Society March Meeting, Boston, MA, USA, Mar 4-8, 2019</span>
+</li>
+
+<li>
+<span class="talk-title">Structural relaxation, electronic structure, and electron-phonon coupling in magic-angle twisted bilayer graphene</span><br>
+<span class="talk-type">Poster</span><br>
+<span class="talk-venue">The 21st Asian Workshop on First-Principles Electronic Structure Calculations, KAIST, Daejeon, Korea, Oct 29-31, 2018</span>
+</li>
+
+<li>
+<span class="talk-title">Electron-phonon interactions in magic-angle twisted bilayer graphene</span><br>
+<span class="talk-type">Contributed talk</span><br>
+<span class="talk-venue">The Korean Physical Society Fall Meeting, Changwon, Korea, Oct 24-26, 2018</span>
+</li>
+
+<li>
+<span class="talk-title">First-principles investigation of off-diagonal electron-phonon interaction in graphene</span><br>
+<span class="talk-type">Contributed talk</span><br>
+<span class="talk-venue">Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 25-27, 2018</span>
+</li>  
   
-1. Atomistic study of electron-phonon coupling in twisted graphene layers,  
-Contributed talk,  
-American Physical Society March Meeting (online), USA, Mar 15-19, 2021.  
-  
-1. Pseudospin tunneling in two-dimensional black phosphorus junctions,  
-Contributed talk,  
-Korean Physical Society Fall Meeting (online), Korea, Nov 4-6, 2020.  
-  
-1. Atomistic study of Electronic and Phononic Properties of Twisted Graphene Layers,  
-Contributed talk,  
-The 14th Asia Pacific Physics Conference, Kuching, Malaysia, Nov 17-21, 2019.  
-  
-1. Atomistic Study of Electronic Structure and Electron-Phonon Coupling in Twisted Graphene Layers  
-Poster,  
-The 22nd Asian Workshop on First-Principles Electronic Structure Calculations, Osaka University, Japan, Oct 28–30, 2019.  
-  
-1. Electron-Phonon Coupling in Twisted Double Bilayer Graphene,  
-Contributed talk,  
-The Korean Physical Society Fall Meeting, Gwangju, Korea, Oct 23-25, 2019.  
-  
-1. Role of Electric Fields on Electron Correlation in Surface-Doped FeSe,  
-Poster,  
-11th International Conference on Magnetic and Superconducting Materials, Seoul, Korea, Aug 17-24, 2019.  
-  
-1. Atomic and Electronic Structure of Twisted Graphene Layers,  
-Poster,  
-The 15th KIAS Electronic Structure Calculation Workshop, Korea Institute for Advanced Study, Seoul, Korea, Jul 4-5, 2019.  
-  
-1. Atomistic Study on the Electronic Structure of Twisted Double Bilayer Graphene,  
-Contributed talk,  
-The Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 24-26, 2019.  
-  
-1. Effects of electric fields on electron correlation in surface-doped FeSe,  
-Poster,  
-APCTP-KIAS Quantum Materials Symposium 2019, YongPyong, Korea, Feb 10-15, 2019.  
-  
-1. Atomistic study of electron-phonon interaction in magic-angle twisted bilayer graphene,  
-Poster,  
-APCTP-KIAS Quantum Materials Symposium 2019, YongPyong, Korea, Feb 10-15, 2019.  
-  
-1. Atomistic study of electron-phonon coupling in magic-angle twisted bilayer graphene,  
-Contributed talk,  
-American Physical Society March Meeting, Boston, MA, USA, Mar 4-8, 2019.  
-  
-1. Structural relaxation, electronic structure, and electron-phonon coupling in magic-angle twisted  
-bilayer graphene,  
-Poster,  
-The 21st Asian Workshop on First-Principles Electronic Structure Calculations, KAIST, Daejeon, Korea, Oct 29-31, 2018.  
-  
-1. Electron-phonon interactions in magic-angle twisted bilayer graphene  
-Contributed talk  
-The Korean Physical Society Fall Meeting, Changwon, Korea, Oct 24-26, 2018.  
-  
-1. First-principles investigation of off-diagonal electron-phonon interaction in graphene  
-Contributed talk  
-Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 25-27, 2018.  
-  
-1. Role of the charge-transfer induced electric field in potassium-dosed FeSe layers,  
-Contributed talk,  
-American Physical Society March Meeting, Los Angeles, CA, USA, Mar 5-9, 2018.  
-  
-1. First-principles study on the enhanced electronic correlation in the potassium-doped surface layer of  
-FeSe,  
-Contributed talk,  
-Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 19-21, 2017.  
-  
-1. Effects of the potassium dosing on the electronic correlation in FeSe: DFT+DMFT study,  
-Contributed talk,  
-American Physical Society March Meeting, New Orleans, LA, USA, Mar 13-17, 2017.  
-  
-1. Doping dependent electronic correlations in FeSe: DFT+DMFT study,  
-Poster,  
-The Korean Physical Society Fall Meeting, Gwangju, South Korea, Oct 19-21, 2016.  
-  
-1. First-principles study of subsurface defects in topological insulator Bi2Se3 including van der Waals  
-interaction,  
-Poster,  
-Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 20-22, 2016.  
-{reversed="reversed"}  
+<li>
+<span class="talk-title">Role of the charge-transfer induced electric field in potassium-dosed FeSe layers</span><br>
+<span class="talk-type">Contributed talk</span><br>
+<span class="talk-venue">American Physical Society March Meeting, Los Angeles, CA, USA, Mar 5-9, 2018</span>
+</li>
+
+<li>
+<span class="talk-title">First-principles study on the enhanced electronic correlation in the potassium-doped surface layer of FeSe</span><br>
+<span class="talk-type">Contributed talk</span><br>
+<span class="talk-venue">Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 19-21, 2017</span>
+</li>
+
+<li>
+<span class="talk-title">Effects of the potassium dosing on the electronic correlation in FeSe: DFT+DMFT study</span><br>
+<span class="talk-type">Contributed talk</span><br>
+<span class="talk-venue">American Physical Society March Meeting, New Orleans, LA, USA, Mar 13-17, 2017</span>
+</li>
+
+<li>
+<span class="talk-title">Doping dependent electronic correlations in FeSe: DFT+DMFT study</span><br>
+<span class="talk-type">Poster</span><br>
+<span class="talk-venue">The Korean Physical Society Fall Meeting, Gwangju, South Korea, Oct 19-21, 2016</span>
+</li>
+
+<li>
+<span class="talk-title">First-principles study of subsurface defects in topological insulator Bi2Se3 including van der Waals interaction</span><br>
+<span class="talk-type">Poster</span><br>
+<span class="talk-venue">Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 20-22, 2016</span>
+</li>
+</ol>  
