@@ -27,17 +27,16 @@ Invited talk,
 제21회 고등과학원 전자구조계산학회, KIAS, Seoul, Korea, Jul 11, 2025.  
 
 1. One-dimensional van der Waals single-chain materials,  
-Invited talk,
+Invited talk,  
 Sogang G-LAMP Kick-off Meeting, Sogang University, Seoul, Korea, Jun 16, 2025.
 
 1. Electronic-structure studies of low-dimensional nanomaterials,  
 Colloquium,  
 Department of Physics, Ajou University, Suwon, Korea, May 28, 2025.
 
-1. Pairing interaction from demon modes in Sr2RuO4, 
-Contributed talk,  
-Global Physics 
-American Physical Society Global Physics Summit, Anaheim, CA, USA, Mar 16-21, 2025.
+1. Pairing interaction from demon modes in Sr2RuO4,   
+Contributed talk,    
+Global Physics American Physical Society Global Physics Summit, Anaheim, CA, USA, Mar 16-21, 2025.
 
 1. Dynamically screened Coulomb interaction from demon mode in Sr2RuO4,  
 Invited talk,  
@@ -71,9 +70,9 @@ Soongsil University, Seoul, Korea, Aug 16, 2024.
 Contributed talk,  
 American Physical Society March Meeting, Las Vegas, NV, USA, Mar 6-10, 2023.  
 
-1. Atomistic study of electronic properties of graphene moiré flat bands, 
-Invited talk,
-KAIST-KAIX Future of Physics Workshop, KAIST, Daejeon, Korea, Dec 26, 2022.
+1. Atomistic study of electronic properties of graphene moiré flat bands,   
+Invited talk,  
+KAIST-KAIX Future of Physics Workshop, KAIST, Daejeon, Korea, Dec 26, 2022.  
 
 1. Resonantly Enhanced Electromigration Forces for Adsorbates on Graphene,  
 Invited talk,
