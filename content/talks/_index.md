@@ -61,7 +61,7 @@ Computational studies of electronic structure and many-body interactions in quan
 <li>
 <span class="talk-title">Pairing interaction from demon modes in Sr2RuO4</span><br>
 <span class="talk-type">Contributed talk</span><br>
-<span class="talk-venue">Global Physics American Physical Society Global Physics Summit, Anaheim, CA, USA, Mar 16-21, 2025</span>
+<span class="talk-venue">American Physical Society Global Physics Summit, Anaheim, CA, USA, Mar 16-21, 2025</span>
 </li>
 
 <li>
