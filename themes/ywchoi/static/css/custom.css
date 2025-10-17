@@ -187,3 +187,8 @@
         font-size: 1.15rem;
     }
 }
+
+.home-news {
+    list-style: none;
+    padding-left: 0;
+}
