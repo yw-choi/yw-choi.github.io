@@ -1,3 +1,30 @@
+/* Mobile Navigation Menu */
+@media (max-width: 991.98px) {
+    #mainNav {
+        margin-top: 1rem;
+    }
+
+    #mainNav .d-flex {
+        border-top: 1px solid #dee2e6;
+        padding-top: 0.5rem;
+    }
+
+    #mainNav a {
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    #mainNav a:last-child {
+        border-bottom: none;
+    }
+}
+
+/* Ensure nav is always visible on desktop */
+@media (min-width: 992px) {
+    #mainNav {
+        display: flex !important;
+    }
+}
+
 /* Gallery grid tweaks */
 .gallery-item img {
     transition: transform .3s ease, filter .3s ease;

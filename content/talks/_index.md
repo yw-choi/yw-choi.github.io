@@ -15,6 +15,14 @@ title: Talks
 
 <ol reversed class="talk-list">
 <li>
+<span class="talk-title">
+Computational studies of electronic structure and many-body interactions in quantum materials
+</span><br>
+<span class="talk-type">Colloquium</span><br>
+<span class="talk-venue">Department of Physics, Sungkyunkwan University, Suwon, Korea, Oct 15, 2025</span>
+</li>
+
+<li>
 <span class="talk-title">Exploring low-dimensional nanomaterials through electronic structure calculations</span><br>
 <span class="talk-type">Invited talk</span><br>
 <span class="talk-venue">제16회 응용물리심포지움, Busan, Korea, Aug 26, 2025</span>
@@ -53,7 +61,7 @@ title: Talks
 <li>
 <span class="talk-title">Pairing interaction from demon modes in Sr2RuO4</span><br>
 <span class="talk-type">Contributed talk</span><br>
-<span class="talk-venue">Global Physics American Physical Society Global Physics Summit, Anaheim, CA, USA, Mar 16-21, 2025</span>
+<span class="talk-venue">American Physical Society Global Physics Summit, Anaheim, CA, USA, Mar 16-21, 2025</span>
 </li>
 
 <li>
