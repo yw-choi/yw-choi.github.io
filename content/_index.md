@@ -20,6 +20,7 @@ title: "Home"
 
 ### Recent News
 
+- **2025/11**  OOur paper on p-Doping of Carbon Nanotube Transistors has been published in ACS Nano!
 - **2025/09**  Our KISTI Nurion allocation proposal has been accepted!
 - **2025/09**  Minchul Choi joined our group. Welcome!
 - **2025/03**  Our paper on 1D phosphorus nanostructures has been published in ACS Nano!
