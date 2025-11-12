@@ -9,7 +9,7 @@ title: Publications
 † Equal Contributions, * Corresponding Author
 
 15.  Yongjae Cho, Sushanta Pal, Stephen J. Buffat, Hao-Yu Lan, **Young Woo Choi**, Dmitry Y. Zemlyanov, Connor Devitt, Sunil A. Bhave, Zhihong Chen, and Joerg Appenzeller,     
-Extension p-Doping of Carbon Nanotube Transistors through Nitric Oxides Annealing,
+Extension p-Doping of Carbon Nanotube Transistors through Nitric Oxides Annealing,  
 [ACS Nano, published online (2025)](https://doi.org/10.1021/acsnano.5c09061).
 
 14.  **Young Woo Choi**†, Yangjin Lee†, Kwanpyo Kim, Alex Zettl, and Marvin L. Cohen,  
