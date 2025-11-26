@@ -19,7 +19,7 @@ title: Talks
 <span class="talk-title">
 Computational studies of low-dimensional van der Waals materials
 </span><br>
-<span class="talk-type">Colloquium</span><br>
+<span class="talk-type">Invited talk</span><br>
 <span class="talk-venue">Department of Physics, KAIST, Daejeon, Korea, Nov 14, 2025</span>
 </li>
 
