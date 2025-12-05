@@ -18,8 +18,10 @@ title: "Home"
     </p>
 </div>
 
-### Recent News
 
+
+### Recent News
+- **2025/12** We are organizing [the 1st International Nanomaterials Symposium](./2025_1st_INS) in Busan, Korea on December 9-10, 2025! 
 - **2025/11**  Our paper on p-Doping of Carbon Nanotube Transistors has been published in ACS Nano!
 - **2025/09**  Our KISTI Nurion allocation proposal has been accepted!
 - **2025/09**  Minchul Choi joined our group. Welcome!
