@@ -5,6 +5,8 @@ layout: list
 # Define gallery items (order matters). You can also omit this list and the layout
 # will try to auto-discover image resources under photos/images/*.
 gallery:
+  - src: "/photos/images/2025_12 _Diana.jpg"
+    caption: "2025/12 Prof. Diana Qiu(YALE) visiting"
   - src: "/photos/images/2025_10_Electronic Structure Workshop.jpeg"
     caption: "2025/10 Electronic Structure Workshop"
   - src: "/photos/images/2025_08_marvin.jpg"
