@@ -20,7 +20,7 @@ title: Talks
 First-principles Study of Excitons in 1D Single Chains
 </span><br>
 <span class="talk-type">Poster of Byeongchan Lee</span><br>
-<span class="talk-venue">The 14th International Conference on Advanced Materials and Devices, BEXCO, Busan, Korea, Dec 8-11, 2025</span>
+<span class="talk-venue">ICAMD 2025, BEXCO, Busan, Korea, Dec 8-11, 2025</span>
 </li>
 
 <li>
@@ -28,7 +28,7 @@ First-principles Study of Excitons in 1D Single Chains
 Electronic structure of twisted multilayer MoTe2 from machine-learning assisted first-principles calculations
 </span><br>
 <span class="talk-type">Poster of Dongsin Kim</span><br>
-<span class="talk-venue">The 14th International Conference on Advanced Materials and Devices, BEXCO, Busan, Korea, Dec 8-11, 2025</span>
+<span class="talk-venue">ICAMD 2025, BEXCO, Busan, Korea, Dec 8-11, 2025</span>
 </li>
 
 <li>
@@ -36,7 +36,7 @@ Electronic structure of twisted multilayer MoTe2 from machine-learning assisted 
 First-Principles Study of Structure-Dependent Conductance Changes in Single-Molecule Junctions 
 </span><br>
 <span class="talk-type">Poster of Seongbin Park</span><br>
-<span class="talk-venue">The 14th International Conference on Advanced Materials and Devices, BEXCO, Busan, Korea, Dec 8-11, 2025</span>
+<span class="talk-venue">ICAMD 2025, BEXCO, Busan, Korea, Dec 8-11, 2025</span>
 </li>
 
 <li>
