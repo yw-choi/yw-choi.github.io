@@ -17,6 +17,30 @@ title: Talks
 
 <li>
 <span class="talk-title">
+First-principles Study of Excitons in 1D Single Chains
+</span><br>
+<span class="talk-type">Poster of Byeongchan Lee</span><br>
+<span class="talk-venue">The 14th International Conference on Advanced Materials and Devices, BEXCO, Busan, Korea, Dec 8-11, 2025</span>
+</li>
+
+<li>
+<span class="talk-title">
+Electronic structure of twisted multilayer MoTe2 from machine-learning assisted first-principles calculations
+</span><br>
+<span class="talk-type">Poster of Dongsin Kim</span><br>
+<span class="talk-venue">The 14th International Conference on Advanced Materials and Devices, BEXCO, Busan, Korea, Dec 8-11, 2025</span>
+</li>
+
+<li>
+<span class="talk-title">
+First-Principles Study of Structure-Dependent Conductance Changes in Single-Molecule Junctions 
+</span><br>
+<span class="talk-type">Poster of Seongbin Park</span><br>
+<span class="talk-venue">The 14th International Conference on Advanced Materials and Devices, BEXCO, Busan, Korea, Dec 8-11, 2025</span>
+</li>
+
+<li>
+<span class="talk-title">
 Computational studies of low-dimensional van der Waals materials
 </span><br>
 <span class="talk-type">Invited talk</span><br>
