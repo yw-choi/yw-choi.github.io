@@ -1,6 +1,6 @@
 {{ define "main" }}
 <h3 class="mb-4">{{ .Title }}</h3>
-<div class="container mb-5">
+<div class="mb-5">
     {{ with .Params.summary }}<p class="lead">{{ . }}</p>{{ end }}
 
     {{ $items := slice }}
@@ -13,54 +13,48 @@
     {{ end }}
     {{ end }}
 
-    {{ $pageSize := or site.Params.gallery_page_size 12 }}
     {{ $pageCtx := . }}
 
-    <div class="row g-3" id="photo-gallery" data-page-size="{{ $pageSize }}">
+    <div class="row g-4" id="photo-gallery">
         {{ range $index, $it := $items }}
-        <div class="col-6 col-md-4 col-lg-3 gallery-item {{ if ge $index $pageSize }}d-none extra-item{{ end }}">
-            <figure class="figure m-0 position-relative overflow-hidden rounded shadow-sm h-100">
-                <a href="{{ $it.src }}" class="d-block" data-full="{{ $it.src }}">
+        <div class="col-md-4 gallery-item">
+            <figure class="figure m-0">
+                <a href="{{ $it.src }}" class="d-block" data-full="{{ $it.src }}" style="cursor: pointer;">
                     <div class="gallery-thumb-wrapper">
                         {{/* Attempt to locate the image as a Page Resource and generate a cropped thumbnail */}}
                         {{ $base := path.Base $it.src }}
                         {{ with $pageCtx.Resources.GetMatch (printf "images/%s" $base) }}
                         {{ $thumb := .Fill "600x400 center" }}
                         <img loading="lazy" src="{{ $thumb.RelPermalink }}" width="{{ $thumb.Width }}"
-                            height="{{ $thumb.Height }}" alt="{{ $it.caption }}" class="gallery-thumb-img" />
+                            height="{{ $thumb.Height }}" alt="{{ $it.caption }}" class="gallery-thumb-img w-100"
+                            style="display: block;" />
                         {{ else }}
                         {{/* Fallback: use original path with CSS object-fit cropping */}}
-                        <img loading="lazy" src="{{ $it.src }}" alt="{{ $it.caption }}" class="gallery-thumb-img" />
+                        <img loading="lazy" src="{{ $it.src }}" alt="{{ $it.caption }}" class="gallery-thumb-img w-100"
+                            style="display: block; aspect-ratio: 3/2; object-fit: cover;" />
                         {{ end }}
                     </div>
                 </a>
-                {{ with $it.caption }}<figcaption class="figure-caption text-center small mt-1">{{ . }}</figcaption>{{
-                end }}
+                {{ with $it.caption }}<figcaption class="text-center small mt-2">{{ . | safeHTML }}</figcaption>{{ end
+                }}
             </figure>
         </div>
         {{ end }}
     </div>
-
-    {{ if gt (len $items) $pageSize }}
-    <div class="text-center mt-4">
-        <button id="gallery-load-more" class="btn btn-outline-primary btn-sm">Load more</button>
-    </div>
-    {{ end }}
 </div>
 
-<div id="lightbox" class="lightbox d-none">
-    <div class="lightbox-backdrop"></div>
-    <figure class="lightbox-content m-0">
-        <button type="button" class="lb-nav-btn lb-prev" id="lightbox-prev"
-            aria-label="Previous image">&#10094;</button>
-        <img id="lightbox-image" src="" alt="" class="img-fluid rounded">
-        <button type="button" class="lb-nav-btn lb-next" id="lightbox-next" aria-label="Next image">&#10095;</button>
-        <figcaption id="lightbox-caption" class="text-center small mt-3"></figcaption>
-        <button type="button" class="btn btn-sm btn-light position-absolute top-0 end-0 m-2" id="lightbox-close"
-            aria-label="Close">
-            <i class="bi bi-x-lg"></i>
-        </button>
-    </figure>
+<div id="lightbox" class="lightbox d-none"
+    style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; display: flex; align-items: center; justify-content: center;">
+    <div class="lightbox-backdrop"
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); cursor: pointer;">
+    </div>
+    <div style="position: relative; z-index: 1; max-width: 90%; max-height: 90vh;">
+        <img id="lightbox-image" src="" alt=""
+            style="max-width: 100%; max-height: 90vh; display: block; margin: 0 auto;">
+        <button type="button"
+            style="position: absolute; top: 10px; right: 10px; background: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 20px; line-height: 1;"
+            id="lightbox-close" aria-label="Close">&times;</button>
+    </div>
 </div>
 
 <script>
@@ -69,70 +63,36 @@
         const lightbox = document.getElementById('lightbox');
         if (!gallery || !lightbox) return;
         const imgEl = document.getElementById('lightbox-image');
-        const capEl = document.getElementById('lightbox-caption');
         const closeBtn = document.getElementById('lightbox-close');
         const backdrop = lightbox.querySelector('.lightbox-backdrop');
-        const prevBtn = document.getElementById('lightbox-prev');
-        const nextBtn = document.getElementById('lightbox-next');
 
-        let items = Array.from(gallery.querySelectorAll('a[data-full]')).map(a => ({
-            src: a.getAttribute('data-full'),
-            caption: a.parentElement.querySelector('figcaption')?.textContent.trim() || ''
-        }));
-        let current = -1;
-
-        function show(idx) {
-            if (idx < 0) idx = items.length - 1;
-            else if (idx >= items.length) idx = 0;
-            current = idx;
-            const it = items[current];
-            imgEl.src = it.src;
-            imgEl.alt = it.caption;
-            capEl.textContent = it.caption;
+        function show(src, caption) {
+            imgEl.src = src;
+            imgEl.alt = caption || '';
             lightbox.classList.remove('d-none');
+            lightbox.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
-        function openBySrc(src, caption) {
-            const idx = items.findIndex(i => i.src === src);
-            if (idx !== -1) { show(idx); } else { // fallback
-                current = -1;
-                imgEl.src = src;
-                imgEl.alt = caption || '';
-                capEl.textContent = caption || '';
-                lightbox.classList.remove('d-none');
-            }
+
+        function close() {
+            lightbox.classList.add('d-none');
+            lightbox.style.display = 'none';
+            document.body.style.overflow = '';
         }
-        function close() { lightbox.classList.add('d-none'); document.body.style.overflow = ''; }
 
         gallery.addEventListener('click', e => {
-            const a = e.target.closest('a[data-full]'); if (!a) return; e.preventDefault();
-            openBySrc(a.getAttribute('data-full'), a.parentElement.querySelector('figcaption')?.textContent.trim());
+            const a = e.target.closest('a[data-full]');
+            if (!a) return;
+            e.preventDefault();
+            const caption = a.parentElement.querySelector('figcaption')?.textContent.trim() || '';
+            show(a.getAttribute('data-full'), caption);
         });
-        ;[closeBtn, backdrop].forEach(el => el && el.addEventListener('click', close));
-        prevBtn.addEventListener('click', () => show(current - 1));
-        nextBtn.addEventListener('click', () => show(current + 1));
+
+        [closeBtn, backdrop].forEach(el => el && el.addEventListener('click', close));
 
         document.addEventListener('keyup', e => {
-            if (lightbox.classList.contains('d-none')) return;
-            if (e.key === 'Escape') close();
-            else if (e.key === 'ArrowLeft') show(current - 1);
-            else if (e.key === 'ArrowRight') show(current + 1);
+            if (!lightbox.classList.contains('d-none') && e.key === 'Escape') close();
         });
-
-        const btn = document.getElementById('gallery-load-more');
-        if (btn) {
-            const pageSize = parseInt(gallery.getAttribute('data-page-size'), 10) || 12;
-            const extras = () => Array.from(gallery.querySelectorAll('.extra-item'));
-            btn.addEventListener('click', () => {
-                extras().slice(0, pageSize).forEach(el => { el.classList.remove('d-none', 'extra-item'); });
-                // Refresh items after loading more
-                items = Array.from(gallery.querySelectorAll('a[data-full]')).map(a => ({
-                    src: a.getAttribute('data-full'),
-                    caption: a.parentElement.querySelector('figcaption')?.textContent.trim() || ''
-                }));
-                if (extras().length === 0) btn.remove();
-            });
-        }
     })();
 </script>
 {{ end }}
