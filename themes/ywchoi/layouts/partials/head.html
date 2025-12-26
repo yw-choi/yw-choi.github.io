@@ -1,9 +1,90 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>
+
+<!-- SEO Meta Tags -->
+<meta name="description" content="{{ if .IsHome }}Computational Quantum Materials Physics Lab at Sogang University. Understanding and predicting quantum materials properties using first-principles computational methods.{{ else }}{{ .Description | default .Summary | default (printf "%s - %s" .Title site.Title) }}{{ end }}">
+<meta name="keywords" content="quantum materials, computational physics, first-principles calculations, density functional theory, DFT, nanomaterials, 2D materials, moiré materials, superconductors, Young Woo Choi, Sogang University">
+<meta name="author" content="Young Woo Choi">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="{{ if .IsHome }}website{{ else }}article{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}">
+<meta property="og:description" content="{{ if .IsHome }}Computational Quantum Materials Physics Lab at Sogang University{{ else }}{{ .Description | default .Summary | default .Title }}{{ end }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}">
+<meta name="twitter:description" content="{{ if .IsHome }}Computational Quantum Materials Physics Lab at Sogang University{{ else }}{{ .Description | default .Summary | default .Title }}{{ end }}">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+<!-- RSS Feed -->
+<link rel="alternate" type="application/rss+xml" title="{{ site.Title }} RSS Feed" href="{{ .Site.BaseURL }}/index.xml">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ .Permalink }}">
+
+<!-- Schema.org structured data -->
+{{ if .IsHome }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ResearchOrganization",
+  "name": "Computational Quantum Materials Physics Lab",
+  "alternateName": "Young Woo Choi Research Group",
+  "url": "{{ .Site.BaseURL }}",
+  "logo": "{{ .Site.BaseURL }}/images/logo-regular.png",
+  "description": "Computational Quantum Materials Physics Lab at Sogang University. Understanding and predicting quantum materials properties using first-principles computational methods.",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "35 Baekbeom-ro, Mapo-gu",
+    "addressLocality": "Seoul",
+    "postalCode": "04107",
+    "addressCountry": "KR"
+  },
+  "parentOrganization": {
+    "@type": "CollegeOrUniversity",
+    "name": "Sogang University",
+    "url": "https://sogang.ac.kr",
+    "department": {
+      "@type": "Organization",
+      "name": "Department of Physics",
+      "url": "https://physics.sogang.ac.kr"
+    }
+  },
+  "member": {
+    "@type": "Person",
+    "name": "Young Woo Choi",
+    "givenName": "Young Woo",
+    "familyName": "Choi",
+    "jobTitle": "Assistant Professor",
+    "email": "ywchoi02@sogang.ac.kr",
+    "url": "{{ .Site.BaseURL }}/people",
+    "sameAs": [
+      "https://scholar.google.com/citations?user=Qv4pipEAAAAJ"
+    ],
+    "affiliation": {
+      "@type": "Organization",
+      "name": "Sogang University"
+    }
+  }
+}
+</script>
+{{ end }}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="dns-prefetch" href="https://www.googletagmanager.com">
+
+<!-- Preload critical assets -->
+<link rel="preload" href="/css/custom.css" as="style">
+
 <link
   href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
   rel="stylesheet">
@@ -11,6 +92,7 @@
   integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="/css/custom.css">
+<link rel="stylesheet" href="/css/print.css" media="print">
 
 <style>
   body {
