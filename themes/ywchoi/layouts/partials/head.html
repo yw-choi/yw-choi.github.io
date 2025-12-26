@@ -1,5 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>
 
 <!-- SEO Meta Tags -->
@@ -21,6 +22,9 @@
 
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+<!-- RSS Feed -->
+<link rel="alternate" type="application/rss+xml" title="{{ site.Title }} RSS Feed" href="{{ .Site.BaseURL }}/index.xml">
 
 <!-- Canonical URL -->
 <link rel="canonical" href="{{ .Permalink }}">
