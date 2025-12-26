@@ -1,0 +1,59 @@
+/* Print Styles */
+@media print {
+    /* Hide navigation and footer */
+    header,
+    footer,
+    .skip-to-content {
+        display: none !important;
+    }
+
+    /* Optimize page breaks */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+
+    ul, ol, p {
+        page-break-inside: avoid;
+    }
+
+    /* Ensure links are visible */
+    a[href]:after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        color: #666;
+    }
+
+    a[href^="#"]:after,
+    a[href^="javascript:"]:after {
+        content: "";
+    }
+
+    /* Optimize colors for print */
+    body {
+        background: white;
+        color: black;
+    }
+
+    /* Expand collapsed content */
+    .collapse {
+        display: block !important;
+        height: auto !important;
+    }
+
+    /* Page margins */
+    @page {
+        margin: 2cm;
+    }
+
+    /* Publication list formatting */
+    ol[reversed] {
+        list-style-type: decimal;
+    }
+
+    /* Ensure images fit on page */
+    img {
+        max-width: 100%;
+        page-break-inside: avoid;
+    }
+}
