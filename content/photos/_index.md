@@ -4,7 +4,13 @@ layout: list
 # Optional description shown above the gallery
 # Define gallery items (order matters). You can also omit this list and the layout
 # will try to auto-discover image resources under photos/images/*.
-gallery:  
+gallery: 
+  - src: "/photos/images/2025_dongshin_icamd.jpg"
+    caption: "2025/12 <br> Dongshin at 2025 ICAMD"
+  - src: "/photos/images/2025_bc_icamd.jpg"
+    caption: "2025/12 <br> Byeongchan at 2025 ICAMD"
+  - src: "/photos/images/2025_sungbin_icamd.jpg"
+    caption: "2025/12 <br> Sungbin at 2025 ICAMD"
   - src: "/photos/images/2025_icamd_group_photo.webp"
     caption: "2025/12 <br> <a href='http://localhost:1313/2025_1st_INS' target='_blank'>1st International Nanomaterials Symposium</a>"
   - src: "/photos/images/2025_glamp_workshop_1.webp"
