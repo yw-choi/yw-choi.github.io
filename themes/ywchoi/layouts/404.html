@@ -1,9 +1,22 @@
 {{ define "main" }}
-  <h1 class="fw-light">404 Not Found</h1>
-  <p>The page you requested cannot be found.</p>
-  <p>
-    <a href="{{ .Site.Home.RelPermalink }}" class="text-black">
-      Return to the home page
-    </a>
-  </p>
+  <div class="text-center py-5">
+    <h1 class="display-1 fw-light">404</h1>
+    <h2 class="fw-light mb-4">Page Not Found</h2>
+    <p class="mb-4">The page you requested cannot be found.</p>
+    <p>
+      <a href="{{ .Site.Home.RelPermalink }}" class="btn btn-outline-dark">
+        Return to Home Page
+      </a>
+    </p>
+    <div class="mt-5">
+      <p class="text-muted">You might be looking for:</p>
+      <ul class="list-unstyled">
+        <li><a href="/people" class="text-decoration-none">People</a></li>
+        <li><a href="/research" class="text-decoration-none">Research</a></li>
+        <li><a href="/publications" class="text-decoration-none">Publications</a></li>
+        <li><a href="/talks" class="text-decoration-none">Talks</a></li>
+        <li><a href="/photos" class="text-decoration-none">Photos</a></li>
+      </ul>
+    </div>
+  </div>
 {{ end }}
