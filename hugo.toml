@@ -8,6 +8,10 @@ enableRobotsTXT = true
 google_analytics_tag = "G-4VEF9JDEXP"
 description = "Computational Quantum Materials Physics Lab at Sogang University"
 
+[outputs]
+home = ["HTML", "RSS"]
+section = ["HTML", "RSS"]
+
 [sitemap]
 changefreq = 'monthly'
 filename = 'sitemap.xml'
