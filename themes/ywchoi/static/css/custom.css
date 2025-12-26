@@ -1,19 +1,3 @@
-/* Skip to content link for accessibility */
-.skip-to-content {
-    position: absolute;
-    top: -40px;
-    left: 0;
-    background: #000;
-    color: #fff;
-    padding: 8px 16px;
-    text-decoration: none;
-    z-index: 100;
-}
-
-.skip-to-content:focus {
-    top: 0;
-}
-
 /* Mobile Navigation Menu */
 @media (max-width: 991.98px) {
     #mainNav {
@@ -229,32 +213,4 @@
 .home-news {
     list-style: none;
     padding-left: 0;
-}
-
-/* Mobile touch target improvements */
-@media (max-width: 991.98px) {
-    /* Ensure nav links have adequate touch targets */
-    #mainNav a {
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-    }
-
-    /* Ensure buttons have adequate touch targets */
-    button,
-    .btn {
-        min-height: 44px;
-        min-width: 44px;
-    }
-}
-
-/* Improve link accessibility */
-a:focus-visible {
-    outline: 2px solid #0d6efd;
-    outline-offset: 2px;
-}
-
-button:focus-visible {
-    outline: 2px solid #0d6efd;
-    outline-offset: 2px;
 }
