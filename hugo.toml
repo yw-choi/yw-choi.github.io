@@ -1,9 +1,17 @@
 baseURL = 'https://yw-choi.github.io'
 title = 'YOUNG WOO CHOI'
 theme = 'ywchoi'
+languageCode = 'en-US'
+enableRobotsTXT = true
 
 [params]
 google_analytics_tag = "G-4VEF9JDEXP"
+description = "Computational Quantum Materials Physics Lab at Sogang University"
+
+[sitemap]
+changefreq = 'monthly'
+filename = 'sitemap.xml'
+priority = 0.5
 
 [markup]
 [markup.goldmark]

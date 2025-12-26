@@ -12,7 +12,7 @@ gallery:
   - src: "/photos/images/2025_sungbin_icamd.jpg"
     caption: "2025/12 <br> Sungbin at 2025 ICAMD"
   - src: "/photos/images/2025_icamd_group_photo.webp"
-    caption: "2025/12 <br> <a href='http://localhost:1313/2025_1st_INS' target='_blank'>1st International Nanomaterials Symposium</a>"
+    caption: "2025/12 <br> <a href='/2025_1st_INS' target='_blank'>1st International Nanomaterials Symposium</a>"
   - src: "/photos/images/2025_glamp_workshop_1.webp"
     caption: "2025/12 <br> Sogang G-LAMP Workshop at Busan"
   - src: "/photos/images/2025_glamp_workshop.webp"
