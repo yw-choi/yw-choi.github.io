@@ -4,7 +4,7 @@ set -euo pipefail
 # Configuration
 SRC_DIR="content/photos/images"
 BACKUP_DIR="content/photos/originals_backup"
-MAX_WIDTH=1200
+MAX_WIDTH=1600
 JPEG_QUALITY=95
 
 # Ensure required tools exist (ImageMagick's mogrify/convert & jpegoptim optional)
