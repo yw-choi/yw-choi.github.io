@@ -2,6 +2,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>
 
+<!-- SEO Meta Tags -->
+<meta name="description" content="{{ if .IsHome }}Computational Quantum Materials Physics Lab at Sogang University. Understanding and predicting quantum materials properties using first-principles computational methods.{{ else }}{{ .Description | default .Summary | default (printf "%s - %s" .Title site.Title) }}{{ end }}">
+<meta name="keywords" content="quantum materials, computational physics, first-principles calculations, density functional theory, DFT, nanomaterials, 2D materials, moiré materials, superconductors, Young Woo Choi, Sogang University">
+<meta name="author" content="Young Woo Choi">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="{{ if .IsHome }}website{{ else }}article{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}">
+<meta property="og:description" content="{{ if .IsHome }}Computational Quantum Materials Physics Lab at Sogang University{{ else }}{{ .Description | default .Summary | default .Title }}{{ end }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}">
+<meta name="twitter:description" content="{{ if .IsHome }}Computational Quantum Materials Physics Lab at Sogang University{{ else }}{{ .Description | default .Summary | default .Title }}{{ end }}">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ .Permalink }}">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
