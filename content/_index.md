@@ -21,17 +21,18 @@ title: "Home"
 
 
 ### Recent News
+- **2026/01** Dr. Sanghyun Ji joined our group. Welcome!
 - **2025/12** We are organizing [the 1st International Nanomaterials Symposium](./2025_1st_INS) in Busan, Korea on December 9-10, 2025! 
-- **2025/11**  Our paper on p-Doping of Carbon Nanotube Transistors has been published in ACS Nano!
-- **2025/09**  Our KISTI Nurion allocation proposal has been accepted!
-- **2025/09**  Minchul Choi joined our group. Welcome!
-- **2025/03**  Our paper on 1D phosphorus nanostructures has been published in ACS Nano!
-- **2024/12**  Dr. Jae Ha Kim joined our group. Welcome!
-- **2024/10**  Seunghee joined our group. Welcome!
-- **2024/10**  Our paper on pairing interaction from demon modes has been accepted for publication in Physical Review B.
-- **2024/10**  Seongbin joined our group. Welcome!
-- **2024/09**  Seungwoo, Seongmin, and Dongsin joined our group. Welcome!
-- **2024/09**  Byeongchan joined our group. Welcome!
-- **2024/09**  Our allocation proposal for KISTI supercomputer resource (NURION) has been accepted!
-- **2024/09**  Young Woo Choi joined Sogang University!
+- **2025/11** Our paper on p-Doping of Carbon Nanotube Transistors has been published in ACS Nano!
+- **2025/09** Our KISTI Nurion allocation proposal has been accepted!
+- **2025/09** Minchul Choi joined our group. Welcome!
+- **2025/03** Our paper on 1D phosphorus nanostructures has been published in ACS Nano!
+- **2024/12** Dr. Jae Ha Kim joined our group. Welcome!
+- **2024/10** Seunghee joined our group. Welcome!
+- **2024/10** Our paper on pairing interaction from demon modes has been accepted for publication in Physical Review B.
+- **2024/10** Seongbin joined our group. Welcome!
+- **2024/09** Seungwoo, Seongmin, and Dongsin joined our group. Welcome!
+- **2024/09** Byeongchan joined our group. Welcome!
+- **2024/09** Our allocation proposal for KISTI supercomputer resource (NURION) has been accepted!
+- **2024/09** Young Woo Choi joined Sogang University!
 {class="home-news"}
