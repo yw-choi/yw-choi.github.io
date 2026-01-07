@@ -8,6 +8,10 @@ title: Publications
 
 † Equal Contributions, * Corresponding Author
 
+16. Byeongin Lee, Junho Bang, Sayan Banerjee, João Augusto Sobral, **Young Woo Choi**, Claudia Felser, Mathias S. Scheurer, Jian-Feng Ge, and Doohee Cho,  
+Anomalous impurity-induced charge modulations in black phosphorus,  
+[Phys. Rev. B **113**, L041105 (2026)](https://journals.aps.org/prb/abstract/10.1103/39jp-9dkp).
+
 15.  Yongjae Cho, Sushanta Pal, Stephen J. Buffat, Hao-Yu Lan, **Young Woo Choi**, Dmitry Y. Zemlyanov, Connor Devitt, Sunil A. Bhave, Zhihong Chen, and Joerg Appenzeller,     
 Extension p-Doping of Carbon Nanotube Transistors through Nitric Oxides Annealing,  
 [ACS Nano **19**, 39014 (2025)](https://doi.org/10.1021/acsnano.5c09061).
