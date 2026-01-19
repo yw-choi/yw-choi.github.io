@@ -49,6 +49,10 @@ name = 'Talks'
 pageRef = '/talks'
 weight = 45
 [[menus.main]]
+name = 'Lectures'
+pageRef = '/lectures'
+weight = 47
+[[menus.main]]
 name = 'Photos'
 pageRef = '/photos'
 weight = 50
