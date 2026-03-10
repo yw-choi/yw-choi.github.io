@@ -1,0 +1,28 @@
+{{ define "main" }}
+<article class="mt-4">
+  <header class="mb-4">
+    <h1 class="fs-3 fw-light">{{ .Title }}</h1>
+    <time class="text-muted" style="font-size: 0.9em;" datetime="{{ .Date.Format "2006-01-02" }}">
+      {{ .Date.Format "January 2, 2006" }}
+    </time>
+    {{ with .Params.tags }}
+    <div class="mt-1">
+      {{ range . }}
+      <span class="badge bg-light text-muted fw-light border">{{ . }}</span>
+      {{ end }}
+    </div>
+    {{ end }}
+  </header>
+  <div class="fw-light" style="line-height: 1.8;">
+    {{ .Content }}
+  </div>
+  <nav class="mt-5 pt-3 border-top d-flex justify-content-between" style="font-size: 0.9em;">
+    {{ with .PrevInSection }}
+    <a href="{{ .RelPermalink }}" class="text-muted text-decoration-none">&larr; {{ .Title }}</a>
+    {{ else }}<span></span>{{ end }}
+    {{ with .NextInSection }}
+    <a href="{{ .RelPermalink }}" class="text-muted text-decoration-none">{{ .Title }} &rarr;</a>
+    {{ else }}<span></span>{{ end }}
+  </nav>
+</article>
+{{ end }}
