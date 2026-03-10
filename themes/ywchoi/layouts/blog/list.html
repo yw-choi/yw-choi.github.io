@@ -1,0 +1,13 @@
+{{ define "main" }}
+<div class="mt-4">
+  {{ .Content }}
+  <ul class="list-unstyled mt-4">
+    {{ range .Pages.ByDate.Reverse }}
+    <li class="mb-3">
+      <span class="text-muted me-2" style="font-size: 0.9em;">{{ .Date.Format "2006-01-02" }}</span>
+      <a href="{{ .RelPermalink }}" class="link-dark text-decoration-none fw-light">{{ .Title }}</a>
+    </li>
+    {{ end }}
+  </ul>
+</div>
+{{ end }}
