@@ -2,7 +2,7 @@
 title: "AI Agent 실전 활용 가이드: 교육과 행정 업무를 중심으로"
 date: 2026-03-13
 tags: ["ai", "agent", "claude", "chatgpt", "education", "productivity"]
-draft: false
+draft: true
 ---
 
 ChatGPT나 Claude 같은 AI 챗봇은 이제 많은 분들이 써보셨을 것입니다. 그런데 최근에는 한 단계 더 나아간 **AI Agent**가 빠르게 확산되고 있습니다. 단순히 질문에 답하는 것을 넘어, 이메일을 보내고, 일정을 잡고, 문서를 정리하는 등 **실제 업무를 대신 수행**하는 AI입니다.
