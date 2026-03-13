@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHY1001 물리 시뮬레이션</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            min-height: 100vh;
+        }
+        header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        header h1 { font-size: 2em; margin-bottom: 8px; }
+        header p { font-size: 1.1em; opacity: 0.8; }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        .chapter-section {
+            margin-bottom: 30px;
+        }
+        .chapter-section h2 {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ddd;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .card-color {
+            height: 8px;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .card-num {
+            font-size: 0.8em;
+            color: #999;
+            margin-bottom: 4px;
+        }
+        .card-title {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .card-desc {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.5;
+        }
+        .tag {
+            display: inline-block;
+            font-size: 0.75em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-top: 10px;
+            color: white;
+        }
+        .ch02 { background: #e74c3c; }
+        .ch04 { background: #3498db; }
+        .ch05 { background: #2ecc71; }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>PHY1001 물리 시뮬레이션</h1>
+        <p>일반물리학 웹 기반 인터랙티브 시뮬레이션</p>
+    </header>
+    <div class="container">
+        <div class="chapter-section">
+            <h2>Ch.02 — 직선 운동</h2>
+            <div class="grid">
+                <a class="card" href="01_freefall.html">
+                    <div class="card-color ch02"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 01</div>
+                        <div class="card-title">자유낙하 & 등가속도 운동</div>
+                        <div class="card-desc">초기 속도와 높이를 조절하며 자유낙하를 관찰합니다. 지구·달·목성의 중력 비교, 실시간 x-t / v-t / a-t 그래프 제공.</div>
+                        <span class="tag ch02">Ch.02</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.04 — 2차원 & 3차원 운동</h2>
+            <div class="grid">
+                <a class="card" href="02_projectile.html">
+                    <div class="card-color ch04"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 02</div>
+                        <div class="card-title">포물선 운동</div>
+                        <div class="card-desc">발사 각도와 초기 속도를 조절하여 포물선 궤적을 시각화합니다. 속도 벡터 분해, 비교 모드(보각) 지원.</div>
+                        <span class="tag ch04">Ch.04</span>
+                    </div>
+                </a>
+                <a class="card" href="03_circular_motion.html">
+                    <div class="card-color ch04"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 03</div>
+                        <div class="card-title">원운동 & 구심가속도</div>
+                        <div class="card-desc">등속 원운동에서 접선 속도 벡터와 구심가속도 벡터를 실시간으로 관찰합니다. 반지름과 속력 조절 가능.</div>
+                        <span class="tag ch04">Ch.04</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.05 — 힘과 운동 I</h2>
+            <div class="grid">
+                <a class="card" href="04_newton_second_law.html">
+                    <div class="card-color ch05"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 04</div>
+                        <div class="card-title">뉴턴 제2법칙 실험실</div>
+                        <div class="card-desc">마찰 없는 수평면에서 힘과 질량을 조절하며 F=ma를 체험합니다. 자유물체도(FBD) 자동 생성.</div>
+                        <span class="tag ch05">Ch.05</span>
+                    </div>
+                </a>
+                <a class="card" href="05_atwood.html">
+                    <div class="card-color ch05"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 05</div>
+                        <div class="card-title">Atwood 기계</div>
+                        <div class="card-desc">도르래 양쪽 질량을 조절하며 가속도와 장력을 관찰합니다. 퀴즈 모드로 예측 후 검증 가능.</div>
+                        <span class="tag ch05">Ch.05</span>
+                    </div>
+                </a>
+                <a class="card" href="06_inclined_plane.html">
+                    <div class="card-color ch05"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 06</div>
+                        <div class="card-title">경사면 & 힘 분해</div>
+                        <div class="card-desc">경사각을 조절하며 mg sinθ, mg cosθ, 수직항력, 마찰력을 시각화합니다. 마찰 유/무 전환 및 임계각 탐색.</div>
+                        <span class="tag ch05">Ch.05</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <footer>
+        PHY1001 일반물리학 — 2026
+    </footer>
+</body>
+</html>

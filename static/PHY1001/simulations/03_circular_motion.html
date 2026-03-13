@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원운동 &amp; 구심가속도 시뮬레이터</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+    background: #f0f2f5;
+    color: #333;
+    min-height: 100vh;
+  }
+  header {
+    background: #1a1a2e;
+    color: #fff;
+    text-align: center;
+    padding: 18px 0 14px;
+  }
+  header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 1px; }
+  header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
+
+  .container {
+    max-width: 960px;
+    margin: 24px auto;
+    padding: 0 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .canvas-wrap {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 12px;
+    flex: 0 0 auto;
+  }
+  canvas {
+    display: block;
+    border-radius: 8px;
+    background: #fafbfc;
+  }
+
+  .side-panel {
+    flex: 1 1 260px;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 18px 20px;
+  }
+  .card h2 {
+    font-size: 0.95rem;
+    color: #1a1a2e;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #e8e8f0;
+    padding-bottom: 6px;
+  }
+
+  /* Info panel */
+  .info-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 6px 12px;
+    font-size: 0.9rem;
+  }
+  .info-grid .label { color: #666; font-weight: 500; }
+  .info-grid .value { font-family: 'Courier New', monospace; font-weight: 600; color: #1a1a2e; }
+
+  /* Sliders */
+  .slider-group { margin-bottom: 14px; }
+  .slider-group:last-child { margin-bottom: 0; }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+    color: #555;
+  }
+  .slider-label .val { font-weight: 700; color: #1a1a2e; }
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #dde;
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: #4a5aba;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+
+  /* Buttons */
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .btn {
+    flex: 1;
+    padding: 10px 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-play { background: #4a5aba; color: #fff; }
+  .btn-play:hover { background: #3a4aaa; }
+  .btn-pause { background: #e8a838; color: #fff; }
+  .btn-pause:hover { background: #d09828; }
+  .btn-reset { background: #e0e0e8; color: #555; }
+  .btn-reset:hover { background: #d0d0d8; }
+
+  /* Trace checkbox */
+  .option-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #555;
+    margin-top: 10px;
+  }
+  .option-row input[type=checkbox] { width: 16px; height: 16px; accent-color: #4a5aba; }
+
+  /* Legend */
+  .legend { display: flex; gap: 16px; font-size: 0.82rem; margin-top: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-swatch { width: 24px; height: 4px; border-radius: 2px; }
+
+  @media (max-width: 700px) {
+    .container { flex-direction: column; align-items: center; }
+    .side-panel { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>원운동 &amp; 구심가속도 시뮬레이터</h1>
+  <p>Ch.04 — Circular Motion &amp; Centripetal Acceleration</p>
+</header>
+
+<div class="container">
+  <div class="canvas-wrap">
+    <canvas id="sim" width="500" height="500"></canvas>
+  </div>
+
+  <div class="side-panel">
+    <!-- Info -->
+    <div class="card">
+      <h2>물리량</h2>
+      <div class="info-grid">
+        <span class="label">속력 (v)</span>   <span class="value" id="disp-v">—</span>
+        <span class="label">반지름 (r)</span>  <span class="value" id="disp-r">—</span>
+        <span class="label">구심가속도 (a = v²/r)</span> <span class="value" id="disp-a">—</span>
+        <span class="label">주기 (T = 2πr/v)</span>     <span class="value" id="disp-T">—</span>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#3b82f6;"></span> 속도 벡터 (v)</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#ef4444;"></span> 가속도 벡터 (a)</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="card">
+      <h2>조절</h2>
+      <div class="slider-group">
+        <div class="slider-label"><span>반지름 (r)</span><span class="val" id="lbl-r">3.0 m</span></div>
+        <input type="range" id="sl-r" min="50" max="200" value="120">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span>속력 (v)</span><span class="val" id="lbl-v">4.0 m/s</span></div>
+        <input type="range" id="sl-v" min="1" max="10" step="0.1" value="4">
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-play" id="btn-play">재생 ▶</button>
+        <button class="btn btn-pause" id="btn-pause">일시정지 ⏸</button>
+        <button class="btn btn-reset" id="btn-reset">초기화 ↺</button>
+      </div>
+      <div class="option-row">
+        <input type="checkbox" id="chk-trace" checked>
+        <label for="chk-trace">궤적 표시</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const canvas = document.getElementById('sim');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W / 2, cy = H / 2;
+
+  // Elements
+  const slR = document.getElementById('sl-r');
+  const slV = document.getElementById('sl-v');
+  const lblR = document.getElementById('lbl-r');
+  const lblV = document.getElementById('lbl-v');
+  const dispV = document.getElementById('disp-v');
+  const dispR = document.getElementById('disp-r');
+  const dispA = document.getElementById('disp-a');
+  const dispT = document.getElementById('disp-T');
+  const btnPlay = document.getElementById('btn-play');
+  const btnPause = document.getElementById('btn-pause');
+  const btnReset = document.getElementById('btn-reset');
+  const chkTrace = document.getElementById('chk-trace');
+
+  // State
+  let radiusPx = 120;
+  let speed = 4;       // m/s
+  let angle = 0;       // radians
+  let running = false;
+  let lastTime = null;
+  let tracePoints = [];
+
+  // Map px radius (50-200) to meters (1-5)
+  function pxToM(px) { return 1 + (px - 50) / (200 - 50) * 4; }
+  function radiusM() { return pxToM(radiusPx); }
+
+  // Angular velocity (rad/s) — use physical speed and physical radius, then apply to pixel circle
+  function omega() { return speed / radiusM(); }
+
+  function updateLabels() {
+    const r = radiusM();
+    const a = speed * speed / r;
+    const T = (2 * Math.PI * r) / speed;
+    lblR.textContent = r.toFixed(1) + ' m';
+    lblV.textContent = speed.toFixed(1) + ' m/s';
+    dispV.textContent = speed.toFixed(2) + ' m/s';
+    dispR.textContent = r.toFixed(2) + ' m';
+    dispA.textContent = a.toFixed(2) + ' m/s²';
+    dispT.textContent = T.toFixed(2) + ' s';
+  }
+
+  // Draw arrow from (x,y) in direction (dx,dy) with given color and label
+  function drawArrow(x, y, dx, dy, color, label) {
+    const len = Math.sqrt(dx * dx + dy * dy);
+    if (len < 1) return;
+    const ex = x + dx, ey = y + dy;
+    const headLen = Math.min(12, len * 0.3);
+    const ang = Math.atan2(dy, dx);
+
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+
+    // Shaft
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(ex, ey);
+    ctx.stroke();
+
+    // Arrowhead
+    ctx.beginPath();
+    ctx.moveTo(ex, ey);
+    ctx.lineTo(ex - headLen * Math.cos(ang - 0.4), ey - headLen * Math.sin(ang - 0.4));
+    ctx.lineTo(ex - headLen * Math.cos(ang + 0.4), ey - headLen * Math.sin(ang + 0.4));
+    ctx.closePath();
+    ctx.fill();
+
+    // Label
+    if (label) {
+      ctx.font = 'bold 13px "Segoe UI", sans-serif';
+      const lx = ex + 14 * Math.cos(ang);
+      const ly = ey + 14 * Math.sin(ang);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, lx, ly);
+    }
+    ctx.restore();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Grid dots (subtle)
+    ctx.fillStyle = '#e0e0e8';
+    for (let gx = 50; gx < W; gx += 50)
+      for (let gy = 50; gy < H; gy += 50) {
+        ctx.beginPath(); ctx.arc(gx, gy, 1.2, 0, 2 * Math.PI); ctx.fill();
+      }
+
+    // Trace
+    if (chkTrace.checked && tracePoints.length > 1) {
+      ctx.strokeStyle = 'rgba(100, 120, 220, 0.25)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(tracePoints[0][0], tracePoints[0][1]);
+      for (let i = 1; i < tracePoints.length; i++) {
+        ctx.lineTo(tracePoints[i][0], tracePoints[i][1]);
+      }
+      ctx.stroke();
+    }
+
+    // Dashed circle
+    ctx.setLineDash([8, 6]);
+    ctx.strokeStyle = '#b0b8c8';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radiusPx, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Center point
+    ctx.fillStyle = '#888';
+    ctx.beginPath(); ctx.arc(cx, cy, 4, 0, 2 * Math.PI); ctx.fill();
+    ctx.font = '12px "Segoe UI", sans-serif';
+    ctx.fillStyle = '#999';
+    ctx.textAlign = 'center';
+    ctx.fillText('중심', cx, cy + 16);
+
+    // Object position
+    const bx = cx + radiusPx * Math.cos(angle);
+    const by = cy - radiusPx * Math.sin(angle);
+
+    // Radius line
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(bx, by); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Vectors — scale for visibility
+    const r = radiusM();
+    const a_phys = speed * speed / r;
+
+    // Velocity vector: tangent to circle (perpendicular to radius, in direction of motion)
+    // angle increases CCW, so velocity direction is at angle + 90 degrees
+    const vScale = 12; // px per m/s
+    const vx = -speed * Math.sin(angle) * (-1); // tangent: (-sin, -cos) for CCW in screen coords
+    // In screen coords (y-down): position is (cos(a), -sin(a))*R
+    // velocity direction tangent CCW: d/dt(cos(a), -sin(a)) * omega = (-sin(a), -cos(a)) * omega
+    // We want direction only scaled by speed magnitude
+    const vDirX = -Math.sin(angle);   // tangent x (screen)
+    const vDirY = -Math.cos(angle);   // tangent y (screen, y-down)
+
+    drawArrow(bx, by, vDirX * speed * vScale, vDirY * speed * vScale, '#3b82f6', 'v');
+
+    // Acceleration vector: toward center
+    const aDirX = cx - bx;
+    const aDirY = cy - by;
+    const aDirLen = Math.sqrt(aDirX * aDirX + aDirY * aDirY);
+    const aScale = 6; // px per m/s²
+    if (aDirLen > 0) {
+      const anx = aDirX / aDirLen;
+      const any = aDirY / aDirLen;
+      drawArrow(bx, by, anx * a_phys * aScale, any * a_phys * aScale, '#ef4444', 'a');
+    }
+
+    // Ball
+    const grad = ctx.createRadialGradient(bx - 3, by - 3, 2, bx, by, 12);
+    grad.addColorStop(0, '#6b8cff');
+    grad.addColorStop(1, '#3b5fe0');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(bx, by, 12, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = '#2a4ab0';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Angle arc indicator
+    ctx.strokeStyle = 'rgba(100,100,160,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 24, 0, -angle, angle > 0);
+    ctx.stroke();
+  }
+
+  function step(timestamp) {
+    if (!running) return;
+    if (lastTime === null) lastTime = timestamp;
+    const dt = (timestamp - lastTime) / 1000;
+    lastTime = timestamp;
+
+    angle += omega() * dt;
+    if (angle > 2 * Math.PI) angle -= 2 * Math.PI;
+
+    // Record trace
+    const bx = cx + radiusPx * Math.cos(angle);
+    const by = cy - radiusPx * Math.sin(angle);
+    tracePoints.push([bx, by]);
+    if (tracePoints.length > 2000) tracePoints.splice(0, 500);
+
+    updateLabels();
+    draw();
+    requestAnimationFrame(step);
+  }
+
+  // Controls
+  slR.addEventListener('input', () => {
+    radiusPx = Number(slR.value);
+    tracePoints = [];
+    updateLabels();
+    if (!running) draw();
+  });
+  slV.addEventListener('input', () => {
+    speed = Number(slV.value);
+    updateLabels();
+    if (!running) draw();
+  });
+
+  btnPlay.addEventListener('click', () => {
+    if (!running) { running = true; lastTime = null; requestAnimationFrame(step); }
+  });
+  btnPause.addEventListener('click', () => { running = false; });
+  btnReset.addEventListener('click', () => {
+    running = false;
+    angle = 0;
+    tracePoints = [];
+    lastTime = null;
+    updateLabels();
+    draw();
+  });
+
+  chkTrace.addEventListener('change', () => { if (!running) draw(); });
+
+  // Init
+  updateLabels();
+  draw();
+})();
+</script>
+</body>
+</html>
