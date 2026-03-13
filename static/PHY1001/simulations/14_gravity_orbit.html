@@ -185,6 +185,9 @@ canvas {
           <input type="range" id="slM" min="1" max="10" step="0.5" value="3">
           <span class="val" id="vlM">3.0</span>
         </div>
+        <div style="font-size:0.72rem; color:#888; margin-top:-4px; margin-bottom:6px; padding-left:2px;">
+          궤도는 질량에 무관 (등가 원리) — 크기만 변경됩니다
+        </div>
         <div class="btn-row" style="margin-bottom:8px;">
           <button class="btn-preset" onclick="preset('circle')">원궤도</button>
           <button class="btn-preset" onclick="preset('ellipse')">타원궤도</button>
@@ -220,11 +223,11 @@ canvas {
       </div>
 
       <div class="panel">
-        <h3>에너지</h3>
+        <h3>비에너지 (E/m)</h3>
         <div class="energy-bar">
-          <div class="e-item e-ke"><span class="e-label">운동 KE</span><span class="e-val" id="eKE">—</span></div>
-          <div class="e-item e-pe"><span class="e-label">위치 PE</span><span class="e-val" id="ePE">—</span></div>
-          <div class="e-item e-te"><span class="e-label">전체 E</span><span class="e-val" id="eTE">—</span></div>
+          <div class="e-item e-ke"><span class="e-label">KE/m</span><span class="e-val" id="eKE">—</span></div>
+          <div class="e-item e-pe"><span class="e-label">PE/m</span><span class="e-val" id="ePE">—</span></div>
+          <div class="e-item e-te"><span class="e-label">E/m</span><span class="e-val" id="eTE">—</span></div>
         </div>
       </div>
     </div>
@@ -253,7 +256,7 @@ const CX = 350, CY = 350;
 
 // Trail
 let trail = [];
-const MAX_TRAIL = 4000;
+const MAX_TRAIL = 500;
 
 // Kepler 2nd law sectors
 let sectorData = []; // timestamps for sector shading
@@ -266,6 +269,7 @@ const SECTOR_DT = 80; // time units for each sector
 
 // Orbital elements (computed)
 let orbA = 0, orbB = 0, orbE = 0, orbT = 0;
+let measuredT = 0; // measured period from actual revolution
 let orbitComplete = false;
 let startAngle = 0;
 let prevAngle = 0;
@@ -306,7 +310,7 @@ function initState() {
   startAngle = Math.atan2(py - CY, px - CX);
   prevAngle = startAngle;
   periodStartTime = 0;
-  orbA = 0; orbB = 0; orbE = 0; orbT = 0;
+  orbA = 0; orbB = 0; orbE = 0; orbT = 0; measuredT = 0;
 
   // Reset sector data
   sectorPhase = 0;
@@ -401,9 +405,9 @@ function step(dt) {
   totalAngleSwept += dAngle;
   prevAngle = angle;
 
-  // Period detection: full revolution
+  // Period detection: full revolution (measured)
   if (!orbitComplete && Math.abs(totalAngleSwept) >= 2 * Math.PI) {
-    orbT = time - periodStartTime;
+    measuredT = time - periodStartTime;
     orbitComplete = true;
   }
 
@@ -563,13 +567,19 @@ function drawPlanet() {
 
 function drawTrail() {
   if (trail.length < 2) return;
-  for (let i = 1; i < trail.length; i++) {
-    const alpha = i / trail.length;
-    ctx.strokeStyle = `rgba(100,160,255,${alpha * 0.6})`;
+  // Draw trail in batches of similar alpha to reduce draw calls
+  const batchSize = 20;
+  const len = trail.length;
+  for (let b = 1; b < len; b += batchSize) {
+    const end = Math.min(b + batchSize, len);
+    const midAlpha = ((b + end) / 2) / len;
+    ctx.strokeStyle = `rgba(100,160,255,${midAlpha * 0.6})`;
     ctx.lineWidth = 1.2;
     ctx.beginPath();
-    ctx.moveTo(trail[i - 1].x, trail[i - 1].y);
-    ctx.lineTo(trail[i].x, trail[i].y);
+    ctx.moveTo(trail[b - 1].x, trail[b - 1].y);
+    for (let i = b; i < end; i++) {
+      ctx.lineTo(trail[i].x, trail[i].y);
+    }
     ctx.stroke();
   }
 }
@@ -796,7 +806,9 @@ function computeSectorArea(points) {
 function updateInfo(info) {
   const { r, v, energy, L } = info;
 
-  document.getElementById('infoT').textContent = orbT > 0 ? orbT.toFixed(1) : '—';
+  // Show measured T if available, otherwise theoretical T
+  const displayT = measuredT > 0 ? measuredT : orbT;
+  document.getElementById('infoT').textContent = displayT > 0 ? displayT.toFixed(1) + (measuredT > 0 ? ' (측정)' : ' (이론)') : '—';
   document.getElementById('infoA').textContent = orbA > 0 ? orbA.toFixed(1) : '—';
   document.getElementById('infoB').textContent = orbB > 0 ? orbB.toFixed(1) : '—';
   document.getElementById('infoE').textContent = orbA > 0 ? orbE.toFixed(4) : '—';
@@ -804,10 +816,14 @@ function updateInfo(info) {
   document.getElementById('infoR').textContent = r.toFixed(1);
 
   // Kepler's 3rd law: T²/a³ = 4π²/GM
-  if (orbA > 0 && orbT > 0) {
-    const k3 = (orbT * orbT) / (orbA * orbA * orbA);
+  // Use measured T for comparison against theoretical value
+  if (orbA > 0 && measuredT > 0) {
+    const k3measured = (measuredT * measuredT) / (orbA * orbA * orbA);
     const k3theory = 4 * Math.PI * Math.PI / GM;
-    document.getElementById('infoK3').textContent = k3.toFixed(6) + ' (이론: ' + k3theory.toFixed(6) + ')';
+    document.getElementById('infoK3').textContent = k3measured.toFixed(6) + ' (이론: ' + k3theory.toFixed(6) + ')';
+  } else if (orbA > 0) {
+    const k3theory = 4 * Math.PI * Math.PI / GM;
+    document.getElementById('infoK3').textContent = '1회전 후 측정 (이론: ' + k3theory.toFixed(6) + ')';
   } else {
     document.getElementById('infoK3').textContent = '—';
   }

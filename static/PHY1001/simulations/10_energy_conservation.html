@@ -213,7 +213,7 @@ canvas {
         <h3>트랙 선택</h3>
         <div class="btn-row">
           <button class="btn btn-track active" data-track="hill">언덕</button>
-          <button class="btn btn-track" data-track="loop">루프</button>
+          <button class="btn btn-track" data-track="loop">이중 언덕</button>
           <button class="btn btn-track" data-track="valley">골짜기</button>
         </div>
       </div>
@@ -506,10 +506,12 @@ function step(dt) {
   // Update speed
   ballSpeed += aTotal * dt;
 
-  // Friction energy loss
-  const ds = Math.abs(ballSpeed * dt);
-  const fricLoss = frictionForce * ds;
-  thermalE += fricLoss;
+  // Friction energy loss (only when actually moving)
+  if (Math.abs(ballSpeed) > 0.05) {
+    const ds = Math.abs(ballSpeed * dt);
+    const fricLoss = frictionForce * ds;
+    thermalE += fricLoss;
+  }
 
   // Clamp thermal energy
   if (thermalE > initialE) thermalE = initialE;
@@ -535,14 +537,14 @@ function step(dt) {
   // Update position
   ballParam += ballSpeed * dt;
 
-  // Clamp to track
+  // Clamp to track: stop at boundaries
   if (ballParam < 0) {
     ballParam = 0;
-    ballSpeed = Math.abs(ballSpeed) * 0.8;
+    ballSpeed = 0;
   }
   if (ballParam >= totalArcLen) {
     ballParam = totalArcLen - 0.01;
-    ballSpeed = -Math.abs(ballSpeed) * 0.8;
+    ballSpeed = 0;
   }
 
   // If total KE is tiny and at a local minimum, stop
@@ -712,7 +714,7 @@ function drawTrack() {
   ctx.fillText('롤러코스터 트랙', margin, 16);
 
   // Track type label
-  const trackLabels = {hill: '언덕', loop: '루프', valley: '골짜기'};
+  const trackLabels = {hill: '언덕', loop: '이중 언덕', valley: '골짜기'};
   ctx.fillStyle = '#888';
   ctx.font = '11px sans-serif';
   ctx.textAlign = 'right';
@@ -731,7 +733,7 @@ function drawGraph() {
   gCtx.fillStyle = '#333';
   gCtx.font = 'bold 12px sans-serif';
   gCtx.textAlign = 'left';
-  gCtx.fillText('에너지 vs 위치', margin.left, 15);
+  gCtx.fillText('에너지 vs 시간', margin.left, 15);
 
   // Axes
   gCtx.strokeStyle = '#999';
@@ -756,9 +758,15 @@ function drawGraph() {
   gCtx.fillStyle = '#666';
   gCtx.font = '10px sans-serif';
   gCtx.textAlign = 'center';
-  gCtx.fillText('위치 x (m)', margin.left + pw / 2, ch - 5);
+  gCtx.fillText('시간 t (s)', margin.left + pw / 2, ch - 5);
 
   const eMax = initialE > 0 ? initialE * 1.15 : 100;
+
+  // Determine time range
+  let tMax = 1;
+  if (energyHistory.length > 0) {
+    tMax = Math.max(1, energyHistory[energyHistory.length - 1].t);
+  }
 
   // Y ticks
   gCtx.fillStyle = '#aaa';
@@ -778,28 +786,29 @@ function drawGraph() {
     }
   }
 
-  // X ticks
+  // X ticks (time)
   gCtx.textAlign = 'center';
-  for (let x = 0; x <= worldW; x += 5) {
-    const cx = margin.left + (x / worldW) * pw;
-    gCtx.fillText(x.toString(), cx, ch - margin.bottom + 15);
+  const xTickCount = 5;
+  for (let i = 0; i <= xTickCount; i++) {
+    const tVal = (tMax / xTickCount) * i;
+    const cx = margin.left + (i / xTickCount) * pw;
+    gCtx.fillText(tVal.toFixed(1), cx, ch - margin.bottom + 15);
   }
 
   if (energyHistory.length < 2) return;
 
-  // Draw stacked area: thermal, then PE, then KE
-  function xToCanvas(wx) { return margin.left + (wx / worldW) * pw; }
+  // Draw energy vs time
+  function tToCanvas(t) { return margin.left + (t / tMax) * pw; }
   function eToCanvas(e) { return ch - margin.bottom - (e / eMax) * ph; }
 
-  // Sort history by x for plotting
-  const sorted = [...energyHistory];
+  const sorted = energyHistory;
 
   // Draw KE
   gCtx.beginPath();
   gCtx.strokeStyle = '#ef5350';
   gCtx.lineWidth = 1.5;
   for (let i = 0; i < sorted.length; i++) {
-    const cx = xToCanvas(sorted[i].x);
+    const cx = tToCanvas(sorted[i].t);
     const cy = eToCanvas(sorted[i].ke);
     if (i === 0) gCtx.moveTo(cx, cy); else gCtx.lineTo(cx, cy);
   }
@@ -810,7 +819,7 @@ function drawGraph() {
   gCtx.strokeStyle = '#42a5f5';
   gCtx.lineWidth = 1.5;
   for (let i = 0; i < sorted.length; i++) {
-    const cx = xToCanvas(sorted[i].x);
+    const cx = tToCanvas(sorted[i].t);
     const cy = eToCanvas(sorted[i].pe);
     if (i === 0) gCtx.moveTo(cx, cy); else gCtx.lineTo(cx, cy);
   }
@@ -821,7 +830,7 @@ function drawGraph() {
   gCtx.strokeStyle = '#4caf50';
   gCtx.lineWidth = 2;
   for (let i = 0; i < sorted.length; i++) {
-    const cx = xToCanvas(sorted[i].x);
+    const cx = tToCanvas(sorted[i].t);
     const cy = eToCanvas(sorted[i].ke + sorted[i].pe);
     if (i === 0) gCtx.moveTo(cx, cy); else gCtx.lineTo(cx, cy);
   }
@@ -844,7 +853,7 @@ function drawGraph() {
     gCtx.strokeStyle = '#ff9800';
     gCtx.lineWidth = 1.5;
     for (let i = 0; i < sorted.length; i++) {
-      const cx = xToCanvas(sorted[i].x);
+      const cx = tToCanvas(sorted[i].t);
       const cy = eToCanvas(sorted[i].th);
       if (i === 0) gCtx.moveTo(cx, cy); else gCtx.lineTo(cx, cy);
     }

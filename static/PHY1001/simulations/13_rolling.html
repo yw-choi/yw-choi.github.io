@@ -498,9 +498,6 @@ function draw() {
 
   // Angle arc
   const arcR = 50;
-  ctx.beginPath();
-  ctx.arc(x0 + rampPixLen * Math.cos(theta), y1, arcR, Math.PI, Math.PI + theta, true);
-  // Actually let's draw the angle at the base
   const baseX = x1;
   const baseY = y1;
   ctx.beginPath();
@@ -776,7 +773,7 @@ function updateRankingDisplay() {
     div.innerHTML = '<div style="color:#999; font-size:0.84rem; padding:8px 0;">경주 진행 중...</div>';
     return;
   }
-  const medals = ['🥇', '🥈', '🥉', '4'];
+  const medals = ['🥇', '🥈', '🥉', '4위'];
   let html = '';
   for (let i = 0; i < state.rankings.length; i++) {
     const r = state.rankings[i];

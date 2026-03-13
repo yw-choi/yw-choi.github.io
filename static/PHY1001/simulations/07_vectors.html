@@ -345,20 +345,24 @@ function drawArrow(x1, y1, x2, y2, color, lineWidth, dashed, headSize) {
   ctx.restore();
 }
 
-function drawAngleArc(cx, cy, angle, color) {
+function drawAngleArc(cx, cy, angle, color, vec) {
   const radius = 25;
-  const startAngle = 0;
-  const endAngle = -angle * Math.PI / 180; // canvas y is flipped
+  // Compute screen-space angle: negate y because canvas y is inverted
+  const dx = vec ? (vec.ex - vec.sx) : Math.cos(angle * Math.PI / 180);
+  const dy = vec ? (vec.ey - vec.sy) : Math.sin(angle * Math.PI / 180);
+  const screenAngle = Math.atan2(-dy, dx); // negate dy for canvas coords
 
   ctx.save();
   ctx.strokeStyle = color;
   ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.arc(cx, cy, radius, startAngle, endAngle, angle > 0);
+  // Draw arc from +x axis (0) to the screen-space angle
+  const anticlockwise = screenAngle < 0;
+  ctx.arc(cx, cy, radius, 0, screenAngle, anticlockwise);
   ctx.stroke();
 
-  // Angle label
-  const midAngle = endAngle / 2;
+  // Angle label at midpoint of arc
+  const midAngle = screenAngle / 2;
   const lx = cx + (radius + 12) * Math.cos(midAngle);
   const ly = cy + (radius + 12) * Math.sin(midAngle);
   ctx.fillStyle = color;
@@ -443,7 +447,7 @@ function drawVectors() {
     // Angle arc from start point
     const info = getVectorInfo(vec);
     if (info.mag > 0.1) {
-      drawAngleArc(sx, sy, info.angle, color);
+      drawAngleArc(sx, sy, info.angle, color, vec);
     }
 
     // Label
@@ -488,7 +492,24 @@ function drawVectors() {
     if (rMag > 0.1) {
       let rAngle = Math.atan2(ry, rx) * 180 / Math.PI;
       if (rAngle < 0) rAngle += 360;
-      drawAngleArc(osx, osy, rAngle, RESULTANT_COLOR);
+      const rVecForArc = { sx: 0, sy: 0, ex: rx, ey: ry };
+      drawAngleArc(osx, osy, rAngle, RESULTANT_COLOR, rVecForArc);
+    }
+
+    // Tip-to-tail chain: draw each vector head-to-tail with thin arrows
+    {
+      let tailGx = 0, tailGy = 0;
+      ctx.globalAlpha = 0.4;
+      vectors.forEach((v, i) => {
+        const dx = v.ex - v.sx;
+        const dy = v.ey - v.sy;
+        const [tsx, tsy] = gridToCanvas(tailGx, tailGy);
+        const [tex, tey] = gridToCanvas(tailGx + dx, tailGy + dy);
+        drawArrow(tsx, tsy, tex, tey, COLORS[i], 2, [6, 4], 10);
+        tailGx += dx;
+        tailGy += dy;
+      });
+      ctx.globalAlpha = 1.0;
     }
 
     // Resultant components

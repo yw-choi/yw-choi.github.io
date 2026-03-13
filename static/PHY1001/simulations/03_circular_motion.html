@@ -230,6 +230,7 @@
   let running = false;
   let lastTime = null;
   let tracePoints = [];
+  let animId = null;
 
   // Map px radius (50-200) to meters (1-5)
   function pxToM(px) { return 1 + (px - 50) / (200 - 50) * 4; }
@@ -344,13 +345,14 @@
     const r = radiusM();
     const a_phys = speed * speed / r;
 
-    // Velocity vector: tangent to circle (perpendicular to radius, in direction of motion)
-    // angle increases CCW, so velocity direction is at angle + 90 degrees
+    // Velocity vector: tangent to circle in the direction of motion (CCW)
+    // Position on screen: (cx + R*cos(θ), cy - R*sin(θ))
+    // d/dt position = R*ω*(-sin(θ), -cos(θ)) in screen coords... but that points wrong.
+    // Correct: d(cos θ)/dt = -sin(θ)*ω, d(-sin θ)/dt = -cos(θ)*ω
+    // So screen velocity direction is (-sin(θ), -cos(θ))*ω*R
+    // But we need to verify: at θ=0, ball is at right. CCW motion means ball moves upward on screen (cy decreases).
+    // At θ=0: (-sin(0), -cos(0)) = (0, -1) which is upward on screen. Correct!
     const vScale = 12; // px per m/s
-    const vx = -speed * Math.sin(angle) * (-1); // tangent: (-sin, -cos) for CCW in screen coords
-    // In screen coords (y-down): position is (cos(a), -sin(a))*R
-    // velocity direction tangent CCW: d/dt(cos(a), -sin(a)) * omega = (-sin(a), -cos(a)) * omega
-    // We want direction only scaled by speed magnitude
     const vDirX = -Math.sin(angle);   // tangent x (screen)
     const vDirY = -Math.cos(angle);   // tangent y (screen, y-down)
 
@@ -381,7 +383,7 @@
     ctx.strokeStyle = 'rgba(100,100,160,0.3)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.arc(cx, cy, 24, 0, -angle, angle > 0);
+    ctx.arc(cx, cy, 24, 0, -angle, true);
     ctx.stroke();
   }
 
@@ -402,7 +404,7 @@
 
     updateLabels();
     draw();
-    requestAnimationFrame(step);
+    animId = requestAnimationFrame(step);
   }
 
   // Controls
@@ -419,11 +421,18 @@
   });
 
   btnPlay.addEventListener('click', () => {
-    if (!running) { running = true; lastTime = null; requestAnimationFrame(step); }
+    if (running) return;
+    running = true;
+    lastTime = null;
+    animId = requestAnimationFrame(step);
   });
-  btnPause.addEventListener('click', () => { running = false; });
+  btnPause.addEventListener('click', () => {
+    running = false;
+    if (animId) { cancelAnimationFrame(animId); animId = null; }
+  });
   btnReset.addEventListener('click', () => {
     running = false;
+    if (animId) { cancelAnimationFrame(animId); animId = null; }
     angle = 0;
     tracePoints = [];
     lastTime = null;

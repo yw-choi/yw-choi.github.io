@@ -16,20 +16,20 @@ header {
   background: #1a1a2e;
   color: #fff;
   text-align: center;
-  padding: 18px 20px;
+  padding: 10px 20px;
 }
 header h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: 1px; }
 header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
 .container {
   max-width: 1400px;
-  margin: 20px auto;
+  margin: 10px auto;
   padding: 0 16px;
 }
 .sync-bar {
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 .sync-bar button {
   padding: 8px 24px;
@@ -53,14 +53,14 @@ header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  padding: 16px;
+  padding: 12px;
   min-width: 0;
 }
 .sim-panel h2 {
   font-size: 1.05rem;
   color: #1a1a2e;
-  margin-bottom: 10px;
-  padding-bottom: 6px;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
   border-bottom: 2px solid #e8e8e8;
   text-align: center;
 }
@@ -182,9 +182,9 @@ canvas {
     <!-- Spring Panel -->
     <div class="sim-panel">
       <h2>용수철-질량 시스템</h2>
-      <canvas id="springCanvas" width="600" height="200"></canvas>
-      <canvas id="springGraph" width="600" height="140"></canvas>
-      <canvas id="springPhase" width="600" height="140"></canvas>
+      <canvas id="springCanvas" width="600" height="160"></canvas>
+      <canvas id="springGraph" width="600" height="110"></canvas>
+      <canvas id="springPhase" width="600" height="110"></canvas>
       <div class="controls">
         <div class="slider-group">
           <label>용수철 상수 k</label>
@@ -230,9 +230,9 @@ canvas {
     <!-- Pendulum Panel -->
     <div class="sim-panel">
       <h2>단진자</h2>
-      <canvas id="pendCanvas" width="600" height="200"></canvas>
-      <canvas id="pendGraph" width="600" height="140"></canvas>
-      <canvas id="pendPhase" width="600" height="140"></canvas>
+      <canvas id="pendCanvas" width="600" height="160"></canvas>
+      <canvas id="pendGraph" width="600" height="110"></canvas>
+      <canvas id="pendPhase" width="600" height="110"></canvas>
       <div class="controls">
         <div class="slider-group">
           <label>줄 길이 L</label>
@@ -352,12 +352,29 @@ const springSim = (() => {
   }
 
   function updateInfo() {
-    const omega = Math.sqrt(k / m);
-    const T = 2 * Math.PI / omega;
-    const f = 1 / T;
-    el('sT').textContent = T.toFixed(3) + ' s';
-    el('sF').textContent = f.toFixed(3) + ' Hz';
-    el('sW').textContent = omega.toFixed(3) + ' rad/s';
+    const omega0 = Math.sqrt(k / m);
+    const gammaTerm = gamma / (2 * m);
+    const omega0sq = k / m;
+    let omega, T, f;
+    if (damping && gammaTerm * gammaTerm < omega0sq) {
+      // Underdamped: omega_d = sqrt(omega0^2 - (gamma/2m)^2)
+      omega = Math.sqrt(omega0sq - gammaTerm * gammaTerm);
+      T = 2 * Math.PI / omega;
+      f = 1 / T;
+    } else {
+      omega = omega0;
+      T = 2 * Math.PI / omega;
+      f = 1 / T;
+    }
+    if (damping) {
+      el('sT').textContent = T.toFixed(3) + ' s (감쇠)';
+      el('sF').textContent = f.toFixed(3) + ' Hz (감쇠)';
+      el('sW').textContent = omega0.toFixed(3) + ' → ' + omega.toFixed(3) + ' rad/s';
+    } else {
+      el('sT').textContent = T.toFixed(3) + ' s';
+      el('sF').textContent = f.toFixed(3) + ' Hz';
+      el('sW').textContent = omega0.toFixed(3) + ' rad/s';
+    }
     el('sAmp').textContent = A.toFixed(3) + ' m';
     el('sX').textContent = x.toFixed(4) + ' m';
     el('sV').textContent = v.toFixed(4) + ' m/s';
@@ -604,8 +621,8 @@ const pendSim = (() => {
   }
 
   function step() {
-    // RK4 for pendulum: theta'' = -(g/L)*sin(theta) - (gamma/(m*L))*omega
-    function accel(th, om) { return -(g/L)*Math.sin(th) - (gamma/(m*L))*om; }
+    // RK4 for pendulum: theta'' = -(g/L)*sin(theta) - (b/m)*omega
+    function accel(th, om) { return -(g/L)*Math.sin(th) - (gamma/m)*om; }
     const k1o = accel(theta, omega) * dt;
     const k1t = omega * dt;
     const k2o = accel(theta + k1t/2, omega + k1o/2) * dt;
@@ -623,11 +640,27 @@ const pendSim = (() => {
 
   function updateInfo() {
     const omega0 = Math.sqrt(g / L);
-    const T = 2 * Math.PI / omega0;
-    const f = 1 / T;
-    el('pT').textContent = T.toFixed(3) + ' s';
-    el('pF').textContent = f.toFixed(3) + ' Hz';
-    el('pW').textContent = omega0.toFixed(3) + ' rad/s';
+    const gammaTerm = gamma / (2 * m);
+    const omega0sq = g / L;
+    let omegaD, T, f;
+    if (damping && gammaTerm * gammaTerm < omega0sq) {
+      omegaD = Math.sqrt(omega0sq - gammaTerm * gammaTerm);
+      T = 2 * Math.PI / omegaD;
+      f = 1 / T;
+    } else {
+      omegaD = omega0;
+      T = 2 * Math.PI / omega0;
+      f = 1 / T;
+    }
+    if (damping) {
+      el('pT').textContent = T.toFixed(3) + ' s (감쇠)';
+      el('pF').textContent = f.toFixed(3) + ' Hz (감쇠)';
+      el('pW').textContent = omega0.toFixed(3) + ' → ' + omegaD.toFixed(3) + ' rad/s';
+    } else {
+      el('pT').textContent = T.toFixed(3) + ' s';
+      el('pF').textContent = f.toFixed(3) + ' Hz';
+      el('pW').textContent = omega0.toFixed(3) + ' rad/s';
+    }
     el('pAmp').textContent = theta0Deg.toFixed(1) + '\u00B0';
     el('pTh').textContent = (theta * 180 / Math.PI).toFixed(2) + '\u00B0';
     el('pOm').textContent = omega.toFixed(4) + ' rad/s';
@@ -837,7 +870,7 @@ function setupCanvas(canvas) {
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
   canvas.width = rect.width * dpr;
-  canvas.height = (canvas === el('springCanvas') || canvas === el('pendCanvas') ? 200 : 140) * dpr * rect.width / 600;
+  canvas.height = (canvas === el('springCanvas') || canvas === el('pendCanvas') ? 160 : 110) * dpr * rect.width / 600;
   canvas.getContext('2d').scale(dpr * rect.width / 600, dpr * rect.width / 600);
 }
 

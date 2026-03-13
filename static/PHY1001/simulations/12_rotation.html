@@ -404,7 +404,9 @@ const shapeFormulas = {
 let mode = 'single'; // 'single' | 'compare'
 let playing = false;
 let simTime = 0;
-const dt = 1/60;
+let dt = 1/60;
+const MAX_OMEGA = 50; // max angular velocity cap (rad/s)
+let lastTimestamp = null;
 
 // Single mode state
 let theta = 0, omega = 0;
@@ -468,6 +470,7 @@ function togglePause() {
 }
 function resetSim() {
   playing = false;
+  lastTimestamp = null;
   simTime = 0;
   theta = 0; omega = 0;
   comp = [{ theta:0, omega:0 }, { theta:0, omega:0 }];
@@ -502,6 +505,9 @@ function stepSingle() {
   const alpha = tau / I;
 
   omega += alpha * dt;
+  // Cap angular velocity
+  if (omega > MAX_OMEGA) omega = MAX_OMEGA;
+  if (omega < -MAX_OMEGA) omega = -MAX_OMEGA;
   theta += omega * dt;
   simTime += dt;
 
@@ -529,6 +535,9 @@ function stepCompare() {
     const I = getMOI(shapes[i], M, R);
     const alpha = tau / I;
     comp[i].omega += alpha * dt;
+    // Cap angular velocity
+    if (comp[i].omega > MAX_OMEGA) comp[i].omega = MAX_OMEGA;
+    if (comp[i].omega < -MAX_OMEGA) comp[i].omega = -MAX_OMEGA;
     comp[i].theta += comp[i].omega * dt;
 
     compHist[i].t.push(simTime);
@@ -553,7 +562,8 @@ function updateDisplay() {
 
   document.getElementById('valTheta').textContent = fmt(theta) + ' rad';
   document.getElementById('valThetaDeg').textContent = fmt(theta * 180 / Math.PI, 1) + '°';
-  document.getElementById('valOmega').textContent = fmt(omega) + ' rad/s';
+  const omegaCapped = Math.abs(omega) >= MAX_OMEGA;
+  document.getElementById('valOmega').textContent = fmt(omega) + ' rad/s' + (omegaCapped ? ' (최대 속도)' : '');
   document.getElementById('valAlpha').textContent = fmt(alpha) + ' rad/s²';
   document.getElementById('valRevs').textContent = fmt(theta / (2*Math.PI), 2);
   document.getElementById('valTime').textContent = fmt(simTime, 2) + ' s';
@@ -692,24 +702,33 @@ function drawShape(ctx, shape, cx, cy, R_visual, angle, color) {
 
   ctx.restore();
 
-  // Angle arc (unrotated)
-  if (Math.abs(angle % (2*Math.PI)) > 0.02) {
+  // Angle arc (unrotated) - show angle modulo 2pi smoothly
+  const displayAngle = ((angle % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+  if (displayAngle > 0.02) {
     ctx.save();
     ctx.translate(cx, cy);
     ctx.beginPath();
     const arcR = r * 0.35;
-    const endAngle = angle % (2*Math.PI);
-    ctx.arc(0, 0, arcR, 0, endAngle, endAngle < 0);
+    ctx.arc(0, 0, arcR, 0, displayAngle, false);
     ctx.strokeStyle = '#e74c3c88';
     ctx.lineWidth = 2;
     ctx.stroke();
     // Arrow at end of arc
-    const ax = arcR * Math.cos(endAngle);
-    const ay = arcR * Math.sin(endAngle);
+    const ax = arcR * Math.cos(displayAngle);
+    const ay = arcR * Math.sin(displayAngle);
     ctx.beginPath();
     ctx.arc(ax, ay, 3, 0, 2*Math.PI);
     ctx.fillStyle = '#e74c3c';
     ctx.fill();
+
+    // Show revolution counter
+    const revs = Math.abs(angle) / (2*Math.PI);
+    if (revs >= 1) {
+      ctx.fillStyle = '#e74c3c';
+      ctx.font = 'bold 12px Segoe UI, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(Math.floor(revs) + ' rev', 0, arcR + 16);
+    }
     ctx.restore();
   }
 }
@@ -821,7 +840,7 @@ function drawCompCanvas(idx) {
 }
 
 // ===================== Graphs =====================
-function drawGraph(canvasId, times, values, color, ylabel, values2, color2) {
+function drawGraph(canvasId, times, values, color, ylabel, values2, color2, legend1, legend2) {
   const c = document.getElementById(canvasId);
   const ctx = c.getContext('2d');
   const W = c.width, H = c.height;
@@ -882,6 +901,24 @@ function drawGraph(canvasId, times, values, color, ylabel, values2, color2) {
   plotLine(values, color);
   if (values2) plotLine(values2, color2);
 
+  // Legend for compare mode
+  if (values2 && legend1 && legend2) {
+    const lx = pad.l + gw - 100;
+    const ly = pad.t + 6;
+    ctx.font = '9px Segoe UI, sans-serif';
+    // Legend item 1
+    ctx.fillStyle = color;
+    ctx.fillRect(lx, ly, 10, 3);
+    ctx.fillStyle = '#555';
+    ctx.textAlign = 'left';
+    ctx.fillText(legend1, lx + 14, ly + 4);
+    // Legend item 2
+    ctx.fillStyle = color2;
+    ctx.fillRect(lx, ly + 12, 10, 3);
+    ctx.fillStyle = '#555';
+    ctx.fillText(legend2, lx + 14, ly + 16);
+  }
+
   // Axis labels
   ctx.fillStyle = '#888';
   ctx.font = '10px Courier New, monospace';
@@ -905,9 +942,13 @@ function drawGraphs() {
     drawGraph('graphAlpha', histT, histAlpha, '#e74c3c', 'α (rad/s²)');
   } else {
     const t0 = compHist[0].t, t1 = compHist[1].t;
-    drawGraph('graphTheta', t0, compHist[0].theta, '#4a6cf7', 'θ (rad)', compHist[1].theta, '#e67e22');
-    drawGraph('graphOmega', t0, compHist[0].omega, '#27ae60', 'ω (rad/s)', compHist[1].omega, '#e67e22');
-    drawGraph('graphAlpha', t0, compHist[0].alpha, '#e74c3c', 'α (rad/s²)', compHist[1].alpha, '#e67e22');
+    const s1 = document.getElementById('compShape1').value;
+    const s2 = document.getElementById('compShape2').value;
+    const leg1 = 'A: ' + shapeNames[s1];
+    const leg2 = 'B: ' + shapeNames[s2];
+    drawGraph('graphTheta', t0, compHist[0].theta, '#4a6cf7', 'θ (rad)', compHist[1].theta, '#e67e22', leg1, leg2);
+    drawGraph('graphOmega', t0, compHist[0].omega, '#27ae60', 'ω (rad/s)', compHist[1].omega, '#e67e22', leg1, leg2);
+    drawGraph('graphAlpha', t0, compHist[0].alpha, '#e74c3c', 'α (rad/s²)', compHist[1].alpha, '#e67e22', leg1, leg2);
   }
 }
 
@@ -923,8 +964,14 @@ function drawAll() {
 }
 
 // ===================== Main Loop =====================
-function loop() {
+function loop(timestamp) {
   if (playing) {
+    if (lastTimestamp !== null) {
+      const elapsed = (timestamp - lastTimestamp) / 1000;
+      dt = Math.min(elapsed, 1/30); // cap at ~33ms
+    }
+    lastTimestamp = timestamp;
+
     if (mode === 'single') {
       stepSingle();
     } else {
@@ -932,6 +979,8 @@ function loop() {
     }
     updateDisplay();
     drawAll();
+  } else {
+    lastTimestamp = null;
   }
   animId = requestAnimationFrame(loop);
 }

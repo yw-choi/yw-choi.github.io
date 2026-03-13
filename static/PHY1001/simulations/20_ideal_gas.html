@@ -173,7 +173,7 @@ canvas {
           <div class="item highlight full"><span class="lbl">PV / NkT</span><span class="val" id="dispPVNkT">—</span></div>
           <div class="item"><span class="lbl">v_rms (이론)</span><span class="val" id="dispVrmsTheory">—</span></div>
           <div class="item"><span class="lbl">v_rms (측정)</span><span class="val" id="dispVrmsSim">—</span></div>
-          <div class="item full"><span class="lbl">KE/분자 = (3/2)kT</span><span class="val" id="dispKE">—</span></div>
+          <div class="item full"><span class="lbl">KE/분자 = kT (2D)</span><span class="val" id="dispKE">—</span></div>
         </div>
       </div>
     </div>
@@ -531,15 +531,14 @@ function updateInfo() {
   const scale = 0.0012;
   const vrmsTheory = Math.sqrt(2 * kB * temperature / mMol) * scale;
 
-  // KE per molecule (physical)
-  const kePerMol = (3/2) * kB * temperature; // 3D formula as in textbook
+  // KE per molecule (2D: 2 degrees of freedom => KE = kT)
+  const kePerMol = kB * temperature;
 
-  // Pressure: use smoothed value
-  // For PV=NkT check: P_sim * V_sim should be proportional to N * T
-  // We define P and V in simulation units, then PV/NkT should → 1 if calibrated
-  // P_sim = pressureSmoothed (dp/dt / perimeter), in our pixel/frame mass=1 units
-  // To get PV/NkT ≈ 1: P * V = N * sigma^2 for 2D ideal gas
-  // sigma^2 = kB*T/m * scale^2
+  // Pressure in 2D: P = Force/Length = dp/(dt * perimeter)
+  // For 2D ideal gas: PV (= P * Area) = NkT
+  // In sim units: momentum uses mass=1 pixel units, velocity in px/frame
+  // sigma^2 = kB*T/m * scale^2 is the variance of each velocity component
+  // For 2D ideal gas with our sim units: P * Area = N * sigma^2
   const sigma2 = kB * temperature / mMol * scale * scale;
   const PV = pressureSmoothed * V;
   const NkT = N * sigma2;
@@ -642,6 +641,7 @@ document.getElementById('sliderN').addEventListener('input', e => {
 // ========== Animation Loop ==========
 let frameCount = 0;
 function animate() {
+  if (!running) { animRunning = false; return; }
   step();
   drawSim();
   frameCount++;
@@ -652,22 +652,28 @@ function animate() {
   animId = requestAnimationFrame(animate);
 }
 
+let animRunning = false; // guard against multiple RAF loops
 function togglePlay() {
   running = !running;
   const btn = document.getElementById('btnPlay');
   if (running) {
     btn.textContent = '⏸ 일시정지';
     btn.classList.add('active');
-    animate();
+    if (!animRunning) {
+      animRunning = true;
+      animate();
+    }
   } else {
     btn.textContent = '▶ 시작';
     btn.classList.remove('active');
     cancelAnimationFrame(animId);
+    animRunning = false;
   }
 }
 
 function resetSim() {
   running = false;
+  animRunning = false;
   cancelAnimationFrame(animId);
   const btn = document.getElementById('btnPlay');
   btn.textContent = '▶ 시작';

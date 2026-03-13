@@ -225,9 +225,9 @@ canvas {
         <div class="val" id="valA1">1.00</div>
       </div>
       <div class="slider-group">
-        <label>파장 &lambda;<sub>1</sub> (px)</label>
-        <input type="range" id="slLam1" min="50" max="300" step="5" value="200">
-        <div class="val" id="valLam1">200</div>
+        <label>파장 &lambda;<sub>1</sub> (m)</label>
+        <input type="range" id="slLam1" min="0.5" max="3.0" step="0.05" value="2.0">
+        <div class="val" id="valLam1">2.00</div>
       </div>
       <div class="slider-group">
         <label>진동수 f<sub>1</sub> (Hz)</label>
@@ -245,9 +245,9 @@ canvas {
         <div class="val" id="valA2">1.00</div>
       </div>
       <div class="slider-group">
-        <label>파장 &lambda;<sub>2</sub> (px)</label>
-        <input type="range" id="slLam2" min="50" max="300" step="5" value="200">
-        <div class="val" id="valLam2">200</div>
+        <label>파장 &lambda;<sub>2</sub> (m)</label>
+        <input type="range" id="slLam2" min="0.5" max="3.0" step="0.05" value="2.0">
+        <div class="val" id="valLam2">2.00</div>
       </div>
       <div class="slider-group">
         <label>진동수 f<sub>2</sub> (Hz)</label>
@@ -300,39 +300,44 @@ const slA2 = document.getElementById('slA2');
 const slLam2 = document.getElementById('slLam2');
 const slF2 = document.getElementById('slF2');
 
+// Scale factor: pixels per meter
+const PX_PER_M = 100;
+
 function getParams() {
   const A1 = parseFloat(slA1.value);
-  const lam1 = parseFloat(slLam1.value);
+  const lam1 = parseFloat(slLam1.value); // meters
   const f1 = parseFloat(slF1.value);
-  const k1 = 2 * Math.PI / lam1;
+  const k1 = 2 * Math.PI / lam1;  // 1/m
   const w1 = 2 * Math.PI * f1;
-  const v1 = f1 * lam1;
+  const v1 = f1 * lam1;  // m/s
   const T1 = 1 / f1;
+  const lam1_px = lam1 * PX_PER_M; // pixels for drawing
 
   const A2 = parseFloat(slA2.value);
-  const lam2 = parseFloat(slLam2.value);
+  const lam2 = parseFloat(slLam2.value); // meters
   const f2 = parseFloat(slF2.value);
-  const k2 = 2 * Math.PI / lam2;
+  const k2 = 2 * Math.PI / lam2;  // 1/m
   const w2 = 2 * Math.PI * f2;
-  const v2 = f2 * lam2;
+  const v2 = f2 * lam2;  // m/s
+  const lam2_px = lam2 * PX_PER_M;
 
-  return { A1, lam1, f1, k1, w1, v1, T1, A2, lam2, f2, k2, w2, v2 };
+  return { A1, lam1, f1, k1, w1, v1, T1, lam1_px, A2, lam2, f2, k2, w2, v2, lam2_px };
 }
 
 function updateLabels() {
   const p = getParams();
   document.getElementById('valA1').textContent = p.A1.toFixed(2);
-  document.getElementById('valLam1').textContent = p.lam1.toFixed(0);
+  document.getElementById('valLam1').textContent = p.lam1.toFixed(2);
   document.getElementById('valF1').textContent = p.f1.toFixed(2);
   document.getElementById('valA2').textContent = p.A2.toFixed(2);
-  document.getElementById('valLam2').textContent = p.lam2.toFixed(0);
+  document.getElementById('valLam2').textContent = p.lam2.toFixed(2);
   document.getElementById('valF2').textContent = p.f2.toFixed(2);
 
-  document.getElementById('dispV').textContent = p.v1.toFixed(1) + ' px/s';
+  document.getElementById('dispV').textContent = p.v1.toFixed(2) + ' m/s';
   document.getElementById('dispF').textContent = p.f1.toFixed(2) + ' Hz';
-  document.getElementById('dispLam').textContent = p.lam1.toFixed(0) + ' px';
+  document.getElementById('dispLam').textContent = p.lam1.toFixed(2) + ' m';
   document.getElementById('dispT').textContent = p.T1.toFixed(3) + ' s';
-  document.getElementById('dispK').textContent = p.k1.toFixed(4) + ' /px';
+  document.getElementById('dispK').textContent = p.k1.toFixed(2) + ' /m';
   document.getElementById('dispW').textContent = p.w1.toFixed(2) + ' rad/s';
 
   // Equation
@@ -340,7 +345,7 @@ function updateLabels() {
     document.getElementById('eqMain').innerHTML =
       'y(x,t) = A sin(kx &minus; &omega;t)';
     document.getElementById('eqVals').innerHTML =
-      'A = <span>' + p.A1.toFixed(2) + '</span> &nbsp; k = <span>' + p.k1.toFixed(4) + ' /px</span> &nbsp; &omega; = <span>' + p.w1.toFixed(2) + ' rad/s</span> &nbsp; v = f&lambda; = <span>' + p.v1.toFixed(1) + ' px/s</span>';
+      'A = <span>' + p.A1.toFixed(2) + ' m</span> &nbsp; k = <span>' + p.k1.toFixed(2) + ' /m</span> &nbsp; &omega; = <span>' + p.w1.toFixed(2) + ' rad/s</span> &nbsp; v = f&lambda; = <span>' + p.v1.toFixed(2) + ' m/s</span>';
   } else {
     const dirStr = wave2Dir === 1 ? '&minus;' : '+';
     document.getElementById('eqMain').innerHTML =
@@ -399,11 +404,13 @@ const SCALE = 80; // pixels per unit amplitude
 const marginX = 30;
 const cy = H / 2;
 
-function waveY(x, time, p) {
-  const y1 = p.A1 * Math.sin(p.k1 * x - p.w1 * time);
+function waveY(x_px, time, p) {
+  // Convert pixel position to meters
+  const x_m = x_px / PX_PER_M;
+  const y1 = p.A1 * Math.sin(p.k1 * x_m - p.w1 * time);
   if (mode === 'travel') return y1;
   const sign = wave2Dir === 1 ? -1 : 1;
-  const y2 = p.A2 * Math.sin(p.k2 * x + sign * p.w2 * time);
+  const y2 = p.A2 * Math.sin(p.k2 * x_m + sign * p.w2 * time);
   return y1 + y2;
 }
 
@@ -449,8 +456,9 @@ function draw() {
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     for (let px = xStart; px <= xEnd; px++) {
-      const x = px - xStart;
-      const y1 = p.A1 * Math.sin(p.k1 * x - p.w1 * t);
+      const x_px = px - xStart;
+      const x_m = x_px / PX_PER_M;
+      const y1 = p.A1 * Math.sin(p.k1 * x_m - p.w1 * t);
       const sy = cy - y1 * SCALE;
       px === xStart ? ctx.moveTo(px, sy) : ctx.lineTo(px, sy);
     }
@@ -460,9 +468,10 @@ function draw() {
     ctx.strokeStyle = 'rgba(239, 83, 80, 0.35)';
     ctx.beginPath();
     for (let px = xStart; px <= xEnd; px++) {
-      const x = px - xStart;
+      const x_px = px - xStart;
+      const x_m = x_px / PX_PER_M;
       const sign = wave2Dir === 1 ? -1 : 1;
-      const y2 = p.A2 * Math.sin(p.k2 * x + sign * p.w2 * t);
+      const y2 = p.A2 * Math.sin(p.k2 * x_m + sign * p.w2 * t);
       const sy = cy - y2 * SCALE;
       px === xStart ? ctx.moveTo(px, sy) : ctx.lineTo(px, sy);
     }
@@ -507,23 +516,26 @@ function draw() {
       ctx.stroke();
 
       // Velocity arrow (transverse)
-      const dt = 0.01;
-      const yNext = waveY(x, t + dt, p);
-      const vy = -(yNext - y) / dt * 2; // scale for visibility
-      if (Math.abs(vy) > 0.02) {
-        const arrowLen = Math.min(Math.abs(vy) * SCALE * 0.15, 25);
-        const arrowDir = vy > 0 ? 1 : -1;
+      // Physical velocity: vy_phys = dy/dt (positive = upward)
+      const dtv = 0.01;
+      const yNext = waveY(x, t + dtv, p);
+      const vy_phys = (yNext - y) / dtv; // positive = moving up in physical coords
+      if (Math.abs(vy_phys) > 0.01) {
+        const arrowLen = Math.min(Math.abs(vy_phys) * SCALE * 0.3, 25);
+        // Canvas y-axis is inverted: physical up = canvas negative y
+        // Arrow should point up on canvas (negative y) when vy_phys > 0
+        const canvasDir = vy_phys > 0 ? -1 : 1; // -1 = up on canvas
         ctx.strokeStyle = '#4caf50';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(px, sy);
-        ctx.lineTo(px, sy + arrowDir * arrowLen);
+        ctx.lineTo(px, sy + canvasDir * arrowLen);
         ctx.stroke();
         // Arrowhead
         ctx.beginPath();
-        ctx.moveTo(px, sy + arrowDir * arrowLen);
-        ctx.lineTo(px - 3, sy + arrowDir * (arrowLen - 5));
-        ctx.lineTo(px + 3, sy + arrowDir * (arrowLen - 5));
+        ctx.moveTo(px, sy + canvasDir * arrowLen);
+        ctx.lineTo(px - 3, sy + canvasDir * (arrowLen - 5));
+        ctx.lineTo(px + 3, sy + canvasDir * (arrowLen - 5));
         ctx.closePath();
         ctx.fillStyle = '#4caf50';
         ctx.fill();
@@ -540,9 +552,10 @@ function draw() {
   if (mode === 'super' && !snapshot) {
     // Check at center
     const xMid = (xEnd - xStart) / 2;
-    const y1mid = p.A1 * Math.sin(p.k1 * xMid - p.w1 * t);
+    const xMid_m = xMid / PX_PER_M;
+    const y1mid = p.A1 * Math.sin(p.k1 * xMid_m - p.w1 * t);
     const sign = wave2Dir === 1 ? -1 : 1;
-    const y2mid = p.A2 * Math.sin(p.k2 * xMid + sign * p.w2 * t);
+    const y2mid = p.A2 * Math.sin(p.k2 * xMid_m + sign * p.w2 * t);
     const ySum = y1mid + y2mid;
     const maxPossible = p.A1 + p.A2;
     const ratio = Math.abs(ySum) / maxPossible;
@@ -571,14 +584,15 @@ function draw() {
 }
 
 function drawSnapshotAnnotations(p, xStart, xEnd) {
-  const lam = p.lam1;
+  const lam_px = p.lam1_px; // wavelength in pixels
+  const lam_m = p.lam1;     // wavelength in meters
   const A = p.A1;
 
   // Find a peak near center
   let peakX = -1;
   let peakY = -Infinity;
   const xMid = (xEnd - xStart) / 2;
-  for (let px = Math.max(xStart, xMid - lam); px <= Math.min(xEnd, xMid + lam); px++) {
+  for (let px = Math.max(xStart, xMid - lam_px); px <= Math.min(xEnd, xMid + lam_px); px++) {
     const x = px - xStart;
     const y = waveY(x, t, p);
     if (y > peakY) { peakY = y; peakX = px; }
@@ -587,7 +601,7 @@ function drawSnapshotAnnotations(p, xStart, xEnd) {
   const peakSy = cy - peakY * SCALE;
 
   // Wavelength dimension line
-  const nextPeakX = peakX + lam;
+  const nextPeakX = peakX + lam_px;
   if (nextPeakX <= xEnd) {
     const dimY = cy + (A + 0.8) * SCALE;
     ctx.strokeStyle = '#e94560';
@@ -608,7 +622,7 @@ function drawSnapshotAnnotations(p, xStart, xEnd) {
     ctx.fillStyle = '#e94560';
     ctx.font = 'bold 13px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('\u03BB = ' + lam.toFixed(0) + ' px', (peakX + nextPeakX) / 2, dimY - 6);
+    ctx.fillText('\u03BB = ' + lam_m.toFixed(2) + ' m', (peakX + nextPeakX) / 2, dimY - 6);
   }
 
   // Amplitude dimension line

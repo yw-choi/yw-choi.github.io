@@ -374,12 +374,29 @@ function computePhysics({ theta, v, R, mu }) {
     ratio = (f_actual > 0.1) ? 999 : 0;
   }
 
-  const netRadial = Fc_required - (bankForce + (slideStatus === 'inward' ? -Math.min(f_actual, f_max) : Math.min(f_actual, f_max)));
+  // Net radial force: required centripetal minus what bank+friction actually provide
+  // When stable, friction provides the deficit and net should be ~0
+  const f_effective = Math.min(f_actual, f_max);
+  let netRadial;
+  if (Math.abs(v - v_ideal) < 0.01 && theta >= 0.001) {
+    netRadial = 0; // at ideal speed, no friction needed
+  } else if (slideStatus === 'stable') {
+    netRadial = 0; // friction fully compensates the deficit
+  } else {
+    // Sliding: friction maxed out but not enough
+    if (v > v_ideal || theta < 0.001) {
+      // Need more inward force than bank+friction_max can provide
+      netRadial = Fc_required - (N * sinT + f_max * cosT);
+    } else {
+      // Need less inward force, sliding inward
+      netRadial = -(N * sinT - f_max * cosT - Fc_required);
+    }
+  }
 
   return {
     Fc_required, N, f_actual, f_max, bankForce, deficit,
     theta_ideal, v_ideal, slideStatus, ratio,
-    netRadial: deficit,
+    netRadial,
     frictionDir: v >= v_ideal ? 'inward' : 'outward'
   };
 }
@@ -403,7 +420,7 @@ function updateDisplays() {
   document.getElementById('valFc').textContent = (ph.Fc_required / 1000).toFixed(2) + ' kN';
   document.getElementById('valBankF').textContent = (ph.bankForce / 1000).toFixed(2) + ' kN';
   document.getElementById('valFfMax').textContent = (ph.f_max / 1000).toFixed(2) + ' kN';
-  document.getElementById('valNetF').textContent = (ph.deficit / 1000).toFixed(2) + ' kN';
+  document.getElementById('valNetF').textContent = (ph.netRadial / 1000).toFixed(2) + ' kN';
   document.getElementById('valIdeal').textContent = (ph.theta_ideal * 180 / Math.PI).toFixed(1) + '°';
 
   // Traffic light
@@ -551,20 +568,22 @@ function drawSideView(p, ph) {
   sCtx.font = 'bold 13px sans-serif';
   sCtx.fillText('N', nEndX - 15, nEndY + 5);
 
-  // Friction force - along the road surface
+  // Friction force - along the road surface (parallel to slope)
+  // Slope-parallel unit vector pointing up the slope (toward center/left): (-cosT, -sinT) in screen coords
+  // Slope-parallel unit vector pointing down the slope (away from center/right): (cosT, sinT) in screen coords
+  // Note: road is tilted by -theta, so "up the slope" goes left and up
   const fDraw = Math.min(ph.f_actual, ph.f_max);
   if (fDraw > 10) {
     const fLen = fDraw * scale;
-    // Friction direction depends on whether car tends inward or outward
     let fEndX, fEndY;
     if (ph.frictionDir === 'inward') {
-      // Friction up the slope (toward center) = direction: up-left along slope
+      // Friction up the slope (toward center) - along the slope surface going up-left
       fEndX = carCenterX - fLen * cosT;
-      fEndY = carCenterY + fLen * sinT;
-    } else {
-      // Friction down the slope (away from center)
-      fEndX = carCenterX + fLen * cosT;
       fEndY = carCenterY - fLen * sinT;
+    } else {
+      // Friction down the slope (away from center) - along the slope surface going down-right
+      fEndX = carCenterX + fLen * cosT;
+      fEndY = carCenterY + fLen * sinT;
     }
     drawArrow(sCtx, carCenterX, carCenterY, fEndX, fEndY, '#f39c12', 3);
     sCtx.fillStyle = '#f39c12';
@@ -805,7 +824,7 @@ document.getElementById('btnReset').addEventListener('click', function () {
 
 [sliderTheta, sliderV, sliderR, sliderMu].forEach(s => {
   s.addEventListener('input', () => {
-    if (!playing) updateDisplays();
+    updateDisplays();
   });
 });
 

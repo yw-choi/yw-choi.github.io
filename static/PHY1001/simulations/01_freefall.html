@@ -359,7 +359,7 @@
   }
 
   // --- Physics ---
-  function step(dt) {
+  function step() {
     if (finished) return;
     a = -g;
     // Kinematic equations from current state
@@ -374,9 +374,9 @@
       if (disc >= 0) {
         let t1 = (-B + Math.sqrt(disc)) / (2 * A);
         let t2 = (-B - Math.sqrt(disc)) / (2 * A);
-        // Pick smallest positive t
+        // Pick the larger positive root (ball rises first, then falls back down)
         let tHit = null;
-        if (t1 > 0 && t2 > 0) tHit = Math.min(t1, t2);
+        if (t1 > 0 && t2 > 0) tHit = Math.max(t1, t2);
         else if (t1 > 0) tHit = t1;
         else if (t2 > 0) tHit = t2;
         if (tHit !== null) t = tHit;
@@ -639,7 +639,7 @@
     if (dtReal > 0.05) dtReal = 0.05;
 
     t += dtReal;
-    step(dtReal);
+    step();
     updateDisplay();
     drawSim();
     drawGraphs();

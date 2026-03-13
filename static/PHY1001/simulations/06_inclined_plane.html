@@ -119,7 +119,7 @@ canvas {
   height: 6px;
 }
 .control-group .val {
-  min-width: 56px;
+  min-width: 120px;
   text-align: right;
   font-weight: 600;
   font-family: 'Courier New', monospace;
@@ -270,10 +270,10 @@ canvas {
         </div>
       </div>
       <div class="control-group" id="mu-group" style="display:none;">
-        <label>마찰계수 μ<sub>s</sub></label>
+        <label>정지마찰계수 μ<sub>s</sub>  (μ<sub>k</sub> = 0.8 μ<sub>s</sub>)</label>
         <div class="slider-row">
           <input type="range" id="sl-mu" min="0" max="1.0" step="0.01" value="0.3">
-          <span class="val" id="sl-mu-v">0.30</span>
+          <span class="val" id="sl-mu-v">μs=0.30, μk=0.24</span>
         </div>
       </div>
     </div>
@@ -335,7 +335,6 @@ function getPhysics() {
       f = muK * N;
       netForce = mgSin - f;
       acc = netForce / mass;
-      if (acc < 0) { acc = 0; netForce = 0; f = mgSin; isStatic = true; }
     }
   } else {
     netForce = mgSin;
@@ -362,7 +361,7 @@ function updateInfo() {
 
   document.getElementById('sl-theta-v').textContent = theta.toFixed(1) + '\u00B0';
   document.getElementById('sl-mass-v').textContent = mass.toFixed(1) + ' kg';
-  document.getElementById('sl-mu-v').textContent = mu.toFixed(2);
+  document.getElementById('sl-mu-v').textContent = 'μs=' + mu.toFixed(2) + ', μk=' + (mu * 0.8).toFixed(2);
 
   const statusArea = document.getElementById('status-area');
   if (frictionOn) {
@@ -612,10 +611,30 @@ function animate(time) {
 
   const p = getPhysics();
   if (!p.isStatic) {
+    const prevVel = velocity;
     velocity += p.acc * dt;
+    // If velocity crosses zero (was positive, now negative or zero), block has stopped
+    if (prevVel > 0 && velocity <= 0) {
+      velocity = 0;
+      // Check if static friction can hold the block
+      const th = toRad(theta);
+      const mgSin = mass * G * Math.sin(th);
+      const mgCos = mass * G * Math.cos(th);
+      const maxStaticF = mu * mgCos;
+      if (frictionOn && mgSin <= maxStaticF) {
+        // Static friction holds - block stays put (isStatic will be true on next getPhysics call)
+      }
+      // If static friction can't hold, block will start sliding again on next frame
+    }
+    if (velocity < 0) velocity = 0; // safety clamp
     blockPos += velocity * dt;
     if (blockPos < 0) { blockPos = 0; velocity = 0; }
-    if (blockPos > 15) { blockPos = 0; velocity = 0; }
+    // Stop at bottom of incline instead of wrapping
+    const maxSlideMeters = 15;
+    if (blockPos >= maxSlideMeters) {
+      blockPos = maxSlideMeters;
+      velocity = 0;
+    }
   }
 
   updateInfo();

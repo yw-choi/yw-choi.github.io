@@ -243,16 +243,6 @@ canvas {
             <div class="bar-track"><div class="bar-fill" id="barWf" style="width:0; background:#f44336;"></div></div>
             <span class="bar-val" id="valWf">0 J</span>
           </div>
-          <div class="bar-row">
-            <span class="bar-label">W_g</span>
-            <div class="bar-track"><div class="bar-fill" id="barWg" style="width:0; background:#ff9800;"></div></div>
-            <span class="bar-val" id="valWg">0 J</span>
-          </div>
-          <div class="bar-row">
-            <span class="bar-label">W_N</span>
-            <div class="bar-track"><div class="bar-fill" id="barWN" style="width:0; background:#9c27b0;"></div></div>
-            <span class="bar-val" id="valWN">0 J</span>
-          </div>
           <div class="bar-row" style="margin-top:4px; border-top:2px solid #e0e0e0; padding-top:6px;">
             <span class="bar-label" style="color:#1a1a2e;">W_net</span>
             <div class="bar-track"><div class="bar-fill" id="barWnet" style="width:0; background:#4caf50;"></div></div>
@@ -391,8 +381,6 @@ function updateInfo(p, phys, d) {
   const maxVal = Math.max(Math.abs(WF), Math.abs(Wf), Math.abs(Wnet), Math.abs(KE), 1);
   setBar('barWF', 'valWF', WF, maxVal, '#2196f3');
   setBar('barWf', 'valWf', Wf, maxVal, '#f44336');
-  setBar('barWg', 'valWg', Wg, maxVal, '#ff9800');
-  setBar('barWN', 'valWN', WN, maxVal, '#9c27b0');
   setBar('barWnet', 'valWnet', Wnet, maxVal, '#4caf50');
   setBar('barDKE', 'valDKE', KE, maxVal, '#00bcd4');
 
@@ -474,7 +462,7 @@ function drawSim() {
     const ey = by + blockH / 2;
     // Arrow from left pointing into block
     const startX = bx - blockW / 2 - arrowLen * Math.cos(p.theta);
-    const startY = by + blockH / 2 + arrowLen * Math.sin(p.theta);
+    const startY = by + blockH / 2 - arrowLen * Math.sin(p.theta);
     const endX = bx - blockW / 2;
     const endY = by + blockH / 2;
 
@@ -516,29 +504,12 @@ function drawSim() {
     }
   }
 
-  // Friction arrow (if moving)
+  // Friction arrow (if moving) - points leftward (opposing motion)
   if (vel > 0.01 && phys.fFric > 0) {
     const fLen = 20 + phys.fFric * 2;
     ctx.strokeStyle = '#ff9800';
     ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.moveTo(bx + blockW / 2 + fLen, groundY - 2);
-    ctx.lineTo(bx + blockW / 2, groundY - 2);
-    ctx.stroke();
-    // arrowhead
-    ctx.fillStyle = '#ff9800';
-    ctx.beginPath();
-    ctx.moveTo(bx + blockW / 2, groundY - 2);
-    ctx.lineTo(bx + blockW / 2 + 8, groundY - 7);
-    ctx.lineTo(bx + blockW / 2 + 8, groundY + 3);
-    ctx.closePath();
-    ctx.fill();
-    // Actually friction points backward (left)
-    ctx.strokeStyle = '#ff9800';
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    const fx1 = bx + blockW / 2;
-    const fx2 = bx + blockW / 2 + fLen;
     ctx.moveTo(bx, groundY - 4);
     ctx.lineTo(bx - fLen, groundY - 4);
     ctx.stroke();

@@ -209,6 +209,7 @@ canvas {
         <input type="range" id="sliderActEff" min="5" max="95" step="1" value="30" oninput="onParamChange()">
       </div>
 
+      <div id="tempWarning" style="display:none;background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:0.82rem;font-weight:600;text-align:center;"></div>
       <div class="info-box">
         <div class="title">카르노 효율</div>
         <div id="effFormula">η = 1 − T<sub>C</sub>/T<sub>H</sub> = 50.0%</div>
@@ -703,11 +704,11 @@ function drawEnergyFlow() {
   const Qc = -stages[2].Q; // positive value
 
   // Hot reservoir
-  const hx = 100, hy = 40, bw = 120, bh = 50;
+  const hx = 120, hy = 20, bw = 120, bh = 50;
   // Engine
-  const ex = 240, ey = 90, ew = 120, eh = 60;
+  const ex = 240, ey = 100, ew = 120, eh = 60;
   // Cold reservoir
-  const cx = 380, cy = 40;
+  const cx = 480, cy = 20;
 
   // Hot reservoir box
   ctx.fillStyle = '#e94560';
@@ -744,7 +745,7 @@ function drawEnergyFlow() {
   ctx.fillText('T_C = ' + Tc + ' K', cx, cy + 40);
 
   // Work output box
-  const wx2 = ex + ew/2, wy = 190;
+  const wx2 = ex + ew/2, wy = 200;
   ctx.fillStyle = '#0f9b58';
   ctx.strokeStyle = '#088040';
   roundRect(ctx, wx2 - 50, wy - 20, 100, 40, 8, true, true);
@@ -754,23 +755,23 @@ function drawEnergyFlow() {
 
   // Arrows
   // Q_H: hot -> engine
-  drawArrow(ctx, hx + bw/2 - 10, hy + bh, ex + 20, ey, '#e94560', 3);
+  drawArrow(ctx, hx, hy + bh, ex + 30, ey, '#e94560', 3);
   ctx.fillStyle = '#e94560';
   ctx.font = 'bold 12px sans-serif';
   ctx.textAlign = 'left';
-  ctx.fillText('Q_H = ' + (Qh).toFixed(1) + ' J', hx + 20, hy + bh + 28);
+  ctx.fillText('Q_H = ' + (Qh).toFixed(1) + ' J', hx - bw/2, hy + bh + 22);
 
   // Q_C: engine -> cold
-  drawArrow(ctx, ex + ew - 20, ey + 10, cx - bw/2 + 10, cy + bh, '#4285f4', 3);
+  drawArrow(ctx, ex + ew - 30, ey, cx, cy + bh, '#4285f4', 3);
   ctx.fillStyle = '#4285f4';
-  ctx.textAlign = 'right';
-  ctx.fillText('Q_C = ' + Qc.toFixed(1) + ' J', cx - 20, cy + bh + 28);
+  ctx.textAlign = 'left';
+  ctx.fillText('Q_C = ' + Qc.toFixed(1) + ' J', cx + bw/2 + 6, cy + bh - 10);
 
   // W: engine -> work
   drawArrow(ctx, ex + ew/2, ey + eh, wx2, wy - 20, '#0f9b58', 3);
   ctx.fillStyle = '#0f9b58';
   ctx.textAlign = 'center';
-  ctx.fillText('W = ' + Wnet.toFixed(1) + ' J', wx2 + 60, ey + eh + 20);
+  ctx.fillText('W = ' + Wnet.toFixed(1) + ' J', wx2, wy + 30);
 
   // Verification
   ctx.fillStyle = '#888';
@@ -903,6 +904,16 @@ function onParamChange() {
     document.getElementById('sliderTc').value = Tc;
   }
 
+  // Warn if Th/Tc ratio is too small for a visible cycle
+  const tempRatio = Th / Tc;
+  const warningEl = document.getElementById('tempWarning');
+  if (tempRatio < 1.1) {
+    warningEl.style.display = 'block';
+    warningEl.textContent = '⚠ Th/Tc = ' + tempRatio.toFixed(2) + ' — 온도 차이가 너무 작아 사이클을 구분하기 어렵습니다.';
+  } else {
+    warningEl.style.display = 'none';
+  }
+
   document.getElementById('valTh').textContent = Th;
   document.getElementById('valTc').textContent = Tc;
   document.getElementById('valN').textContent = n.toFixed(1);
@@ -916,7 +927,10 @@ function togglePlay() {
   stepping = false;
   document.getElementById('btnPlay').textContent = playing ? '⏸ 일시정지' : '▶ 재생';
   document.getElementById('btnPlay').classList.toggle('active', playing);
-  if (playing) animate();
+  if (playing) {
+    lastTime = 0; // reset so first frame gets a fresh timestamp
+    animate();
+  }
 }
 
 function stepMode() {

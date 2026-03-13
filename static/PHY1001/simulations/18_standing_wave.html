@@ -227,7 +227,7 @@ canvas {
         <input type="range" id="slL" min="1" max="4" step="0.1" value="2">
         <span class="val" id="valL">2.0 m</span>
       </div>
-      <div class="ctrl-group">
+      <div class="ctrl-group" id="ctrlT">
         <label>장력 T:</label>
         <input type="range" id="slT" min="10" max="200" step="5" value="50">
         <span class="val" id="valT">50 N</span>
@@ -237,10 +237,14 @@ canvas {
         <input type="range" id="slA" min="0.1" max="1" step="0.05" value="0.5">
         <span class="val" id="valA">0.50</span>
       </div>
-      <div class="ctrl-group">
+      <div class="ctrl-group" id="ctrlMu">
         <label>선밀도 μ:</label>
         <input type="range" id="slMu" min="0.001" max="0.05" step="0.001" value="0.01">
         <span class="val" id="valMu">0.010 kg/m</span>
+      </div>
+      <div class="ctrl-group" id="ctrlVsound" style="display:none;">
+        <label>음속:</label>
+        <span class="val" id="valVsound">343 m/s</span>
       </div>
     </div>
 
@@ -325,7 +329,12 @@ function updateHarmonicBtns() {
 }
 
 // ---- Physics ----
-function waveSpeed() { return Math.sqrt(T / mu); }
+const SPEED_OF_SOUND = 343; // m/s at room temperature
+
+function waveSpeed() {
+  if (mode === 'string') return Math.sqrt(T / mu);
+  return SPEED_OF_SOUND; // pipes use speed of sound
+}
 
 function wavelength() {
   if (mode === 'string' || mode === 'open') return 2 * L / n;
@@ -353,6 +362,12 @@ function setMode(m) {
   document.getElementById('modeOpen').classList.toggle('active', m === 'open');
   document.getElementById('modeClosed').classList.toggle('active', m === 'closed');
   document.getElementById('panelTitle').textContent = modeTitles[m];
+
+  // Show/hide tension & linear density for string vs pipe modes
+  const isString = m === 'string';
+  document.getElementById('ctrlT').style.display = isString ? '' : 'none';
+  document.getElementById('ctrlMu').style.display = isString ? '' : 'none';
+  document.getElementById('ctrlVsound').style.display = isString ? 'none' : '';
 
   // Reset n to valid harmonic
   const harmonics = getAvailableHarmonics();
@@ -758,49 +773,48 @@ function drawSweepWave(margin, drawW, midY, ampPx) {
   else f1 = v / (2 * L);
 
   const maxFreq = f1 * 8;
-  // Sweep
-  const sweepOmega = 2 * Math.PI * sweepFreq;
   const Q = 15; // quality factor
-
-  // Calculate response amplitude - sum of resonances
-  let responseAmp = 0;
   const harmonics = mode === 'closed' ? [1,3,5,7,9,11] : [1,2,3,4,5,6];
+
+  // Calculate response: sum contributions from each resonant mode
+  // Each mode has a resonant response amplitude and its own spatial shape
+  const modeResponses = [];
   harmonics.forEach(h => {
     let fRes;
     if (mode === 'closed') fRes = h * v / (4 * L);
     else fRes = h * v / (2 * L);
     const ratio = sweepFreq / fRes;
     const amp = 1 / Math.sqrt((1 - ratio * ratio) ** 2 + (ratio / Q) ** 2);
-    responseAmp += amp * A / harmonics.length;
-  });
-  responseAmp = Math.min(responseAmp, 3 * A);
-
-  // Find closest resonant harmonic
-  let bestH = harmonics[0], bestDiff = Infinity;
-  harmonics.forEach(h => {
-    let fRes = mode === 'closed' ? h * v / (4 * L) : h * v / (2 * L);
-    const diff = Math.abs(sweepFreq - fRes);
-    if (diff < bestDiff) { bestDiff = diff; bestH = h; }
+    modeResponses.push({ h, fRes, amp: amp / Q }); // normalize so peak ~ Q/Q = 1
   });
 
-  // Draw wave with response amplitude
+  // Draw the wave as a sum of mode shapes weighted by their response
   const N = 500;
   ctx.beginPath();
   ctx.strokeStyle = '#e94560';
   ctx.lineWidth = 3;
-  const effA = responseAmp;
   for (let i = 0; i <= N; i++) {
     const xf = i / N;
     const px = margin + xf * drawW;
-    const xPhys = xf * L;
-    let y;
-    if (mode === 'string') y = effA * Math.sin(bestH * Math.PI * xf) * Math.cos(2 * Math.PI * sweepFreq * t);
-    else if (mode === 'open') y = effA * Math.cos(bestH * Math.PI * xf) * Math.cos(2 * Math.PI * sweepFreq * t);
-    else y = effA * Math.sin(bestH * Math.PI * xf / 2) * Math.cos(2 * Math.PI * sweepFreq * t);
+    let y = 0;
+    modeResponses.forEach(mr => {
+      let spatialShape;
+      if (mode === 'string') spatialShape = Math.sin(mr.h * Math.PI * xf);
+      else if (mode === 'open') spatialShape = Math.cos(mr.h * Math.PI * xf);
+      else spatialShape = Math.sin(mr.h * Math.PI * xf / 2);
+      y += A * mr.amp * spatialShape;
+    });
+    y *= Math.cos(2 * Math.PI * sweepFreq * t);
     const py = midY - y * ampPx / (2 * A || 1);
     if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
   }
   ctx.stroke();
+
+  // Calculate total response amplitude for display
+  let responseAmp = 0;
+  modeResponses.forEach(mr => responseAmp += mr.amp);
+  responseAmp *= A;
+  responseAmp = Math.min(responseAmp, 3 * A);
 
   // Store sweep data
   sweepData.push({ f: sweepFreq, amp: responseAmp });

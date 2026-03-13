@@ -290,7 +290,11 @@ function updateDisplays() {
   const T = tension();
 
   if (!quizMode) {
-    document.getElementById('disp-a').textContent = Math.abs(a).toFixed(3) + ' m/s\u00B2';
+    let dirLabel = '';
+    if (Math.abs(a) > 0.001) {
+      dirLabel = a > 0 ? ' (m\u2081 \u2193)' : ' (m\u2082 \u2193)';
+    }
+    document.getElementById('disp-a').textContent = Math.abs(a).toFixed(3) + ' m/s\u00B2' + dirLabel;
     document.getElementById('disp-T').textContent = T.toFixed(2) + ' N';
   } else {
     document.getElementById('disp-a').textContent = '???';
@@ -366,28 +370,29 @@ function draw() {
   ctx.strokeStyle = '#374151';
   ctx.lineWidth = 3;
 
-  // Left rope: from pulley edge down to mass
+  // Rope over pulley (arc wrapping around bottom half)
   ctx.beginPath();
-  ctx.moveTo(ropeLeftX, pulleyY);
-  ctx.lineTo(ropeLeftX, leftY);
-  ctx.stroke();
-
-  // Right rope: from pulley edge down to mass
-  ctx.beginPath();
-  ctx.moveTo(ropeRightX, pulleyY);
-  ctx.lineTo(ropeRightX, rightY);
-  ctx.stroke();
-
-  // Rope over pulley (arc)
-  ctx.beginPath();
-  ctx.arc(pulleyX, pulleyY, pulleyR - 2, Math.PI, 0, false);
+  ctx.arc(pulleyX, pulleyY, pulleyR - 2, Math.PI, 0, true);
   ctx.strokeStyle = '#374151';
   ctx.lineWidth = 3;
   ctx.stroke();
 
-  // Draw masses
-  drawMass(ropeLeftX, leftY, m1, '#3b82f6', '#2563eb', 'm\u2081');
-  drawMass(ropeRightX, rightY, m2, '#ef4444', '#dc2626', 'm\u2082');
+  // Left rope: from pulley groove bottom-left down to mass
+  const ropeGrooveR = pulleyR - 2;
+  ctx.beginPath();
+  ctx.moveTo(pulleyX - ropeGrooveR, pulleyY);
+  ctx.lineTo(pulleyX - ropeGrooveR, leftY);
+  ctx.stroke();
+
+  // Right rope: from pulley groove bottom-right down to mass
+  ctx.beginPath();
+  ctx.moveTo(pulleyX + ropeGrooveR, pulleyY);
+  ctx.lineTo(pulleyX + ropeGrooveR, rightY);
+  ctx.stroke();
+
+  // Draw masses (aligned to groove radius)
+  drawMass(pulleyX - ropeGrooveR, leftY, m1, '#3b82f6', '#2563eb', 'm\u2081');
+  drawMass(pulleyX + ropeGrooveR, rightY, m2, '#ef4444', '#dc2626', 'm\u2082');
 
   // Ground line
   ctx.strokeStyle = '#9ca3af';
@@ -407,8 +412,8 @@ function draw() {
     const a = accel();
     // Left mass arrow
     const arrowDir = a > 0 ? 1 : -1; // m1 direction
-    drawArrow(ropeLeftX - massW / 2 - 18, leftY + massH / 2, arrowDir, '#3b82f6');
-    drawArrow(ropeRightX + massW / 2 + 18, rightY + massH / 2, -arrowDir, '#ef4444');
+    drawArrow(pulleyX - ropeGrooveR - massW / 2 - 18, leftY + massH / 2, arrowDir, '#3b82f6');
+    drawArrow(pulleyX + ropeGrooveR + massW / 2 + 18, rightY + massH / 2, -arrowDir, '#ef4444');
   }
 }
 

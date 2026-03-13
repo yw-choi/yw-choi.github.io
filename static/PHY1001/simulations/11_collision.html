@@ -242,7 +242,7 @@ canvas {
       <button class="btn btn-reset" onclick="reset()">&#8635; 초기화</button>
     </div>
   </div>
-  <div class="legend">공의 크기는 질량에 비례합니다. 궤적(trail)이 표시됩니다.</div>
+  <div class="legend">공의 크기는 질량의 세제곱근에 비례합니다 (부피 스케일링). 궤적(trail)이 표시됩니다.</div>
 </div>
 
 <script>
@@ -383,7 +383,7 @@ function showVal(id, v, unit) {
   if (el) el.textContent = v + (unit || '');
 }
 
-function radius(m) { return 12 + m * 2.5; }
+function radius(m) { return 12 + Math.pow(m, 1/3) * 8; }
 
 function reset() {
   cancelAnimationFrame(animId);
@@ -433,13 +433,25 @@ function initState() {
 
     const r1 = radius(m1), r2 = radius(m2);
     const cy = H * 0.4;
+    // Adaptive speed scaling: ensure collision happens in ~2-3 seconds
+    const gap = (W - 300) - (r1 + r2); // approximate pixel gap between ball edges
+    const approachSpeed = Math.abs(v1 - v2); // relative approach speed in m/s
+    const targetTime = 2.5; // seconds until collision
+    let pxPerMs;
+    if (approachSpeed > 0.01) {
+      pxPerMs = gap / (approachSpeed * targetTime);
+    } else {
+      pxPerMs = 18; // fallback
+    }
+
     state = {
       m1, m2, v1i: v1, v2i: v2, v1f, v2f, e, ctype,
       r1, r2,
+      pxPerMs,
       // positions in canvas coords
       x1: 150, x2: W - 150,
       y1: cy, y2: cy,
-      vx1: v1 * 18, vx2: v2 * 18, // pixels/sec speed for animation
+      vx1: v1 * pxPerMs, vx2: v2 * pxPerMs, // pixels/sec speed for animation
       collided: false,
       merged: false,
       phase: 'before', // before, collision, after
@@ -461,11 +473,17 @@ function initState() {
     const totalR = r1 + r2;
     const bPixels = b * totalR; // impact parameter in pixels
 
+    // Adaptive speed for 2D: ball1 travels from x=100 to x~cx2 in ~2.5 seconds
+    const gap2D = cx2 - 100 - totalR;
+    const targetTime2D = 2.5;
+    const pxPerMs2D = gap2D / (v1 * targetTime2D);
+
     state = {
       m1, m2, v1i: v1, b, r1, r2,
+      pxPerMs: pxPerMs2D,
       x1: 100, y1: cy2 + bPixels,
       x2: cx2, y2: cy2,
-      vx1: v1 * 20, vy1: 0,
+      vx1: v1 * pxPerMs2D, vy1: 0,
       vx2: 0, vy2: 0,
       collided: false,
       phase: 'before',
@@ -508,10 +526,10 @@ function compute2DCollision() {
   s.vy2 = v2nf * ny + v2tf * ty;
 
   // store for info display
-  s.v1fx = s.vx1 / 20;
-  s.v1fy = s.vy1 / 20;
-  s.v2fx = s.vx2 / 20;
-  s.v2fy = s.vy2 / 20;
+  s.v1fx = s.vx1 / s.pxPerMs;
+  s.v1fy = s.vy1 / s.pxPerMs;
+  s.v2fx = s.vx2 / s.pxPerMs;
+  s.v2fy = s.vy2 / s.pxPerMs;
 }
 
 function play() {
@@ -560,7 +578,7 @@ function step1D(dt) {
       // set final velocities
       if (s.ctype === 'inelastic') {
         s.merged = true;
-        const vf = s.v1f * 18;
+        const vf = s.v1f * s.pxPerMs;
         s.vx1 = vf;
         s.vx2 = vf;
         // place them together
@@ -568,8 +586,8 @@ function step1D(dt) {
         s.x1 = cx;
         s.x2 = cx;
       } else {
-        s.vx1 = s.v1f * 18;
-        s.vx2 = s.v2f * 18;
+        s.vx1 = s.v1f * s.pxPerMs;
+        s.vx2 = s.v2f * s.pxPerMs;
         // separate them so they don't overlap
         const overlap = (s.r1 + s.r2) - Math.abs(s.x2 - s.x1);
         if (s.x1 < s.x2) {
@@ -652,14 +670,14 @@ function draw1D() {
 
   // velocity arrows (before collision shown on top area)
   if (!s.collided) {
-    drawArrow1D(s.x1, s.y1 - s.r1 - 25, s.vx1 / 18, C1, 'v₁');
-    drawArrow1D(s.x2, s.y2 - s.r2 - 25, s.vx2 / 18, C2, 'v₂');
+    drawArrow1D(s.x1, s.y1 - s.r1 - 25, s.vx1 / s.pxPerMs, C1, 'v₁');
+    drawArrow1D(s.x2, s.y2 - s.r2 - 25, s.vx2 / s.pxPerMs, C2, 'v₂');
   } else {
     if (s.merged) {
-      drawArrow1D(s.x1, s.y1 - radius(s.m1 + s.m2) - 25, s.vx1 / 18, CMerge, "v'");
+      drawArrow1D(s.x1, s.y1 - radius(s.m1 + s.m2) - 25, s.vx1 / s.pxPerMs, CMerge, "v'");
     } else {
-      drawArrow1D(s.x1, s.y1 - s.r1 - 25, s.vx1 / 18, C1, "v₁'");
-      drawArrow1D(s.x2, s.y2 - s.r2 - 25, s.vx2 / 18, C2, "v₂'");
+      drawArrow1D(s.x1, s.y1 - s.r1 - 25, s.vx1 / s.pxPerMs, C1, "v₁'");
+      drawArrow1D(s.x2, s.y2 - s.r2 - 25, s.vx2 / s.pxPerMs, C2, "v₂'");
     }
   }
 
@@ -696,16 +714,16 @@ function draw2D() {
   // velocity vectors
   const arrowScale = 3.5;
   if (!s.collided) {
-    drawArrow2D(s.x1, s.y1, s.vx1 * arrowScale / 20, s.vy1 * arrowScale / 20, C1, 'v₁');
+    drawArrow2D(s.x1, s.y1, s.vx1 * arrowScale / s.pxPerMs, s.vy1 * arrowScale / s.pxPerMs, C1, 'v₁');
   } else {
-    drawArrow2D(s.x1, s.y1, s.vx1 * arrowScale / 20, s.vy1 * arrowScale / 20, C1, "v₁'");
-    drawArrow2D(s.x2, s.y2, s.vx2 * arrowScale / 20, s.vy2 * arrowScale / 20, C2, "v₂'");
+    drawArrow2D(s.x1, s.y1, s.vx1 * arrowScale / s.pxPerMs, s.vy1 * arrowScale / s.pxPerMs, C1, "v₁'");
+    drawArrow2D(s.x2, s.y2, s.vx2 * arrowScale / s.pxPerMs, s.vy2 * arrowScale / s.pxPerMs, C2, "v₂'");
   }
 
   // momentum vectors
   const pScale = 1.5;
-  const px1 = s.m1 * s.vx1 / 20, py1 = s.m1 * s.vy1 / 20;
-  const px2 = s.m2 * s.vx2 / 20, py2 = s.m2 * s.vy2 / 20;
+  const px1 = s.m1 * s.vx1 / s.pxPerMs, py1 = s.m1 * s.vy1 / s.pxPerMs;
+  const px2 = s.m2 * s.vx2 / s.pxPerMs, py2 = s.m2 * s.vy2 / s.pxPerMs;
   // show total momentum arrow from bottom-left corner
   const ox = 80, oy = H - 40;
   drawArrow2D(ox, oy, (px1 + px2) * pScale, (py1 + py2) * pScale, '#4caf50', 'p_total');
@@ -756,8 +774,13 @@ function drawTrail(trail, color, w) {
 }
 
 function drawArrow1D(x, y, v, color, label) {
-  const len = v * 8;
-  if (Math.abs(len) < 2) return;
+  let len = v * 8;
+  // If velocity is essentially zero, hide both arrow and label
+  if (Math.abs(v) < 0.01) return;
+  // Enforce minimum arrow length of 3px for visibility
+  if (Math.abs(len) < 3) {
+    len = Math.sign(len) * 3;
+  }
   ctx.strokeStyle = color;
   ctx.fillStyle = color;
   ctx.lineWidth = 2.5;
@@ -780,7 +803,13 @@ function drawArrow1D(x, y, v, color, label) {
 
 function drawArrow2D(x, y, dx, dy, color, label) {
   const len = Math.sqrt(dx * dx + dy * dy);
-  if (len < 2) return;
+  if (len < 0.5) return;
+  // Enforce minimum arrow length for visibility
+  if (len < 3 && len > 0) {
+    const scale = 3 / len;
+    dx *= scale;
+    dy *= scale;
+  }
   ctx.strokeStyle = color;
   ctx.fillStyle = color;
   ctx.lineWidth = 2.5;
@@ -812,8 +841,8 @@ function drawBars1D() {
   const pBefore = s.m1 * s.v1i + s.m2 * s.v2i;
   let pAfter;
   if (s.collided) {
-    if (s.merged) pAfter = (s.m1 + s.m2) * (s.vx1 / 18);
-    else pAfter = s.m1 * (s.vx1 / 18) + s.m2 * (s.vx2 / 18);
+    if (s.merged) pAfter = (s.m1 + s.m2) * (s.vx1 / s.pxPerMs);
+    else pAfter = s.m1 * (s.vx1 / s.pxPerMs) + s.m2 * (s.vx2 / s.pxPerMs);
   } else {
     pAfter = pBefore;
   }
@@ -835,8 +864,8 @@ function drawBars1D() {
   const ke1b = 0.5 * s.m1 * s.v1i * s.v1i + 0.5 * s.m2 * s.v2i * s.v2i;
   let ke1a;
   if (s.collided) {
-    if (s.merged) ke1a = 0.5 * (s.m1 + s.m2) * (s.vx1 / 18) * (s.vx1 / 18);
-    else ke1a = 0.5 * s.m1 * (s.vx1 / 18) * (s.vx1 / 18) + 0.5 * s.m2 * (s.vx2 / 18) * (s.vx2 / 18);
+    if (s.merged) ke1a = 0.5 * (s.m1 + s.m2) * (s.vx1 / s.pxPerMs) * (s.vx1 / s.pxPerMs);
+    else ke1a = 0.5 * s.m1 * (s.vx1 / s.pxPerMs) * (s.vx1 / s.pxPerMs) + 0.5 * s.m2 * (s.vx2 / s.pxPerMs) * (s.vx2 / s.pxPerMs);
   } else {
     ke1a = ke1b;
   }
@@ -937,10 +966,10 @@ function updateInfo1D(panel) {
 
 function updateInfo2D(panel) {
   const s = state;
-  const v1mag = Math.sqrt(s.vx1 * s.vx1 + s.vy1 * s.vy1) / 20;
-  const v2mag = Math.sqrt(s.vx2 * s.vx2 + s.vy2 * s.vy2) / 20;
-  const px = s.m1 * s.vx1 / 20 + s.m2 * s.vx2 / 20;
-  const py = s.m1 * s.vy1 / 20 + s.m2 * s.vy2 / 20;
+  const v1mag = Math.sqrt(s.vx1 * s.vx1 + s.vy1 * s.vy1) / s.pxPerMs;
+  const v2mag = Math.sqrt(s.vx2 * s.vx2 + s.vy2 * s.vy2) / s.pxPerMs;
+  const px = s.m1 * s.vx1 / s.pxPerMs + s.m2 * s.vx2 / s.pxPerMs;
+  const py = s.m1 * s.vy1 / s.pxPerMs + s.m2 * s.vy2 / s.pxPerMs;
   const pTotal = Math.sqrt(px * px + py * py);
   const pInit = s.m1 * s.v1i;
   const keBefore = 0.5 * s.m1 * s.v1i * s.v1i;

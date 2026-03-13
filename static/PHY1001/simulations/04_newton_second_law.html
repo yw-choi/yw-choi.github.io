@@ -231,14 +231,14 @@ footer {
   const trackLeft = 40, trackRight = 660;
   const trackLen = trackRight - trackLeft;
 
-  // Map physics x to canvas x. Physics range: arbitrary, wrap.
+  // Camera offset for panning view (in physics units)
+  let cameraX = 0;
+
+  // Map physics x to canvas x. The view pans to follow the block.
   function physToCanvas(px) {
-    // 1 m = 30 px on screen
-    const scale = 30;
-    let cx = trackLeft + trackLen / 2 + px * scale;
-    // wrap
-    cx = trackLeft + ((cx - trackLeft) % trackLen + trackLen) % trackLen;
-    return cx;
+    const scale = 30; // 1 m = 30 px on screen
+    const centerCanvas = trackLeft + trackLen / 2;
+    return centerCanvas + (px - cameraX) * scale;
   }
 
   function reset() {
@@ -292,6 +292,9 @@ footer {
     const W = mainCanvas.width, H = mainCanvas.height;
     mctx.clearRect(0, 0, W, H);
 
+    // Update camera to follow the block
+    cameraX = x;
+
     // Background
     mctx.fillStyle = '#f8f9fb';
     mctx.fillRect(0, 0, W, H);
@@ -309,7 +312,7 @@ footer {
       mctx.stroke();
     }
 
-    // Block position
+    // Block position (always centered since camera follows)
     const cx = physToCanvas(x);
     const bx = cx - blockW / 2;
     const by = surfaceY - blockH;
@@ -332,19 +335,26 @@ footer {
     mctx.textBaseline = 'middle';
     mctx.fillText(m.toFixed(1) + ' kg', cx, by + blockH / 2);
 
-    // Force arrow on block
+    // Force arrow on block (clamped to canvas)
     if (Math.abs(F) > 0.1) {
       const arrowScale = 2.2;
-      const arrowLen = F * arrowScale;
+      let arrowLen = F * arrowScale;
       const arrowY = by + blockH / 2;
       const startX = F > 0 ? bx + blockW : bx;
-      drawArrow(mctx, startX, arrowY, startX + arrowLen, arrowY, '#ef4444', 3.5);
+      // Clamp arrow tip to stay within canvas
+      let endX = startX + arrowLen;
+      endX = Math.max(8, Math.min(W - 8, endX));
+      arrowLen = endX - startX;
+      if (Math.abs(arrowLen) > 2) {
+        drawArrow(mctx, startX, arrowY, endX, arrowY, '#ef4444', 3.5);
 
-      // label
-      mctx.fillStyle = '#ef4444';
-      mctx.font = 'bold 13px sans-serif';
-      mctx.textAlign = 'center';
-      mctx.fillText('F = ' + F + ' N', startX + arrowLen / 2, arrowY - 14);
+        // label
+        mctx.fillStyle = '#ef4444';
+        mctx.font = 'bold 13px sans-serif';
+        mctx.textAlign = 'center';
+        const labelX = Math.max(40, Math.min(W - 40, startX + arrowLen / 2));
+        mctx.fillText('F = ' + F + ' N', labelX, arrowY - 14);
+      }
     }
 
     // Velocity arrow (green, below surface)
@@ -359,17 +369,46 @@ footer {
       mctx.fillText('v = ' + v.toFixed(1) + ' m/s', cx + vLen / 2, vy - 12);
     }
 
-    // Scale / ruler marks
+    // Scale / ruler marks (relative to camera, showing physics positions)
+    const scale = 30;
+    const meterStep = 1; // 1 meter per tick
+    // Find the range of physics x visible on screen
+    const leftPhysX = cameraX - (trackLen / 2) / scale;
+    const rightPhysX = cameraX + (trackLen / 2) / scale;
+    const firstTick = Math.ceil(leftPhysX / meterStep) * meterStep;
     mctx.fillStyle = '#999';
     mctx.font = '10px sans-serif';
     mctx.textAlign = 'center';
-    for (let tick = trackLeft; tick <= trackRight; tick += (trackLen / 10)) {
+    mctx.strokeStyle = '#888';
+    mctx.lineWidth = 1;
+    for (let phys = firstTick; phys <= rightPhysX; phys += meterStep) {
+      const tickX = physToCanvas(phys);
+      if (tickX < trackLeft || tickX > trackRight) continue;
       mctx.beginPath();
-      mctx.moveTo(tick, surfaceY + 6);
-      mctx.lineTo(tick, surfaceY + 10);
-      mctx.strokeStyle = '#888';
-      mctx.lineWidth = 1;
+      mctx.moveTo(tickX, surfaceY + 6);
+      mctx.lineTo(tickX, surfaceY + 12);
       mctx.stroke();
+      // Show label every 5 meters
+      if (Math.abs(phys % 5) < 0.01 || Math.abs(phys) < 0.01) {
+        mctx.fillText(phys.toFixed(0) + 'm', tickX, surfaceY + 22);
+      }
+    }
+
+    // Origin marker (if visible)
+    const originX = physToCanvas(0);
+    if (originX >= trackLeft && originX <= trackRight) {
+      mctx.strokeStyle = '#4361ee55';
+      mctx.lineWidth = 1.5;
+      mctx.setLineDash([4, 4]);
+      mctx.beginPath();
+      mctx.moveTo(originX, surfaceY - blockH - 20);
+      mctx.lineTo(originX, surfaceY);
+      mctx.stroke();
+      mctx.setLineDash([]);
+      mctx.fillStyle = '#4361ee';
+      mctx.font = '10px sans-serif';
+      mctx.textAlign = 'center';
+      mctx.fillText('x=0', originX, surfaceY - blockH - 24);
     }
   }
 
