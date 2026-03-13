@@ -278,11 +278,11 @@ canvas#energyCanvas {
 
   // ===== Constants & Config =====
   const k = 8.99e9;          // Coulomb constant
-  const Q_MAG = 1e-9;        // charge magnitude (1 nC)
+  const Q_MAG = 1e-6;        // charge magnitude (1 µC)
   const q_test = 1e-9;       // test charge (1 nC)
-  const m_test = 1e-6;       // test charge mass (1 µg)
+  const m_test = 1e-12;      // test charge mass (1 pg — scaled for visible motion)
   const CLAMP_DIST = 0.15;   // clamp distance in sim coords (m)
-  const V_CLAMP = 500;       // max |V| for display
+  const V_CLAMP = 50000;     // max |V| for display
   const SIM_SIZE = 10;       // simulation area: -5 to 5 m
 
   // Canvas
@@ -505,27 +505,27 @@ canvas#energyCanvas {
 
     // Equipotential lines
     if (showEquipotential && heatmapData) {
-      // Choose contour levels
-      const levels = [];
-      for (let v = -400; v <= 400; v += 50) {
-        if (v !== 0) levels.push(v);
+      // Choose contour levels based on actual V range
+      const levels = [0];
+      const contourSteps = [500, 1000, 2000, 5000, 10000, 20000, 40000];
+      for (const s of contourSteps) {
+        levels.push(s);
+        levels.push(-s);
       }
-      levels.push(0);
 
-      mainCtx.lineWidth = 1.2;
       for (const level of levels) {
         const segments = marchingSquares(heatmapData, heatmapRes, heatmapRes, level);
         if (segments.length === 0) continue;
 
         if (level === 0) {
-          mainCtx.strokeStyle = '#333';
-          mainCtx.lineWidth = 2;
+          mainCtx.strokeStyle = '#222';
+          mainCtx.lineWidth = 2.5;
         } else if (level > 0) {
-          mainCtx.strokeStyle = 'rgba(180, 0, 0, 0.6)';
-          mainCtx.lineWidth = 1;
+          mainCtx.strokeStyle = 'rgba(200, 0, 0, 0.85)';
+          mainCtx.lineWidth = 1.5;
         } else {
-          mainCtx.strokeStyle = 'rgba(0, 0, 180, 0.6)';
-          mainCtx.lineWidth = 1;
+          mainCtx.strokeStyle = 'rgba(0, 0, 200, 0.85)';
+          mainCtx.lineWidth = 1.5;
         }
 
         mainCtx.beginPath();
@@ -555,12 +555,12 @@ canvas#energyCanvas {
           if (bestDist < Infinity) {
             const lx = (segments[bestIdx] + segments[bestIdx+2]) / 2 / (heatmapRes - 1) * CW;
             const ly = (segments[bestIdx+1] + segments[bestIdx+3]) / 2 / (heatmapRes - 1) * CH;
-            mainCtx.fillStyle = '#fff';
-            const labelText = level + ' V';
+            const labelText = Math.abs(level) >= 1000 ? (level/1000) + ' kV' : level + ' V';
+            mainCtx.font = 'bold 11px sans-serif';
             const tw = mainCtx.measureText(labelText).width;
-            mainCtx.fillRect(lx - tw/2 - 3, ly - 7, tw + 6, 14);
-            mainCtx.fillStyle = level >= 0 ? '#900' : '#009';
-            mainCtx.font = '11px sans-serif';
+            mainCtx.fillStyle = 'rgba(255,255,255,0.85)';
+            mainCtx.fillRect(lx - tw/2 - 4, ly - 8, tw + 8, 16);
+            mainCtx.fillStyle = level >= 0 ? '#b00' : '#00b';
             mainCtx.textAlign = 'center';
             mainCtx.textBaseline = 'middle';
             mainCtx.fillText(labelText, lx, ly);
@@ -638,30 +638,50 @@ canvas#energyCanvas {
     // Test charge
     if (showTestCharge) {
       const [tcx, tcy] = simToCanvas(testCharge.x, testCharge.y);
+
+      // Glow ring when released
+      if (released) {
+        mainCtx.beginPath();
+        mainCtx.arc(tcx, tcy, 16, 0, Math.PI * 2);
+        mainCtx.strokeStyle = 'rgba(241, 196, 15, 0.4)';
+        mainCtx.lineWidth = 4;
+        mainCtx.stroke();
+      }
+
       mainCtx.beginPath();
-      mainCtx.arc(tcx, tcy, 10, 0, Math.PI * 2);
+      mainCtx.arc(tcx, tcy, 12, 0, Math.PI * 2);
       mainCtx.fillStyle = '#f1c40f';
       mainCtx.fill();
       mainCtx.strokeStyle = '#e67e22';
-      mainCtx.lineWidth = 2;
+      mainCtx.lineWidth = 2.5;
       mainCtx.stroke();
 
       mainCtx.fillStyle = '#333';
-      mainCtx.font = 'bold 11px sans-serif';
+      mainCtx.font = 'bold 12px sans-serif';
       mainCtx.textAlign = 'center';
       mainCtx.textBaseline = 'middle';
       mainCtx.fillText('+q', tcx, tcy);
 
+      // Label: "시험전하" above the charge
+      mainCtx.font = 'bold 11px sans-serif';
+      const label = released ? '시험전하 (이동 중)' : '시험전하 (드래그)';
+      const lw = mainCtx.measureText(label).width;
+      mainCtx.fillStyle = 'rgba(0,0,0,0.8)';
+      mainCtx.fillRect(tcx - lw/2 - 6, tcy - 36, lw + 12, 20);
+      mainCtx.fillStyle = '#f1c40f';
+      mainCtx.fillText(label, tcx, tcy - 26);
+
       // Show V at test charge location
       if (charges.length > 0) {
         const V = computeVClamped(testCharge.x, testCharge.y);
-        mainCtx.fillStyle = 'rgba(0,0,0,0.75)';
-        const txt = 'V = ' + V.toFixed(1) + ' V';
-        const tw = mainCtx.measureText(txt).width;
-        mainCtx.fillRect(tcx - tw/2 - 5, tcy - 28, tw + 10, 18);
-        mainCtx.fillStyle = '#fff';
         mainCtx.font = '11px sans-serif';
-        mainCtx.fillText(txt, tcx, tcy - 19);
+        const vStr = Math.abs(V) >= 1000 ? (V/1000).toFixed(1) + ' kV' : V.toFixed(1) + ' V';
+        const txt = 'V = ' + vStr;
+        const tw = mainCtx.measureText(txt).width;
+        mainCtx.fillStyle = 'rgba(0,0,0,0.8)';
+        mainCtx.fillRect(tcx - tw/2 - 5, tcy + 18, tw + 10, 18);
+        mainCtx.fillStyle = '#fff';
+        mainCtx.fillText(txt, tcx, tcy + 27);
       }
     }
 
@@ -682,9 +702,9 @@ canvas#energyCanvas {
       mainCtx.font = '10px sans-serif';
       mainCtx.textAlign = 'left';
       mainCtx.textBaseline = 'middle';
-      mainCtx.fillText('+' + V_CLAMP + ' V', barX + barW + 4, barY + 4);
+      mainCtx.fillText('+' + (V_CLAMP/1000) + ' kV', barX + barW + 4, barY + 4);
       mainCtx.fillText('0 V', barX + barW + 4, barY + barH/2);
-      mainCtx.fillText('−' + V_CLAMP + ' V', barX + barW + 4, barY + barH - 4);
+      mainCtx.fillText('−' + (V_CLAMP/1000) + ' kV', barX + barW + 4, barY + barH - 4);
     }
   }
 
@@ -806,8 +826,8 @@ canvas#energyCanvas {
 
     document.getElementById('valX').textContent = testCharge.x.toFixed(2);
     document.getElementById('valY').textContent = testCharge.y.toFixed(2);
-    document.getElementById('valV').textContent = V.toFixed(1);
-    document.getElementById('valE').textContent = Emag.toFixed(1);
+    document.getElementById('valV').textContent = Math.abs(V) >= 1000 ? (V/1000).toFixed(2) + ' k' : V.toFixed(1);
+    document.getElementById('valE').textContent = Emag >= 1000 ? (Emag/1000).toFixed(1) + ' k' : Emag.toFixed(1);
     document.getElementById('valKE').textContent = formatEnergy(KE);
     document.getElementById('valPE').textContent = formatEnergy(PE);
     document.getElementById('valSpeed').textContent = speed < 0.01 ? '0' : speed.toFixed(2);
