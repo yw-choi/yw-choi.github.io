@@ -885,6 +885,7 @@ canvas#energyCanvas {
     initialTotalEnergy = q_test * V; // KE=0 at release
     testCharge.vx = 0;
     testCharge.vy = 0;
+    startAnimation();
   });
 
   btnStop.addEventListener('click', () => {
@@ -991,13 +992,19 @@ canvas#energyCanvas {
 
   // ===== Animation loop for released test charge =====
   let lastTime = null;
+  let animId = null;
 
   function animate(timestamp) {
+    if (!released) {
+      animId = null;
+      lastTime = null;
+      return;
+    }
     if (!lastTime) lastTime = timestamp;
     const dt = Math.min((timestamp - lastTime) / 1000, 0.05); // cap dt
     lastTime = timestamp;
 
-    if (released && charges.length > 0 && showTestCharge) {
+    if (charges.length > 0 && showTestCharge) {
       // RK2 integration
       const substeps = 4;
       const subdt = dt / substeps;
@@ -1043,12 +1050,18 @@ canvas#energyCanvas {
     drawMain();
     drawEnergy();
     updateInfo();
-    requestAnimationFrame(animate);
+    animId = requestAnimationFrame(animate);
+  }
+
+  function startAnimation() {
+    if (!animId) {
+      lastTime = null;
+      animId = requestAnimationFrame(animate);
+    }
   }
 
   // ===== Init =====
   redrawAll();
-  requestAnimationFrame(animate);
 
 })();
 </script>

@@ -689,8 +689,11 @@ canvas {
     const omegaSign = signQ * Bz;
 
     // Map dt from "display time" to "physics angular progress"
-    // We want one full orbit to take about 3 seconds visually
-    const T_visual = 3.0; // seconds for one visual orbit
+    // Scale visual period proportionally to physical period T = 2πm/(|q|B)
+    // Reference: proton at B=0.50 T → T_ref = 3.0 s visually
+    const T_phys = 2 * Math.PI * m / (q * B);
+    const T_phys_ref = 2 * Math.PI * 1.673e-27 / (1.602e-19 * 0.50);
+    const T_visual = Math.max(1.0, Math.min(8.0, 3.0 * (T_phys / T_phys_ref)));
     const omega_visual = 2 * Math.PI / T_visual * omegaSign;
 
     simTime += dt;
@@ -721,23 +724,77 @@ canvas {
     drawParticle();
     drawVectors();
 
-    // Entry point marker
+    // Before firing: show particle at start position with velocity arrow
+    if (!fired) {
+      // Preview: show where particle will be and direction
+      const previewX = W / 2 - W * 0.35;
+      const previewY = H / 2;
+
+      // Entry arrow from left edge
+      ctx.save();
+      ctx.setLineDash([6, 4]);
+      ctx.strokeStyle = '#4caf50';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, previewY);
+      ctx.lineTo(previewX - 14, previewY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Arrowhead
+      ctx.fillStyle = '#4caf50';
+      ctx.beginPath();
+      ctx.moveTo(previewX - 14, previewY);
+      ctx.lineTo(previewX - 22, previewY - 5);
+      ctx.lineTo(previewX - 22, previewY + 5);
+      ctx.closePath();
+      ctx.fill();
+
+      // Preview particle
+      const color = isPositive() ? '#e53935' : '#2196f3';
+      ctx.beginPath();
+      ctx.arc(previewX, previewY, 10, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.globalAlpha = 0.5;
+      ctx.fill();
+      ctx.globalAlpha = 1.0;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Charge label
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(isPositive() ? '+' : '−', previewX, previewY);
+
+      // Velocity arrow
+      drawArrow(previewX + 14, previewY, previewX + 60, previewY, '#4361ee', 'v₀');
+
+      // Label
+      ctx.fillStyle = 'rgba(0,0,0,0.7)';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('발사 버튼을 누르세요', previewX + 24, previewY - 24);
+      ctx.font = '11px sans-serif';
+      ctx.fillStyle = '#666';
+      ctx.fillText('입자 진입 →', 50, previewY - 12);
+      ctx.restore();
+    }
+
+    // Entry point marker (after firing)
     if (fired) {
       const startX = W / 2 - orbitR_px;
       const startY = H / 2;
       ctx.save();
-      ctx.strokeStyle = '#4caf50';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(startX - 12, startY);
-      ctx.lineTo(startX - 4, startY);
-      ctx.moveTo(startX - 8, startY - 4);
-      ctx.lineTo(startX - 8, startY + 4);
-      ctx.stroke();
       ctx.fillStyle = '#4caf50';
+      ctx.beginPath();
+      ctx.arc(startX, startY, 4, 0, Math.PI * 2);
+      ctx.fill();
       ctx.font = '11px sans-serif';
       ctx.textAlign = 'right';
-      ctx.fillText('발사', startX - 14, startY + 4);
+      ctx.fillText('진입점', startX - 8, startY + 4);
       ctx.restore();
     }
 
@@ -823,7 +880,16 @@ canvas {
   // Event listeners
   sliderB.addEventListener('input', () => { updateSliderLabels(); updateInfoPanel(); });
   sliderV.addEventListener('input', () => { updateSliderLabels(); updateInfoPanel(); });
-  selParticle.addEventListener('change', () => { updateInfoPanel(); });
+  selParticle.addEventListener('change', () => {
+    // Auto-set charge sign to match particle's natural charge
+    if (selParticle.value === 'electron') {
+      toggleSign.checked = false;
+    } else {
+      toggleSign.checked = true;
+    }
+    updateToggles();
+    updateInfoPanel();
+  });
   toggleBdir.addEventListener('change', () => { updateToggles(); updateInfoPanel(); draw(); });
   toggleSign.addEventListener('change', () => { updateToggles(); updateInfoPanel(); });
   btnFire.addEventListener('click', fire);
