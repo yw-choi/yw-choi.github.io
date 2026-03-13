@@ -175,7 +175,7 @@ input[type="range"]::-webkit-slider-thumb {
 <header>
   <h1>포물선 운동 시뮬레이터</h1>
   <p>Ch.04 Motion in Two and Three Dimensions &mdash; Projectile Motion</p>
-<a href="index.html" class="back-btn">&larr; 목록으로</a>
+<a href="index.html" class="back-btn">&larr; 시뮬레이션 목록</a>
 </header>
 <div class="sim-desc">포물선 운동에서 수평 방향(등속)과 수직 방향(등가속도)의 독립적인 운동을 관찰합니다. 발사 각도와 초기 속력을 조절하고, 속도 벡터가 vx와 vy 성분으로 분해되는 것을 확인하세요. 비교 모드에서는 보각(90°−θ)의 궤적을 동시에 볼 수 있습니다.</div>
 <div class="container">
@@ -319,8 +319,8 @@ function computeScale() {
   mX = Math.max(mX * 1.15, 10);
   mY = Math.max(mY * 1.15, p.h0 + 5);
 
-  const cw = canvas.width;
-  const ch = canvas.height;
+  const cw = canvas._logW || canvas.width;
+  const ch = canvas._logH || canvas.height;
   const padL = 60, padR = 30, padT = 30, padB = 50;
   const drawW = cw - padL - padR;
   const drawH = ch - padT - padB;
@@ -361,7 +361,7 @@ function drawGrid() {
   // vertical lines
   for (let x = 0; x <= maxWorldX * 1.1; x += step) {
     const { cx, cy } = toCanvas(x, 0);
-    if (cx > canvas.width - 10) break;
+    if (cx > (canvas._logW || canvas.width) - 10) break;
     ctx.beginPath();
     ctx.moveTo(cx, originY);
     ctx.lineTo(cx, originY - maxWorldY * scaleY * 1.05);
@@ -417,13 +417,13 @@ function drawGrid() {
 function drawGround() {
   ctx.save();
   ctx.fillStyle = '#d4c9a8';
-  ctx.fillRect(originX, originY, canvas.width - originX, canvas.height - originY + 5);
+  ctx.fillRect(originX, originY, (canvas._logW || canvas.width) - originX, (canvas._logH || canvas.height) - originY + 5);
   // grass line
   ctx.strokeStyle = '#6b8e23';
   ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(originX, originY);
-  ctx.lineTo(canvas.width, originY);
+  ctx.lineTo(canvas._logW || canvas.width, originY);
   ctx.stroke();
   ctx.restore();
 }
@@ -503,10 +503,12 @@ function updateInfo() {
 }
 
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const W = canvas._logW || canvas.width;
+  const H = canvas._logH || canvas.height;
+  ctx.clearRect(0, 0, W, H);
   // background
   ctx.fillStyle = '#fafbfc';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, W, H);
 
   drawGrid();
   drawGround();
@@ -625,7 +627,8 @@ function animate(timestamp) {
   const allDone = proj1 && proj1.done && (!proj2 || proj2.done);
   if (allDone) {
     state = 'done';
-    btnPlay.disabled = true;
+    btnPlay.disabled = false;
+    btnPlay.textContent = '다시 발사';
     btnPause.disabled = true;
     return;
   }
@@ -647,6 +650,7 @@ function launch() {
   simTime = 0;
   lastTime = null;
   state = 'running';
+  btnPlay.textContent = '발사';
   btnPlay.disabled = true;
   btnPause.disabled = false;
   angleSlider.disabled = true;
@@ -724,14 +728,15 @@ function resizeCanvas() {
   const wrap = canvas.parentElement;
   const w = wrap.clientWidth;
   const ratio = 500 / 1000;
-  canvas.width = w * (window.devicePixelRatio || 1);
-  canvas.height = w * ratio * (window.devicePixelRatio || 1);
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = w * dpr;
+  canvas.height = w * ratio * dpr;
   canvas.style.width = w + 'px';
   canvas.style.height = (w * ratio) + 'px';
-  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
-  // recalc internal dimensions for drawing (use CSS pixels)
-  canvas.width = w;
-  canvas.height = w * ratio;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  // Use CSS pixel dimensions for all drawing logic
+  canvas._logW = w;
+  canvas._logH = w * ratio;
   computeScale();
   draw();
 }

@@ -355,10 +355,22 @@
   var ectx = energyCanvas.getContext('2d');
   var sctx = spectrumCanvas.getContext('2d');
 
+  // --- HiDPI scaling ---
+  var dpr = window.devicePixelRatio || 1;
+  function setupHiDPI(canvas, ctx, w, h) {
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = 'auto';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  setupHiDPI(energyCanvas, ectx, 960, 700);
+  setupHiDPI(spectrumCanvas, sctx, 1160, 120);
+
   // Level positions (computed once)
   var levelPositions = {};
-  var canvasW = energyCanvas.width;
-  var canvasH = energyCanvas.height;
+  var canvasW = 960;
+  var canvasH = 700;
   var marginTop = 50;
   var marginBottom = 60;
   var marginLeft = 100;
@@ -451,10 +463,7 @@
       var col = (lam >= 380 && lam <= 780) ? wavelengthToColor(lam) : '#fff';
       drawTransitionArrow(ni, nf2, col, 1.0, true);
 
-      // Draw photon animation if active
-      if (animationPhoton) {
-        drawPhoton(animationPhoton);
-      }
+      // (photon animation placeholder - reserved for future use)
     }
   }
 
@@ -559,10 +568,6 @@
       ectx.fill();
     }
     ectx.restore();
-  }
-
-  function drawPhoton(p) {
-    // Animated photon - not used currently, kept for potential expansion
   }
 
   // Spectrum drawing
@@ -696,6 +701,7 @@
     var scaleY = canvasH / rect.height;
     var clickX = (e.clientX - rect.left) * scaleX;
     var clickY = (e.clientY - rect.top) * scaleY;
+    // Note: scaleX/scaleY already account for CSS sizing; dpr is handled by canvas transform
 
     // Find closest level
     var closest = null;

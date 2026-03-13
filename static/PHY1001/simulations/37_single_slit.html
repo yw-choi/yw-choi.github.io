@@ -383,17 +383,23 @@ header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
     // Central maximum full width: 2y1 = 2 * lambda * D / a
     var aPhys = a_um * 1e-6;
     var lamPhys = lambda_nm * 1e-9;
-    var centralWidth = 2 * lamPhys * D_m / aPhys; // in meters
-    // Display in appropriate unit
-    if (centralWidth >= 1.0) {
-      document.getElementById('valCW').textContent = centralWidth.toFixed(2);
-      document.getElementById('valCW').nextElementSibling.innerHTML = ' m';
-    } else if (centralWidth >= 0.01) {
-      document.getElementById('valCW').textContent = (centralWidth * 100).toFixed(1);
-      document.getElementById('valCW').nextElementSibling.innerHTML = ' cm';
+    if (aPhys < lamPhys) {
+      // sin(theta) > 1 for first minimum: no minima exist
+      document.getElementById('valCW').textContent = '극소 없음';
+      document.getElementById('valCW').nextElementSibling.innerHTML = ' (a < \u03BB)';
     } else {
-      document.getElementById('valCW').textContent = (centralWidth * 1000).toFixed(2);
-      document.getElementById('valCW').nextElementSibling.innerHTML = ' mm';
+      var centralWidth = 2 * lamPhys * D_m / aPhys; // in meters
+      // Display in appropriate unit
+      if (centralWidth >= 1.0) {
+        document.getElementById('valCW').textContent = centralWidth.toFixed(2);
+        document.getElementById('valCW').nextElementSibling.innerHTML = ' m';
+      } else if (centralWidth >= 0.01) {
+        document.getElementById('valCW').textContent = (centralWidth * 100).toFixed(1);
+        document.getElementById('valCW').nextElementSibling.innerHTML = ' cm';
+      } else {
+        document.getElementById('valCW').textContent = (centralWidth * 1000).toFixed(2);
+        document.getElementById('valCW').nextElementSibling.innerHTML = ' mm';
+      }
     }
   }
 

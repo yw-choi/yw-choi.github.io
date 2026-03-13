@@ -185,7 +185,7 @@ canvas {
 <header>
   <h1>단진동 시뮬레이터 (용수철 &amp; 진자)</h1>
   <p>Simple Harmonic Motion: Spring-Mass &amp; Simple Pendulum</p>
-<a href="index.html" class="back-btn">&larr; 목록으로</a>
+<a href="index.html" class="back-btn">&larr; 시뮬레이션 목록</a>
 </header>
 
 <div class="sim-desc">
@@ -642,8 +642,8 @@ const pendSim = (() => {
   }
 
   function step() {
-    // RK4 for pendulum: theta'' = -(g/L)*sin(theta) - (b/m)*omega
-    function accel(th, om) { return -(g/L)*Math.sin(th) - (gamma/m)*om; }
+    // RK4 for pendulum: theta'' = -(g/L)*sin(theta) - (b/(mL))*omega
+    function accel(th, om) { return -(g/L)*Math.sin(th) - (gamma/(m*L))*om; }
     const k1o = accel(theta, omega) * dt;
     const k1t = omega * dt;
     const k2o = accel(theta + k1t/2, omega + k1o/2) * dt;
@@ -661,7 +661,7 @@ const pendSim = (() => {
 
   function updateInfo() {
     const omega0 = Math.sqrt(g / L);
-    const gammaTerm = gamma / (2 * m);
+    const gammaTerm = gamma / (2 * m * L);
     const omega0sq = g / L;
     let omegaD, T, f;
     if (damping && gammaTerm * gammaTerm < omega0sq) {

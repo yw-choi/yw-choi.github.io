@@ -194,7 +194,7 @@ canvas {
 <header>
   <h1>횡파 시뮬레이터</h1>
   <p>Transverse Wave Simulation &mdash; Ch.16 Waves I</p>
-<a href="index.html" class="back-btn">&larr; 목록으로</a>
+<a href="index.html" class="back-btn">&larr; 시뮬레이션 목록</a>
 </header>
 
 <div class="sim-desc">
@@ -230,6 +230,7 @@ canvas {
     <!-- Info Display -->
     <div class="info-grid">
       <div class="info-box"><div class="label">파동 속도 v</div><div class="value" id="dispV">-</div></div>
+      <div class="info-box" style="display:none;"><div class="label">파동 2 속도 v₂</div><div class="value" id="dispV2">-</div></div>
       <div class="info-box"><div class="label">진동수 f</div><div class="value" id="dispF">-</div></div>
       <div class="info-box"><div class="label">파장 &lambda;</div><div class="value" id="dispLam">-</div></div>
       <div class="info-box"><div class="label">주기 T</div><div class="value" id="dispT">-</div></div>
@@ -354,12 +355,19 @@ function updateLabels() {
   document.getElementById('valLam2').textContent = p.lam2.toFixed(2);
   document.getElementById('valF2').textContent = p.f2.toFixed(2);
 
-  document.getElementById('dispV').textContent = p.v1.toFixed(2) + ' m/s';
+  document.getElementById('dispV').textContent = (mode === 'super' ? '파동1: ' : '') + p.v1.toFixed(2) + ' m/s';
   document.getElementById('dispF').textContent = p.f1.toFixed(2) + ' Hz';
   document.getElementById('dispLam').textContent = p.lam1.toFixed(2) + ' m';
   document.getElementById('dispT').textContent = p.T1.toFixed(3) + ' s';
   document.getElementById('dispK').textContent = p.k1.toFixed(2) + ' /m';
   document.getElementById('dispW').textContent = p.w1.toFixed(2) + ' rad/s';
+
+  // Show wave 2 speed in superposition mode
+  const v2Box = document.getElementById('dispV2');
+  if (v2Box) {
+    v2Box.parentElement.style.display = mode === 'super' ? '' : 'none';
+    v2Box.textContent = p.v2.toFixed(2) + ' m/s';
+  }
 
   // Equation
   if (mode === 'travel') {

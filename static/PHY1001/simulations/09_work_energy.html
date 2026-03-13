@@ -225,7 +225,7 @@ canvas {
 <header>
   <h1>일-에너지 정리 시뮬레이터</h1>
   <p>Ch.07 운동에너지와 일 (Work-Energy Theorem)</p>
-<a href="index.html" class="back-btn">&larr; 목록으로</a>
+<a href="index.html" class="back-btn">&larr; 시뮬레이션 목록</a>
 </header>
 <div class="sim-desc">각도 θ로 힘을 가하여 물체를 밀 때, 각 힘이 한 일과 운동에너지 변화를 관찰합니다. 일-에너지 정리 W_net = ΔKE가 실시간으로 검증됩니다. 힘의 크기, 각도, 질량, 마찰계수를 바꿔가며 에너지 바 차트와 그래프를 확인하세요.</div>
 
@@ -806,10 +806,16 @@ document.getElementById('btnReset').addEventListener('click', resetSim);
 function setupCanvas(c) {
   const dpr = window.devicePixelRatio || 1;
   const rect = c.getBoundingClientRect();
-  // Keep logical size from HTML attributes
+  c.width = rect.width * dpr;
+  c.height = rect.height * dpr;
+  const context = c.getContext('2d');
+  context.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return context;
 }
 
 // Init
+setupCanvas(canvas);
+setupCanvas(graphCanvas);
 updateDisplays();
 resetSim();
 </script>

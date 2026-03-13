@@ -209,6 +209,9 @@ header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
           <label>물체 높이: <span id="dispH" class="slider-val">3.0 cm</span></label>
           <input type="range" id="sliderH" min="1" max="6" value="3" step="0.5">
         </div>
+        <div class="control-group" style="flex:0;min-width:auto;">
+          <button id="btnReset" style="padding:6px 18px;border:2px solid #4285f4;background:#4285f4;color:#fff;border-radius:6px;font-size:0.85rem;font-weight:600;cursor:pointer;">↺ 초기화</button>
+        </div>
       </div>
     </div>
   </div>
@@ -804,6 +807,23 @@ header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
     draw();
   }, { passive: false });
   canvas.addEventListener('touchend', function() { dragging = false; });
+
+  // ---- Reset button ----
+  document.getElementById('btnReset').addEventListener('click', function() {
+    objDist = 30;
+    objHeight = 3;
+    R = 40;
+    mode = 'mirror';
+    subtype = 'concave';
+    sliderR.value = 40;
+    sliderH.value = 3;
+    dispR.textContent = '40 cm';
+    dispH.textContent = '3.0 cm';
+    modeToggle.querySelectorAll('button').forEach(function(b) { b.classList.remove('active'); });
+    modeToggle.querySelector('[data-mode="mirror"]').classList.add('active');
+    updateTypeButtons();
+    draw();
+  });
 
   // ---- Init ----
   window.addEventListener('resize', resize);

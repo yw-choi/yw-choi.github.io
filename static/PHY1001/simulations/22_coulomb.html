@@ -153,6 +153,7 @@ canvas {
       <canvas id="graphCanvas" width="480" height="400"></canvas>
       <div class="btn-bar">
         <button onclick="clearGraph()">↺ 그래프 초기화</button>
+        <button onclick="resetPositions()">↺ 초기화</button>
       </div>
     </div>
 
@@ -580,6 +581,18 @@ canvas {
     render();
   }
   window.clearGraph = clearGraph;
+
+  function resetPositions() {
+    x1 = 200; y1 = 225;
+    x2 = 500; y2 = 225;
+    q1 = 5.0; q2 = -3.0;
+    document.getElementById('sliderQ1').value = 5;
+    document.getElementById('sliderQ2').value = -3;
+    graphData = [];
+    addGraphPoint();
+    render();
+  }
+  window.resetPositions = resetPositions;
 
   // ===== Graph data collection =====
   function addGraphPoint() {

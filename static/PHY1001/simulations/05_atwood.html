@@ -203,7 +203,7 @@
 </head>
 <body>
 
-<header>Atwood 기계 시뮬레이터<a href="index.html" class="back-btn">&larr; 목록으로</a>
+<header>Atwood 기계 시뮬레이터<a href="index.html" class="back-btn">&larr; 시뮬레이션 목록</a>
 </header>
 <div class="sim-desc">도르래에 연결된 두 질량의 운동을 관찰합니다. 가속도 a = (m₁−m₂)g/(m₁+m₂)와 장력 T = 2m₁m₂g/(m₁+m₂) 공식을 슬라이더로 검증해 보세요. 퀴즈 모드에서는 직접 예측한 값을 입력하고 정답과 비교할 수 있습니다.</div>
 
@@ -514,7 +514,7 @@ function animate(ts) {
     const maxDispMeters = maxDisp / pixPerMeter;
     if (Math.abs(displacement) >= maxDispMeters) {
       displacement = Math.sign(displacement) * maxDispMeters;
-      velocity = 0;
+      // Keep the final velocity for display (don't zero it out)
       stopped = true;
     }
   }

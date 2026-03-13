@@ -220,7 +220,7 @@ canvas {
 <header>
   <h1>굴림 운동 경주 시뮬레이터</h1>
   <p>Ch.11 Rolling, Torque, and Angular Momentum — 관성모멘트에 따른 굴림 속도 비교</p>
-<a href="index.html" class="back-btn">&larr; 목록으로</a>
+<a href="index.html" class="back-btn">&larr; 시뮬레이션 목록</a>
 </header>
 <div class="sim-desc">경사면에서 원판, 고리, 속찬 구, 속빈 구가 동시에 굴러내립니다. 가속도 a = g sinθ/(1+c)에서 관성모멘트 비율 c = I/MR²가 작을수록 빠르게 도착합니다. 병진 운동에너지와 회전 운동에너지의 분배도 확인하세요.</div>
 <div class="container">
@@ -307,7 +307,7 @@ const ctx = canvas.getContext('2d');
 const eCanvas = document.getElementById('energyCanvas');
 const ectx = eCanvas.getContext('2d');
 
-const g = 9.81;
+const g = 9.8;
 
 const objects = [
   { id: 'disk',    name: '원판',       c: 0.5,     color: '#4CAF50', chk: 'chkDisk' },
@@ -356,6 +356,7 @@ function initRacers() {
 function reset() {
   state.running = false;
   state.paused = false;
+  document.getElementById('btnPause').textContent = '⏸ 일시정지';
   initRacers();
   updateFormulaBox();
   updateRankingDisplay();
@@ -378,6 +379,7 @@ function start() {
 
 function pause() {
   state.paused = !state.paused;
+  document.getElementById('btnPause').textContent = state.paused ? '▶ 재개' : '⏸ 일시정지';
 }
 
 function race() {

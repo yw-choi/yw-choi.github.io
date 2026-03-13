@@ -148,7 +148,7 @@ canvas {
 <header>
   <h1>이상기체 분자 운동 시뮬레이터</h1>
   <p>Ch.19 기체 운동론 — PV = NkT, 맥스웰-볼츠만 분포, 벽 충돌 압력 측정</p>
-<a href="index.html" class="back-btn">&larr; 목록으로</a>
+<a href="index.html" class="back-btn">&larr; 시뮬레이션 목록</a>
 </header>
 
 <div class="sim-desc">
@@ -194,7 +194,8 @@ canvas {
           <div class="item highlight full"><span class="lbl">PV / NkT</span><span class="val" id="dispPVNkT">—</span></div>
           <div class="item"><span class="lbl">v_rms (이론)</span><span class="val" id="dispVrmsTheory">—</span></div>
           <div class="item"><span class="lbl">v_rms (측정)</span><span class="val" id="dispVrmsSim">—</span></div>
-          <div class="item full"><span class="lbl">KE/분자 = kT (2D)</span><span class="val" id="dispKE">—</span></div>
+          <div class="item full"><span class="lbl">KE/분자 = kT (2D 시뮬레이션)</span><span class="val" id="dispKE">—</span></div>
+          <div class="item full"><span class="lbl">3D 이론값: (3/2)kT</span><span class="val" id="dispKE3D">—</span></div>
         </div>
       </div>
     </div>
@@ -573,6 +574,7 @@ function updateInfo() {
   document.getElementById('dispVrmsTheory').textContent = vrmsTheory.toFixed(2) + ' px/f';
   document.getElementById('dispVrmsSim').textContent = vrmsSim.toFixed(2) + ' px/f';
   document.getElementById('dispKE').textContent = kePerMol.toExponential(3) + ' J';
+  document.getElementById('dispKE3D').textContent = (1.5 * kePerMol).toExponential(3) + ' J';
 
   document.getElementById('valT').textContent = temperature + ' K';
   document.getElementById('valN').textContent = targetN;

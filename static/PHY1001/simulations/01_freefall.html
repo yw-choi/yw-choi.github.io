@@ -196,7 +196,7 @@ header h1 { font-size: 1.4rem; font-weight: 600; letter-spacing: 1px; }
 <header>
   <h1>자유낙하 &amp; 등가속도 운동 시뮬레이터</h1>
   <p>Ch.02 Motion Along a Straight Line</p>
-<a href="index.html" class="back-btn">&larr; 목록으로</a>
+<a href="index.html" class="back-btn">&larr; 시뮬레이션 목록</a>
 </header>
 <div class="sim-desc">중력 가속도 g 하에서 물체의 자유낙하를 시뮬레이션합니다. 초기 높이와 초기 속도를 조절하고, 지구·달·목성에서의 운동을 비교해 보세요. 위치-시간, 속도-시간, 가속도-시간 그래프가 실시간으로 그려집니다.</div>
 
@@ -391,9 +391,11 @@ header h1 { font-size: 1.4rem; font-weight: 600; letter-spacing: 1px; }
       if (disc >= 0) {
         let t1 = (-B + Math.sqrt(disc)) / (2 * A);
         let t2 = (-B - Math.sqrt(disc)) / (2 * A);
-        // Pick the larger positive root (ball rises first, then falls back down)
+        // Pick the correct positive root:
+        // v0 >= 0 (upward/drop): larger root (ball rises then falls)
+        // v0 < 0 (downward): smaller root (ball goes straight down)
         let tHit = null;
-        if (t1 > 0 && t2 > 0) tHit = Math.max(t1, t2);
+        if (t1 > 0 && t2 > 0) tHit = (v0 >= 0) ? Math.max(t1, t2) : Math.min(t1, t2);
         else if (t1 > 0) tHit = t1;
         else if (t2 > 0) tHit = t2;
         if (tHit !== null) t = tHit;
@@ -598,6 +600,13 @@ header h1 { font-size: 1.4rem; font-weight: 600; letter-spacing: 1px; }
     ctx.font = `${10}px sans-serif`;
     ctx.textAlign = 'center';
     ctx.fillText('t (s)', padL + gw / 2, h - 2);
+    // Y-axis label (vertical)
+    ctx.save();
+    ctx.translate(8, padT + gh / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center';
+    ctx.fillText(yLabel + ' (' + yUnit + ')', 0, 0);
+    ctx.restore();
     ctx.textAlign = 'right';
     // Y axis tick labels
     for (let i = 0; i <= 4; i++) {

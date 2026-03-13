@@ -713,12 +713,18 @@ canvas {
   }
 
   let animFrame = null;
+  let lastAnimTime = null;
+  const ANIM_SPEED = 1.0; // full slide in ~1 second
   function animateDielectric(target) {
     if (animFrame) cancelAnimationFrame(animFrame);
-    const step = target > dielectricSlideT ? 0.04 : -0.04;
-    function tick() {
-      dielectricSlideT += step;
-      if ((step > 0 && dielectricSlideT >= target) || (step < 0 && dielectricSlideT <= target)) {
+    lastAnimTime = null;
+    const dir = target > dielectricSlideT ? 1 : -1;
+    function tick(timestamp) {
+      if (lastAnimTime === null) lastAnimTime = timestamp;
+      const dt = (timestamp - lastAnimTime) / 1000;
+      lastAnimTime = timestamp;
+      dielectricSlideT += dir * ANIM_SPEED * dt;
+      if ((dir > 0 && dielectricSlideT >= target) || (dir < 0 && dielectricSlideT <= target)) {
         dielectricSlideT = target;
         draw();
         return;
@@ -726,7 +732,7 @@ canvas {
       draw();
       animFrame = requestAnimationFrame(tick);
     }
-    tick();
+    animFrame = requestAnimationFrame(tick);
   }
 
   // Event listeners

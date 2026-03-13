@@ -216,7 +216,7 @@ canvas {
 <header>
   <h1>에너지 보존 롤러코스터</h1>
   <p>Ch.08 퍼텐셜 에너지와 에너지 보존 | E = KE + PE = &frac12;mv&sup2; + mgh</p>
-<a href="index.html" class="back-btn">&larr; 목록으로</a>
+<a href="index.html" class="back-btn">&larr; 시뮬레이션 목록</a>
 </header>
 <div class="sim-desc">롤러코스터 트랙을 따라 움직이는 공의 운동에너지(KE)와 위치에너지(PE) 변환을 관찰합니다. 마찰이 없으면 역학적 에너지가 보존되고, 마찰을 켜면 열에너지로 전환되는 과정을 볼 수 있습니다.</div>
 
@@ -489,9 +489,8 @@ function step(dt) {
 
   if (ke < 0) {
     // Ball doesn't have enough energy to reach this height
-    // It should stop and reverse
     ke = 0;
-    ballSpeed = -ballSpeed * 0.01; // tiny nudge back
+    ballSpeed = 0;
   }
 
   const speed = Math.sqrt(2 * ke / m);
@@ -541,8 +540,8 @@ function step(dt) {
   const newKE = newMechE - newPE;
 
   if (newKE < 0) {
-    // Can't reach that height, reverse direction
-    ballSpeed = -ballSpeed * 0.5;
+    // Can't reach that height; let gravity decelerate naturally
+    ballSpeed = 0;
     // Don't update position
     return;
   }

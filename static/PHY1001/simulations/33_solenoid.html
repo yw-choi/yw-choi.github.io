@@ -601,7 +601,7 @@ header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
     var N = 200;
     for (var k = 0; k <= N; k++) {
       var r = (k/N) * maxR;
-      var bv = r <= 1.0 ? ph.B : ph.B * Math.exp(-18*(r-1));
+      var bv = r <= 1.0 ? ph.B : 0;
       var x = pad.l + (r/maxR)*pw;
       var y = pad.t + pph - (bv/maxB)*pph;
       if (k === 0) pCtx.moveTo(x,y); else pCtx.lineTo(x,y);
@@ -614,6 +614,12 @@ header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
     pCtx.closePath();
     pCtx.fillStyle = 'rgba(0,102,204,0.07)';
     pCtx.fill();
+
+    /* note: ideal solenoid external B = 0 */
+    pCtx.font = '10px sans-serif';
+    pCtx.fillStyle = '#888';
+    pCtx.textAlign = 'left';
+    pCtx.fillText('\uc774\uc0c1\uc801 \uc194\ub808\ub178\uc774\ub4dc: \uc678\ubd80 B = 0', bx + 3, pad.t + 24);
 
     pCtx.restore();
   }

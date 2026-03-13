@@ -125,6 +125,7 @@
   <div class="desc-box">
     전자기파는 전기장(E)과 자기장(B)이 서로 수직으로 진동하며 빛의 속도 c로 전파됩니다.
     전기장은 y축(초록), 자기장은 z축(빨강)으로 진동하며, 포인팅 벡터 S = E &times; B 는 전파 방향(x축)을 가리킵니다.
+    (실제 B 진폭은 E/c ≈ 3.3&times;10<sup>&minus;9</sup> 배로 매우 작지만, 시각화를 위해 같은 크기로 과장하여 표시합니다.)
   </div>
 
   <div class="canvas-card">
@@ -444,7 +445,7 @@
     ctx.fillStyle = '#4caf50';
     ctx.fillText('--- E (전기장, y축)', legX, legY + 14);
     ctx.fillStyle = '#f44336';
-    ctx.fillText('--- B (자기장, z축)', legX, legY + 34);
+    ctx.fillText('--- B (자기장, z축) (축척 과장)', legX, legY + 34);
     if (showS) {
       ctx.fillStyle = '#ffc107';
       ctx.fillText('--> S (포인팅 벡터)', legX, legY + 54);
@@ -460,8 +461,8 @@
   const spectrumBands = [
     { name: '감마선', logMin: -12, logMax: -10.5, color: '#8b00ff' },
     { name: 'X선', logMin: -10.5, logMax: -8.5, color: '#4b0082' },
-    { name: 'UV', logMin: -8.5, logMax: -6.6, color: '#6a0dad' },
-    { name: '가시광', logMin: -6.6, logMax: -6.15, color: 'rainbow' },
+    { name: 'UV', logMin: -8.5, logMax: -6.42, color: '#6a0dad' },
+    { name: '가시광', logMin: -6.42, logMax: -6.15, color: 'rainbow' },
     { name: '적외선', logMin: -6.15, logMax: -4, color: '#cc3333' },
     { name: '마이크로파', logMin: -4, logMax: -1, color: '#ff8c00' },
     { name: '라디오파', logMin: -1, logMax: 4, color: '#daa520' },

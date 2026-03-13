@@ -246,7 +246,6 @@ button.reset-btn:hover { background: #3367c4; }
 
   // State
   let magnetX = 200; // px position of magnet center on canvas
-  const coilCenterX = 530; // px center of canvas
   const coilCenterY = 180;
   let N = 10;
   let coilRadius = 3.0; // cm
@@ -284,7 +283,7 @@ button.reset-btn:hover { background: #3367c4; }
   }
 
   function computeFlux() {
-    const dist_px = coilCenterX - magnetX;
+    const dist_px = getCanvasW() * 0.5 - magnetX;
     const dist_m = dist_px * PX_TO_M;
     const B = dipoleFieldOnAxis(dist_m);
     const A = Math.PI * (coilRadius * 0.01) * (coilRadius * 0.01); // m^2
@@ -857,9 +856,9 @@ button.reset-btn:hover { background: #3367c4; }
     const dFlux = newFlux - currentFlux;
     currentEMF = dt > 0 ? -dFlux / dt : 0;
 
-    // Dampen very small EMF to zero when stationary
+    // Set EMF to exactly zero when magnet is stationary
     if (Math.abs(dx) < 0.5) {
-      currentEMF *= 0.8;
+      currentEMF = 0;
     }
 
     currentFlux = newFlux;
