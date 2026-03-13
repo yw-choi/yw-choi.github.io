@@ -3,342 +3,589 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHY1001 일반물리 I — 2026-1학기</title>
+    <title>PHY1001 일반물리학 — 서강대학교</title>
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4VEF9JDEXP"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-4VEF9JDEXP");</script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-4VEF9JDEXP');
+        // PDF 다운로드 트래킹
+        document.addEventListener('click', function(e) {
+            var link = e.target.closest('a[href$=".pdf"]');
+            if (link) {
+                gtag('event', 'file_download', {
+                    file_name: link.getAttribute('href').split('/').pop(),
+                    file_extension: 'pdf',
+                    link_url: link.href
+                });
+            }
+        });
+    </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f5f6f8;
+            background: #f0f2f5;
             color: #333;
-            line-height: 1.7;
+            min-height: 100vh;
         }
         header {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             color: white;
-            padding: 48px 20px 36px;
+            padding: 48px 20px 40px;
             text-align: center;
         }
-        header h1 { font-size: 2.2em; margin-bottom: 6px; }
-        header .subtitle { font-size: 1.15em; opacity: 0.85; }
-        header .meta {
+        header h1 { font-size: 2.2em; margin-bottom: 8px; letter-spacing: 1px; }
+        header .subtitle { font-size: 1.15em; opacity: 0.8; margin-bottom: 6px; }
+        header .semester { font-size: 0.95em; opacity: 0.6; }
+        header .header-credit {
             margin-top: 16px;
-            font-size: 0.9em;
-            opacity: 0.65;
-            line-height: 1.8;
+            font-size: 0.85em;
+            opacity: 0.55;
+            line-height: 1.6;
         }
-        header .meta a { color: #8ab4f8; text-decoration: none; }
-        header .meta a:hover { text-decoration: underline; }
-        .container { max-width: 900px; margin: 0 auto; padding: 28px 20px 40px; }
-
-        .section { margin-bottom: 32px; }
-        .section h2 {
-            font-size: 1.3em;
-            color: #1a1a2e;
-            margin-bottom: 14px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #ddd;
+        header .header-credit a { color: #8ab4f8; text-decoration: none; }
+        header .header-credit a:hover { text-decoration: underline; }
+        nav {
+            background: #16213e;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-
-        /* 강의 개요 */
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px 24px;
-            font-size: 0.95em;
-        }
-        .info-grid dt { color: #888; font-size: 0.85em; }
-        .info-grid dd { font-weight: 600; margin-bottom: 4px; }
-        @media (max-width: 500px) { .info-grid { grid-template-columns: 1fr; } }
-
-        /* 주차별 일정 */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9em;
-        }
-        th {
-            background: #1a1a2e;
-            color: #fff;
-            padding: 8px 10px;
-            text-align: left;
-            font-weight: 600;
-        }
-        td { padding: 8px 10px; border-bottom: 1px solid #e8e8e8; vertical-align: middle; }
-        tr:hover { background: #f0f4ff; }
-        tr.exam { background: #fff3e0; font-weight: 600; }
-        tr.exam:hover { background: #ffe8cc; }
-        .ch-tag {
+        nav a {
             display: inline-block;
-            background: #e8eaf6;
-            color: #3949ab;
-            font-size: 0.78em;
-            padding: 1px 7px;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-        /* 자료 링크 */
-        .res-link {
-            display: inline-block;
-            font-size: 0.75em;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 6px;
+            color: rgba(255,255,255,0.7);
             text-decoration: none;
-            margin: 1px 2px;
-            transition: opacity 0.15s;
+            padding: 14px 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
         }
-        .res-link:hover { opacity: 0.75; }
-        .res-slide {
-            background: #e74c3c;
+        nav a:hover, nav a.active {
             color: #fff;
+            border-bottom-color: #8ab4f8;
+            background: rgba(255,255,255,0.05);
         }
-        .res-hw {
-            background: #3949ab;
-            color: #fff;
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 20px;
         }
-        td.res-cell { white-space: nowrap; }
-
-        /* 시뮬레이션 */
-        .sim-box {
-            background: #fff;
-            border-radius: 10px;
-            padding: 18px 22px;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+        .section { margin-bottom: 40px; }
+        .section-header {
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
         }
-        .sim-box .sim-text { flex: 1; }
-        .sim-box .sim-text p {
-            font-size: 0.92em;
-            color: #555;
-            margin-top: 4px;
+        .section-header h2 { font-size: 1.3em; color: #1a1a2e; }
+        .section-header .badge {
+            font-size: 0.75em;
+            background: #1a1a2e;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
         }
-        .sim-box .sim-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #1565c0, #0d47a1);
-            color: #fff;
-            padding: 10px 22px;
-            border-radius: 8px;
+        .section-header a {
+            margin-left: auto;
+            font-size: 0.85em;
+            color: #3498db;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 0.92em;
-            white-space: nowrap;
-            transition: transform 0.15s, box-shadow 0.15s;
         }
-        .sim-box .sim-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 14px rgba(13,71,161,0.3);
+        .section-header a:hover { text-decoration: underline; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
         }
-        @media (max-width: 500px) {
-            .sim-box { flex-direction: column; text-align: center; }
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
-
-        /* 교재 */
-        .textbook-box {
-            background: #fff;
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+        .card-color { height: 6px; }
+        .card-body { padding: 18px 20px; }
+        .card-title { font-size: 1.1em; font-weight: 600; margin-bottom: 6px; }
+        .card-desc { font-size: 0.88em; color: #666; line-height: 1.5; }
+        .card-meta { font-size: 0.78em; color: #999; margin-top: 8px; }
+        .tag {
+            display: inline-block;
+            font-size: 0.72em;
+            padding: 2px 8px;
             border-radius: 10px;
-            padding: 16px 20px;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-            font-size: 0.93em;
+            color: white;
+            margin-top: 8px;
         }
-        .textbook-box .title { font-weight: 700; margin-bottom: 4px; }
-        .textbook-box .sub { color: #777; font-size: 0.88em; }
-
+        /* Section accent colors */
+        .accent-sim { background: #3498db; }
+        .accent-slide { background: #2ecc71; }
+        .accent-hw { background: #e67e22; }
+        .accent-exam { background: #e74c3c; }
+        .accent-syllabus { background: #9b59b6; }
+        /* Chapter row (compact list) */
+        .chapter-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .chapter-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            border-radius: 8px;
+            padding: 12px 16px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+        }
+        .chapter-item:hover {
+            background: #f8f9ff;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+        }
+        .chapter-item .ch-num {
+            font-size: 0.8em;
+            font-weight: 700;
+            color: white;
+            background: #1a1a2e;
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .chapter-item .ch-info { flex: 1; min-width: 0; }
+        .chapter-item .ch-title { font-size: 0.88em; font-weight: 600; }
+        .chapter-item .ch-links { font-size: 0.75em; color: #3498db; margin-top: 2px; }
+        .chapter-item .ch-links a { color: #3498db; text-decoration: none; margin-right: 8px; }
+        .chapter-item .ch-links a:hover { text-decoration: underline; }
+        /* Highlight card */
+        .highlight-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        .highlight-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+        }
+        .highlight-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+        .highlight-card .icon { font-size: 2em; margin-bottom: 10px; }
+        .highlight-card .h-title { font-size: 1.1em; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+        .highlight-card .h-desc { font-size: 0.85em; color: #666; }
+        .highlight-card .h-count { font-size: 0.78em; color: #3498db; margin-top: 8px; font-weight: 600; }
         footer {
             text-align: center;
-            padding: 24px 20px;
-            color: #999;
-            font-size: 0.82em;
-            line-height: 1.7;
-            border-top: 1px solid #e0e0e0;
+            padding: 30px 20px;
+            color: #888;
+            font-size: 0.85em;
+            line-height: 1.8;
+            border-top: 1px solid #ddd;
+            margin-top: 10px;
         }
         footer a { color: #3498db; text-decoration: none; }
         footer a:hover { text-decoration: underline; }
+        footer .credit-line { color: #aaa; font-size: 0.8em; }
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.5em; }
+            nav a { padding: 12px 14px; font-size: 0.82em; }
+            .highlight-cards { grid-template-columns: 1fr 1fr; }
+        }
     </style>
 </head>
 <body>
-<header>
-    <h1>PHY1001 일반물리 I</h1>
-    <div class="subtitle">2026년 1학기 — 수/금 15:00~16:15</div>
-    <div class="meta">
-        <a href="https://physics.sogang.ac.kr" target="_blank">서강대학교 물리학과</a> |
-        최영우 교수 | <a href="mailto:ywchoi02@sogang.ac.kr">ywchoi02@sogang.ac.kr</a> | 연구실 F303C
-    </div>
-</header>
+    <header>
+        <h1>PHY1001 일반물리학</h1>
+        <div class="subtitle">Fundamentals of Physics (Halliday, Resnick, Walker)</div>
+        <div class="semester">2026학년도 1학기</div>
+        <div class="header-credit">
+            <a href="https://physics.sogang.ac.kr" target="_blank">서강대학교 물리학과</a> |
+            문의: <a href="mailto:ywchoi02@sogang.ac.kr">최영우 ywchoi02@sogang.ac.kr</a>
+        </div>
+    </header>
 
-<div class="container">
+    <nav id="main-nav">
+        <a href="#overview" class="active">Overview</a>
+        <a href="#simulations">시뮬레이션</a>
+        <a href="#slides">강의자료</a>
+        <a href="#homeworks">숙제</a>
+    </nav>
 
-    <!-- 강의 개요 -->
-    <div class="section">
-        <h2>강의 개요</h2>
-        <dl class="info-grid">
-            <div><dt>과목코드</dt><dd>PHY1001-13</dd></div>
-            <div><dt>학점</dt><dd>3학점</dd></div>
-            <div><dt>수업시간</dt><dd>수/금 15:00~16:15</dd></div>
-            <div><dt>오피스아워</dt><dd>월·화·목 10:00~12:00 (사전 이메일)</dd></div>
-            <div><dt>성적평가</dt><dd>중간 50% + 기말 50%</dd></div>
-            <div><dt>결시</dt><dd>중간 또는 기말 미응시 시 F</dd></div>
-        </dl>
-    </div>
+    <div class="container">
 
-    <!-- 주차별 일정 -->
-    <div class="section">
-        <h2>주차별 일정</h2>
-        <table>
-            <thead><tr><th>주</th><th>주제</th><th>챕터</th><th>자료</th></tr></thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>강의 소개, 측정, 직선 운동, 벡터</td>
-                    <td><span class="ch-tag">Ch.1-3</span></td>
-                    <td class="res-cell">
-                        <a class="res-link res-slide" href="slides/intro.pdf" target="_blank">Intro</a>
-                        <a class="res-link res-slide" href="slides/ch01.pdf" target="_blank">Ch.01</a>
-                        <a class="res-link res-slide" href="slides/ch02.pdf" target="_blank">Ch.02</a>
-                        <a class="res-link res-slide" href="slides/ch03.pdf" target="_blank">Ch.03</a>
-                        <a class="res-link res-hw" href="homeworks/ch01_homework.pdf" target="_blank">HW1</a>
-                        <a class="res-link res-hw" href="homeworks/ch02_homework.pdf" target="_blank">HW2</a>
-                        <a class="res-link res-hw" href="homeworks/ch03_homework.pdf" target="_blank">HW3</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>2차원·3차원 운동, 뉴턴의 법칙</td>
-                    <td><span class="ch-tag">Ch.4-5</span></td>
-                    <td class="res-cell">
-                        <a class="res-link res-slide" href="slides/ch04.pdf" target="_blank">Ch.04</a>
-                        <a class="res-link res-slide" href="slides/ch05.pdf" target="_blank">Ch.05</a>
-                        <a class="res-link res-hw" href="homeworks/ch04_homework.pdf" target="_blank">HW4</a>
-                        <a class="res-link res-hw" href="homeworks/ch05_homework.pdf" target="_blank">HW5</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>힘과 운동, 일과 운동에너지</td>
-                    <td><span class="ch-tag">Ch.6-7</span></td>
-                    <td class="res-cell">
-                        <a class="res-link res-slide" href="slides/ch06.pdf" target="_blank">Ch.06</a>
-                        <a class="res-link res-slide" href="slides/ch07.pdf" target="_blank">Ch.07</a>
-                        <a class="res-link res-hw" href="homeworks/ch06_homework.pdf" target="_blank">HW6</a>
-                        <a class="res-link res-hw" href="homeworks/ch07_homework.pdf" target="_blank">HW7</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>위치에너지, 에너지 보존, 선운동량</td>
-                    <td><span class="ch-tag">Ch.8-9</span></td>
-                    <td class="res-cell">
-                        <a class="res-link res-slide" href="slides/ch08.pdf" target="_blank">Ch.08</a>
-                        <a class="res-link res-slide" href="slides/ch09.pdf" target="_blank">Ch.09</a>
-                        <a class="res-link res-hw" href="homeworks/ch08_homework.pdf" target="_blank">HW8</a>
-                        <a class="res-link res-hw" href="homeworks/ch09_homework.pdf" target="_blank">HW9</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>회전 운동</td>
-                    <td><span class="ch-tag">Ch.10</span></td>
-                    <td class="res-cell">
-                        <a class="res-link res-slide" href="slides/ch10.pdf" target="_blank">Ch.10</a>
-                        <a class="res-link res-hw" href="homeworks/ch10_homework.pdf" target="_blank">HW10</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td>굴림 운동, 토크, 각운동량</td>
-                    <td><span class="ch-tag">Ch.11</span></td>
-                    <td class="res-cell"></td>
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td>평형과 탄성</td>
-                    <td><span class="ch-tag">Ch.12</span></td>
-                    <td class="res-cell"></td>
-                </tr>
-                <tr class="exam"><td>8</td><td>중간고사</td><td>—</td><td></td></tr>
-                <tr>
-                    <td>9</td>
-                    <td>중력 (만유인력, 행성 운동, 케플러 법칙)</td>
-                    <td><span class="ch-tag">Ch.13</span></td>
-                    <td class="res-cell"></td>
-                </tr>
-                <tr>
-                    <td>10</td>
-                    <td>유체, 진동 (단진동)</td>
-                    <td><span class="ch-tag">Ch.14-15</span></td>
-                    <td class="res-cell"></td>
-                </tr>
-                <tr>
-                    <td>11</td>
-                    <td>진동, 파동 (파동 방정식)</td>
-                    <td><span class="ch-tag">Ch.15-16</span></td>
-                    <td class="res-cell"></td>
-                </tr>
-                <tr>
-                    <td>12</td>
-                    <td>파동 (간섭, 맥놀이, 도플러 효과)</td>
-                    <td><span class="ch-tag">Ch.16-17</span></td>
-                    <td class="res-cell"></td>
-                </tr>
-                <tr>
-                    <td>13</td>
-                    <td>온도, 열, 열역학 제1법칙</td>
-                    <td><span class="ch-tag">Ch.18</span></td>
-                    <td class="res-cell"></td>
-                </tr>
-                <tr>
-                    <td>14</td>
-                    <td>기체 분자 운동론</td>
-                    <td><span class="ch-tag">Ch.19</span></td>
-                    <td class="res-cell"></td>
-                </tr>
-                <tr>
-                    <td>15</td>
-                    <td>엔트로피, 열역학 제2법칙</td>
-                    <td><span class="ch-tag">Ch.20</span></td>
-                    <td class="res-cell"></td>
-                </tr>
-                <tr class="exam"><td>16</td><td>기말고사</td><td>—</td><td></td></tr>
-            </tbody>
-        </table>
-        <p style="margin-top: 10px; font-size: 0.83em; color: #999;">
-            <span style="display:inline-block; width:10px; height:10px; background:#e74c3c; border-radius:3px; vertical-align:middle;"></span> 강의노트 &nbsp;
-            <span style="display:inline-block; width:10px; height:10px; background:#3949ab; border-radius:3px; vertical-align:middle;"></span> 연습문제 &nbsp;| &nbsp;
-            6주차 이후 자료는 수업 진행에 따라 업데이트됩니다.
-        </p>
-    </div>
-
-    <!-- 물리 시뮬레이션 -->
-    <div class="section">
-        <h2>물리 시뮬레이션</h2>
-        <div class="sim-box">
-            <div class="sim-text">
-                <strong>인터랙티브 시뮬레이션 (20개)</strong>
-                <p>자유낙하부터 카르노 엔진까지 — 브라우저에서 바로 실행되는 시뮬레이션으로 핵심 개념을 체험하세요.</p>
+        <!-- Overview -->
+        <div class="section" id="overview">
+            <div class="highlight-cards">
+                <a class="highlight-card" href="simulations/index.html">
+                    <div class="icon">&#9881;</div>
+                    <div class="h-title">시뮬레이션</div>
+                    <div class="h-desc">인터랙티브 물리 실험</div>
+                    <div class="h-count">41개 시뮬레이션 (Ch.02 ~ Ch.40)</div>
+                </a>
+                <a class="highlight-card" href="#slides">
+                    <div class="icon">&#128218;</div>
+                    <div class="h-title">강의자료</div>
+                    <div class="h-desc">Slidev 슬라이드 & PDF</div>
+                    <div class="h-count">12개 챕터</div>
+                </a>
+                <a class="highlight-card" href="#homeworks">
+                    <div class="icon">&#9997;</div>
+                    <div class="h-title">숙제</div>
+                    <div class="h-desc">연습문제 & 풀이</div>
+                    <div class="h-count">10개 챕터</div>
+                </a>
+                <a class="highlight-card" href="syllabus/extended syllabus_일반물리I.pdf">
+                    <div class="icon">&#128197;</div>
+                    <div class="h-title">실라버스</div>
+                    <div class="h-desc">강의 계획서</div>
+                    <div class="h-count">PDF 다운로드</div>
+                </a>
             </div>
-            <a class="sim-btn" href="simulations/">바로가기 &rarr;</a>
         </div>
+
+        <!-- Simulations -->
+        <div class="section" id="simulations">
+            <div class="section-header">
+                <h2>시뮬레이션</h2>
+                <span class="badge">41개</span>
+                <a href="simulations/index.html">전체 보기 &rarr;</a>
+            </div>
+            <div class="grid">
+                <a class="card" href="simulations/index.html#mechanics">
+                    <div class="card-color accent-sim"></div>
+                    <div class="card-body">
+                        <div class="card-title">역학 (Ch.02 ~ Ch.14)</div>
+                        <div class="card-desc">자유낙하, 포물선 운동, 뉴턴 법칙, 에너지 보존, 충돌, 회전, 중력, 유체</div>
+                        <div class="card-meta">시뮬레이션 01 ~ 15 (15개)</div>
+                    </div>
+                </a>
+                <a class="card" href="simulations/index.html#waves">
+                    <div class="card-color accent-sim"></div>
+                    <div class="card-body">
+                        <div class="card-title">파동 & 열역학 (Ch.15 ~ Ch.20)</div>
+                        <div class="card-desc">단진동, 횡파, 정상파, 열전달, 이상기체, 카르노 엔진</div>
+                        <div class="card-meta">시뮬레이션 16 ~ 21 (6개)</div>
+                    </div>
+                </a>
+                <a class="card" href="simulations/index.html#em">
+                    <div class="card-color accent-sim"></div>
+                    <div class="card-body">
+                        <div class="card-title">전자기학 (Ch.21 ~ Ch.33)</div>
+                        <div class="card-desc">쿨롱 법칙, 전기장, 가우스 법칙, 축전기, RC/RLC 회로, 패러데이 법칙, 전자기파</div>
+                        <div class="card-meta">시뮬레이션 22 ~ 34 (13개)</div>
+                    </div>
+                </a>
+                <a class="card" href="simulations/index.html#optics">
+                    <div class="card-color accent-sim"></div>
+                    <div class="card-body">
+                        <div class="card-title">광학 & 현대물리 (Ch.34 ~ Ch.40)</div>
+                        <div class="card-desc">거울/렌즈, 간섭, 회절, 상대성이론, 광전 효과, 양자역학</div>
+                        <div class="card-meta">시뮬레이션 35 ~ 41 (7개)</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Slides -->
+        <div class="section" id="slides">
+            <div class="section-header">
+                <h2>강의자료</h2>
+                <span class="badge">12개 챕터</span>
+            </div>
+            <div class="chapter-list">
+                <div class="chapter-item">
+                    <div class="ch-num" style="background:#9b59b6;">Intro</div>
+                    <div class="ch-info">
+                        <div class="ch-title">강의 소개</div>
+                        <div class="ch-links">
+                            <a href="slides/intro/dist/index.html">HTML</a>
+                            <a href="slides/intro.pdf">PDF</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">01</div>
+                    <div class="ch-info">
+                        <div class="ch-title">측정</div>
+                        <div class="ch-links">
+                            <a href="slides/ch01/dist/index.html">HTML</a>
+                            <a href="slides/ch01.pdf">PDF</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">02</div>
+                    <div class="ch-info">
+                        <div class="ch-title">직선 운동</div>
+                        <div class="ch-links">
+                            <a href="slides/ch02/dist/index.html">HTML</a>
+                            <a href="slides/ch02.pdf">PDF</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">03</div>
+                    <div class="ch-info">
+                        <div class="ch-title">벡터</div>
+                        <div class="ch-links">
+                            <a href="slides/ch03/dist/index.html">HTML</a>
+                            <a href="slides/ch03.pdf">PDF</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">04</div>
+                    <div class="ch-info">
+                        <div class="ch-title">2차원 & 3차원 운동</div>
+                        <div class="ch-links">
+                            <a href="slides/ch04/dist/index.html">HTML</a>
+                            <a href="slides/ch04.pdf">PDF</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">05</div>
+                    <div class="ch-info">
+                        <div class="ch-title">힘과 운동 I</div>
+                        <div class="ch-links">
+                            <a href="slides/ch05/dist/index.html">HTML</a>
+                            <a href="slides/ch05.pdf">PDF</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">06</div>
+                    <div class="ch-info">
+                        <div class="ch-title">힘과 운동 II</div>
+                        <div class="ch-links">
+                            <a href="slides/ch06.pdf">PDF</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">07</div>
+                    <div class="ch-info">
+                        <div class="ch-title">운동에너지와 일</div>
+                        <div class="ch-links">
+                            <a href="slides/ch07/dist/index.html">HTML</a>
+                            <a href="slides/ch07.pdf">PDF</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">08</div>
+                    <div class="ch-info">
+                        <div class="ch-title">위치에너지와 에너지 보존</div>
+                        <div class="ch-links">
+                            <a href="slides/ch08/dist/index.html">HTML</a>
+                            <a href="slides/ch08.pdf">PDF</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">09</div>
+                    <div class="ch-info">
+                        <div class="ch-title">질량 중심과 선운동량</div>
+                        <div class="ch-links">
+                            <a href="slides/ch09/dist/index.html">HTML</a>
+                            <a href="slides/ch09.pdf">PDF</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">10</div>
+                    <div class="ch-info">
+                        <div class="ch-title">회전</div>
+                        <div class="ch-links">
+                            <a href="slides/ch10/dist/index.html">HTML</a>
+                            <a href="slides/ch10.pdf">PDF</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num" style="background:#6a0dad;">AI</div>
+                    <div class="ch-info">
+                        <div class="ch-title">AI 코딩</div>
+                        <div class="ch-links">
+                            <a href="slides/ai-coding/dist/index.html">HTML</a>
+                            <a href="slides/ai-coding.pdf">PDF</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Homeworks -->
+        <div class="section" id="homeworks">
+            <div class="section-header">
+                <h2>숙제</h2>
+                <span class="badge">10개 챕터</span>
+            </div>
+            <div class="chapter-list">
+                <div class="chapter-item">
+                    <div class="ch-num">01</div>
+                    <div class="ch-info">
+                        <div class="ch-title">Ch.01 측정</div>
+                        <div class="ch-links">
+                            <a href="homeworks/ch01_homework.pdf">문제</a>
+                            <a href="homeworks/ch01_homework_solution.pdf">풀이</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">02</div>
+                    <div class="ch-info">
+                        <div class="ch-title">Ch.02 직선 운동</div>
+                        <div class="ch-links">
+                            <a href="homeworks/ch02_homework.pdf">문제</a>
+                            <a href="homeworks/ch02_homework_solution.pdf">풀이</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">03</div>
+                    <div class="ch-info">
+                        <div class="ch-title">Ch.03 벡터</div>
+                        <div class="ch-links">
+                            <a href="homeworks/ch03_homework.pdf">문제</a>
+                            <a href="homeworks/ch03_homework_solution.pdf">풀이</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">04</div>
+                    <div class="ch-info">
+                        <div class="ch-title">Ch.04 2차원 운동</div>
+                        <div class="ch-links">
+                            <a href="homeworks/ch04_homework.pdf">문제</a>
+                            <a href="homeworks/ch04_homework_solution.pdf">풀이</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">05</div>
+                    <div class="ch-info">
+                        <div class="ch-title">Ch.05 힘과 운동 I</div>
+                        <div class="ch-links">
+                            <a href="homeworks/ch05_homework.pdf">문제</a>
+                            <a href="homeworks/ch05_homework_solution.pdf">풀이</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">06</div>
+                    <div class="ch-info">
+                        <div class="ch-title">Ch.06 힘과 운동 II</div>
+                        <div class="ch-links">
+                            <a href="homeworks/ch06_homework.pdf">문제</a>
+                            <a href="homeworks/ch06_homework_solution.pdf">풀이</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">07</div>
+                    <div class="ch-info">
+                        <div class="ch-title">Ch.07 운동에너지와 일</div>
+                        <div class="ch-links">
+                            <a href="homeworks/ch07_homework.pdf">문제</a>
+                            <a href="homeworks/ch07_homework_solution.pdf">풀이</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">08</div>
+                    <div class="ch-info">
+                        <div class="ch-title">Ch.08 위치에너지</div>
+                        <div class="ch-links">
+                            <a href="homeworks/ch08_homework.pdf">문제</a>
+                            <a href="homeworks/ch08_homework_solution.pdf">풀이</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">09</div>
+                    <div class="ch-info">
+                        <div class="ch-title">Ch.09 선운동량</div>
+                        <div class="ch-links">
+                            <a href="homeworks/ch09_homework.pdf">문제</a>
+                            <a href="homeworks/ch09_homework_solution.pdf">풀이</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chapter-item">
+                    <div class="ch-num">10</div>
+                    <div class="ch-info">
+                        <div class="ch-title">Ch.10 회전</div>
+                        <div class="ch-links">
+                            <a href="homeworks/ch10_homework.pdf">문제</a>
+                            <a href="homeworks/ch10_homework_solution.pdf">풀이</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- 교재 -->
-    <div class="section">
-        <h2>교재</h2>
-        <div class="textbook-box">
-            <div class="title">Principles of Physics, 12th Edition</div>
-            <div class="sub">Resnick, Halliday, Walker — Wiley (ISBN: 9781119820611)</div>
-            <div class="sub" style="margin-top: 4px;">한국어판: 일반물리학 12판 (ISBN: 9791191679410)</div>
-        </div>
-    </div>
+    <footer>
+        <a href="https://physics.sogang.ac.kr" target="_blank">서강대학교 물리학과</a> — PHY1001 일반물리학 (2026)<br>
+        버그 및 개선사항 신고: <a href="mailto:ywchoi02@sogang.ac.kr">최영우 (ywchoi02@sogang.ac.kr)</a><br>
+        <span class="credit-line">Built with <a href="https://claude.ai/claude-code" target="_blank">Claude Code</a> (Anthropic)</span>
+    </footer>
 
-</div>
-
-<footer>
-    <a href="https://physics.sogang.ac.kr" target="_blank">서강대학교 물리학과</a> — PHY1001 일반물리 I (2026-1학기)<br>
-    문의: <a href="mailto:ywchoi02@sogang.ac.kr">최영우 (ywchoi02@sogang.ac.kr)</a><br>
-    <span style="color:#bbb; font-size:0.9em;">Built with <a href="https://claude.ai/claude-code" target="_blank">Claude Code</a></span>
-</footer>
+    <script>
+        // Smooth scroll for nav links
+        document.querySelectorAll('nav a[href^="#"]').forEach(function(a) {
+            a.addEventListener('click', function(e) {
+                e.preventDefault();
+                var target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+        // Highlight active nav on scroll
+        var sections = document.querySelectorAll('.section[id]');
+        var navLinks = document.querySelectorAll('nav a[href^="#"]');
+        window.addEventListener('scroll', function() {
+            var scrollPos = window.scrollY + 80;
+            sections.forEach(function(sec) {
+                if (sec.offsetTop <= scrollPos && sec.offsetTop + sec.offsetHeight > scrollPos) {
+                    navLinks.forEach(function(l) { l.classList.remove('active'); });
+                    var active = document.querySelector('nav a[href="#' + sec.id + '"]');
+                    if (active) active.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
