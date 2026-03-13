@@ -114,66 +114,69 @@
         .cat-em { background: #e67e22; }
         .cat-optics { background: #8e44ad; }
 
-        /* Compact card grid */
+        /* Square card grid */
         .sim-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
         }
         .sim-card {
             display: flex;
-            align-items: stretch;
+            flex-direction: column;
             background: white;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             text-decoration: none;
             color: inherit;
             transition: all 0.2s;
+            aspect-ratio: 1;
         }
         .sim-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
         }
         .sim-accent {
-            width: 5px;
+            height: 6px;
             flex-shrink: 0;
         }
         .sim-body {
-            padding: 12px 14px;
+            padding: 16px;
             flex: 1;
-            min-width: 0;
+            display: flex;
+            flex-direction: column;
         }
         .sim-top {
             display: flex;
-            align-items: baseline;
+            align-items: center;
             gap: 8px;
-            margin-bottom: 3px;
+            margin-bottom: 10px;
         }
         .sim-num {
-            font-size: 0.72em;
+            font-size: 0.75em;
             color: #999;
             white-space: nowrap;
         }
         .sim-ch {
-            font-size: 0.68em;
-            padding: 1px 6px;
+            font-size: 0.7em;
+            padding: 2px 8px;
             border-radius: 8px;
             color: white;
             white-space: nowrap;
         }
         .sim-title {
-            font-size: 0.95em;
+            font-size: 1em;
             font-weight: 600;
-            line-height: 1.3;
+            line-height: 1.35;
+            margin-bottom: 8px;
         }
         .sim-desc {
-            font-size: 0.78em;
+            font-size: 0.8em;
             color: #777;
-            line-height: 1.4;
-            margin-top: 3px;
+            line-height: 1.45;
+            flex: 1;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -230,8 +233,9 @@
         footer a:hover { text-decoration: underline; }
         footer .credit-line { color: #aaa; font-size: 0.85em; }
 
-        @media (max-width: 700px) {
-            .sim-grid { grid-template-columns: 1fr; }
+        @media (max-width: 500px) {
+            .sim-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .sim-card { aspect-ratio: auto; }
             header h1 { font-size: 1.4em; }
         }
     </style>
