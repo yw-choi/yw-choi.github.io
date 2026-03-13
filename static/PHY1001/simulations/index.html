@@ -85,9 +85,23 @@
         .ch20 { background: #2c3e50; }
         footer {
             text-align: center;
-            padding: 20px;
-            color: #999;
+            padding: 30px 20px;
+            color: #888;
             font-size: 0.85em;
+            line-height: 1.8;
+            border-top: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        footer .credit-line {
+            color: #aaa;
+            font-size: 0.8em;
         }
     </style>
 </head>
@@ -397,7 +411,9 @@
 
     </div>
     <footer>
-        PHY1001 일반물리학 — 2026
+        <a href="https://physics.sogang.ac.kr" target="_blank">서강대학교 물리학과</a> — PHY1001 일반물리학 (2026)<br>
+        버그 및 개선사항 신고: <a href="mailto:ywchoi02@sogang.ac.kr">최영우 (ywchoi02@sogang.ac.kr)</a><br>
+        <span class="credit-line">Built with <a href="https://claude.ai/claude-code" target="_blank">Claude Code</a> (Anthropic)</span>
     </footer>
 </body>
 </html>
