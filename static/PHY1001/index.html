@@ -125,20 +125,10 @@
         .card-title { font-size: 1.1em; font-weight: 600; margin-bottom: 6px; }
         .card-desc { font-size: 0.88em; color: #666; line-height: 1.5; }
         .card-meta { font-size: 0.78em; color: #999; margin-top: 8px; }
-        .tag {
-            display: inline-block;
-            font-size: 0.72em;
-            padding: 2px 8px;
-            border-radius: 10px;
-            color: white;
-            margin-top: 8px;
-        }
         /* Section accent colors */
         .accent-sim { background: #3498db; }
         .accent-slide { background: #2ecc71; }
         .accent-hw { background: #e67e22; }
-        .accent-exam { background: #e74c3c; }
-        .accent-syllabus { background: #9b59b6; }
         /* Chapter row (compact list) */
         .chapter-list {
             display: grid;
@@ -178,7 +168,38 @@
         .chapter-item .ch-links { font-size: 0.75em; color: #3498db; margin-top: 2px; }
         .chapter-item .ch-links a { color: #3498db; text-decoration: none; margin-right: 8px; }
         .chapter-item .ch-links a:hover { text-decoration: underline; }
-        /* Highlight card */
+        /* Course overview box */
+        .course-overview {
+            background: white;
+            border-radius: 12px;
+            padding: 28px 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            line-height: 1.8;
+            font-size: 0.95em;
+        }
+        .course-overview h3 {
+            font-size: 1.1em;
+            color: #1a1a2e;
+            margin-bottom: 12px;
+        }
+        .course-overview .info-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 4px 16px;
+            font-size: 0.9em;
+            margin-bottom: 14px;
+        }
+        .course-overview .info-grid dt {
+            font-weight: 600;
+            color: #555;
+            white-space: nowrap;
+        }
+        .course-overview .info-grid dd { color: #333; }
+        .course-overview .info-grid dd a { color: #3498db; text-decoration: none; }
+        .course-overview .info-grid dd a:hover { text-decoration: underline; }
+        .course-overview p { color: #555; font-size: 0.9em; }
+        /* Highlight cards */
         .highlight-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -219,6 +240,7 @@
             header h1 { font-size: 1.5em; }
             nav a { padding: 12px 14px; font-size: 0.82em; }
             .highlight-cards { grid-template-columns: 1fr 1fr; }
+            .course-overview { padding: 20px; }
         }
     </style>
 </head>
@@ -235,26 +257,32 @@
 
     <nav id="main-nav">
         <a href="#overview" class="active">Overview</a>
-        <a href="#simulations">시뮬레이션</a>
         <a href="#slides">강의자료</a>
         <a href="#homeworks">숙제</a>
+        <a href="#simulations">시뮬레이션</a>
     </nav>
 
     <div class="container">
 
         <!-- Overview -->
         <div class="section" id="overview">
+            <div class="course-overview">
+                <h3>강의 개요</h3>
+                <dl class="info-grid">
+                    <dt>교과목</dt><dd>PHY1001 일반물리학 I</dd>
+                    <dt>교재</dt><dd>Fundamentals of Physics, 12th Ed. (Halliday, Resnick, Walker)</dd>
+                    <dt>범위</dt><dd>Ch.01 ~ Ch.40 (역학, 파동, 열역학, 전자기학, 광학, 현대물리)</dd>
+                    <dt>담당</dt><dd>최영우 (<a href="mailto:ywchoi02@sogang.ac.kr">ywchoi02@sogang.ac.kr</a>)</dd>
+                    <dt>실라버스</dt><dd><a href="syllabus/extended%20syllabus_%EC%9D%BC%EB%B0%98%EB%AC%BC%EB%A6%ACI.pdf">PDF 다운로드</a></dd>
+                </dl>
+                <p>본 페이지에서는 강의자료(슬라이드 PDF), 숙제, 그리고 각 챕터별 인터랙티브 물리 시뮬레이션을 제공합니다.</p>
+            </div>
+
             <div class="highlight-cards">
-                <a class="highlight-card" href="simulations/index.html">
-                    <div class="icon">&#9881;</div>
-                    <div class="h-title">시뮬레이션</div>
-                    <div class="h-desc">인터랙티브 물리 실험</div>
-                    <div class="h-count">41개 시뮬레이션 (Ch.02 ~ Ch.40)</div>
-                </a>
                 <a class="highlight-card" href="#slides">
                     <div class="icon">&#128218;</div>
                     <div class="h-title">강의자료</div>
-                    <div class="h-desc">Slidev 슬라이드 & PDF</div>
+                    <div class="h-desc">슬라이드 PDF</div>
                     <div class="h-count">12개 챕터</div>
                 </a>
                 <a class="highlight-card" href="#homeworks">
@@ -263,54 +291,11 @@
                     <div class="h-desc">연습문제</div>
                     <div class="h-count">10개 챕터</div>
                 </a>
-                <a class="highlight-card" href="syllabus/extended syllabus_일반물리I.pdf">
-                    <div class="icon">&#128197;</div>
-                    <div class="h-title">실라버스</div>
-                    <div class="h-desc">강의 계획서</div>
-                    <div class="h-count">PDF 다운로드</div>
-                </a>
-            </div>
-        </div>
-
-        <!-- Simulations -->
-        <div class="section" id="simulations">
-            <div class="section-header">
-                <h2>시뮬레이션</h2>
-                <span class="badge">41개</span>
-                <a href="simulations/index.html">전체 보기 &rarr;</a>
-            </div>
-            <div class="grid">
-                <a class="card" href="simulations/index.html#mechanics">
-                    <div class="card-color accent-sim"></div>
-                    <div class="card-body">
-                        <div class="card-title">역학 (Ch.02 ~ Ch.14)</div>
-                        <div class="card-desc">자유낙하, 포물선 운동, 뉴턴 법칙, 에너지 보존, 충돌, 회전, 중력, 유체</div>
-                        <div class="card-meta">시뮬레이션 01 ~ 15 (15개)</div>
-                    </div>
-                </a>
-                <a class="card" href="simulations/index.html#waves">
-                    <div class="card-color accent-sim"></div>
-                    <div class="card-body">
-                        <div class="card-title">파동 & 열역학 (Ch.15 ~ Ch.20)</div>
-                        <div class="card-desc">단진동, 횡파, 정상파, 열전달, 이상기체, 카르노 엔진</div>
-                        <div class="card-meta">시뮬레이션 16 ~ 21 (6개)</div>
-                    </div>
-                </a>
-                <a class="card" href="simulations/index.html#em">
-                    <div class="card-color accent-sim"></div>
-                    <div class="card-body">
-                        <div class="card-title">전자기학 (Ch.21 ~ Ch.33)</div>
-                        <div class="card-desc">쿨롱 법칙, 전기장, 가우스 법칙, 축전기, RC/RLC 회로, 패러데이 법칙, 전자기파</div>
-                        <div class="card-meta">시뮬레이션 22 ~ 34 (13개)</div>
-                    </div>
-                </a>
-                <a class="card" href="simulations/index.html#optics">
-                    <div class="card-color accent-sim"></div>
-                    <div class="card-body">
-                        <div class="card-title">광학 & 현대물리 (Ch.34 ~ Ch.40)</div>
-                        <div class="card-desc">거울/렌즈, 간섭, 회절, 상대성이론, 광전 효과, 양자역학</div>
-                        <div class="card-meta">시뮬레이션 35 ~ 41 (7개)</div>
-                    </div>
+                <a class="highlight-card" href="simulations/index.html">
+                    <div class="icon">&#9881;</div>
+                    <div class="h-title">시뮬레이션</div>
+                    <div class="h-desc">인터랙티브 물리 실험</div>
+                    <div class="h-count">41개 (Ch.02 ~ Ch.40)</div>
                 </a>
             </div>
         </div>
@@ -530,6 +515,49 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Simulations -->
+        <div class="section" id="simulations">
+            <div class="section-header">
+                <h2>시뮬레이션</h2>
+                <span class="badge">41개</span>
+                <a href="simulations/index.html">전체 보기 &rarr;</a>
+            </div>
+            <div class="grid">
+                <a class="card" href="simulations/index.html#mechanics">
+                    <div class="card-color accent-sim"></div>
+                    <div class="card-body">
+                        <div class="card-title">역학 (Ch.02 ~ Ch.14)</div>
+                        <div class="card-desc">자유낙하, 포물선 운동, 뉴턴 법칙, 에너지 보존, 충돌, 회전, 중력, 유체</div>
+                        <div class="card-meta">시뮬레이션 01 ~ 15 (15개)</div>
+                    </div>
+                </a>
+                <a class="card" href="simulations/index.html#waves">
+                    <div class="card-color accent-sim"></div>
+                    <div class="card-body">
+                        <div class="card-title">파동 & 열역학 (Ch.15 ~ Ch.20)</div>
+                        <div class="card-desc">단진동, 횡파, 정상파, 열전달, 이상기체, 카르노 엔진</div>
+                        <div class="card-meta">시뮬레이션 16 ~ 21 (6개)</div>
+                    </div>
+                </a>
+                <a class="card" href="simulations/index.html#em">
+                    <div class="card-color accent-sim"></div>
+                    <div class="card-body">
+                        <div class="card-title">전자기학 (Ch.21 ~ Ch.33)</div>
+                        <div class="card-desc">쿨롱 법칙, 전기장, 가우스 법칙, 축전기, RC/RLC 회로, 패러데이 법칙, 전자기파</div>
+                        <div class="card-meta">시뮬레이션 22 ~ 34 (13개)</div>
+                    </div>
+                </a>
+                <a class="card" href="simulations/index.html#optics">
+                    <div class="card-color accent-sim"></div>
+                    <div class="card-body">
+                        <div class="card-title">광학 & 현대물리 (Ch.34 ~ Ch.40)</div>
+                        <div class="card-desc">거울/렌즈, 간섭, 회절, 상대성이론, 광전 효과, 양자역학</div>
+                        <div class="card-meta">시뮬레이션 35 ~ 41 (7개)</div>
+                    </div>
+                </a>
             </div>
         </div>
 
