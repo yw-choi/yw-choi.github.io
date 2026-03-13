@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHY1001 일반물리 I — 2026-1학기</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4VEF9JDEXP"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-4VEF9JDEXP");</script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f6f8;
+            color: #333;
+            line-height: 1.7;
+        }
+        header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 48px 20px 36px;
+            text-align: center;
+        }
+        header h1 { font-size: 2.2em; margin-bottom: 6px; }
+        header .subtitle { font-size: 1.15em; opacity: 0.85; }
+        header .meta {
+            margin-top: 16px;
+            font-size: 0.9em;
+            opacity: 0.65;
+            line-height: 1.8;
+        }
+        header .meta a { color: #8ab4f8; text-decoration: none; }
+        header .meta a:hover { text-decoration: underline; }
+        .container { max-width: 860px; margin: 0 auto; padding: 28px 20px 40px; }
+
+        .section { margin-bottom: 32px; }
+        .section h2 {
+            font-size: 1.3em;
+            color: #1a1a2e;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        /* 강의 개요 */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 24px;
+            font-size: 0.95em;
+        }
+        .info-grid dt { color: #888; font-size: 0.85em; }
+        .info-grid dd { font-weight: 600; margin-bottom: 4px; }
+        @media (max-width: 500px) { .info-grid { grid-template-columns: 1fr; } }
+
+        /* 주차별 일정 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92em;
+        }
+        th {
+            background: #1a1a2e;
+            color: #fff;
+            padding: 8px 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td { padding: 8px 12px; border-bottom: 1px solid #e8e8e8; }
+        tr:hover { background: #f0f4ff; }
+        tr.exam { background: #fff3e0; font-weight: 600; }
+        tr.exam:hover { background: #ffe8cc; }
+        .ch-tag {
+            display: inline-block;
+            background: #e8eaf6;
+            color: #3949ab;
+            font-size: 0.78em;
+            padding: 1px 7px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        /* 강의 자료 */
+        .slides-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .slide-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            text-decoration: none;
+            color: #333;
+            font-size: 0.92em;
+            font-weight: 600;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .slide-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        .slide-icon {
+            width: 32px; height: 32px;
+            background: #e74c3c;
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff;
+            font-size: 0.7em;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* 시뮬레이션 배너 */
+        .sim-banner {
+            display: block;
+            background: linear-gradient(135deg, #1565c0, #0d47a1);
+            color: #fff;
+            padding: 24px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .sim-banner:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(13,71,161,0.3);
+        }
+        .sim-banner h3 { font-size: 1.2em; margin-bottom: 6px; }
+        .sim-banner p { font-size: 0.92em; opacity: 0.9; }
+        .sim-banner .arrow { float: right; font-size: 1.4em; margin-top: -4px; }
+
+        /* 교재 */
+        .textbook-box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 16px 20px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+            font-size: 0.93em;
+        }
+        .textbook-box .title { font-weight: 700; margin-bottom: 4px; }
+        .textbook-box .sub { color: #777; font-size: 0.88em; }
+
+        footer {
+            text-align: center;
+            padding: 24px 20px;
+            color: #999;
+            font-size: 0.82em;
+            line-height: 1.7;
+            border-top: 1px solid #e0e0e0;
+        }
+        footer a { color: #3498db; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>PHY1001 일반물리 I</h1>
+    <div class="subtitle">2026년 1학기 — 수/금 15:00~16:15</div>
+    <div class="meta">
+        <a href="https://physics.sogang.ac.kr" target="_blank">서강대학교 물리학과</a> |
+        최영우 교수 | <a href="mailto:ywchoi02@sogang.ac.kr">ywchoi02@sogang.ac.kr</a> | 연구실 F303C
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- 강의 개요 -->
+    <div class="section">
+        <h2>강의 개요</h2>
+        <dl class="info-grid">
+            <div><dt>과목코드</dt><dd>PHY1001-13</dd></div>
+            <div><dt>학점</dt><dd>3학점</dd></div>
+            <div><dt>수업시간</dt><dd>수/금 15:00~16:15</dd></div>
+            <div><dt>오피스아워</dt><dd>월·화·목 10:00~12:00 (사전 이메일)</dd></div>
+            <div><dt>성적평가</dt><dd>중간 50% + 기말 50%</dd></div>
+            <div><dt>결시</dt><dd>중간 또는 기말 미응시 시 F</dd></div>
+        </dl>
+    </div>
+
+    <!-- 시뮬레이션 배너 -->
+    <div class="section">
+        <a class="sim-banner" href="simulations/">
+            <span class="arrow">&rarr;</span>
+            <h3>물리 시뮬레이션 (20개)</h3>
+            <p>자유낙하부터 카르노 엔진까지 — 브라우저에서 바로 실행되는 인터랙티브 시뮬레이션으로 핵심 개념을 체험하세요.</p>
+        </a>
+    </div>
+
+    <!-- 주차별 일정 -->
+    <div class="section">
+        <h2>주차별 일정</h2>
+        <table>
+            <thead><tr><th>주</th><th>주제</th><th>챕터</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td>강의 소개, 측정, 직선 운동, 벡터</td><td><span class="ch-tag">Ch.1-3</span></td></tr>
+                <tr><td>2</td><td>2차원·3차원 운동, 뉴턴의 법칙</td><td><span class="ch-tag">Ch.4-5</span></td></tr>
+                <tr><td>3</td><td>힘과 운동, 일과 운동에너지</td><td><span class="ch-tag">Ch.6-7</span></td></tr>
+                <tr><td>4</td><td>위치에너지, 에너지 보존, 선운동량</td><td><span class="ch-tag">Ch.8-9</span></td></tr>
+                <tr><td>5</td><td>회전 운동</td><td><span class="ch-tag">Ch.10</span></td></tr>
+                <tr><td>6</td><td>굴림 운동, 토크, 각운동량</td><td><span class="ch-tag">Ch.11</span></td></tr>
+                <tr><td>7</td><td>평형과 탄성</td><td><span class="ch-tag">Ch.12</span></td></tr>
+                <tr class="exam"><td>8</td><td>중간고사</td><td>—</td></tr>
+                <tr><td>9</td><td>중력 (만유인력, 행성 운동, 케플러 법칙)</td><td><span class="ch-tag">Ch.13</span></td></tr>
+                <tr><td>10</td><td>유체, 진동 (단진동)</td><td><span class="ch-tag">Ch.14-15</span></td></tr>
+                <tr><td>11</td><td>진동, 파동 (파동 방정식)</td><td><span class="ch-tag">Ch.15-16</span></td></tr>
+                <tr><td>12</td><td>파동 (간섭, 맥놀이, 도플러 효과)</td><td><span class="ch-tag">Ch.16-17</span></td></tr>
+                <tr><td>13</td><td>온도, 열, 열역학 제1법칙</td><td><span class="ch-tag">Ch.18</span></td></tr>
+                <tr><td>14</td><td>기체 분자 운동론</td><td><span class="ch-tag">Ch.19</span></td></tr>
+                <tr><td>15</td><td>엔트로피, 열역학 제2법칙</td><td><span class="ch-tag">Ch.20</span></td></tr>
+                <tr class="exam"><td>16</td><td>기말고사</td><td>—</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 강의 자료 -->
+    <div class="section">
+        <h2>강의 자료 (Lecture Notes)</h2>
+        <div class="slides-grid">
+            <a class="slide-card" href="slides/intro.pdf" target="_blank">
+                <div class="slide-icon">PDF</div> Intro
+            </a>
+            <a class="slide-card" href="slides/ch01.pdf" target="_blank">
+                <div class="slide-icon">PDF</div> Ch.01 측정
+            </a>
+            <a class="slide-card" href="slides/ch02.pdf" target="_blank">
+                <div class="slide-icon">PDF</div> Ch.02 직선운동
+            </a>
+            <a class="slide-card" href="slides/ch03.pdf" target="_blank">
+                <div class="slide-icon">PDF</div> Ch.03 벡터
+            </a>
+            <a class="slide-card" href="slides/ch04.pdf" target="_blank">
+                <div class="slide-icon">PDF</div> Ch.04 2D운동
+            </a>
+            <a class="slide-card" href="slides/ch05.pdf" target="_blank">
+                <div class="slide-icon">PDF</div> Ch.05 힘I
+            </a>
+            <a class="slide-card" href="slides/ch06.pdf" target="_blank">
+                <div class="slide-icon">PDF</div> Ch.06 힘II
+            </a>
+            <a class="slide-card" href="slides/ch07.pdf" target="_blank">
+                <div class="slide-icon">PDF</div> Ch.07 일·에너지
+            </a>
+            <a class="slide-card" href="slides/ch08.pdf" target="_blank">
+                <div class="slide-icon">PDF</div> Ch.08 위치에너지
+            </a>
+            <a class="slide-card" href="slides/ch09.pdf" target="_blank">
+                <div class="slide-icon">PDF</div> Ch.09 운동량
+            </a>
+            <a class="slide-card" href="slides/ch10.pdf" target="_blank">
+                <div class="slide-icon">PDF</div> Ch.10 회전
+            </a>
+        </div>
+        <p style="margin-top: 12px; font-size: 0.85em; color: #999;">Ch.11 이후 강의 자료는 수업 진행에 따라 업데이트됩니다.</p>
+    </div>
+
+    <!-- 교재 -->
+    <div class="section">
+        <h2>교재</h2>
+        <div class="textbook-box">
+            <div class="title">Principles of Physics, 12th Edition</div>
+            <div class="sub">Resnick, Halliday, Walker — Wiley (ISBN: 9781119820611)</div>
+            <div class="sub" style="margin-top: 4px;">한국어판: 일반물리학 12판 (ISBN: 9791191679410)</div>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <a href="https://physics.sogang.ac.kr" target="_blank">서강대학교 물리학과</a> — PHY1001 일반물리 I (2026-1학기)<br>
+    문의: <a href="mailto:ywchoi02@sogang.ac.kr">최영우 (ywchoi02@sogang.ac.kr)</a><br>
+    <span style="color:#bbb; font-size:0.9em;">Built with <a href="https://claude.ai/claude-code" target="_blank">Claude Code</a></span>
+</footer>
+</body>
+</html>
