@@ -21,6 +21,7 @@ title: "Home"
 
 
 ### Recent News
+- **2026/03** Sokly Heng joined our group. Welcome!
 - **2026/01** Dr. Sanghyun Ji joined our group. Welcome!
 - **2025/12** We are organizing [the 1st International Nanomaterials Symposium](./2025_1st_INS) in Busan, Korea on December 9-10, 2025! 
 - **2025/11** Our paper on p-Doping of Carbon Nanotube Transistors has been published in ACS Nano!
