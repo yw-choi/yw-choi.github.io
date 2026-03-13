@@ -181,44 +181,11 @@
             overflow: hidden;
         }
 
-        /* Chapter tag colors */
-        .ch02 { background: #e74c3c; }
-        .ch03 { background: #e67e22; }
-        .ch04 { background: #3498db; }
-        .ch05 { background: #2ecc71; }
-        .ch07 { background: #9b59b6; }
-        .ch08 { background: #8e44ad; }
-        .ch09 { background: #2c3e50; }
-        .ch10 { background: #d35400; }
-        .ch11 { background: #c0392b; }
-        .ch13 { background: #2980b9; }
-        .ch14 { background: #16a085; }
-        .ch15 { background: #8e44ad; }
-        .ch16 { background: #e74c3c; }
-        .ch17 { background: #c0392b; }
-        .ch18 { background: #d35400; }
-        .ch19 { background: #e67e22; }
-        .ch20 { background: #2c3e50; }
-        .ch21 { background: #1565c0; }
-        .ch22 { background: #0277bd; }
-        .ch23 { background: #00838f; }
-        .ch24 { background: #00695c; }
-        .ch25 { background: #2e7d32; }
-        .ch26 { background: #558b2f; }
-        .ch27 { background: #9e9d24; }
-        .ch28 { background: #ff8f00; }
-        .ch29 { background: #ef6c00; }
-        .ch30 { background: #d84315; }
-        .ch31 { background: #bf360c; }
-        .ch32 { background: #6a0dad; }
-        .ch33 { background: #e91e63; }
-        .ch34 { background: #00897b; }
-        .ch35 { background: #5c6bc0; }
-        .ch36 { background: #ad1457; }
-        .ch37 { background: #6a1b9a; }
-        .ch38 { background: #7c4dff; }
-        .ch39 { background: #304ffe; }
-        .ch40 { background: #304ffe; }
+        /* Category colors — unified per section */
+        .clr-mechanics { background: #e74c3c; }
+        .clr-waves { background: #2980b9; }
+        .clr-em { background: #e67e22; }
+        .clr-optics { background: #8e44ad; }
 
         footer {
             text-align: center;
@@ -287,154 +254,154 @@
             </div>
             <div class="sim-grid">
                 <a class="sim-card" href="01_freefall.html">
-                    <div class="sim-accent ch02"></div>
+                    <div class="sim-accent clr-mechanics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#01</span>
-                            <span class="sim-ch ch02">Ch.02</span>
+                            <span class="sim-ch clr-mechanics">Ch.02</span>
                         </div>
                         <div class="sim-title">자유낙하 & 등가속도 운동</div>
                         <div class="sim-desc">초기 속도와 높이를 조절하며 자유낙하를 관찰. 지구·달·목성 비교, x-t / v-t / a-t 그래프.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="07_vectors.html">
-                    <div class="sim-accent ch03"></div>
+                    <div class="sim-accent clr-mechanics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#07</span>
-                            <span class="sim-ch ch03">Ch.03</span>
+                            <span class="sim-ch clr-mechanics">Ch.03</span>
                         </div>
                         <div class="sim-title">벡터 덧셈 & 분해</div>
                         <div class="sim-desc">클릭·드래그로 벡터를 생성하고 합벡터 확인. x,y 성분 분해 및 단위벡터 표기.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="02_projectile.html">
-                    <div class="sim-accent ch04"></div>
+                    <div class="sim-accent clr-mechanics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#02</span>
-                            <span class="sim-ch ch04">Ch.04</span>
+                            <span class="sim-ch clr-mechanics">Ch.04</span>
                         </div>
                         <div class="sim-title">포물선 운동</div>
                         <div class="sim-desc">발사 각도와 초기 속도를 조절하여 포물선 궤적 시각화. 속도 벡터 분해, 보각 비교.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="03_circular_motion.html">
-                    <div class="sim-accent ch04"></div>
+                    <div class="sim-accent clr-mechanics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#03</span>
-                            <span class="sim-ch ch04">Ch.04</span>
+                            <span class="sim-ch clr-mechanics">Ch.04</span>
                         </div>
                         <div class="sim-title">원운동 & 구심가속도</div>
                         <div class="sim-desc">등속 원운동에서 접선 속도와 구심가속도 벡터를 실시간 관찰. 반지름·속력 조절.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="04_newton_second_law.html">
-                    <div class="sim-accent ch05"></div>
+                    <div class="sim-accent clr-mechanics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#04</span>
-                            <span class="sim-ch ch05">Ch.05</span>
+                            <span class="sim-ch clr-mechanics">Ch.05</span>
                         </div>
                         <div class="sim-title">뉴턴 제2법칙 실험실</div>
                         <div class="sim-desc">마찰 없는 수평면에서 F=ma 체험. 자유물체도(FBD) 자동 생성.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="05_atwood.html">
-                    <div class="sim-accent ch05"></div>
+                    <div class="sim-accent clr-mechanics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#05</span>
-                            <span class="sim-ch ch05">Ch.05</span>
+                            <span class="sim-ch clr-mechanics">Ch.05</span>
                         </div>
                         <div class="sim-title">Atwood 기계</div>
                         <div class="sim-desc">도르래 양쪽 질량을 조절하며 가속도와 장력 관찰. 퀴즈 모드 지원.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="06_inclined_plane.html">
-                    <div class="sim-accent ch05"></div>
+                    <div class="sim-accent clr-mechanics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#06</span>
-                            <span class="sim-ch ch05">Ch.05</span>
+                            <span class="sim-ch clr-mechanics">Ch.05</span>
                         </div>
                         <div class="sim-title">경사면 & 힘 분해</div>
                         <div class="sim-desc">경사각 조절하며 mg sinθ, 수직항력, 마찰력 시각화. 임계각 탐색.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="09_work_energy.html">
-                    <div class="sim-accent ch07"></div>
+                    <div class="sim-accent clr-mechanics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#09</span>
-                            <span class="sim-ch ch07">Ch.07</span>
+                            <span class="sim-ch clr-mechanics">Ch.07</span>
                         </div>
                         <div class="sim-title">일-에너지 정리</div>
                         <div class="sim-desc">각도를 가진 힘으로 물체를 밀며 W_net = ΔKE 검증.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="10_energy_conservation.html">
-                    <div class="sim-accent ch08"></div>
+                    <div class="sim-accent clr-mechanics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#10</span>
-                            <span class="sim-ch ch08">Ch.08</span>
+                            <span class="sim-ch clr-mechanics">Ch.08</span>
                         </div>
                         <div class="sim-title">에너지 보존 롤러코스터</div>
                         <div class="sim-desc">롤러코스터에서 KE·PE 변환 실시간 관찰. 마찰 토글, 3가지 트랙.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="11_collision.html">
-                    <div class="sim-accent ch09"></div>
+                    <div class="sim-accent clr-mechanics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#11</span>
-                            <span class="sim-ch ch09">Ch.09</span>
+                            <span class="sim-ch clr-mechanics">Ch.09</span>
                         </div>
                         <div class="sim-title">충돌 & 운동량 보존</div>
                         <div class="sim-desc">1D/2D 충돌에서 운동량 보존 시각화. 탄성·비탄성 비교.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="12_rotation.html">
-                    <div class="sim-accent ch10"></div>
+                    <div class="sim-accent clr-mechanics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#12</span>
-                            <span class="sim-ch ch10">Ch.10</span>
+                            <span class="sim-ch clr-mechanics">Ch.10</span>
                         </div>
                         <div class="sim-title">회전 운동학 & 관성모멘트</div>
                         <div class="sim-desc">원판·고리·막대·구의 회전 비교. 토크에 따른 각가속도 차이.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="13_rolling.html">
-                    <div class="sim-accent ch11"></div>
+                    <div class="sim-accent clr-mechanics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#13</span>
-                            <span class="sim-ch ch11">Ch.11</span>
+                            <span class="sim-ch clr-mechanics">Ch.11</span>
                         </div>
                         <div class="sim-title">굴림 운동 경주</div>
                         <div class="sim-desc">경사면에서 원판·고리·구가 동시에 굴러내림. 도착 순서 비교.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="14_gravity_orbit.html">
-                    <div class="sim-accent ch13"></div>
+                    <div class="sim-accent clr-mechanics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#14</span>
-                            <span class="sim-ch ch13">Ch.13</span>
+                            <span class="sim-ch clr-mechanics">Ch.13</span>
                         </div>
                         <div class="sim-title">행성 궤도 & 케플러 법칙</div>
                         <div class="sim-desc">만유인력에 의한 궤도 시뮬레이션. 케플러 3법칙, 에너지 표시.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="15_fluids.html">
-                    <div class="sim-accent ch14"></div>
+                    <div class="sim-accent clr-mechanics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#15</span>
-                            <span class="sim-ch ch14">Ch.14</span>
+                            <span class="sim-ch clr-mechanics">Ch.14</span>
                         </div>
                         <div class="sim-title">부력 & 유체 압력</div>
                         <div class="sim-desc">아르키메데스 원리. 물체 밀도·유체 종류를 바꾸며 부력 탐구.</div>
@@ -451,66 +418,66 @@
             </div>
             <div class="sim-grid">
                 <a class="sim-card" href="16_oscillation.html">
-                    <div class="sim-accent ch15"></div>
+                    <div class="sim-accent clr-waves"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#16</span>
-                            <span class="sim-ch ch15">Ch.15</span>
+                            <span class="sim-ch clr-waves">Ch.15</span>
                         </div>
                         <div class="sim-title">단진동 (용수철 & 진자)</div>
                         <div class="sim-desc">용수철-질량 계와 단진자 비교. 위상 공간, 에너지 바, 감쇠 모드.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="17_wave.html">
-                    <div class="sim-accent ch16"></div>
+                    <div class="sim-accent clr-waves"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#17</span>
-                            <span class="sim-ch ch16">Ch.16</span>
+                            <span class="sim-ch clr-waves">Ch.16</span>
                         </div>
                         <div class="sim-title">횡파 시뮬레이터</div>
                         <div class="sim-desc">진행파의 진폭·파장·주파수 조절. 두 파의 중첩, 입자 운동 시각화.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="18_standing_wave.html">
-                    <div class="sim-accent ch17"></div>
+                    <div class="sim-accent clr-waves"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#18</span>
-                            <span class="sim-ch ch17">Ch.17</span>
+                            <span class="sim-ch clr-waves">Ch.17</span>
                         </div>
                         <div class="sim-title">정상파 & 공명</div>
                         <div class="sim-desc">양끝 고정 줄의 정상파 (n=1~6). 마디·배 표시, 열린/닫힌 관 모드.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="19_heat.html">
-                    <div class="sim-accent ch18"></div>
+                    <div class="sim-accent clr-waves"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#19</span>
-                            <span class="sim-ch ch18">Ch.18</span>
+                            <span class="sim-ch clr-waves">Ch.18</span>
                         </div>
                         <div class="sim-title">열전달 & 열평형</div>
                         <div class="sim-desc">두 물체의 열전달 시각화. 다양한 재질의 비열 비교, 평형 온도 계산.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="20_ideal_gas.html">
-                    <div class="sim-accent ch19"></div>
+                    <div class="sim-accent clr-waves"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#20</span>
-                            <span class="sim-ch ch19">Ch.19</span>
+                            <span class="sim-ch clr-waves">Ch.19</span>
                         </div>
                         <div class="sim-title">이상기체 분자 운동</div>
                         <div class="sim-desc">기체 분자 운동 시뮬레이션. 맥스웰-볼츠만 분포, 피스톤, PV=NkT.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="21_carnot.html">
-                    <div class="sim-accent ch20"></div>
+                    <div class="sim-accent clr-waves"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#21</span>
-                            <span class="sim-ch ch20">Ch.20</span>
+                            <span class="sim-ch clr-waves">Ch.20</span>
                         </div>
                         <div class="sim-title">카르노 엔진 & PV 다이어그램</div>
                         <div class="sim-desc">카르노 순환 PV·TS 다이어그램 애니메이션. 효율, 에너지 흐름, 엔트로피.</div>
@@ -527,143 +494,143 @@
             </div>
             <div class="sim-grid">
                 <a class="sim-card" href="22_coulomb.html">
-                    <div class="sim-accent ch21"></div>
+                    <div class="sim-accent clr-em"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#22</span>
-                            <span class="sim-ch ch21">Ch.21</span>
+                            <span class="sim-ch clr-em">Ch.21</span>
                         </div>
                         <div class="sim-title">쿨롱의 법칙: 전하 사이의 힘</div>
                         <div class="sim-desc">두 점전하를 드래그하며 정전기력 관찰. F vs r 그래프, 뉴턴 제3법칙.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="23_electric_field.html">
-                    <div class="sim-accent ch22"></div>
+                    <div class="sim-accent clr-em"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#23</span>
-                            <span class="sim-ch ch22">Ch.22</span>
+                            <span class="sim-ch clr-em">Ch.22</span>
                         </div>
                         <div class="sim-title">전기장 시각화</div>
                         <div class="sim-desc">점전하 배치 후 전기장 벡터/전기력선 실시간 관찰. 프로브 모드.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="24_gauss_law.html">
-                    <div class="sim-accent ch23"></div>
+                    <div class="sim-accent clr-em"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#24</span>
-                            <span class="sim-ch ch23">Ch.23</span>
+                            <span class="sim-ch clr-em">Ch.23</span>
                         </div>
                         <div class="sim-title">가우스 법칙: 전기 선속</div>
                         <div class="sim-desc">가우스 면을 이동·크기 조절하며 전기 선속 실시간 계산.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="25_electric_potential.html">
-                    <div class="sim-accent ch24"></div>
+                    <div class="sim-accent clr-em"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#25</span>
-                            <span class="sim-ch ch24">Ch.24</span>
+                            <span class="sim-ch clr-em">Ch.24</span>
                         </div>
                         <div class="sim-title">전기 퍼텐셜과 등전위선</div>
                         <div class="sim-desc">전위 히트맵과 등전위선. 시험전하의 가속과 에너지 변환 관찰.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="26_capacitor.html">
-                    <div class="sim-accent ch25"></div>
+                    <div class="sim-accent clr-em"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#26</span>
-                            <span class="sim-ch ch25">Ch.25</span>
+                            <span class="sim-ch clr-em">Ch.25</span>
                         </div>
                         <div class="sim-title">평행판 축전기</div>
                         <div class="sim-desc">면적·간격·전압 조절. 배터리 연결/분리, 유전체 삽입 효과.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="27_ohm_law.html">
-                    <div class="sim-accent ch26"></div>
+                    <div class="sim-accent clr-em"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#27</span>
-                            <span class="sim-ch ch26">Ch.26</span>
+                            <span class="sim-ch clr-em">Ch.26</span>
                         </div>
                         <div class="sim-title">옴의 법칙과 비저항</div>
                         <div class="sim-desc">드리프트 속도 시각화. 재질·길이·단면적 변경, V-I 그래프.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="28_rc_circuit.html">
-                    <div class="sim-accent ch27"></div>
+                    <div class="sim-accent clr-em"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#28</span>
-                            <span class="sim-ch ch27">Ch.27</span>
+                            <span class="sim-ch clr-em">Ch.27</span>
                         </div>
                         <div class="sim-title">RC 회로: 충전과 방전</div>
                         <div class="sim-desc">지수적 충전·방전 과정. 시정수 τ=RC, V(t)·i(t) 그래프.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="29_charged_particle_magnetic.html">
-                    <div class="sim-accent ch28"></div>
+                    <div class="sim-accent clr-em"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#29</span>
-                            <span class="sim-ch ch28">Ch.28</span>
+                            <span class="sim-ch clr-em">Ch.28</span>
                         </div>
                         <div class="sim-title">자기장 속 하전 입자의 운동</div>
                         <div class="sim-desc">균일 자기장에서 원운동. 로런츠 힘, r=mv/(qB), 사이클로트론 주파수.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="30_magnetic_field_wires.html">
-                    <div class="sim-accent ch29"></div>
+                    <div class="sim-accent clr-em"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#30</span>
-                            <span class="sim-ch ch29">Ch.29</span>
+                            <span class="sim-ch clr-em">Ch.29</span>
                         </div>
                         <div class="sim-title">전류가 만드는 자기장</div>
                         <div class="sim-desc">도선 주위 자기장 벡터 그리드. 비오-사바르 법칙, 평행 도선 힘.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="31_faraday.html">
-                    <div class="sim-accent ch30"></div>
+                    <div class="sim-accent clr-em"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#31</span>
-                            <span class="sim-ch ch30">Ch.30</span>
+                            <span class="sim-ch clr-em">Ch.30</span>
                         </div>
                         <div class="sim-title">패러데이 법칙: 전자기 유도</div>
                         <div class="sim-desc">막대자석을 코일로 드래그. 자기 선속·EMF 그래프, 렌츠 법칙.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="32_rlc_circuit.html">
-                    <div class="sim-accent ch31"></div>
+                    <div class="sim-accent clr-em"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#32</span>
-                            <span class="sim-ch ch31">Ch.31</span>
+                            <span class="sim-ch clr-em">Ch.31</span>
                         </div>
                         <div class="sim-title">RLC 회로 진동</div>
                         <div class="sim-desc">전기·자기 에너지 교환. 비감쇠·과소·임계·과다감쇠 비교.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="33_solenoid.html">
-                    <div class="sim-accent ch32"></div>
+                    <div class="sim-accent clr-em"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#33</span>
-                            <span class="sim-ch ch32">Ch.32</span>
+                            <span class="sim-ch clr-em">Ch.32</span>
                         </div>
                         <div class="sim-title">솔레노이드와 인덕턴스</div>
                         <div class="sim-desc">솔레노이드 내부 균일 자기장, B(r) 프로파일. 인덕턴스·에너지.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="34_em_wave.html">
-                    <div class="sim-accent ch33"></div>
+                    <div class="sim-accent clr-em"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#34</span>
-                            <span class="sim-ch ch33">Ch.33</span>
+                            <span class="sim-ch clr-em">Ch.33</span>
                         </div>
                         <div class="sim-title">전자기파 전파</div>
                         <div class="sim-desc">3D 시점 E·B 진동. 파장·진폭 조절, 포인팅 벡터, EM 스펙트럼.</div>
@@ -680,77 +647,77 @@
             </div>
             <div class="sim-grid">
                 <a class="sim-card" href="35_mirror_lens.html">
-                    <div class="sim-accent ch34"></div>
+                    <div class="sim-accent clr-optics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#35</span>
-                            <span class="sim-ch ch34">Ch.34</span>
+                            <span class="sim-ch clr-optics">Ch.34</span>
                         </div>
                         <div class="sim-title">구면 거울과 렌즈 광선 추적</div>
                         <div class="sim-desc">오목/볼록 거울, 수렴/발산 렌즈. 3개 주요 광선, 거울/렌즈 방정식.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="36_double_slit.html">
-                    <div class="sim-accent ch35"></div>
+                    <div class="sim-accent clr-optics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#36</span>
-                            <span class="sim-ch ch35">Ch.35</span>
+                            <span class="sim-ch clr-optics">Ch.35</span>
                         </div>
                         <div class="sim-title">영의 이중슬릿 간섭</div>
                         <div class="sim-desc">보강·상쇄 간섭 무늬. 슬릿 간격·파장·거리 조절, 경로차 기하학.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="37_single_slit.html">
-                    <div class="sim-accent ch36"></div>
+                    <div class="sim-accent clr-optics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#37</span>
-                            <span class="sim-ch ch36">Ch.36</span>
+                            <span class="sim-ch clr-optics">Ch.36</span>
                         </div>
                         <div class="sim-title">단일 슬릿 회절 무늬</div>
                         <div class="sim-desc">sinc² 세기 분포. 극소 조건 a sinθ = mλ 확인.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="38_time_dilation.html">
-                    <div class="sim-accent ch37"></div>
+                    <div class="sim-accent clr-optics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#38</span>
-                            <span class="sim-ch ch37">Ch.37</span>
+                            <span class="sim-ch clr-optics">Ch.37</span>
                         </div>
                         <div class="sim-title">시간 지연 빛시계</div>
                         <div class="sim-desc">정지/운동 관측자 빛시계 비교. 삼각형 기하학, 로런츠 인자 γ.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="39_photoelectric.html">
-                    <div class="sim-accent ch38"></div>
+                    <div class="sim-accent clr-optics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#39</span>
-                            <span class="sim-ch ch38">Ch.38</span>
+                            <span class="sim-ch clr-optics">Ch.38</span>
                         </div>
                         <div class="sim-title">광전 효과 실험</div>
                         <div class="sim-desc">광자의 전자 방출 시각화. 정지 전압 vs 진동수, hf = K + Φ.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="40_infinite_well.html">
-                    <div class="sim-accent ch39"></div>
+                    <div class="sim-accent clr-optics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#40</span>
-                            <span class="sim-ch ch39">Ch.39</span>
+                            <span class="sim-ch clr-optics">Ch.39</span>
                         </div>
                         <div class="sim-title">무한 퍼텐셜 우물 속 입자</div>
                         <div class="sim-desc">파동함수, 확률밀도, 에너지 준위 시각화. 준위 간 전이 광자 파장.</div>
                     </div>
                 </a>
                 <a class="sim-card" href="41_hydrogen_atom.html">
-                    <div class="sim-accent ch40"></div>
+                    <div class="sim-accent clr-optics"></div>
                     <div class="sim-body">
                         <div class="sim-top">
                             <span class="sim-num">#41</span>
-                            <span class="sim-ch ch40">Ch.40</span>
+                            <span class="sim-ch clr-optics">Ch.40</span>
                         </div>
                         <div class="sim-title">수소 원자 에너지 준위와 전이</div>
                         <div class="sim-desc">에너지 준위 다이어그램에서 전이 클릭. 라이먼·발머·파셴 계열.</div>
