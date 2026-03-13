@@ -25,9 +25,7 @@
             margin: 0 auto;
             padding: 30px 20px;
         }
-        .chapter-section {
-            margin-bottom: 30px;
-        }
+        .chapter-section { margin-bottom: 30px; }
         .chapter-section h2 {
             font-size: 1.2em;
             color: #555;
@@ -54,27 +52,11 @@
             transform: translateY(-4px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
-        .card-color {
-            height: 8px;
-        }
-        .card-body {
-            padding: 20px;
-        }
-        .card-num {
-            font-size: 0.8em;
-            color: #999;
-            margin-bottom: 4px;
-        }
-        .card-title {
-            font-size: 1.15em;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .card-desc {
-            font-size: 0.9em;
-            color: #666;
-            line-height: 1.5;
-        }
+        .card-color { height: 8px; }
+        .card-body { padding: 20px; }
+        .card-num { font-size: 0.8em; color: #999; margin-bottom: 4px; }
+        .card-title { font-size: 1.15em; font-weight: 600; margin-bottom: 8px; }
+        .card-desc { font-size: 0.9em; color: #666; line-height: 1.5; }
         .tag {
             display: inline-block;
             font-size: 0.75em;
@@ -84,8 +66,23 @@
             color: white;
         }
         .ch02 { background: #e74c3c; }
+        .ch03 { background: #e67e22; }
         .ch04 { background: #3498db; }
         .ch05 { background: #2ecc71; }
+        .ch06 { background: #1abc9c; }
+        .ch07 { background: #9b59b6; }
+        .ch08 { background: #8e44ad; }
+        .ch09 { background: #2c3e50; }
+        .ch10 { background: #d35400; }
+        .ch11 { background: #c0392b; }
+        .ch13 { background: #2980b9; }
+        .ch14 { background: #16a085; }
+        .ch15 { background: #8e44ad; }
+        .ch16 { background: #e74c3c; }
+        .ch17 { background: #c0392b; }
+        .ch18 { background: #d35400; }
+        .ch19 { background: #e67e22; }
+        .ch20 { background: #2c3e50; }
         footer {
             text-align: center;
             padding: 20px;
@@ -97,9 +94,10 @@
 <body>
     <header>
         <h1>PHY1001 물리 시뮬레이션</h1>
-        <p>일반물리학 웹 기반 인터랙티브 시뮬레이션</p>
+        <p>일반물리학 웹 기반 인터랙티브 시뮬레이션 (Ch.02 ~ Ch.20)</p>
     </header>
     <div class="container">
+
         <div class="chapter-section">
             <h2>Ch.02 — 직선 운동</h2>
             <div class="grid">
@@ -110,6 +108,21 @@
                         <div class="card-title">자유낙하 & 등가속도 운동</div>
                         <div class="card-desc">초기 속도와 높이를 조절하며 자유낙하를 관찰합니다. 지구·달·목성의 중력 비교, 실시간 x-t / v-t / a-t 그래프 제공.</div>
                         <span class="tag ch02">Ch.02</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.03 — 벡터</h2>
+            <div class="grid">
+                <a class="card" href="07_vectors.html">
+                    <div class="card-color ch03"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 07</div>
+                        <div class="card-title">벡터 덧셈 & 분해</div>
+                        <div class="card-desc">클릭·드래그로 벡터를 생성하고 합벡터를 확인합니다. x,y 성분 분해 및 단위벡터 표기 지원.</div>
+                        <span class="tag ch03">Ch.03</span>
                     </div>
                 </a>
             </div>
@@ -171,6 +184,217 @@
                 </a>
             </div>
         </div>
+
+        <div class="chapter-section">
+            <h2>Ch.06 — 힘과 운동 II</h2>
+            <div class="grid">
+                <a class="card" href="08_friction_circular.html">
+                    <div class="card-color ch06"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 08</div>
+                        <div class="card-title">마찰력 & 경사 곡선도로</div>
+                        <div class="card-desc">경사 곡선도로에서 차량의 힘 분석. 경사각·속도·반지름·마찰계수를 조절하며 미끄러짐 여부를 판단합니다.</div>
+                        <span class="tag ch06">Ch.06</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.07 — 운동에너지와 일</h2>
+            <div class="grid">
+                <a class="card" href="09_work_energy.html">
+                    <div class="card-color ch07"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 09</div>
+                        <div class="card-title">일-에너지 정리</div>
+                        <div class="card-desc">각도를 가진 힘으로 물체를 밀며 일과 운동에너지 변화를 관찰합니다. W_net = ΔKE 검증.</div>
+                        <span class="tag ch07">Ch.07</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.08 — 위치에너지와 에너지 보존</h2>
+            <div class="grid">
+                <a class="card" href="10_energy_conservation.html">
+                    <div class="card-color ch08"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 10</div>
+                        <div class="card-title">에너지 보존 롤러코스터</div>
+                        <div class="card-desc">롤러코스터 트랙에서 KE·PE 변환을 실시간으로 관찰합니다. 마찰 토글, 3가지 프리셋 트랙 제공.</div>
+                        <span class="tag ch08">Ch.08</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.09 — 질량 중심과 선운동량</h2>
+            <div class="grid">
+                <a class="card" href="11_collision.html">
+                    <div class="card-color ch09"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 11</div>
+                        <div class="card-title">충돌 & 운동량 보존</div>
+                        <div class="card-desc">1D/2D 충돌에서 운동량 보존을 시각화합니다. 탄성·비탄성·부분탄성 충돌 비교.</div>
+                        <span class="tag ch09">Ch.09</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.10 — 회전</h2>
+            <div class="grid">
+                <a class="card" href="12_rotation.html">
+                    <div class="card-color ch10"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 12</div>
+                        <div class="card-title">회전 운동학 & 관성모멘트</div>
+                        <div class="card-desc">원판·고리·막대·구의 회전 운동을 비교합니다. 토크 적용 시 관성모멘트에 따른 각가속도 차이 관찰.</div>
+                        <span class="tag ch10">Ch.10</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.11 — 굴림, 토크, 각운동량</h2>
+            <div class="grid">
+                <a class="card" href="13_rolling.html">
+                    <div class="card-color ch11"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 13</div>
+                        <div class="card-title">굴림 운동 경주</div>
+                        <div class="card-desc">경사면에서 원판·고리·구·속빈구가 동시에 굴러내립니다. 관성모멘트에 따른 도착 순서 비교.</div>
+                        <span class="tag ch11">Ch.11</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.13 — 중력</h2>
+            <div class="grid">
+                <a class="card" href="14_gravity_orbit.html">
+                    <div class="card-color ch13"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 14</div>
+                        <div class="card-title">행성 궤도 & 케플러 법칙</div>
+                        <div class="card-desc">만유인력에 의한 행성 궤도를 시뮬레이션합니다. 케플러 3법칙 시각화, 에너지 표시.</div>
+                        <span class="tag ch13">Ch.13</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.14 — 유체</h2>
+            <div class="grid">
+                <a class="card" href="15_fluids.html">
+                    <div class="card-color ch14"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 15</div>
+                        <div class="card-title">부력 & 유체 압력</div>
+                        <div class="card-desc">아르키메데스 원리와 유체 정역학. 물체 밀도·유체 종류를 바꾸며 뜨고 가라앉는 조건을 탐구합니다.</div>
+                        <span class="tag ch14">Ch.14</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.15 — 진동</h2>
+            <div class="grid">
+                <a class="card" href="16_oscillation.html">
+                    <div class="card-color ch15"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 16</div>
+                        <div class="card-title">단진동 (용수철 & 진자)</div>
+                        <div class="card-desc">용수철-질량 계와 단진자를 나란히 비교합니다. 위상 공간 다이어그램, 에너지 바, 감쇠 모드 지원.</div>
+                        <span class="tag ch15">Ch.15</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.16 — 파동 I</h2>
+            <div class="grid">
+                <a class="card" href="17_wave.html">
+                    <div class="card-color ch16"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 17</div>
+                        <div class="card-title">횡파 시뮬레이터</div>
+                        <div class="card-desc">진행파의 진폭·파장·주파수를 조절합니다. 두 파의 중첩(간섭), 입자 운동 시각화, 스냅샷 모드 제공.</div>
+                        <span class="tag ch16">Ch.16</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.17 — 파동 II</h2>
+            <div class="grid">
+                <a class="card" href="18_standing_wave.html">
+                    <div class="card-color ch17"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 18</div>
+                        <div class="card-title">정상파 & 공명</div>
+                        <div class="card-desc">양끝 고정 줄의 정상파 (n=1~6). 마디·배 표시, 공명 주파수 스윕, 열린 관·닫은 관 모드 지원.</div>
+                        <span class="tag ch17">Ch.17</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.18 — 온도, 열, 열역학 제1법칙</h2>
+            <div class="grid">
+                <a class="card" href="19_heat.html">
+                    <div class="card-color ch18"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 19</div>
+                        <div class="card-title">열전달 & 열평형</div>
+                        <div class="card-desc">두 물체의 열전달 과정을 시각화합니다. 다양한 재질(물·구리·알루미늄 등)의 비열 비교, 평형 온도 계산.</div>
+                        <span class="tag ch18">Ch.18</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.19 — 기체 분자 운동론</h2>
+            <div class="grid">
+                <a class="card" href="20_ideal_gas.html">
+                    <div class="card-color ch19"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 20</div>
+                        <div class="card-title">이상기체 분자 운동</div>
+                        <div class="card-desc">기체 분자들의 운동을 시뮬레이션합니다. 맥스웰-볼츠만 속력 분포, 피스톤 조절, PV=NkT 검증.</div>
+                        <span class="tag ch19">Ch.19</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="chapter-section">
+            <h2>Ch.20 — 엔트로피와 열역학 제2법칙</h2>
+            <div class="grid">
+                <a class="card" href="21_carnot.html">
+                    <div class="card-color ch20"></div>
+                    <div class="card-body">
+                        <div class="card-num">시뮬레이션 21</div>
+                        <div class="card-title">카르노 엔진 & PV 다이어그램</div>
+                        <div class="card-desc">카르노 순환의 PV·TS 다이어그램을 애니메이션으로 관찰합니다. 효율 계산, 에너지 흐름도, 엔트로피 변화 표시.</div>
+                        <span class="tag ch20">Ch.20</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
     </div>
     <footer>
         PHY1001 일반물리학 — 2026

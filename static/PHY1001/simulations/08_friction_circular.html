@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마찰력 &amp; 경사 곡선도로 시뮬레이터</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f0f2f5;
+  color: #333;
+  min-height: 100vh;
+}
+header {
+  background: #1a1a2e;
+  color: #fff;
+  text-align: center;
+  padding: 18px 20px;
+}
+header h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: 1px; }
+header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
+.container {
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+.main-area {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.canvas-col {
+  flex: 1 1 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.canvas-wrap {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 12px;
+}
+.canvas-wrap h3 {
+  font-size: 0.88rem;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+  background: #fafbfc;
+}
+.info-panel {
+  flex: 0 0 280px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 16px;
+  font-size: 0.88rem;
+  align-self: flex-start;
+}
+.info-panel h3 {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e8e8e8;
+  color: #1a1a2e;
+}
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.info-row .label { color: #666; }
+.info-row .value { font-weight: 600; font-family: 'Courier New', monospace; }
+.info-row.highlight { background: #f8f9ff; margin: 0 -8px; padding: 5px 8px; border-radius: 4px; }
+.ideal-box {
+  margin-top: 12px;
+  padding: 10px;
+  background: #fff8e1;
+  border-radius: 6px;
+  border-left: 3px solid #ffc107;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.ideal-box .val { font-weight: 700; color: #e65100; }
+.traffic-light {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.traffic-light .dot {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(0,0,0,0.15);
+}
+.traffic-green { background: #e8f5e9; color: #2e7d32; }
+.traffic-green .dot { background: #4caf50; box-shadow: 0 0 8px #4caf50; }
+.traffic-yellow { background: #fffde7; color: #f57f17; }
+.traffic-yellow .dot { background: #ffc107; box-shadow: 0 0 8px #ffc107; }
+.traffic-red { background: #ffebee; color: #c62828; }
+.traffic-red .dot { background: #f44336; box-shadow: 0 0 8px #f44336; }
+.slide-dir {
+  margin-top: 8px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+}
+.slide-in { background: #e3f2fd; color: #1565c0; }
+.slide-out { background: #fce4ec; color: #c62828; }
+.slide-stable { background: #e8f5e9; color: #2e7d32; }
+
+.controls {
+  margin-top: 16px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 18px 20px;
+}
+.controls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+.control-group label {
+  display: block;
+  font-size: 0.82rem;
+  color: #555;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.control-group .slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.control-group input[type=range] {
+  flex: 1;
+  accent-color: #1a1a2e;
+  height: 6px;
+}
+.control-group .val {
+  min-width: 56px;
+  text-align: right;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+.btn-row {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+}
+.btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-primary { background: #1a1a2e; color: #fff; }
+.btn-primary:hover { background: #2a2a4e; }
+.btn-secondary { background: #e0e0e0; color: #333; }
+.btn-secondary:hover { background: #d0d0d0; }
+
+@media (max-width: 720px) {
+  .main-area { flex-direction: column; }
+  .info-panel { flex: 1 1 auto; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>마찰력 &amp; 경사 곡선도로 시뮬레이터</h1>
+  <p>Ch.06 Force and Motion II — 경사 곡선도로에서의 원운동과 마찰력</p>
+</header>
+
+<div class="container">
+  <div class="main-area">
+    <div class="canvas-col">
+      <div class="canvas-wrap">
+        <h3>측면도 (Side View) — 힘 벡터</h3>
+        <canvas id="sideCanvas" width="520" height="380"></canvas>
+      </div>
+      <div class="canvas-wrap">
+        <h3>상면도 (Top View) — 원형 경로</h3>
+        <canvas id="topCanvas" width="520" height="280"></canvas>
+      </div>
+    </div>
+    <div class="info-panel">
+      <h3>물리량 계산</h3>
+      <div class="info-row"><span class="label">질량 m</span><span class="value" id="valMass">1000 kg</span></div>
+      <div class="info-row"><span class="label">속력 v</span><span class="value" id="valSpeed">—</span></div>
+      <div class="info-row"><span class="label">반지름 R</span><span class="value" id="valRadius">—</span></div>
+      <div class="info-row"><span class="label">경사각 θ</span><span class="value" id="valTheta">—</span></div>
+      <div class="info-row"><span class="label">마찰계수 μ</span><span class="value" id="valMu">—</span></div>
+      <div class="info-row highlight"><span class="label">수직항력 N</span><span class="value" id="valN">—</span></div>
+      <div class="info-row highlight"><span class="label">구심력 (필요)</span><span class="value" id="valFc">—</span></div>
+      <div class="info-row"><span class="label">경사면 제공</span><span class="value" id="valBankF">—</span></div>
+      <div class="info-row"><span class="label">최대 마찰력</span><span class="value" id="valFfMax">—</span></div>
+      <div class="info-row highlight"><span class="label">순 반경방향 힘</span><span class="value" id="valNetF">—</span></div>
+
+      <div class="ideal-box">
+        이상적 경사각 (무마찰):<br>
+        θ<sub>ideal</sub> = arctan(v²/gR) = <span class="val" id="valIdeal">—</span>
+      </div>
+
+      <div class="traffic-light" id="trafficLight">
+        <div class="dot"></div>
+        <span id="trafficText">—</span>
+      </div>
+
+      <div class="slide-dir slide-stable" id="slideDir">안정 (Stable)</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="controls-grid">
+      <div class="control-group">
+        <label>경사각 θ (°)</label>
+        <div class="slider-row">
+          <input type="range" id="sliderTheta" min="0" max="45" step="0.5" value="15">
+          <span class="val" id="dispTheta">15.0°</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <label>속력 v (m/s)</label>
+        <div class="slider-row">
+          <input type="range" id="sliderV" min="5" max="30" step="0.5" value="15">
+          <span class="val" id="dispV">15.0 m/s</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <label>곡선 반지름 R (m)</label>
+        <div class="slider-row">
+          <input type="range" id="sliderR" min="20" max="200" step="1" value="80">
+          <span class="val" id="dispR">80 m</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <label>마찰계수 μ</label>
+        <div class="slider-row">
+          <input type="range" id="sliderMu" min="0" max="1" step="0.01" value="0.4">
+          <span class="val" id="dispMu">0.40</span>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btnPlayPause">▶ 재생</button>
+      <button class="btn btn-secondary" id="btnReset">↻ 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const g = 9.8;
+const mass = 1000; // kg
+
+// Elements
+const sideCanvas = document.getElementById('sideCanvas');
+const topCanvas = document.getElementById('topCanvas');
+const sCtx = sideCanvas.getContext('2d');
+const tCtx = topCanvas.getContext('2d');
+
+const sliderTheta = document.getElementById('sliderTheta');
+const sliderV = document.getElementById('sliderV');
+const sliderR = document.getElementById('sliderR');
+const sliderMu = document.getElementById('sliderMu');
+
+let playing = false;
+let carAngle = 0; // radians, top-view position on circle
+let lastTime = null;
+
+function getParams() {
+  const theta = parseFloat(sliderTheta.value) * Math.PI / 180;
+  const v = parseFloat(sliderV.value);
+  const R = parseFloat(sliderR.value);
+  const mu = parseFloat(sliderMu.value);
+  return { theta, v, R, mu };
+}
+
+function computePhysics({ theta, v, R, mu }) {
+  const cosT = Math.cos(theta);
+  const sinT = Math.sin(theta);
+
+  // Required centripetal force
+  const Fc_required = mass * v * v / R;
+
+  // Force provided by banking alone (component of N toward center)
+  // From equilibrium: N cosθ = mg + f sinθ  and  N sinθ + f cosθ = mv²/R (if friction inward)
+  // But we need to determine direction of friction first.
+
+  // Ideal (frictionless) speed for this bank angle
+  const v_ideal = Math.sqrt(g * R * Math.tan(theta));
+  const theta_ideal = Math.atan(v * v / (g * R));
+
+  // Without friction: N = mg/cosθ, radial component from bank = N sinθ = mg tanθ
+  const N_noFriction = mass * g / cosT;
+  const bankForce = N_noFriction * sinT; // = mg tanθ
+
+  // Deficit: how much more centripetal force is needed beyond banking
+  const deficit = Fc_required - bankForce;
+
+  // Now solve properly with friction
+  // Case analysis: if v > v_ideal, car tends to slide outward, friction points inward (up the slope)
+  // if v < v_ideal, car tends to slide inward, friction points outward (down the slope)
+
+  let N, f_actual, f_max, slideStatus, ratio;
+
+  if (Math.abs(v - v_ideal) < 0.01 || theta < 0.001) {
+    // At ideal speed or flat road
+    if (theta < 0.001) {
+      // Flat road: N = mg, need friction = mv²/R
+      N = mass * g;
+      f_max = mu * N;
+      f_actual = Fc_required;
+      if (f_actual <= f_max + 0.1) {
+        slideStatus = 'stable';
+      } else {
+        slideStatus = 'outward';
+      }
+    } else {
+      N = mass * g / cosT;
+      f_actual = 0;
+      f_max = mu * N;
+      slideStatus = 'stable';
+    }
+  } else if (v > v_ideal) {
+    // Tends to slide outward; friction acts inward (up slope)
+    // N sinθ + f cosθ = mv²/R
+    // N cosθ - f sinθ = mg
+    // Solve: N = m(g cosθ + (v²/R) sinθ), f = m((v²/R) cosθ - g sinθ)
+    N = mass * (g * cosT + (v * v / R) * sinT);
+    f_actual = mass * ((v * v / R) * cosT - g * sinT);
+    f_max = mu * N;
+    if (f_actual <= f_max + 0.1) {
+      slideStatus = 'stable';
+    } else {
+      slideStatus = 'outward';
+    }
+  } else {
+    // Tends to slide inward; friction acts outward (down slope)
+    // N sinθ - f cosθ = mv²/R
+    // N cosθ + f sinθ = mg
+    // Solve: N = m(g cosθ - (v²/R) sinθ), f = m(g sinθ - (v²/R) cosθ)
+    N = mass * (g * cosT - (v * v / R) * sinT);
+    f_actual = mass * (g * sinT - (v * v / R) * cosT);
+    f_max = mu * N;
+    if (f_actual <= f_max + 0.1) {
+      slideStatus = 'stable';
+    } else {
+      slideStatus = 'inward';
+    }
+  }
+
+  // Ratio for traffic light
+  if (f_max > 0.01) {
+    ratio = f_actual / f_max;
+  } else {
+    ratio = (f_actual > 0.1) ? 999 : 0;
+  }
+
+  const netRadial = Fc_required - (bankForce + (slideStatus === 'inward' ? -Math.min(f_actual, f_max) : Math.min(f_actual, f_max)));
+
+  return {
+    Fc_required, N, f_actual, f_max, bankForce, deficit,
+    theta_ideal, v_ideal, slideStatus, ratio,
+    netRadial: deficit,
+    frictionDir: v >= v_ideal ? 'inward' : 'outward'
+  };
+}
+
+function updateDisplays() {
+  const p = getParams();
+  const ph = computePhysics(p);
+  const thetaDeg = p.theta * 180 / Math.PI;
+
+  document.getElementById('dispTheta').textContent = thetaDeg.toFixed(1) + '°';
+  document.getElementById('dispV').textContent = p.v.toFixed(1) + ' m/s';
+  document.getElementById('dispR').textContent = p.R.toFixed(0) + ' m';
+  document.getElementById('dispMu').textContent = p.mu.toFixed(2);
+
+  document.getElementById('valSpeed').textContent = p.v.toFixed(1) + ' m/s';
+  document.getElementById('valRadius').textContent = p.R.toFixed(0) + ' m';
+  document.getElementById('valTheta').textContent = thetaDeg.toFixed(1) + '°';
+  document.getElementById('valMu').textContent = p.mu.toFixed(2);
+
+  document.getElementById('valN').textContent = (ph.N / 1000).toFixed(2) + ' kN';
+  document.getElementById('valFc').textContent = (ph.Fc_required / 1000).toFixed(2) + ' kN';
+  document.getElementById('valBankF').textContent = (ph.bankForce / 1000).toFixed(2) + ' kN';
+  document.getElementById('valFfMax').textContent = (ph.f_max / 1000).toFixed(2) + ' kN';
+  document.getElementById('valNetF').textContent = (ph.deficit / 1000).toFixed(2) + ' kN';
+  document.getElementById('valIdeal').textContent = (ph.theta_ideal * 180 / Math.PI).toFixed(1) + '°';
+
+  // Traffic light
+  const tl = document.getElementById('trafficLight');
+  const tt = document.getElementById('trafficText');
+  tl.className = 'traffic-light';
+  if (ph.ratio < 0.6) {
+    tl.classList.add('traffic-green');
+    tt.textContent = '안전 (Safe)';
+  } else if (ph.ratio < 1.0) {
+    tl.classList.add('traffic-yellow');
+    tt.textContent = '주의 (Marginal)';
+  } else {
+    tl.classList.add('traffic-red');
+    tt.textContent = '미끄러짐! (Sliding)';
+  }
+
+  // Slide direction
+  const sd = document.getElementById('slideDir');
+  sd.className = 'slide-dir';
+  if (ph.slideStatus === 'outward') {
+    sd.classList.add('slide-out');
+    sd.textContent = '바깥쪽 미끄러짐 (Slide Outward)';
+  } else if (ph.slideStatus === 'inward') {
+    sd.classList.add('slide-in');
+    sd.textContent = '안쪽 미끄러짐 (Slide Inward)';
+  } else {
+    sd.classList.add('slide-stable');
+    sd.textContent = '안정 (Stable)';
+  }
+
+  drawSideView(p, ph);
+  drawTopView(p, ph);
+}
+
+// ── Side View Drawing ──
+function drawSideView(p, ph) {
+  const W = sideCanvas.width;
+  const H = sideCanvas.height;
+  sCtx.clearRect(0, 0, W, H);
+
+  const cx = W / 2;
+  const cy = H / 2 + 20;
+  const thetaDeg = p.theta * 180 / Math.PI;
+  const cosT = Math.cos(p.theta);
+  const sinT = Math.sin(p.theta);
+
+  // Draw ground reference
+  sCtx.strokeStyle = '#ccc';
+  sCtx.lineWidth = 1;
+  sCtx.setLineDash([4, 4]);
+  sCtx.beginPath();
+  sCtx.moveTo(60, cy + 80);
+  sCtx.lineTo(W - 60, cy + 80);
+  sCtx.stroke();
+  sCtx.setLineDash([]);
+
+  // Draw banked road surface
+  const roadLen = 240;
+  const roadThick = 12;
+  const roadCx = cx;
+  const roadCy = cy + 20;
+
+  sCtx.save();
+  sCtx.translate(roadCx, roadCy);
+  sCtx.rotate(-p.theta);
+
+  // Road surface
+  sCtx.fillStyle = '#555';
+  sCtx.beginPath();
+  sCtx.roundRect(-roadLen / 2, -roadThick / 2, roadLen, roadThick, 3);
+  sCtx.fill();
+
+  // Road surface markings
+  sCtx.strokeStyle = '#fff';
+  sCtx.lineWidth = 1.5;
+  sCtx.setLineDash([8, 8]);
+  sCtx.beginPath();
+  sCtx.moveTo(-roadLen / 2 + 10, 0);
+  sCtx.lineTo(roadLen / 2 - 10, 0);
+  sCtx.stroke();
+  sCtx.setLineDash([]);
+
+  sCtx.restore();
+
+  // Draw car on road
+  const carW = 50;
+  const carH = 28;
+  const carX = roadCx;
+  const carY = roadCy - roadThick / 2;
+
+  sCtx.save();
+  sCtx.translate(carX, carY);
+  sCtx.rotate(-p.theta);
+  sCtx.translate(0, -carH / 2);
+
+  // Car body
+  sCtx.fillStyle = '#3498db';
+  sCtx.beginPath();
+  sCtx.roundRect(-carW / 2, -carH / 2, carW, carH, 5);
+  sCtx.fill();
+  sCtx.strokeStyle = '#2980b9';
+  sCtx.lineWidth = 1.5;
+  sCtx.stroke();
+
+  // Car roof
+  sCtx.fillStyle = '#5dade2';
+  sCtx.beginPath();
+  sCtx.roundRect(-carW / 4, -carH / 2 - 10, carW / 2, 12, 3);
+  sCtx.fill();
+
+  // Wheels
+  sCtx.fillStyle = '#2c3e50';
+  sCtx.beginPath();
+  sCtx.arc(-carW / 3, carH / 2 - 2, 5, 0, Math.PI * 2);
+  sCtx.fill();
+  sCtx.beginPath();
+  sCtx.arc(carW / 3, carH / 2 - 2, 5, 0, Math.PI * 2);
+  sCtx.fill();
+
+  sCtx.restore();
+
+  // Force vectors - drawn from car center
+  const carCenterX = carX - (carH / 2 + roadThick / 2) * sinT;
+  const carCenterY = carY - (carH / 2 + roadThick / 2) * cosT;
+
+  const scale = 0.008; // pixels per Newton
+
+  // Weight (mg) - straight down
+  const mgLen = mass * g * scale;
+  drawArrow(sCtx, carCenterX, carCenterY, carCenterX, carCenterY + mgLen, '#e74c3c', 3);
+  sCtx.fillStyle = '#e74c3c';
+  sCtx.font = 'bold 13px sans-serif';
+  sCtx.fillText('mg', carCenterX + 6, carCenterY + mgLen - 5);
+
+  // Normal force N - perpendicular to road surface (outward)
+  const nLen = ph.N * scale;
+  const nDx = -nLen * (-sinT); // perpendicular to surface, pointing away
+  const nDy = -nLen * cosT;
+  // Normal is perpendicular to road, pointing away from surface
+  const nEndX = carCenterX - nLen * Math.sin(p.theta);
+  const nEndY = carCenterY - nLen * Math.cos(p.theta);
+  drawArrow(sCtx, carCenterX, carCenterY, nEndX, nEndY, '#2ecc71', 3);
+  sCtx.fillStyle = '#2ecc71';
+  sCtx.font = 'bold 13px sans-serif';
+  sCtx.fillText('N', nEndX - 15, nEndY + 5);
+
+  // Friction force - along the road surface
+  const fDraw = Math.min(ph.f_actual, ph.f_max);
+  if (fDraw > 10) {
+    const fLen = fDraw * scale;
+    // Friction direction depends on whether car tends inward or outward
+    let fEndX, fEndY;
+    if (ph.frictionDir === 'inward') {
+      // Friction up the slope (toward center) = direction: up-left along slope
+      fEndX = carCenterX - fLen * cosT;
+      fEndY = carCenterY + fLen * sinT;
+    } else {
+      // Friction down the slope (away from center)
+      fEndX = carCenterX + fLen * cosT;
+      fEndY = carCenterY - fLen * sinT;
+    }
+    drawArrow(sCtx, carCenterX, carCenterY, fEndX, fEndY, '#f39c12', 3);
+    sCtx.fillStyle = '#f39c12';
+    sCtx.font = 'bold 13px sans-serif';
+    sCtx.fillText('f', fEndX + (ph.frictionDir === 'inward' ? -14 : 8), fEndY);
+  }
+
+  // Centripetal direction (horizontal, toward center = left)
+  const fcLen = ph.Fc_required * scale;
+  drawArrow(sCtx, carCenterX, carCenterY, carCenterX - fcLen, carCenterY, '#9b59b6', 2.5);
+  sCtx.fillStyle = '#9b59b6';
+  sCtx.font = 'bold 12px sans-serif';
+  sCtx.setLineDash([3, 3]);
+  sCtx.strokeStyle = '#9b59b6';
+  sCtx.lineWidth = 1;
+  sCtx.beginPath();
+  sCtx.moveTo(carCenterX - fcLen, carCenterY);
+  sCtx.lineTo(carCenterX - fcLen, carCenterY + 15);
+  sCtx.stroke();
+  sCtx.setLineDash([]);
+  sCtx.fillText('구심력 방향', carCenterX - fcLen - 10, carCenterY + 28);
+
+  // Angle arc
+  if (thetaDeg > 1) {
+    sCtx.save();
+    sCtx.translate(roadCx - roadLen / 2 * cosT, roadCy + roadLen / 2 * sinT);
+    const arcR = 40;
+    sCtx.strokeStyle = '#e67e22';
+    sCtx.lineWidth = 2;
+    sCtx.beginPath();
+    sCtx.arc(0, 0, arcR, -Math.PI / 2, -Math.PI / 2 + p.theta, false);
+    sCtx.stroke();
+    const midA = -Math.PI / 2 + p.theta / 2;
+    sCtx.fillStyle = '#e67e22';
+    sCtx.font = 'bold 14px sans-serif';
+    sCtx.fillText('θ', arcR * Math.cos(midA) + 5, arcR * Math.sin(midA));
+    sCtx.restore();
+  }
+
+  // Legend
+  sCtx.font = '11px sans-serif';
+  const legends = [
+    { color: '#e74c3c', text: '중력 (mg)' },
+    { color: '#2ecc71', text: '수직항력 (N)' },
+    { color: '#f39c12', text: '마찰력 (f)' },
+    { color: '#9b59b6', text: '구심력 방향' }
+  ];
+  legends.forEach((l, i) => {
+    sCtx.fillStyle = l.color;
+    sCtx.fillRect(12, 12 + i * 18, 12, 12);
+    sCtx.fillStyle = '#444';
+    sCtx.fillText(l.text, 28, 22 + i * 18);
+  });
+
+  // Center label
+  sCtx.fillStyle = '#888';
+  sCtx.font = '11px sans-serif';
+  sCtx.textAlign = 'left';
+  sCtx.fillText('← 곡선 중심', 20, H - 15);
+  sCtx.textAlign = 'right';
+  sCtx.fillText('바깥쪽 →', W - 20, H - 15);
+  sCtx.textAlign = 'left';
+}
+
+// ── Top View Drawing ──
+function drawTopView(p, ph) {
+  const W = topCanvas.width;
+  const H = topCanvas.height;
+  tCtx.clearRect(0, 0, W, H);
+
+  const cx = W / 2;
+  const cy = H / 2 + 10;
+  const maxDrawR = Math.min(W, H) / 2 - 40;
+  const drawR = maxDrawR * 0.8;
+  const roadWidth = 22;
+
+  // Draw circular road
+  tCtx.strokeStyle = '#ddd';
+  tCtx.lineWidth = roadWidth + 4;
+  tCtx.beginPath();
+  tCtx.arc(cx, cy, drawR, 0, Math.PI * 2);
+  tCtx.stroke();
+
+  tCtx.strokeStyle = '#666';
+  tCtx.lineWidth = roadWidth;
+  tCtx.beginPath();
+  tCtx.arc(cx, cy, drawR, 0, Math.PI * 2);
+  tCtx.stroke();
+
+  // Dashed center line
+  tCtx.strokeStyle = '#fff';
+  tCtx.lineWidth = 1.5;
+  tCtx.setLineDash([6, 6]);
+  tCtx.beginPath();
+  tCtx.arc(cx, cy, drawR, 0, Math.PI * 2);
+  tCtx.stroke();
+  tCtx.setLineDash([]);
+
+  // Radius line
+  tCtx.strokeStyle = '#bbb';
+  tCtx.lineWidth = 1;
+  tCtx.setLineDash([3, 3]);
+  tCtx.beginPath();
+  tCtx.moveTo(cx, cy);
+  const carDrawX = cx + drawR * Math.cos(carAngle);
+  const carDrawY = cy + drawR * Math.sin(carAngle);
+  tCtx.lineTo(carDrawX, carDrawY);
+  tCtx.stroke();
+  tCtx.setLineDash([]);
+
+  // Center point
+  tCtx.fillStyle = '#999';
+  tCtx.beginPath();
+  tCtx.arc(cx, cy, 3, 0, Math.PI * 2);
+  tCtx.fill();
+
+  // Draw car
+  const carSize = 10;
+  const tangentAngle = carAngle + Math.PI / 2;
+
+  tCtx.save();
+  tCtx.translate(carDrawX, carDrawY);
+  tCtx.rotate(tangentAngle);
+
+  // Car body
+  tCtx.fillStyle = '#3498db';
+  tCtx.beginPath();
+  tCtx.roundRect(-carSize, -carSize / 2, carSize * 2, carSize, 3);
+  tCtx.fill();
+  tCtx.strokeStyle = '#2980b9';
+  tCtx.lineWidth = 1;
+  tCtx.stroke();
+
+  // Direction indicator
+  tCtx.fillStyle = '#fff';
+  tCtx.beginPath();
+  tCtx.moveTo(carSize - 2, 0);
+  tCtx.lineTo(carSize - 6, -3);
+  tCtx.lineTo(carSize - 6, 3);
+  tCtx.closePath();
+  tCtx.fill();
+
+  tCtx.restore();
+
+  // Centripetal arrow (toward center)
+  const arrowLen = 30;
+  const towardCx = cx - carDrawX;
+  const towardCy = cy - carDrawY;
+  const dist = Math.sqrt(towardCx * towardCx + towardCy * towardCy);
+  const ux = towardCx / dist;
+  const uy = towardCy / dist;
+  drawArrow(tCtx, carDrawX + ux * 14, carDrawY + uy * 14,
+    carDrawX + ux * (14 + arrowLen), carDrawY + uy * (14 + arrowLen), '#9b59b6', 2.5);
+
+  // Slide indicator
+  if (ph.slideStatus !== 'stable') {
+    const slideDir = ph.slideStatus === 'outward' ? -1 : 1;
+    const sArrowLen = 20;
+    drawArrow(tCtx,
+      carDrawX - ux * slideDir * 14, carDrawY - uy * slideDir * 14,
+      carDrawX - ux * slideDir * (14 + sArrowLen), carDrawY - uy * slideDir * (14 + sArrowLen),
+      ph.slideStatus === 'outward' ? '#e74c3c' : '#3498db', 2.5);
+  }
+
+  // Labels
+  tCtx.fillStyle = '#666';
+  tCtx.font = '11px sans-serif';
+  tCtx.fillText('R = ' + p.R.toFixed(0) + ' m', cx + 5, cy + 14);
+  tCtx.fillText('v = ' + p.v.toFixed(1) + ' m/s', 10, 18);
+
+  // Speed indicator text
+  if (playing) {
+    tCtx.fillStyle = '#2ecc71';
+    tCtx.font = 'bold 11px sans-serif';
+    tCtx.fillText('● 재생 중', W - 75, 18);
+  }
+}
+
+function drawArrow(ctx, x1, y1, x2, y2, color, width) {
+  const headLen = 10;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = 'round';
+
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.4), y2 - headLen * Math.sin(angle - 0.4));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.4), y2 - headLen * Math.sin(angle + 0.4));
+  ctx.closePath();
+  ctx.fill();
+}
+
+// ── Animation ──
+function animate(time) {
+  if (!playing) return;
+  if (lastTime === null) lastTime = time;
+  const dt = (time - lastTime) / 1000;
+  lastTime = time;
+
+  const p = getParams();
+  // Angular velocity = v / R
+  const omega = p.v / p.R;
+  carAngle += omega * dt;
+  if (carAngle > Math.PI * 2) carAngle -= Math.PI * 2;
+
+  updateDisplays();
+  requestAnimationFrame(animate);
+}
+
+document.getElementById('btnPlayPause').addEventListener('click', function () {
+  playing = !playing;
+  this.textContent = playing ? '⏸ 일시정지' : '▶ 재생';
+  if (playing) {
+    lastTime = null;
+    requestAnimationFrame(animate);
+  }
+});
+
+document.getElementById('btnReset').addEventListener('click', function () {
+  playing = false;
+  document.getElementById('btnPlayPause').textContent = '▶ 재생';
+  carAngle = 0;
+  lastTime = null;
+  sliderTheta.value = 15;
+  sliderV.value = 15;
+  sliderR.value = 80;
+  sliderMu.value = 0.4;
+  updateDisplays();
+});
+
+[sliderTheta, sliderV, sliderR, sliderMu].forEach(s => {
+  s.addEventListener('input', () => {
+    if (!playing) updateDisplays();
+  });
+});
+
+// Initial draw
+updateDisplays();
+</script>
+</body>
+</html>
