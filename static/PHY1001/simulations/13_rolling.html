@@ -17,7 +17,10 @@ header {
   color: #fff;
   text-align: center;
   padding: 18px 20px;
+  position: relative;
 }
+.back-btn { position: absolute; top: 14px; left: 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; padding: 4px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; transition: all 0.2s; }
+.back-btn:hover { color: #fff; border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); }
 header h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: 1px; }
 header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
 .container {
@@ -198,13 +201,26 @@ canvas {
   .canvas-wrap { flex: 1 1 100%; }
   .ranking-wrap { flex: 1 1 100%; }
 }
+.sim-desc {
+    max-width: 900px;
+    margin: 12px auto 0;
+    padding: 10px 20px;
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #555;
+    line-height: 1.6;
+}
 </style>
 </head>
 <body>
 <header>
   <h1>굴림 운동 경주 시뮬레이터</h1>
   <p>Ch.11 Rolling, Torque, and Angular Momentum — 관성모멘트에 따른 굴림 속도 비교</p>
+<a href="index.html" class="back-btn">&larr; 목록으로</a>
 </header>
+<div class="sim-desc">경사면에서 원판, 고리, 속찬 구, 속빈 구가 동시에 굴러내립니다. 가속도 a = g sinθ/(1+c)에서 관성모멘트 비율 c = I/MR²가 작을수록 빠르게 도착합니다. 병진 운동에너지와 회전 운동에너지의 분배도 확인하세요.</div>
 <div class="container">
   <div class="top-row">
     <div class="canvas-wrap">

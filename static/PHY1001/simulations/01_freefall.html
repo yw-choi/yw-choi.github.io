@@ -18,7 +18,9 @@
     text-align: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
-  header h1 { font-size: 1.4rem; font-weight: 600; letter-spacing: 1px; }
+  .back-btn { position: absolute; top: 14px; left: 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; padding: 4px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; transition: all 0.2s; }
+.back-btn:hover { color: #fff; border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); }
+header h1 { font-size: 1.4rem; font-weight: 600; letter-spacing: 1px; }
   header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
   .container {
     max-width: 920px;
@@ -170,6 +172,17 @@
     opacity: 0.5;
     cursor: default;
   }
+  .sim-desc {
+    max-width: 900px;
+    margin: 12px auto 0;
+    padding: 10px 20px;
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #555;
+    line-height: 1.6;
+  }
   @media (max-width: 700px) {
     .main-display { flex-direction: column; }
     .canvas-panel { flex: none; }
@@ -181,7 +194,9 @@
 <header>
   <h1>자유낙하 &amp; 등가속도 운동 시뮬레이터</h1>
   <p>Ch.02 Motion Along a Straight Line</p>
+<a href="index.html" class="back-btn">&larr; 목록으로</a>
 </header>
+<div class="sim-desc">중력 가속도 g 하에서 물체의 자유낙하를 시뮬레이션합니다. 초기 높이와 초기 속도를 조절하고, 지구·달·목성에서의 운동을 비교해 보세요. 위치-시간, 속도-시간, 가속도-시간 그래프가 실시간으로 그려집니다.</div>
 
 <div class="container">
   <!-- Info Bar -->

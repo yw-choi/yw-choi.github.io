@@ -17,7 +17,10 @@ header {
   color: #fff;
   text-align: center;
   padding: 18px 0 14px;
+  position: relative;
 }
+.back-btn { position: absolute; top: 14px; left: 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; padding: 4px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; transition: all 0.2s; }
+.back-btn:hover { color: #fff; border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); }
 header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: 1px; }
 header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
 .container {
@@ -130,13 +133,26 @@ footer {
   font-size: 0.75rem;
   color: #aaa;
 }
+.sim-desc {
+    max-width: 900px;
+    margin: 12px auto 0;
+    padding: 10px 20px;
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #555;
+    line-height: 1.6;
+}
 </style>
 </head>
 <body>
 <header>
   <h1>뉴턴 제2법칙 실험실</h1>
   <p>Newton's Second Law Lab &mdash; F = ma (마찰 없는 수평면)</p>
+<a href="index.html" class="back-btn">&larr; 목록으로</a>
 </header>
+<div class="sim-desc">마찰 없는 수평면 위의 물체에 힘을 가하여 뉴턴 제2법칙 F = ma를 체험합니다. 힘과 질량을 조절하면 가속도가 어떻게 변하는지 관찰하세요. 오른쪽의 자유물체도(FBD)에서 작용하는 모든 힘을 확인할 수 있습니다.</div>
 
 <div class="container">
   <!-- Canvases -->

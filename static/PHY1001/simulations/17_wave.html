@@ -17,7 +17,10 @@ header {
   color: #fff;
   text-align: center;
   padding: 18px 20px;
+  position: relative;
 }
+.back-btn { position: absolute; top: 14px; left: 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; padding: 4px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; transition: all 0.2s; }
+.back-btn:hover { color: #fff; border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); }
 header h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: 1px; }
 header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
 .container {
@@ -168,6 +171,17 @@ canvas {
   background: #1a1a2e;
   color: #fff;
 }
+.sim-desc {
+    max-width: 900px;
+    margin: 12px auto 0;
+    padding: 10px 20px;
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #555;
+    line-height: 1.6;
+}
 @media (max-width: 600px) {
   .controls-grid { grid-template-columns: 1fr 1fr; }
   .info-grid { grid-template-columns: repeat(3, 1fr); }
@@ -178,7 +192,12 @@ canvas {
 <header>
   <h1>횡파 시뮬레이터</h1>
   <p>Transverse Wave Simulation &mdash; Ch.16 Waves I</p>
+<a href="index.html" class="back-btn">&larr; 목록으로</a>
 </header>
+
+<div class="sim-desc">
+줄을 따라 전파되는 횡파 y(x,t) = A sin(kx − ωt)를 시각화합니다. 진폭, 파장, 주파수를 조절하고 파동 속도 v = fλ 관계를 확인하세요. 중첩 모드에서 두 파의 보강·상쇄 간섭을 관찰할 수 있습니다.
+</div>
 
 <div class="container">
   <!-- Control Buttons -->

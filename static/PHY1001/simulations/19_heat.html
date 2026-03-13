@@ -17,7 +17,10 @@ header {
   color: #fff;
   text-align: center;
   padding: 18px 20px;
+  position: relative;
 }
+.back-btn { position: absolute; top: 14px; left: 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; padding: 4px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; transition: all 0.2s; }
+.back-btn:hover { color: #fff; border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); }
 header h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: 1px; }
 header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
 .container {
@@ -160,6 +163,17 @@ canvas {
   font-size: 0.88rem;
 }
 .law-display .eq { font-size: 1.1rem; font-weight: 700; color: #1a1a2e; margin-top: 4px; }
+.sim-desc {
+    max-width: 900px;
+    margin: 12px auto 0;
+    padding: 10px 20px;
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #555;
+    line-height: 1.6;
+}
 @media (max-width: 900px) {
   .main-layout { flex-direction: column; }
   .left-col, .right-col { flex: 1 1 auto; }
@@ -170,7 +184,13 @@ canvas {
 <header>
   <h1>열전달 &amp; 열평형 시뮬레이터</h1>
   <p>Ch.18 Temperature, Heat, and the First Law of Thermodynamics</p>
+<a href="index.html" class="back-btn">&larr; 목록으로</a>
 </header>
+
+<div class="sim-desc">
+온도가 다른 두 물체가 접촉할 때 열이 이동하여 열평형에 도달하는 과정을 시뮬레이션합니다. 다양한 재질의 비열 차이가 평형 온도에 어떻게 영향을 미치는지 관찰하세요. T_eq = (m₁c₁T₁ + m₂c₂T₂)/(m₁c₁ + m₂c₂)
+</div>
+
 <div class="container">
   <div class="main-layout">
     <div class="left-col">

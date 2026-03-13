@@ -18,6 +18,8 @@ header {
   text-align: center;
   padding: 18px 20px;
 }
+.back-btn { position: absolute; top: 14px; left: 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; padding: 4px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; transition: all 0.2s; }
+.back-btn:hover { color: #fff; border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); }
 header h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: 1px; }
 header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
 .container {
@@ -212,6 +214,17 @@ canvas {
   .info-panel { flex: 1 1 100%; max-height: none; }
   .controls-grid { grid-template-columns: 1fr; }
 }
+.sim-desc {
+    max-width: 900px;
+    margin: 12px auto 0;
+    padding: 10px 20px;
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #555;
+    line-height: 1.6;
+}
 </style>
 </head>
 <body>
@@ -219,7 +232,9 @@ canvas {
 <header>
   <h1>충돌 &amp; 운동량 보존 시뮬레이터</h1>
   <p>Ch.09 질량 중심과 선운동량 — 1D &amp; 2D 충돌</p>
+<a href="index.html" class="back-btn">&larr; 목록으로</a>
 </header>
+<div class="sim-desc">1차원 및 2차원 충돌에서 운동량 보존 법칙을 시각화합니다. 탄성 충돌에서는 운동에너지도 보존되지만, 비탄성 충돌에서는 운동에너지가 감소합니다. 질량과 속도를 바꿔가며 충돌 전후의 물리량을 비교하세요.</div>
 
 <div class="container">
   <div class="mode-toggle">

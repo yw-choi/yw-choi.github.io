@@ -18,6 +18,8 @@ header {
   text-align: center;
   padding: 18px 20px;
 }
+.back-btn { position: absolute; top: 14px; left: 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; padding: 4px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; transition: all 0.2s; }
+.back-btn:hover { color: #fff; border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); }
 header h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: 1px; }
 header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
 .container {
@@ -197,6 +199,17 @@ canvas {
   width: 18px; height: 4px; border-radius: 2px;
 }
 
+.sim-desc {
+    max-width: 900px;
+    margin: 12px auto 0;
+    padding: 10px 20px;
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #555;
+    line-height: 1.6;
+}
 @media (max-width: 700px) {
   .main-area { flex-direction: column; }
   .info-panel { flex: 1 1 auto; }
@@ -207,7 +220,9 @@ canvas {
 <header>
   <h1>경사면 &amp; 힘 분해 시뮬레이터</h1>
   <p>Ch.05 — Force and Motion on an Inclined Plane</p>
+<a href="index.html" class="back-btn">&larr; 목록으로</a>
 </header>
+<div class="sim-desc">경사면 위 물체에 작용하는 힘을 성분별로 분해합니다. 중력 mg를 경사면에 평행한 성분(mg sinθ)과 수직 성분(mg cosθ)으로 나누어 관찰하세요. 마찰력을 켜면 정지 마찰과 운동 마찰의 전환, 임계각 θc = arctan(μs)를 탐구할 수 있습니다.</div>
 
 <div class="container">
   <div class="main-area">

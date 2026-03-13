@@ -17,7 +17,10 @@ header {
   color: #fff;
   text-align: center;
   padding: 18px 20px;
+  position: relative;
 }
+.back-btn { position: absolute; top: 14px; left: 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; padding: 4px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; transition: all 0.2s; }
+.back-btn:hover { color: #fff; border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); }
 header h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: 1px; }
 header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
 .container {
@@ -141,6 +144,17 @@ canvas {
 .legend .lred { color: #e74c3c; }
 .legend .lblue { color: #3498db; }
 .legend .lyellow { color: #e6a817; }
+.sim-desc {
+    max-width: 900px;
+    margin: 12px auto 0;
+    padding: 10px 20px;
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #555;
+    line-height: 1.6;
+}
 @media (max-width: 900px) {
   .side-panel { flex: 1 1 100%; }
   .canvas-wrap { flex: 1 1 100%; }
@@ -152,7 +166,12 @@ canvas {
 <header>
   <h1>부력 &amp; 유체 압력 시뮬레이터</h1>
   <p>Ch.14 Fluids — Archimedes' Principle &amp; Hydrostatic Pressure</p>
+<a href="index.html" class="back-btn">&larr; 목록으로</a>
 </header>
+
+<div class="sim-desc">
+아르키메데스 원리에 따라 물체에 작용하는 부력 Fb = ρ_fluid × V_sub × g를 관찰합니다. 물체와 유체의 밀도를 바꿔가며 뜨거나 가라앉는 조건을 탐구하세요. 유체 깊이에 따른 압력 변화(P = P_atm + ρgh)도 확인할 수 있습니다.
+</div>
 
 <div class="container">
 <div class="main-area">

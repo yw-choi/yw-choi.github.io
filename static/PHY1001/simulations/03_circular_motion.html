@@ -18,7 +18,9 @@
     text-align: center;
     padding: 18px 0 14px;
   }
-  header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 1px; }
+  .back-btn { position: absolute; top: 14px; left: 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; padding: 4px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; transition: all 0.2s; }
+.back-btn:hover { color: #fff; border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); }
+header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 1px; }
   header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
 
   .container {
@@ -144,6 +146,17 @@
   .legend-item { display: flex; align-items: center; gap: 5px; }
   .legend-swatch { width: 24px; height: 4px; border-radius: 2px; }
 
+  .sim-desc {
+    max-width: 900px;
+    margin: 12px auto 0;
+    padding: 10px 20px;
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #555;
+    line-height: 1.6;
+  }
   @media (max-width: 700px) {
     .container { flex-direction: column; align-items: center; }
     .side-panel { max-width: 100%; }
@@ -155,7 +168,9 @@
 <header>
   <h1>원운동 &amp; 구심가속도 시뮬레이터</h1>
   <p>Ch.04 — Circular Motion &amp; Centripetal Acceleration</p>
+<a href="index.html" class="back-btn">&larr; 목록으로</a>
 </header>
+<div class="sim-desc">등속 원운동에서 속력은 일정하지만 속도의 방향이 계속 변합니다. 접선 방향의 속도 벡터(파란색)와 중심을 향하는 구심가속도 벡터(빨간색)를 관찰하세요. 구심가속도 a = v²/r 관계를 반지름과 속력을 바꿔가며 확인할 수 있습니다.</div>
 
 <div class="container">
   <div class="canvas-wrap">
