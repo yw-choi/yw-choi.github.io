@@ -41,7 +41,7 @@ sogang-qmp/hive-mcp      TypeScript MCP 서버 — Claude.ai(웹)가 사용하�
 
 ## hive-cli: AI가 쓰는 CLI
 
-[sogang-qmp/hive-cli](https://github.com/sogang-qmp/hive-cli)는 Go + Cobra로 만든 CLI다. 특이한 점은 **주 사용자가 사람이 아니라 Claude Code**라는 것이다. Google Workspace CLI(`gws`)를 만든 Justin Poehnelt의 글 ["You Need to Rewrite Your CLI for AI Agents"](https://justin.poehnelt.com/posts/rewrite-your-cli-for-ai-agents/)에서 영감을 받았다. 이 관점에서 모든 설계 결정이 나온다.
+[sogang-qmp/hive-cli](https://github.com/sogang-qmp/hive-cli)는 Go + Cobra로 만든 CLI다. 특이한 점은 **주 사용자가 사람이 아니라 Claude Code**라는 것이다. Google Workspace CLI(`gws`)를 만든 Justin Poehnelt의 글 ["You Need to Rewrite Your CLI for AI Agents"](https://justin.poehnelt.com/posts/rewrite-your-cli-for-ai-agents/)에서 영감을 받았다.
 
 ### 주요 명령어
 
