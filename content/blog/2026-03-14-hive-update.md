@@ -32,14 +32,16 @@ sogang-qmp/hive-mcp      TypeScript MCP 서버 — Claude.ai(웹)가 사용하�
 - **가이드 문서**: 셋업, 일상 워크플로우, 미팅 사이클, Claude 사용법, 서버 사용법 등
 - **CLAUDE.md**: 각 프로젝트 리포에 들어갈 AI 컨텍스트 파일의 원본
 
-핵심 규칙은 변하지 않았다:
-1. **GitHub is everything** — 별도의 DB나 서버 없이 GitHub 리포가 전부
-2. **Convention over infrastructure** — 폴더 구조와 네이밍 규칙이 시스템
-3. **AI-native** — CLAUDE.md가 convention을 정의하고, AI가 직접 작업
+핵심 원칙은 초기 버전에서 진화했다:
+
+1. **GitHub is the source of truth** — 연구 데이터와 문서는 모두 GitHub 리포에 있다. 다만 이제 분석과 추천을 위한 overmind 서버, MCP 브릿지를 위한 hive-mcp 서버가 추가되었다. 서버가 날아가도 데이터는 GitHub에 그대로 남는다.
+2. **Convention over infrastructure** — 폴더 구조와 네이밍 규칙이 시스템. CLI와 MCP 서버는 이 convention 위에서 동작하는 도구다.
+3. **AI-native** — CLAUDE.md가 convention을 정의하고, AI가 직접 작업. CLI도 AI agent가 주 사용자로 설계되었다.
+4. **Living documentation** — README가 프로젝트와 함께 진화하고, `reports/`가 논문의 building block이 된다.
 
 ## hive-cli: AI가 쓰는 CLI
 
-[sogang-qmp/hive-cli](https://github.com/sogang-qmp/hive-cli)는 Go + Cobra로 만든 CLI다. 특이한 점은 **주 사용자가 사람이 아니라 Claude Code**라는 것이다. 이 관점에서 모든 설계 결정이 나온다.
+[sogang-qmp/hive-cli](https://github.com/sogang-qmp/hive-cli)는 Go + Cobra로 만든 CLI다. 특이한 점은 **주 사용자가 사람이 아니라 Claude Code**라는 것이다. Google Workspace CLI(`gws`)를 만든 Justin Poehnelt의 글 ["You Need to Rewrite Your CLI for AI Agents"](https://justin.poehnelt.com/posts/rewrite-your-cli-for-ai-agents/)에서 영감을 받았다. 이 관점에서 모든 설계 결정이 나온다.
 
 ### 주요 명령어
 
