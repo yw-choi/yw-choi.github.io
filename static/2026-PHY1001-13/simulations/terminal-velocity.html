@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>종단속도 시뮬레이션</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+
+  .container { display: flex; height: 100vh; }
+
+  .canvas-area { flex: 1; position: relative; }
+  canvas { width: 100%; height: 100%; display: block; }
+
+  .controls {
+    width: 260px; padding: 20px; background: #faf5f6;
+    border-left: 2px solid rgba(139,0,41,0.15);
+    overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
+  }
+
+  h2 { color: #8B0029; font-size: 1.1rem; margin-bottom: 4px; }
+  .subtitle { color: #888; font-size: 0.75rem; margin-bottom: 12px; }
+
+  label { display: block; font-size: 0.8rem; color: #555; margin-bottom: 2px; }
+  .slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .slider-row input[type="range"] { flex: 1; accent-color: #8B0029; }
+  .slider-val { font-size: 0.8rem; font-weight: 600; color: #8B0029; min-width: 50px; text-align: right; }
+
+  .info-box {
+    background: white; border: 1px solid rgba(139,0,41,0.15);
+    border-radius: 10px; padding: 12px; font-size: 0.8rem; line-height: 1.6;
+  }
+  .info-box .val { color: #8B0029; font-weight: 700; }
+
+  .btn-row { display: flex; gap: 8px; }
+  button {
+    flex: 1; padding: 8px; border: none; border-radius: 8px;
+    font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.15s;
+  }
+  .btn-primary { background: #8B0029; color: white; }
+  .btn-primary:hover { background: #a3003a; }
+  .btn-secondary { background: rgba(139,0,41,0.1); color: #8B0029; }
+  .btn-secondary:hover { background: rgba(139,0,41,0.2); }
+
+  @media (max-width: 700px) {
+    .container { flex-direction: column; }
+    .canvas-area { height: 55vh; }
+    .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid rgba(139,0,41,0.15); }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>종단속도 시뮬레이션</h2>
+      <div class="subtitle">항력과 종단속도</div>
+    </div>
+
+    <div>
+      <label>질량 m</label>
+      <div class="slider-row">
+        <input type="range" id="mass" min="0" max="100" step="1" value="30">
+        <span class="slider-val" id="mass-val">5.0 kg</span>
+      </div>
+    </div>
+
+    <div>
+      <label>단면적 A</label>
+      <div class="slider-row">
+        <input type="range" id="area" min="1" max="200" step="1" value="10">
+        <span class="slider-val" id="area-val">0.10 m²</span>
+      </div>
+    </div>
+
+    <div>
+      <label>항력계수 C</label>
+      <div class="slider-row">
+        <input type="range" id="drag" min="2" max="30" step="1" value="10">
+        <span class="slider-val" id="drag-val">0.50</span>
+      </div>
+    </div>
+
+    <div style="font-size: 0.8rem; color: #555;">
+      공기밀도 ρ = <span style="color: #8B0029; font-weight: 600;">1.21 kg/m³</span>
+    </div>
+
+    <div class="info-box" id="info">
+      <!-- dynamically filled -->
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-primary" id="btn-toggle">시작</button>
+      <button class="btn-secondary" id="btn-reset">초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const dpr = window.devicePixelRatio || 1;
+
+// Sliders
+const massSlider = document.getElementById('mass');
+const areaSlider = document.getElementById('area');
+const dragSlider = document.getElementById('drag');
+
+const massValEl = document.getElementById('mass-val');
+const areaValEl = document.getElementById('area-val');
+const dragValEl = document.getElementById('drag-val');
+
+const infoBox = document.getElementById('info');
+const btnToggle = document.getElementById('btn-toggle');
+const btnReset = document.getElementById('btn-reset');
+
+// Physics constants
+const g = 9.8;
+const rho = 1.21;
+
+// Mass slider: logarithmic mapping [0,100] -> [0.1, 100]
+function sliderToMass(s) {
+  // s in [0,100]
+  // map to [log10(0.1), log10(100)] = [-1, 2]
+  const logMin = Math.log10(0.1);
+  const logMax = Math.log10(100);
+  return Math.pow(10, logMin + (s / 100) * (logMax - logMin));
+}
+
+function getMass() { return sliderToMass(parseFloat(massSlider.value)); }
+function getArea() { return parseFloat(areaSlider.value) / 100; } // [1,200] -> [0.01, 2.00]
+function getDragCoeff() { return parseFloat(dragSlider.value) / 20; } // [2,30] -> [0.1, 1.5]
+
+function terminalVelocity(m, C, A) {
+  return Math.sqrt(2 * m * g / (C * rho * A));
+}
+
+// State
+let running = false;
+let time = 0;
+let velocity = 0;
+let distance = 0;
+let history = []; // [{t, v}]
+let animId = null;
+let lastTimestamp = null;
+
+// Scroll offset for background
+let scrollOffset = 0;
+
+function reset() {
+  running = false;
+  time = 0;
+  velocity = 0;
+  distance = 0;
+  history = [{t: 0, v: 0}];
+  scrollOffset = 0;
+  lastTimestamp = null;
+  btnToggle.textContent = '시작';
+  updateInfo();
+  draw();
+}
+
+function toggle() {
+  if (running) {
+    running = false;
+    btnToggle.textContent = '계속';
+    if (animId) { cancelAnimationFrame(animId); animId = null; }
+  } else {
+    running = true;
+    btnToggle.textContent = '일시정지';
+    lastTimestamp = null;
+    animId = requestAnimationFrame(step);
+  }
+}
+
+btnToggle.addEventListener('click', toggle);
+btnReset.addEventListener('click', reset);
+
+// Update slider displays
+function updateSliderDisplays() {
+  const m = getMass();
+  if (m >= 10) massValEl.textContent = m.toFixed(1) + ' kg';
+  else if (m >= 1) massValEl.textContent = m.toFixed(2) + ' kg';
+  else massValEl.textContent = m.toFixed(2) + ' kg';
+
+  areaValEl.textContent = getArea().toFixed(2) + ' m²';
+  dragValEl.textContent = getDragCoeff().toFixed(2);
+}
+
+massSlider.addEventListener('input', () => { updateSliderDisplays(); updateInfo(); });
+areaSlider.addEventListener('input', () => { updateSliderDisplays(); updateInfo(); });
+dragSlider.addEventListener('input', () => { updateSliderDisplays(); updateInfo(); });
+
+function updateInfo() {
+  const m = getMass();
+  const A = getArea();
+  const C = getDragCoeff();
+  const Fg = m * g;
+  const D = 0.5 * C * rho * A * velocity * velocity;
+  const Fnet = Fg - D;
+  const a = Fnet / m;
+  const vt = terminalVelocity(m, C, A);
+
+  infoBox.innerHTML =
+    `중력: F<sub>g</sub> = <span class="val">${Fg.toFixed(2)} N</span><br>` +
+    `항력: D = <span class="val">${D.toFixed(2)} N</span><br>` +
+    `알짜힘: F<sub>net</sub> = <span class="val">${Fnet.toFixed(2)} N</span><br>` +
+    `가속도: a = <span class="val">${a.toFixed(3)} m/s²</span><br>` +
+    `현재 속도: v = <span class="val">${velocity.toFixed(2)} m/s</span><br>` +
+    `종단속도: v<sub>t</sub> = <span class="val">${vt.toFixed(2)} m/s</span><br>` +
+    `낙하 거리: y = <span class="val">${distance.toFixed(2)} m</span><br>` +
+    `경과 시간: t = <span class="val">${time.toFixed(2)} s</span>`;
+}
+
+function resize() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  draw();
+}
+
+window.addEventListener('resize', resize);
+
+function step(timestamp) {
+  if (!running) return;
+  if (lastTimestamp === null) lastTimestamp = timestamp;
+
+  let dtReal = (timestamp - lastTimestamp) / 1000;
+  lastTimestamp = timestamp;
+  if (dtReal > 0.05) dtReal = 0.05; // cap
+
+  const m = getMass();
+  const A = getArea();
+  const C = getDragCoeff();
+
+  // RK4 integration for better accuracy
+  const substeps = 4;
+  const dt = dtReal / substeps;
+  for (let i = 0; i < substeps; i++) {
+    const D = 0.5 * C * rho * A * velocity * velocity;
+    const a = g - D / m;
+    velocity += a * dt;
+    if (velocity < 0) velocity = 0;
+    distance += velocity * dt;
+    time += dt;
+  }
+
+  // Scroll offset for background lines
+  scrollOffset += velocity * dtReal * 3; // scale for visual effect
+
+  // Record history (limit points for performance)
+  if (history.length === 0 || time - history[history.length - 1].t > 0.02) {
+    history.push({ t: time, v: velocity });
+  }
+  // Keep history manageable
+  if (history.length > 5000) {
+    const newHist = [];
+    for (let i = 0; i < history.length; i += 2) newHist.push(history[i]);
+    history = newHist;
+  }
+
+  updateInfo();
+  draw();
+  animId = requestAnimationFrame(step);
+}
+
+function draw() {
+  const W = canvas.width;
+  const H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const m = getMass();
+  const A = getArea();
+  const C = getDragCoeff();
+  const vt = terminalVelocity(m, C, A);
+
+  // Split canvas: left 40% for animation, right 60% for graph
+  const splitX = W * 0.4;
+
+  // ===== LEFT: Falling object animation =====
+  drawAnimation(0, 0, splitX, H, m, A, C, vt);
+
+  // ===== Divider line =====
+  ctx.strokeStyle = 'rgba(139,0,41,0.15)';
+  ctx.lineWidth = 1 * dpr;
+  ctx.beginPath();
+  ctx.moveTo(splitX, 0);
+  ctx.lineTo(splitX, H);
+  ctx.stroke();
+
+  // ===== RIGHT: v-t graph =====
+  drawGraph(splitX, 0, W - splitX, H, vt);
+}
+
+function drawAnimation(x0, y0, w, h, m, A, C, vt) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x0, y0, w, h);
+  ctx.clip();
+
+  // Background: subtle horizontal lines scrolling up
+  ctx.strokeStyle = 'rgba(0,0,0,0.06)';
+  ctx.lineWidth = 1 * dpr;
+  const lineSpacing = 40 * dpr;
+  const offset = scrollOffset * dpr % lineSpacing;
+  for (let ly = -lineSpacing + offset; ly < h + lineSpacing; ly += lineSpacing) {
+    // scroll upward: lines move up as object falls
+    const yy = y0 + h - ly;
+    ctx.beginPath();
+    ctx.moveTo(x0, yy);
+    ctx.lineTo(x0 + w, yy);
+    ctx.stroke();
+  }
+
+  // Object (circle) centered
+  const cx = x0 + w / 2;
+  const cy = y0 + h / 2;
+  const objRadius = Math.max(12, Math.min(30, 8 + Math.sqrt(A) * 15)) * dpr;
+
+  // Draw object
+  ctx.fillStyle = '#444';
+  ctx.beginPath();
+  ctx.arc(cx, cy, objRadius, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#666';
+  ctx.beginPath();
+  ctx.arc(cx - objRadius * 0.3, cy - objRadius * 0.3, objRadius * 0.15, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Force arrows
+  const maxArrowLen = h * 0.3;
+  const Fg = m * g;
+  const D = 0.5 * C * rho * A * velocity * velocity;
+
+  // Scale arrows relative to Fg (gravity is reference)
+  const gravArrowLen = Math.min(maxArrowLen, Math.max(30 * dpr, 60 * dpr));
+  const dragArrowLen = (Fg > 0) ? gravArrowLen * (D / Fg) : 0;
+
+  const arrowWidth = 3 * dpr;
+  const headSize = 10 * dpr;
+
+  // Gravity arrow (red, pointing down)
+  if (gravArrowLen > headSize) {
+    drawArrow(ctx, cx, cy + objRadius + 5 * dpr, cx, cy + objRadius + 5 * dpr + gravArrowLen,
+      '#d32f2f', arrowWidth, headSize);
+    // Label
+    ctx.fillStyle = '#d32f2f';
+    ctx.font = `${12 * dpr}px -apple-system, sans-serif`;
+    ctx.textAlign = 'left';
+    ctx.fillText('Fg', cx + headSize + 2 * dpr, cy + objRadius + 5 * dpr + gravArrowLen / 2 + 4 * dpr);
+  }
+
+  // Drag arrow (blue, pointing up)
+  if (dragArrowLen > headSize * 0.5 && velocity > 0.01) {
+    const clampedDrag = Math.min(dragArrowLen, maxArrowLen);
+    drawArrow(ctx, cx, cy - objRadius - 5 * dpr, cx, cy - objRadius - 5 * dpr - clampedDrag,
+      '#1565c0', arrowWidth, headSize);
+    // Label
+    ctx.fillStyle = '#1565c0';
+    ctx.font = `${12 * dpr}px -apple-system, sans-serif`;
+    ctx.textAlign = 'left';
+    ctx.fillText('D', cx + headSize + 2 * dpr, cy - objRadius - 5 * dpr - clampedDrag / 2 + 4 * dpr);
+  }
+
+  // Speed indicator text at top
+  ctx.fillStyle = '#8B0029';
+  ctx.font = `bold ${13 * dpr}px -apple-system, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText(`v = ${velocity.toFixed(1)} m/s`, cx, y0 + 25 * dpr);
+
+  ctx.restore();
+}
+
+function drawArrow(ctx, x1, y1, x2, y2, color, lineW, headSz) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  if (len < 1) return;
+  const ux = dx / len;
+  const uy = dy / len;
+
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = lineW;
+  ctx.lineCap = 'round';
+
+  // Line
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2 - ux * headSz * 0.5, y2 - uy * headSz * 0.5);
+  ctx.stroke();
+
+  // Arrowhead
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - ux * headSz - uy * headSz * 0.4, y2 - uy * headSz + ux * headSz * 0.4);
+  ctx.lineTo(x2 - ux * headSz + uy * headSz * 0.4, y2 - uy * headSz - ux * headSz * 0.4);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawGraph(x0, y0, w, h, vt) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x0, y0, w, h);
+  ctx.clip();
+
+  const pad = { top: 40 * dpr, bottom: 45 * dpr, left: 55 * dpr, right: 25 * dpr };
+  const gx = x0 + pad.left;
+  const gy = y0 + pad.top;
+  const gw = w - pad.left - pad.right;
+  const gh = h - pad.top - pad.bottom;
+
+  // Determine axis ranges
+  let maxT = 10;
+  let maxV = vt * 1.2;
+  if (maxV < 5) maxV = 5;
+
+  if (history.length > 0) {
+    const lastT = history[history.length - 1].t;
+    if (lastT > maxT * 0.8) maxT = lastT * 1.3;
+  }
+
+  // Round maxV and maxT to nice numbers
+  maxV = niceMax(maxV);
+  maxT = niceMax(maxT);
+
+  // Background
+  ctx.fillStyle = '#fafafa';
+  ctx.fillRect(gx, gy, gw, gh);
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(0,0,0,0.08)';
+  ctx.lineWidth = 1 * dpr;
+
+  const nTicksY = 5;
+  for (let i = 0; i <= nTicksY; i++) {
+    const yy = gy + gh - (i / nTicksY) * gh;
+    ctx.beginPath();
+    ctx.moveTo(gx, yy);
+    ctx.lineTo(gx + gw, yy);
+    ctx.stroke();
+
+    ctx.fillStyle = '#888';
+    ctx.font = `${10 * dpr}px -apple-system, sans-serif`;
+    ctx.textAlign = 'right';
+    ctx.fillText((maxV * i / nTicksY).toFixed(1), gx - 6 * dpr, yy + 3 * dpr);
+  }
+
+  const nTicksX = 5;
+  for (let i = 0; i <= nTicksX; i++) {
+    const xx = gx + (i / nTicksX) * gw;
+    ctx.beginPath();
+    ctx.moveTo(xx, gy);
+    ctx.lineTo(xx, gy + gh);
+    ctx.stroke();
+
+    ctx.fillStyle = '#888';
+    ctx.font = `${10 * dpr}px -apple-system, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText((maxT * i / nTicksX).toFixed(1), xx, gy + gh + 16 * dpr);
+  }
+
+  // Axes
+  ctx.strokeStyle = '#333';
+  ctx.lineWidth = 1.5 * dpr;
+  ctx.beginPath();
+  ctx.moveTo(gx, gy);
+  ctx.lineTo(gx, gy + gh);
+  ctx.lineTo(gx + gw, gy + gh);
+  ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#555';
+  ctx.font = `${11 * dpr}px -apple-system, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText('시간 (s)', gx + gw / 2, gy + gh + 38 * dpr);
+
+  ctx.save();
+  ctx.translate(x0 + 16 * dpr, gy + gh / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('속도 (m/s)', 0, 0);
+  ctx.restore();
+
+  // Terminal velocity dashed line
+  if (vt <= maxV) {
+    const vtY = gy + gh - (vt / maxV) * gh;
+    ctx.setLineDash([6 * dpr, 4 * dpr]);
+    ctx.strokeStyle = 'rgba(139,0,41,0.5)';
+    ctx.lineWidth = 1.5 * dpr;
+    ctx.beginPath();
+    ctx.moveTo(gx, vtY);
+    ctx.lineTo(gx + gw, vtY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = '#8B0029';
+    ctx.font = `bold ${11 * dpr}px -apple-system, sans-serif`;
+    ctx.textAlign = 'right';
+    ctx.fillText(`vt = ${vt.toFixed(1)} m/s`, gx + gw - 4 * dpr, vtY - 5 * dpr);
+  }
+
+  // Plot v-t curve
+  if (history.length > 1) {
+    ctx.strokeStyle = '#8B0029';
+    ctx.lineWidth = 2.5 * dpr;
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    let started = false;
+    for (let i = 0; i < history.length; i++) {
+      const px = gx + (history[i].t / maxT) * gw;
+      const py = gy + gh - (history[i].v / maxV) * gh;
+      if (px > gx + gw) break;
+      if (!started) { ctx.moveTo(px, py); started = true; }
+      else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+
+    // Current point dot
+    const last = history[history.length - 1];
+    const lpx = gx + (last.t / maxT) * gw;
+    const lpy = gy + gh - (last.v / maxV) * gh;
+    if (lpx <= gx + gw) {
+      ctx.fillStyle = '#8B0029';
+      ctx.beginPath();
+      ctx.arc(lpx, lpy, 4 * dpr, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // Title
+  ctx.fillStyle = '#333';
+  ctx.font = `bold ${13 * dpr}px -apple-system, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText('속도-시간 그래프', x0 + w / 2, y0 + 24 * dpr);
+
+  ctx.restore();
+}
+
+function niceMax(val) {
+  if (val <= 0) return 10;
+  const exp = Math.floor(Math.log10(val));
+  const frac = val / Math.pow(10, exp);
+  let nice;
+  if (frac <= 1) nice = 1;
+  else if (frac <= 2) nice = 2;
+  else if (frac <= 5) nice = 5;
+  else nice = 10;
+  return nice * Math.pow(10, exp);
+}
+
+// Init
+updateSliderDisplays();
+reset();
+setTimeout(resize, 0);
+</script>
+</body>
+</html>
