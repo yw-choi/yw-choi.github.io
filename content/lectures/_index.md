@@ -20,7 +20,7 @@ title: Lectures
     </span>
     <ul>
         <li>
-        Machine Learning Applications in Physics (undergraduate/graduate course, in English)
+        <a href="/PHYG004/">Machine Learning Applications in Physics</a> (undergraduate/graduate course, in English)
         </li>
         <li>
         General Physics I (undergraduate course)
