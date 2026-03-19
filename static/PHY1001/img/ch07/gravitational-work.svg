@@ -35,11 +35,11 @@
   </text>
 
   <!-- Angle label -->
-  <text x="145" y="370" font-size="14" font-style="italic" fill="#8B0029">&phi; = 180&deg;</text>
+  <text x="145" y="370" font-size="14" font-style="italic" fill="#8B0029">φ = 180°</text>
 
   <!-- Result -->
   <text x="185" y="65" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">
-    <tspan font-style="italic">W</tspan><tspan font-size="11" dy="3">g</tspan><tspan dy="-3"> = &minus;mgd</tspan>
+    <tspan font-style="italic">W</tspan><tspan font-size="11" dy="3">g</tspan><tspan dy="-3"> = −mgd</tspan>
   </text>
   <text x="185" y="85" text-anchor="middle" font-size="13" fill="#6B7280">(&#xC74C;&#xC758; &#xC77C;: &#xAC10;&#xC18D;)</text>
 
@@ -64,7 +64,7 @@
   </text>
 
   <!-- Angle label -->
-  <text x="530" y="370" font-size="14" font-style="italic" fill="#2563EB">&phi; = 0&deg;</text>
+  <text x="530" y="370" font-size="14" font-style="italic" fill="#2563EB">φ = 0°</text>
 
   <!-- Result -->
   <text x="565" y="65" text-anchor="middle" font-size="14" fill="#2563EB" font-weight="bold">

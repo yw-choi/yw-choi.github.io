@@ -97,7 +97,7 @@
 
   <!-- Formula -->
   <text x="600" y="240" text-anchor="middle" font-size="16" fill="#8B0029" font-weight="bold">
-    <tspan font-style="italic">F</tspan><tspan font-size="12" dy="3">s</tspan><tspan dy="-3"> = &minus;</tspan><tspan font-style="italic">kx</tspan>
+    <tspan font-style="italic">F</tspan><tspan font-size="12" dy="3">s</tspan><tspan dy="-3"> = −</tspan><tspan font-style="italic">kx</tspan>
   </text>
   <text x="600" y="265" text-anchor="middle" font-size="13" fill="#6B7280">&#xD56D;&#xC0C1; &#xD3C9;&#xD615; &#xC704;&#xCE58; &#xBC29;&#xD5A5;</text>
 </svg>

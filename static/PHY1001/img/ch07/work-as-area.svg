@@ -38,7 +38,7 @@
   <!-- Formula at top right -->
   <rect x="420" y="42" width="250" height="50" rx="5" fill="white" stroke="#8B0029" stroke-width="1.5"/>
   <text x="545" y="72" text-anchor="middle" font-size="16" fill="#8B0029" font-weight="bold">
-    <tspan font-style="italic">W</tspan> = &int; <tspan font-style="italic">F</tspan>(<tspan font-style="italic">x</tspan>) d<tspan font-style="italic">x</tspan>
+    <tspan font-style="italic">W</tspan> = ∫ <tspan font-style="italic">F</tspan>(<tspan font-style="italic">x</tspan>) d<tspan font-style="italic">x</tspan>
   </text>
 
   <!-- Origin label -->
