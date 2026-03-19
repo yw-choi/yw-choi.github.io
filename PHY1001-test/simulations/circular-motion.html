@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>등속 원운동 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 13px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 12px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .theorem-eq { font-size: 15px; display: block; margin-top: 4px; }
+.theorem-box .katex { color: #fff; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 11px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+.formula-overlay { position: absolute; bottom: 0; left: 0; right: 0; pointer-events: none; padding: 8px 16px 10px; background: rgba(250,250,250,0.92); border-top: 1px solid #eee; }
+.formula-overlay .formula-line { font-size: 14px; line-height: 1.7; color: #333; }
+.formula-overlay .formula-line .katex { font-size: 14px; }
+.formula-overlay .formula-line.highlight { color: #8B0029; font-weight: 700; }
+.perp-badge { position: absolute; pointer-events: none; background: rgba(139,0,41,0.1); border: 1.5px solid #8B0029; border-radius: 6px; padding: 3px 8px; font-size: 13px; font-weight: 700; color: #8B0029; }
+.perp-badge .katex { font-size: 14px; }
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+    <div class="perp-badge" id="perpBadge"></div>
+    <div class="formula-overlay" id="formulaOverlay">
+      <div class="formula-line" id="formulaA"></div>
+      <div class="formula-line highlight" id="formulaT"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>등속 원운동</h2>
+      <div class="subtitle">Uniform Circular Motion (Ch.4)</div>
+    </div>
+
+    <div class="theorem-box">
+      구심 가속도
+      <span class="theorem-eq" id="theoremEq"></span>
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="control-group">
+      <label>반지름 r = <span id="rVal">2.0</span> m</label>
+      <input type="range" id="rSlider" min="0.5" max="5" value="2" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>속력 v = <span id="vVal">4.0</span> m/s</label>
+      <input type="range" id="vSlider" min="1" max="10" value="4" step="0.5">
+    </div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+function renderStaticKaTeX() {
+  document.getElementById('theoremEq').innerHTML = tex('a = \\dfrac{v^2}{r}');
+  document.getElementById('canvasTitle').innerHTML = '등속 원운동: ' + tex('\\vec{v} \\perp \\vec{a}');
+  document.getElementById('formulaBox').innerHTML =
+    '<b>구심 가속도:</b> ' + tex('a = \\dfrac{v^2}{r}') + ' (중심 방향)<br>' +
+    '<b>주기:</b> ' + tex('T = \\dfrac{2\\pi r}{v}');
+  document.getElementById('perpBadge').innerHTML = tex('\\vec{v} \\perp \\vec{a}');
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let W, H;
+
+const rSlider = document.getElementById('rSlider');
+const vSlider = document.getElementById('vSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let running = false;
+let animId = null;
+let theta = 0; // current angle in radians
+let lastTimestamp = null;
+
+function getParams() {
+  return {
+    r: parseFloat(rSlider.value),
+    v: parseFloat(vSlider.value)
+  };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  W = rect.width;
+  H = rect.height;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function updateLabels() {
+  document.getElementById('rVal').textContent = parseFloat(rSlider.value).toFixed(1);
+  document.getElementById('vVal').textContent = parseFloat(vSlider.value).toFixed(1);
+}
+
+function updateInfo() {
+  const { r, v } = getParams();
+  const a = v * v / r;
+  const T = 2 * Math.PI * r / v;
+  const thetaDeg = ((theta * 180 / Math.PI) % 360 + 360) % 360;
+
+  const infoBox = document.getElementById('infoBox');
+  infoBox.innerHTML =
+    '<div>' + tex('\\theta') + ' = <span class="val">' + thetaDeg.toFixed(1) + '\u00B0</span></div>' +
+    '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">' +
+    '<div><span class="label">구심 가속도:</span></div>' +
+    '<div>' + tex('a = \\dfrac{v^2}{r} = \\dfrac{' + v.toFixed(1) + '^2}{' + r.toFixed(1) + '}') +
+    ' = <span class="val">' + a.toFixed(2) + ' m/s\u00B2</span></div>' +
+    '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">' +
+    '<div><span class="label">주기:</span></div>' +
+    '<div>' + tex('T = \\dfrac{2\\pi r}{v} = \\dfrac{2\\pi \\times ' + r.toFixed(1) + '}{' + v.toFixed(1) + '}') +
+    ' = <span class="val">' + T.toFixed(2) + ' s</span></div>';
+
+  // Formula overlay
+  document.getElementById('formulaA').innerHTML = tex(
+    'a = \\frac{v^2}{r} = \\frac{' + v.toFixed(1) + '^2}{' + r.toFixed(1) + '} = ' + a.toFixed(2) + '\\;\\text{m/s}^2'
+  );
+  document.getElementById('formulaT').innerHTML = tex(
+    'T = \\frac{2\\pi r}{v} = ' + T.toFixed(2) + '\\;\\text{s}'
+  );
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 10;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lw;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawTextWithBg(text, tx, ty, font, color, align) {
+  ctx.font = font;
+  ctx.textAlign = align || 'center';
+  const m = ctx.measureText(text);
+  const th = parseInt(font) || 12;
+  const pad = 3;
+  let bx = tx - pad;
+  if (align === 'center') bx = tx - m.width / 2 - pad;
+  else if (align === 'right') bx = tx - m.width - pad;
+  ctx.fillStyle = 'rgba(255,255,255,0.88)';
+  ctx.fillRect(bx, ty - th + 1 - pad, m.width + pad * 2, th + pad * 2);
+  ctx.fillStyle = color;
+  ctx.fillText(text, tx, ty);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  const { r, v } = getParams();
+  const a = v * v / r;
+
+  // Circle center
+  const cx = W * 0.45;
+  const cy = H * 0.45;
+  const maxR = Math.min(W * 0.35, H * 0.32);
+  const ppm = maxR / 5; // pixels per meter
+  const rPx = r * ppm;
+
+  // Orbit circle
+  ctx.strokeStyle = '#ddd';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  ctx.arc(cx, cy, rPx, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Center dot
+  ctx.fillStyle = '#6B7280';
+  ctx.beginPath();
+  ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#6B7280';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('O', cx, cy + 18);
+
+  // Radius line (dashed)
+  const px = cx + rPx * Math.cos(theta);
+  const py = cy - rPx * Math.sin(theta);
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 3]);
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(px, py);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // r label
+  const rLabelX = (cx + px) / 2;
+  const rLabelY = (cy + py) / 2;
+  drawTextWithBg('r = ' + r.toFixed(1) + ' m', rLabelX + 10, rLabelY - 8, '12px sans-serif', '#6B7280', 'left');
+
+  // Particle
+  ctx.fillStyle = '#8B0029';
+  ctx.beginPath();
+  ctx.arc(px, py, 8, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Velocity vector (tangential, perpendicular to radius, counterclockwise)
+  const vDir = theta + Math.PI / 2; // tangential direction (CCW)
+  const vScale = Math.min(ppm * 0.5, 30);
+  const vLen = v * vScale;
+  const vEndX = px + vLen * Math.cos(vDir);
+  const vEndY = py - vLen * Math.sin(vDir);
+  drawArrow(px, py, vEndX, vEndY, '#2563EB', 2.5);
+
+  // v label
+  const vLabelX = px + (vLen * 0.6 + 12) * Math.cos(vDir);
+  const vLabelY = py - (vLen * 0.6 + 12) * Math.sin(vDir);
+  drawTextWithBg('v = ' + v.toFixed(1) + ' m/s', vLabelX, vLabelY, 'bold 12px sans-serif', '#2563EB', 'center');
+
+  // Acceleration vector (toward center)
+  const aDir = Math.atan2(cy - py, cx - px); // toward center
+  const aScale = vScale * 0.8;
+  const aLen = Math.min(a * aScale, rPx * 0.7);
+  const aEndX = px + aLen * Math.cos(aDir);
+  const aEndY = py + aLen * Math.sin(aDir);
+  drawArrow(px, py, aEndX, aEndY, '#8B0029', 2.5);
+
+  // a label
+  const aLabelX = px + (aLen * 0.6 + 12) * Math.cos(aDir);
+  const aLabelY = py + (aLen * 0.6 + 12) * Math.sin(aDir);
+  drawTextWithBg('a = ' + a.toFixed(1) + ' m/s\u00B2', aLabelX, aLabelY, 'bold 12px sans-serif', '#8B0029', 'center');
+
+  // Right angle indicator (v perp a)
+  const rightAngleSize = 12;
+  const uVx = Math.cos(vDir);
+  const uVy = -Math.sin(vDir);
+  const uAx = Math.cos(aDir);
+  const uAy = Math.sin(aDir);
+  const raX1 = px + rightAngleSize * uVx;
+  const raY1 = py + rightAngleSize * uVy;
+  const raX2 = px + rightAngleSize * uVx + rightAngleSize * uAx;
+  const raY2 = py + rightAngleSize * uVy + rightAngleSize * uAy;
+  const raX3 = px + rightAngleSize * uAx;
+  const raY3 = py + rightAngleSize * uAy;
+  ctx.strokeStyle = '#8B0029';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(raX1, raY1);
+  ctx.lineTo(raX2, raY2);
+  ctx.lineTo(raX3, raY3);
+  ctx.stroke();
+
+  // Angle arc at center
+  const arcR = Math.min(rPx * 0.25, 40);
+  if (arcR > 10) {
+    ctx.strokeStyle = '#6B7280';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, arcR, -theta, 0, theta > 0);
+    ctx.stroke();
+    const thetaDeg = ((theta * 180 / Math.PI) % 360 + 360) % 360;
+    if (thetaDeg > 5 && thetaDeg < 355) {
+      const midA = -theta / 2;
+      ctx.fillStyle = '#6B7280';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('\u03B8 = ' + thetaDeg.toFixed(0) + '\u00B0', cx + arcR * Math.cos(midA) + 6, cy + arcR * Math.sin(midA) + 4);
+    }
+  }
+
+  // Trail (fading dots)
+  const trailCount = 40;
+  const omega = v / r;
+  for (let i = 1; i <= trailCount; i++) {
+    const trailTheta = theta - i * 0.08;
+    const trailX = cx + rPx * Math.cos(trailTheta);
+    const trailY = cy - rPx * Math.sin(trailTheta);
+    const alpha = 1 - i / trailCount;
+    ctx.fillStyle = `rgba(139, 0, 41, ${alpha * 0.3})`;
+    ctx.beginPath();
+    ctx.arc(trailX, trailY, 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Position perp badge
+  const badge = document.getElementById('perpBadge');
+  badge.style.left = (px + 20) + 'px';
+  badge.style.top = (py - 35) + 'px';
+}
+
+function animate(timestamp) {
+  if (!running) return;
+  if (lastTimestamp === null) lastTimestamp = timestamp;
+  const dtReal = (timestamp - lastTimestamp) / 1000;
+  lastTimestamp = timestamp;
+  const dt = Math.min(dtReal, 0.05);
+
+  const { r, v } = getParams();
+  const omega = v / r;
+  theta += omega * dt;
+
+  updateInfo();
+  draw();
+  animId = requestAnimationFrame(animate);
+}
+
+function start() {
+  if (running) return;
+  running = true;
+  lastTimestamp = null;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(animate);
+}
+
+function stop() {
+  running = false;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  if (animId) cancelAnimationFrame(animId);
+}
+
+function reset() {
+  stop();
+  theta = 0;
+  lastTimestamp = null;
+  updateInfo();
+  draw();
+}
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+[rSlider, vSlider].forEach(s => s.addEventListener('input', () => {
+  updateLabels();
+  updateInfo();
+  draw();
+}));
+window.addEventListener('resize', resize);
+
+renderStaticKaTeX();
+updateLabels();
+reset();
+resize();
+</script>
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>뉴턴의 제2법칙 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
+.control-group { display: flex; flex-direction: column; gap: 4px; }
+.control-group label { font-size: 13px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .eq { color: #555; font-size: 12px; }
+.info-box .eq .katex { font-size: 13px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .theorem-eq { font-size: 16px; display: block; margin-top: 4px; }
+.theorem-box .katex { color: #fff; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+
+.formula-overlay { position: absolute; bottom: 0; left: 0; right: 0; pointer-events: none; padding: 10px 20px 12px; background: rgba(250,250,250,0.92); border-top: 1px solid #eee; }
+.formula-overlay .formula-line { font-size: 15px; line-height: 1.7; color: #333; }
+.formula-overlay .formula-line.highlight { color: #8B0029; font-weight: 700; }
+.formula-overlay .formula-line .katex { font-size: 16px; }
+.formula-overlay .formula-line.highlight .katex { font-size: 16px; }
+
+.canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 20px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 20px; color: #8B0029; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 50vh; }
+  .controls { width: 100%; height: 50vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+    <div class="formula-overlay" id="formulaOverlay">
+      <div class="formula-line" id="formulaF"></div>
+      <div class="formula-line" id="formulaA"></div>
+      <div class="formula-line highlight" id="formulaVerify"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="theorem-box">
+      뉴턴의 제2법칙
+      <span class="theorem-eq" id="theoremEq"></span>
+    </div>
+
+    <div class="control-group">
+      <label>알짜힘 F = <span id="forceVal">10.0</span> N</label>
+      <input type="range" id="forceSlider" min="-30" max="30" value="10" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>질량 m = <span id="massVal">5.0</span> kg</label>
+      <input type="range" id="massSlider" min="1" max="20" value="5" step="0.5">
+    </div>
+
+    <div class="info-box" id="infoBox">
+      <div class="eq" id="eqLaw"></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div><span class="label">가속도 a:</span> <span class="val" id="accelInfo">0.00 m/s&sup2;</span></div>
+      <div><span class="label">속도 v:</span> <span class="val" id="speedInfo">0.00 m/s</span></div>
+      <div><span class="label">변위 x:</span> <span class="val" id="dispInfo">0.00 m</span></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div><span class="label">시간 t:</span> <span class="val" id="timeInfo">0.00 s</span></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) {
+  return katex.renderToString(expr, { throwOnError: false });
+}
+
+function renderStaticKaTeX() {
+  document.getElementById('theoremEq').innerHTML = tex('\\vec{F}_{\\text{net}} = m\\vec{a}');
+  document.getElementById('canvasTitle').innerHTML = '뉴턴의 제2법칙: ' + tex('F = ma');
+  document.getElementById('eqLaw').innerHTML = tex('a = F / m');
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+const forceSlider = document.getElementById('forceSlider');
+const massSlider = document.getElementById('massSlider');
+const forceVal = document.getElementById('forceVal');
+const massVal = document.getElementById('massVal');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let dpr = window.devicePixelRatio || 1;
+let W, H;
+let running = false;
+let animId = null;
+
+const maxDisp = 10; // meters in each direction
+const dtAnim = 1 / 60;
+let t = 0;
+
+function getParams() {
+  const F = parseFloat(forceSlider.value);
+  const m = parseFloat(massSlider.value);
+  return { F, m, a: F / m };
+}
+
+function getState() {
+  const { F, m, a } = getParams();
+  const xNow = 0.5 * a * t * t;
+  const vNow = a * t;
+  return { x: xNow, v: vNow, a, F, m };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  W = rect.width;
+  H = rect.height;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function updateLabels() {
+  forceVal.textContent = parseFloat(forceSlider.value).toFixed(1);
+  massVal.textContent = parseFloat(massSlider.value).toFixed(1);
+}
+
+function updateInfo() {
+  const { x, v, a, F, m } = getState();
+  document.getElementById('accelInfo').textContent = a.toFixed(2) + ' m/s\u00B2';
+  document.getElementById('speedInfo').textContent = v.toFixed(2) + ' m/s';
+  document.getElementById('dispInfo').textContent = x.toFixed(2) + ' m';
+  document.getElementById('timeInfo').textContent = t.toFixed(2) + ' s';
+
+  document.getElementById('formulaF').innerHTML = tex(
+    'F = ' + F.toFixed(1) + '\\;\\text{N},\\quad m = ' + m.toFixed(1) + '\\;\\text{kg}'
+  );
+  document.getElementById('formulaA').innerHTML = tex(
+    'a = F/m = ' + F.toFixed(1) + '/' + m.toFixed(1) + ' = ' + a.toFixed(2) + '\\;\\text{m/s}^2'
+  );
+  document.getElementById('formulaVerify').innerHTML = tex(
+    'v = at = ' + v.toFixed(2) + '\\;\\text{m/s},\\quad x = \\tfrac{1}{2}at^2 = ' + x.toFixed(2) + '\\;\\text{m}'
+  );
+}
+
+function drawArrow(x1, y1, x2, y2, color, lineWidth) {
+  const headLen = 12;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawTextWithBg(text, x, y, font, color) {
+  ctx.font = font;
+  const m = ctx.measureText(text);
+  const pad = 3;
+  ctx.fillStyle = 'rgba(250,250,250,0.85)';
+  ctx.fillRect(x - m.width / 2 - pad, y - 12 - pad, m.width + 2 * pad, 16 + 2 * pad);
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center';
+  ctx.fillText(text, x, y);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  const { x, v, a, F, m } = getState();
+
+  const groundY = H * 0.55;
+  const centerX = W * 0.5;
+  const pxPerMeter = (W - 80) / (2 * maxDisp);
+
+  // Ground
+  ctx.fillStyle = '#F3F4F6';
+  ctx.fillRect(0, groundY, W, H - groundY);
+  ctx.strokeStyle = '#bbb';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, groundY);
+  ctx.lineTo(W, groundY);
+  ctx.stroke();
+
+  // Hatching
+  ctx.strokeStyle = '#ddd';
+  ctx.lineWidth = 1;
+  for (let hx = 0; hx < W; hx += 14) {
+    ctx.beginPath();
+    ctx.moveTo(hx, groundY);
+    ctx.lineTo(hx - 10, groundY + 10);
+    ctx.stroke();
+  }
+
+  // Ruler marks
+  ctx.fillStyle = '#888';
+  ctx.font = '13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.strokeStyle = '#aaa';
+  ctx.lineWidth = 1;
+  for (let i = -maxDisp; i <= maxDisp; i += 2) {
+    const px = centerX + i * pxPerMeter;
+    if (px < 20 || px > W - 20) continue;
+    ctx.beginPath();
+    ctx.moveTo(px, groundY);
+    ctx.lineTo(px, groundY + 8);
+    ctx.stroke();
+    ctx.fillText(i + '', px, groundY + 22);
+  }
+  ctx.fillText('x (m)', W - 30, groundY + 22);
+
+  // Clamp visual position
+  const xClamped = Math.max(-maxDisp, Math.min(maxDisp, x));
+  const blockCenterX = centerX + xClamped * pxPerMeter;
+
+  // Block
+  const blockW = 50 + m * 1.5;
+  const blockH = 50 + m * 1.5;
+  const blockLeft = blockCenterX - blockW / 2;
+  const blockTop = groundY - blockH;
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.08)';
+  ctx.fillRect(blockLeft + 3, blockTop + 3, blockW, blockH);
+
+  ctx.fillStyle = '#F3F4F6';
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2;
+  ctx.fillRect(blockLeft, blockTop, blockW, blockH);
+  ctx.strokeRect(blockLeft, blockTop, blockW, blockH);
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(m.toFixed(1) + ' kg', blockCenterX, blockTop + blockH / 2);
+  ctx.textBaseline = 'alphabetic';
+
+  // Force arrow (red, horizontal)
+  if (Math.abs(F) > 0.1) {
+    const arrowLen = Math.abs(F) * 2.5;
+    const dir = F > 0 ? 1 : -1;
+    const fStartX = blockCenterX + dir * blockW / 2;
+    const fStartY = blockTop + blockH / 2;
+    const fEndX = fStartX + dir * arrowLen;
+    drawArrow(fStartX, fStartY, fEndX, fStartY, '#8B0029', 3);
+    drawTextWithBg('F = ' + F.toFixed(1) + ' N', fEndX + dir * 30, fStartY - 5, 'bold 15px sans-serif', '#8B0029');
+  }
+
+  // Acceleration arrow (blue, below block)
+  if (Math.abs(a) > 0.01) {
+    const aLen = Math.min(Math.abs(a) * 15, 80);
+    const aDir = a > 0 ? 1 : -1;
+    const aY = groundY + 40;
+    drawArrow(blockCenterX, aY, blockCenterX + aDir * aLen, aY, '#2563EB', 2.5);
+    drawTextWithBg('a = ' + a.toFixed(2) + ' m/s\u00B2', blockCenterX + aDir * aLen / 2, aY - 12, 'bold 14px sans-serif', '#2563EB');
+  }
+
+  // Velocity arrow (blue, above block)
+  if (Math.abs(v) > 0.05) {
+    const vLen = Math.min(Math.abs(v) * 8, 100);
+    const vDir = v > 0 ? 1 : -1;
+    const vY = blockTop - 20;
+    drawArrow(blockCenterX, vY, blockCenterX + vDir * vLen, vY, '#2563EB', 2.5);
+    drawTextWithBg('v = ' + v.toFixed(2) + ' m/s', blockCenterX + vDir * vLen / 2, vY - 12, 'bold 14px sans-serif', '#2563EB');
+  }
+
+  // a vs F/m comparison bar chart (top-right)
+  const barRight = W - 30;
+  const barTop = 50;
+  const barW = 36;
+  const barGap = 16;
+  const maxBarH = 90;
+  const aVal = Math.abs(a);
+  const fmVal = Math.abs(F / m);
+  const scaleE = maxBarH / Math.max(aVal, fmVal, 1);
+  const barBase = barTop + maxBarH;
+
+  ctx.fillStyle = '#444';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('|a| vs |F/m|', barRight - barW - barGap / 2, barTop - 8);
+
+  ctx.strokeStyle = '#999';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(barRight - 2 * barW - barGap - 10, barBase);
+  ctx.lineTo(barRight + 10, barBase);
+  ctx.stroke();
+
+  // a bar
+  const aBarX = barRight - 2 * barW - barGap;
+  const aBarH = aVal * scaleE;
+  ctx.fillStyle = 'rgba(37,99,235,0.7)';
+  ctx.fillRect(aBarX, barBase - aBarH, barW, aBarH);
+  ctx.strokeStyle = '#2563EB';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(aBarX, barBase - aBarH, barW, Math.max(aBarH, 1));
+  ctx.fillStyle = '#2563EB';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.fillText('|a|', aBarX + barW / 2, barBase + 16);
+  ctx.fillText(aVal.toFixed(2), aBarX + barW / 2, barBase - aBarH - 6);
+
+  // F/m bar
+  const fmBarX = barRight - barW;
+  const fmBarH = fmVal * scaleE;
+  ctx.fillStyle = 'rgba(139,0,41,0.7)';
+  ctx.fillRect(fmBarX, barBase - fmBarH, barW, fmBarH);
+  ctx.strokeStyle = '#8B0029';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(fmBarX, barBase - fmBarH, barW, Math.max(fmBarH, 1));
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.fillText('|F/m|', fmBarX + barW / 2, barBase + 16);
+  ctx.fillText(fmVal.toFixed(2), fmBarX + barW / 2, barBase - fmBarH - 6);
+}
+
+function step() {
+  const { x } = getState();
+  t += dtAnim;
+
+  if (Math.abs(x) >= maxDisp) {
+    updateInfo();
+    draw();
+    stop();
+    return;
+  }
+
+  updateInfo();
+  draw();
+  if (running) animId = requestAnimationFrame(step);
+}
+
+function start() {
+  if (running) return;
+  running = true;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  if (animId) cancelAnimationFrame(animId);
+}
+
+function reset() {
+  stop();
+  t = 0;
+  updateInfo();
+  draw();
+}
+
+playBtn.addEventListener('click', () => {
+  if (running) stop(); else start();
+});
+resetBtn.addEventListener('click', reset);
+
+[forceSlider, massSlider].forEach(s => {
+  s.addEventListener('input', () => {
+    updateLabels();
+    reset();
+  });
+});
+
+window.addEventListener('resize', resize);
+
+renderStaticKaTeX();
+updateLabels();
+reset();
+resize();
+</script>
+</body>
+</html>

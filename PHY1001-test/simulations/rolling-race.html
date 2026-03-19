@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>구름 운동 경주 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
+.control-group { display: flex; flex-direction: column; gap: 4px; }
+.control-group label { font-size: 13px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .theorem-eq { font-size: 15px; display: block; margin-top: 4px; }
+.theorem-box .katex { color: #fff; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.legend { display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+.energy-grid { display: grid; grid-template-columns: auto 1fr 1fr 1fr; gap: 2px 8px; font-size: 11.5px; line-height: 1.6; }
+.energy-grid .hdr { font-weight: 700; color: #8B0029; border-bottom: 1px solid #e0c0c8; padding-bottom: 2px; margin-bottom: 2px; }
+
+.canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 20px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 20px; color: #8B0029; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 50vh; }
+  .controls { width: 100%; height: 50vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div class="theorem-box">
+      구름 운동 에너지
+      <span class="theorem-eq" id="theoremEq"></span>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#8B0029"></div><span>링 (Hoop): <span id="hoopEq"></span></span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#2563EB"></div><span>원판 (Disk): <span id="diskEq"></span></span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#2a7d2a"></div><span>구 (Sphere): <span id="sphereEq"></span></span></div>
+    </div>
+
+    <div class="control-group">
+      <label>빗면 각도 θ = <span id="angleVal">30</span>&deg;</label>
+      <input type="range" id="angleSlider" min="10" max="60" value="30" step="1">
+    </div>
+
+    <div class="control-group">
+      <label>빗면 길이 L = <span id="lengthVal">5.0</span> m</label>
+      <input type="range" id="lengthSlider" min="2" max="10" value="5" step="0.5">
+    </div>
+
+    <div class="info-box">
+      <div style="font-weight:700;color:#8B0029;margin-bottom:4px;" id="accelTitle"></div>
+      <div class="energy-grid" id="energyGrid">
+        <div class="hdr"></div>
+        <div class="hdr" style="color:#8B0029">링</div>
+        <div class="hdr" style="color:#2563EB">원판</div>
+        <div class="hdr" style="color:#2a7d2a">구</div>
+      </div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:6px 0">
+      <div id="resultText" style="font-size:12px;color:#6B7280;"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+// Objects: hoop (c=1), disk (c=0.5), sphere (c=2/5)
+const objects = [
+  { name: '링', c: 1, color: '#8B0029', Ilabel: 'MR^2' },
+  { name: '원판', c: 0.5, color: '#2563EB', Ilabel: '\\tfrac{1}{2}MR^2' },
+  { name: '구', c: 2/5, color: '#2a7d2a', Ilabel: '\\tfrac{2}{5}MR^2' },
+];
+
+function renderStaticKaTeX() {
+  document.getElementById('theoremEq').innerHTML = tex('K = \\tfrac{1}{2}I_{com}\\omega^2 + \\tfrac{1}{2}Mv_{com}^2');
+  document.getElementById('canvasTitle').innerHTML = '구름 운동 경주: ' + tex('a_{com} = \\dfrac{g\\sin\\theta}{1 + I_{com}/MR^2}');
+  document.getElementById('hoopEq').innerHTML = tex('I = MR^2');
+  document.getElementById('diskEq').innerHTML = tex('I = \\tfrac{1}{2}MR^2');
+  document.getElementById('sphereEq').innerHTML = tex('I = \\tfrac{2}{5}MR^2');
+  document.getElementById('accelTitle').innerHTML = tex('a_{com} = \\dfrac{g\\sin\\theta}{1+c}') + ', ' + tex('c = I_{com}/MR^2');
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const angleSlider = document.getElementById('angleSlider');
+const lengthSlider = document.getElementById('lengthSlider');
+const angleVal = document.getElementById('angleVal');
+const lengthVal = document.getElementById('lengthVal');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+let running = false, animId = null;
+let t = 0;
+const dt = 1/60;
+const g = 9.8;
+const M = 1; // normalized mass
+const R_phys = 0.25; // physical radius in meters
+
+function getParams() {
+  const theta = parseFloat(angleSlider.value) * Math.PI / 180;
+  const L = parseFloat(lengthSlider.value);
+  return { theta, L, thetaDeg: parseFloat(angleSlider.value) };
+}
+
+// Each object: distance along incline s(t), velocity v(t)
+// a = g sin theta / (1 + c), s = 0.5*a*t^2, v = a*t
+function getObjState(c) {
+  const { theta, L } = getParams();
+  const a = g * Math.sin(theta) / (1 + c);
+  let s = 0.5 * a * t * t;
+  let v = a * t;
+  let finished = false;
+  if (s >= L) {
+    s = L;
+    v = Math.sqrt(2 * a * L);
+    finished = true;
+  }
+  const h = (L - s) * Math.sin(theta);
+  const U = M * g * h;
+  const Ktrans = 0.5 * M * v * v;
+  const omega = v / R_phys;
+  const I = c * M * R_phys * R_phys;
+  const Krot = 0.5 * I * omega * omega;
+  const Etotal = U + Ktrans + Krot;
+  return { s, v, a, finished, U, Ktrans, Krot, Etotal, omega };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 10;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath(); ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath(); ctx.fill();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  const { theta, L, thetaDeg } = getParams();
+
+  // Incline geometry
+  const margin = 60;
+  const rampRight = CW - 30;
+  const rampBottom = CH - 50;
+  const rampLen = Math.min(CW - 100, CH - 120);
+  const rampLeft = rampRight - rampLen * Math.cos(theta);
+  const rampTop = rampBottom - rampLen * Math.sin(theta);
+
+  // Draw incline surface
+  ctx.fillStyle = '#F3F4F6';
+  ctx.beginPath();
+  ctx.moveTo(rampRight, rampBottom);
+  ctx.lineTo(rampLeft, rampTop);
+  ctx.lineTo(rampRight, rampTop + (rampBottom - rampTop)); // should be rampRight, rampBottom
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(rampLeft, rampTop);
+  ctx.lineTo(rampRight, rampBottom);
+  ctx.stroke();
+
+  // Ground
+  ctx.strokeStyle = '#bbb'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(rampRight - 5, rampBottom); ctx.lineTo(CW, rampBottom); ctx.stroke();
+
+  // Angle arc
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(rampRight, rampBottom, 40, Math.PI, Math.PI + theta, true);
+  ctx.stroke();
+  ctx.fillStyle = '#6B7280'; ctx.font = '14px sans-serif'; ctx.textAlign = 'center';
+  const aLabelAngle = Math.PI + theta / 2;
+  ctx.fillText('θ=' + thetaDeg + '°', rampRight + 55 * Math.cos(aLabelAngle), rampBottom + 55 * Math.sin(aLabelAngle));
+
+  // Draw objects on incline
+  const objRadius = 18; // visual radius
+  const laneSpacing = objRadius * 2.5;
+
+  for (let i = 0; i < objects.length; i++) {
+    const obj = objects[i];
+    const state = getObjState(obj.c);
+    const frac = state.s / L; // fraction of incline traveled
+    // Position along incline
+    const px = rampLeft + frac * (rampRight - rampLeft);
+    const py = rampTop + frac * (rampBottom - rampTop);
+    // Offset perpendicular to incline for each lane
+    const perpX = Math.sin(theta);
+    const perpY = -Math.cos(theta);
+    const laneOffset = (i - 1) * laneSpacing;
+    const cx = px + perpX * (objRadius + 3) + perpX * laneOffset * 0.3;
+    const cy = py + perpY * (objRadius + 3) + perpY * laneOffset * 0.3;
+
+    // Draw the object
+    ctx.beginPath();
+    ctx.arc(cx, cy, objRadius, 0, 2 * Math.PI);
+    if (obj.c === 1) {
+      // Hoop: just outline
+      ctx.strokeStyle = obj.color; ctx.lineWidth = 3; ctx.stroke();
+    } else if (obj.c === 0.5) {
+      // Disk: filled
+      ctx.fillStyle = obj.color + '30'; ctx.fill();
+      ctx.strokeStyle = obj.color; ctx.lineWidth = 2; ctx.stroke();
+    } else {
+      // Sphere: filled darker
+      ctx.fillStyle = obj.color + '40'; ctx.fill();
+      ctx.strokeStyle = obj.color; ctx.lineWidth = 2; ctx.stroke();
+    }
+    // Rotation indicator line
+    const rotAngle = (state.s / R_phys); // total angle rotated
+    ctx.strokeStyle = obj.color; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + objRadius * 0.8 * Math.cos(rotAngle), cy + objRadius * 0.8 * Math.sin(rotAngle));
+    ctx.stroke();
+
+    // Center dot
+    ctx.beginPath(); ctx.arc(cx, cy, 2, 0, 2 * Math.PI);
+    ctx.fillStyle = obj.color; ctx.fill();
+
+    // Label
+    ctx.fillStyle = obj.color; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(obj.name, cx, cy - objRadius - 6);
+  }
+
+  // Energy bar chart area (top-left)
+  drawEnergyBars();
+}
+
+function drawEnergyBars() {
+  const { theta, L } = getParams();
+  const Etotal = M * g * L * Math.sin(theta);
+  const barAreaX = 20;
+  const barAreaY = 50;
+  const barH = 120;
+  const barW = 28;
+  const groupW = barW * 3 + 8;
+  const groupGap = 20;
+
+  ctx.fillStyle = '#444'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+
+  const labels = ['링', '원판', '구'];
+  const colors = ['#8B0029', '#2563EB', '#2a7d2a'];
+
+  for (let i = 0; i < 3; i++) {
+    const state = getObjState(objects[i].c);
+    const gx = barAreaX + i * (groupW + groupGap);
+    const baseY = barAreaY + barH;
+    const scale = barH / Math.max(Etotal, 0.01);
+
+    // U bar
+    const uH = state.U * scale;
+    ctx.fillStyle = '#6B7280'; ctx.globalAlpha = 0.5;
+    ctx.fillRect(gx, baseY - uH, barW - 2, uH);
+    ctx.globalAlpha = 1;
+
+    // Ktrans bar (on top of U)
+    const ktH = state.Ktrans * scale;
+    ctx.fillStyle = colors[i] + '80';
+    ctx.fillRect(gx, baseY - uH - ktH, barW - 2, ktH);
+
+    // Krot bar (on top of Ktrans)
+    const krH = state.Krot * scale;
+    ctx.fillStyle = colors[i];
+    ctx.fillRect(gx, baseY - uH - ktH - krH, barW - 2, krH);
+
+    // Baseline
+    ctx.strokeStyle = '#999'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(gx - 2, baseY); ctx.lineTo(gx + barW, baseY); ctx.stroke();
+
+    // Label
+    ctx.fillStyle = colors[i]; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(labels[i], gx + (barW - 2) / 2, baseY + 14);
+  }
+
+  // Legend for bar segments
+  const legX = barAreaX + 3 * (groupW + groupGap) + 5;
+  const legY = barAreaY + 10;
+  ctx.font = '11px sans-serif'; ctx.textAlign = 'left';
+
+  ctx.fillStyle = '#8B0029';
+  ctx.fillRect(legX, legY, 10, 10);
+  ctx.fillStyle = '#444'; ctx.fillText('K_rot', legX + 14, legY + 9);
+
+  ctx.fillStyle = '#8B002960';
+  ctx.fillRect(legX, legY + 18, 10, 10);
+  ctx.fillStyle = '#444'; ctx.fillText('K_trans', legX + 14, legY + 27);
+
+  ctx.fillStyle = '#6B728080';
+  ctx.fillRect(legX, legY + 36, 10, 10);
+  ctx.fillStyle = '#444'; ctx.fillText('U (위치)', legX + 14, legY + 45);
+}
+
+function updateInfo() {
+  const { theta, L, thetaDeg } = getParams();
+  const grid = document.getElementById('energyGrid');
+  // Clear previous rows (keep headers)
+  while (grid.children.length > 4) grid.removeChild(grid.lastChild);
+
+  const rowLabels = ['a (m/s²)', 'v (m/s)', 's (m)'];
+  for (let r = 0; r < 3; r++) {
+    const rl = document.createElement('div');
+    rl.style.fontWeight = '600'; rl.style.color = '#444';
+    rl.textContent = rowLabels[r];
+    grid.appendChild(rl);
+    for (let i = 0; i < 3; i++) {
+      const state = getObjState(objects[i].c);
+      const val = document.createElement('div');
+      val.style.fontFamily = 'monospace'; val.style.fontWeight = '600';
+      val.style.color = objects[i].color;
+      if (r === 0) val.textContent = state.a.toFixed(2);
+      else if (r === 1) val.textContent = state.v.toFixed(2);
+      else val.textContent = state.s.toFixed(2);
+      grid.appendChild(val);
+    }
+  }
+
+  // Result text
+  const allFinished = objects.every((o) => getObjState(o.c).finished);
+  const resultEl = document.getElementById('resultText');
+  if (allFinished) {
+    resultEl.innerHTML = '<b style="color:#8B0029">관성 모멘트가 작을수록 빨리 도착!</b><br>' +
+      tex('c') + ' 가 작을수록 → ' + tex('a_{com}') + ' 가 큼';
+  } else if (t > 0) {
+    resultEl.textContent = '경주 진행 중...';
+  } else {
+    resultEl.innerHTML = '같은 질량·반지름이라도 ' + tex('I_{com}/MR^2') + ' 에 따라 가속도가 다릅니다.';
+  }
+}
+
+function step() {
+  t += dt;
+  const allFinished = objects.every((o) => getObjState(o.c).finished);
+  updateInfo();
+  draw();
+  if (allFinished) { stop(); return; }
+  if (running) animId = requestAnimationFrame(step);
+}
+
+function start() {
+  if (running) return;
+  running = true;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  if (animId) cancelAnimationFrame(animId);
+}
+
+function reset() {
+  stop(); t = 0; updateInfo(); draw();
+}
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+
+[angleSlider, lengthSlider].forEach(s => {
+  s.addEventListener('input', () => {
+    angleVal.textContent = angleSlider.value;
+    lengthVal.textContent = parseFloat(lengthSlider.value).toFixed(1);
+    reset();
+  });
+});
+
+window.addEventListener('resize', resize);
+renderStaticKaTeX();
+reset();
+resize();
+</script>
+</body>
+</html>

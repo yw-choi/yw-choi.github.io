@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>앳우드 기계 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
+.control-group { display: flex; flex-direction: column; gap: 4px; }
+.control-group label { font-size: 13px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .eq { color: #555; font-size: 12px; }
+.info-box .eq .katex { font-size: 13px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .theorem-eq { font-size: 14px; display: block; margin-top: 4px; }
+.theorem-box .katex { color: #fff; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+
+.formula-overlay { position: absolute; bottom: 0; left: 0; right: 0; pointer-events: none; padding: 10px 20px 12px; background: rgba(250,250,250,0.92); border-top: 1px solid #eee; }
+.formula-overlay .formula-line { font-size: 14px; line-height: 1.7; color: #333; }
+.formula-overlay .formula-line.highlight { color: #8B0029; font-weight: 700; }
+.formula-overlay .formula-line .katex { font-size: 15px; }
+.formula-overlay .formula-line.highlight .katex { font-size: 15px; }
+
+.canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 50vh; }
+  .controls { width: 100%; height: 50vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+    <div class="formula-overlay" id="formulaOverlay">
+      <div class="formula-line" id="formulaEq1"></div>
+      <div class="formula-line" id="formulaEq2"></div>
+      <div class="formula-line highlight" id="formulaResult"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="theorem-box">
+      앳우드 기계
+      <span class="theorem-eq" id="theoremEq"></span>
+    </div>
+
+    <div class="control-group">
+      <label><span id="m1Label"></span> = <span id="m1Val">8.0</span> kg</label>
+      <input type="range" id="m1Slider" min="1" max="20" value="8" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label><span id="m2Label"></span> = <span id="m2Val">4.0</span> kg</label>
+      <input type="range" id="m2Slider" min="1" max="20" value="4" step="0.5">
+    </div>
+
+    <div class="info-box" id="infoBox">
+      <div class="eq" id="eqAccel"></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div><span class="label">가속도 a:</span> <span class="val" id="accelInfo">0.00 m/s&sup2;</span></div>
+      <div><span class="label">장력 T:</span> <span class="val" id="tensionInfo">0.00 N</span></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div><span class="label">속도 |v|:</span> <span class="val" id="speedInfo">0.00 m/s</span></div>
+      <div><span class="label" id="dispLabel1"></span> <span class="val" id="disp1Info">0.00 m</span></div>
+      <div><span class="label" id="dispLabel2"></span> <span class="val" id="disp2Info">0.00 m</span></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div><span class="label">시간 t:</span> <span class="val" id="timeInfo">0.00 s</span></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) {
+  return katex.renderToString(expr, { throwOnError: false });
+}
+
+function renderStaticKaTeX() {
+  document.getElementById('theoremEq').innerHTML = tex('a = \\frac{(m_1 - m_2)g}{m_1 + m_2}');
+  document.getElementById('canvasTitle').innerHTML = '앳우드 기계: ' + tex('a = \\frac{(m_1 - m_2)g}{m_1 + m_2}');
+  document.getElementById('m1Label').innerHTML = tex('m_1');
+  document.getElementById('m2Label').innerHTML = tex('m_2');
+  document.getElementById('eqAccel').innerHTML = tex('T = \\frac{2m_1 m_2 g}{m_1 + m_2}');
+  document.getElementById('dispLabel1').innerHTML = tex('\\Delta y_1') + ':';
+  document.getElementById('dispLabel2').innerHTML = tex('\\Delta y_2') + ':';
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const g = 9.8;
+
+const m1Slider = document.getElementById('m1Slider');
+const m2Slider = document.getElementById('m2Slider');
+const m1Val = document.getElementById('m1Val');
+const m2Val = document.getElementById('m2Val');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let dpr = window.devicePixelRatio || 1;
+let W, H;
+let running = false;
+let animId = null;
+const dtAnim = 1 / 60;
+let t = 0;
+const maxDrop = 3.0; // max meters either mass can drop
+
+function getParams() {
+  const m1 = parseFloat(m1Slider.value);
+  const m2 = parseFloat(m2Slider.value);
+  const a = (m1 - m2) * g / (m1 + m2);
+  const T = 2 * m1 * m2 * g / (m1 + m2);
+  return { m1, m2, a, T };
+}
+
+function getState() {
+  const { m1, m2, a, T } = getParams();
+  // m1 goes down if a > 0
+  let dy1 = 0.5 * a * t * t; // positive = downward for m1
+  let v = a * t;
+
+  if (Math.abs(dy1) >= maxDrop) {
+    const tEnd = Math.sqrt(2 * maxDrop / Math.abs(a));
+    dy1 = Math.sign(a) * maxDrop;
+    v = a * tEnd;
+  }
+
+  return { dy1, dy2: -dy1, v, a, T, m1, m2 };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  W = rect.width;
+  H = rect.height;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function updateLabels() {
+  m1Val.textContent = parseFloat(m1Slider.value).toFixed(1);
+  m2Val.textContent = parseFloat(m2Slider.value).toFixed(1);
+}
+
+function updateInfo() {
+  const { dy1, dy2, v, a, T, m1, m2 } = getState();
+  document.getElementById('accelInfo').textContent = a.toFixed(3) + ' m/s\u00B2';
+  document.getElementById('tensionInfo').textContent = T.toFixed(2) + ' N';
+  document.getElementById('speedInfo').textContent = Math.abs(v).toFixed(2) + ' m/s';
+  document.getElementById('disp1Info').textContent = dy1.toFixed(3) + ' m';
+  document.getElementById('disp2Info').textContent = dy2.toFixed(3) + ' m';
+  document.getElementById('timeInfo').textContent = t.toFixed(2) + ' s';
+
+  document.getElementById('formulaEq1').innerHTML = tex(
+    'm_1 g - T = m_1 a \\quad\\Rightarrow\\quad ' + m1.toFixed(1) + '\\times' + g.toFixed(1) + ' - T = ' + m1.toFixed(1) + 'a'
+  );
+  document.getElementById('formulaEq2').innerHTML = tex(
+    'T - m_2 g = m_2 a \\quad\\Rightarrow\\quad T - ' + m2.toFixed(1) + '\\times' + g.toFixed(1) + ' = ' + m2.toFixed(1) + 'a'
+  );
+  document.getElementById('formulaResult').innerHTML = tex(
+    'a = ' + a.toFixed(3) + '\\;\\text{m/s}^2,\\quad T = ' + T.toFixed(2) + '\\;\\text{N}'
+  );
+}
+
+function drawArrow(x1, y1, x2, y2, color, lineWidth) {
+  const headLen = 10;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  const { dy1, dy2, v, a, T, m1, m2 } = getState();
+
+  const pulleyX = W * 0.42;
+  const pulleyY = 60;
+  const pulleyR = 22;
+  const leftX = pulleyX - 70;
+  const rightX = pulleyX + 70;
+  const baseY = pulleyY + pulleyR + 10; // string attachment Y at rest
+  const pxPerMeter = (H - 220) / (2 * maxDrop);
+  const blockW = 55;
+  const blockH = 55;
+
+  // Pulley support
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(pulleyX - 40, 30);
+  ctx.lineTo(pulleyX + 40, 30);
+  ctx.stroke();
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(pulleyX, 30);
+  ctx.lineTo(pulleyX, pulleyY - pulleyR);
+  ctx.stroke();
+
+  // Pulley
+  ctx.fillStyle = '#F3F4F6';
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(pulleyX, pulleyY, pulleyR, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = '#1a1a1a';
+  ctx.beginPath();
+  ctx.arc(pulleyX, pulleyY, 4, 0, 2 * Math.PI);
+  ctx.fill();
+
+  // Mass positions (dy1 positive = m1 goes down)
+  const m1Y = baseY + dy1 * pxPerMeter;
+  const m2Y = baseY + dy2 * pxPerMeter; // dy2 = -dy1
+
+  // Strings
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 1.5;
+  // Left string: from pulley left side to m1
+  ctx.beginPath();
+  ctx.moveTo(pulleyX - pulleyR, pulleyY);
+  ctx.lineTo(leftX, pulleyY);
+  ctx.lineTo(leftX, m1Y);
+  ctx.stroke();
+  // Right string
+  ctx.beginPath();
+  ctx.moveTo(pulleyX + pulleyR, pulleyY);
+  ctx.lineTo(rightX, pulleyY);
+  ctx.lineTo(rightX, m2Y);
+  ctx.stroke();
+
+  // Mass 1 (left)
+  const m1Top = m1Y;
+  ctx.fillStyle = 'rgba(0,0,0,0.08)';
+  ctx.fillRect(leftX - blockW / 2 + 3, m1Top + 3, blockW, blockH);
+  ctx.fillStyle = '#F3F4F6';
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2;
+  ctx.fillRect(leftX - blockW / 2, m1Top, blockW, blockH);
+  ctx.strokeRect(leftX - blockW / 2, m1Top, blockW, blockH);
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(m1.toFixed(1), leftX, m1Top + blockH / 2 - 8);
+  ctx.fillText('kg', leftX, m1Top + blockH / 2 + 8);
+  ctx.textBaseline = 'alphabetic';
+
+  // m1 label
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.fillText('m\u2081', leftX, m1Top + blockH + 18);
+
+  // Mass 2 (right)
+  const m2Top = m2Y;
+  ctx.fillStyle = 'rgba(0,0,0,0.08)';
+  ctx.fillRect(rightX - blockW / 2 + 3, m2Top + 3, blockW, blockH);
+  ctx.fillStyle = '#F3F4F6';
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2;
+  ctx.fillRect(rightX - blockW / 2, m2Top, blockW, blockH);
+  ctx.strokeRect(rightX - blockW / 2, m2Top, blockW, blockH);
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(m2.toFixed(1), rightX, m2Top + blockH / 2 - 8);
+  ctx.fillText('kg', rightX, m2Top + blockH / 2 + 8);
+  ctx.textBaseline = 'alphabetic';
+
+  // m2 label
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.fillText('m\u2082', rightX, m2Top + blockH + 18);
+
+  // Force arrows on masses (FBD overlay)
+  const arrowScale = 1.2;
+
+  // m1: T up, m1g down
+  const m1Center = m1Top + blockH / 2;
+  const TLen = T * arrowScale;
+  const m1gLen = m1 * g * arrowScale;
+  // T up
+  drawArrow(leftX - blockW / 2 - 15, m1Center, leftX - blockW / 2 - 15, m1Center - Math.min(TLen, 80), '#8B0029', 2.5);
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('T', leftX - blockW / 2 - 18, m1Center - Math.min(TLen, 80) + 4);
+  // m1g down
+  drawArrow(leftX - blockW / 2 - 15, m1Center, leftX - blockW / 2 - 15, m1Center + Math.min(m1gLen, 80), '#8B0029', 2.5);
+  ctx.fillText('m\u2081g', leftX - blockW / 2 - 18, m1Center + Math.min(m1gLen, 80) + 4);
+
+  // m2: T up, m2g down
+  const m2Center = m2Top + blockH / 2;
+  const m2gLen = m2 * g * arrowScale;
+  // T up
+  drawArrow(rightX + blockW / 2 + 15, m2Center, rightX + blockW / 2 + 15, m2Center - Math.min(TLen, 80), '#8B0029', 2.5);
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('T', rightX + blockW / 2 + 18, m2Center - Math.min(TLen, 80) + 4);
+  // m2g down
+  drawArrow(rightX + blockW / 2 + 15, m2Center, rightX + blockW / 2 + 15, m2Center + Math.min(m2gLen, 80), '#8B0029', 2.5);
+  ctx.fillText('m\u2082g', rightX + blockW / 2 + 18, m2Center + Math.min(m2gLen, 80) + 4);
+
+  // Velocity arrows (blue)
+  if (Math.abs(v) > 0.05) {
+    const vLen = Math.min(Math.abs(v) * 12, 60);
+    // m1 velocity (down if a > 0)
+    const v1Dir = a > 0 ? 1 : -1;
+    drawArrow(leftX + blockW / 2 + 10, m1Center, leftX + blockW / 2 + 10, m1Center + v1Dir * vLen, '#2563EB', 2);
+    // m2 velocity (up if a > 0)
+    drawArrow(rightX - blockW / 2 - 10, m2Center, rightX - blockW / 2 - 10, m2Center - v1Dir * vLen, '#2563EB', 2);
+
+    ctx.fillStyle = '#2563EB';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('v', leftX + blockW / 2 + 20, m1Center + v1Dir * vLen + v1Dir * 12);
+    ctx.fillText('v', rightX - blockW / 2 - 20, m2Center - v1Dir * vLen - v1Dir * 12 + 10);
+  }
+}
+
+function step() {
+  const { a } = getParams();
+  t += dtAnim;
+
+  const dy1 = 0.5 * a * t * t;
+  if (Math.abs(dy1) >= maxDrop) {
+    t = Math.sqrt(2 * maxDrop / Math.abs(a));
+    updateInfo();
+    draw();
+    stop();
+    return;
+  }
+
+  updateInfo();
+  draw();
+  if (running) animId = requestAnimationFrame(step);
+}
+
+function start() {
+  if (running) return;
+  running = true;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  if (animId) cancelAnimationFrame(animId);
+}
+
+function reset() {
+  stop();
+  t = 0;
+  updateInfo();
+  draw();
+}
+
+playBtn.addEventListener('click', () => {
+  if (running) stop(); else start();
+});
+resetBtn.addEventListener('click', reset);
+
+[m1Slider, m2Slider].forEach(s => {
+  s.addEventListener('input', () => {
+    updateLabels();
+    reset();
+  });
+});
+
+window.addEventListener('resize', resize);
+
+renderStaticKaTeX();
+updateLabels();
+reset();
+resize();
+</script>
+</body>
+</html>

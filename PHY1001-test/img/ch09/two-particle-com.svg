@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 350" font-family="sans-serif">
+  <!-- Axis -->
+  <defs>
+    <marker id="arrowBlack" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
+    </marker>
+  </defs>
+
+  <!-- x-axis -->
+  <line x1="60" y1="250" x2="650" y2="250" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrowBlack)"/>
+  <text x="660" y="255" font-size="14" fill="#6B7280" font-style="italic">x</text>
+
+  <!-- Origin -->
+  <text x="60" y="275" font-size="13" fill="#6B7280" text-anchor="middle">O</text>
+  <line x1="60" y1="245" x2="60" y2="255" stroke="#6B7280" stroke-width="1"/>
+
+  <!-- Particle 1 -->
+  <circle cx="180" cy="170" r="28" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
+  <text x="180" y="176" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+  <text x="190" y="182" font-size="10" fill="#1a1a1a">1</text>
+
+  <!-- Dashed line from m1 to axis -->
+  <line x1="180" y1="198" x2="180" y2="250" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="180" y="275" font-size="13" fill="#6B7280" text-anchor="middle" font-style="italic">x<tspan font-size="10" dy="3">1</tspan></text>
+
+  <!-- Particle 2 -->
+  <circle cx="500" cy="140" r="38" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
+  <text x="500" y="146" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+  <text x="510" y="152" font-size="10" fill="#1a1a1a">2</text>
+
+  <!-- Dashed line from m2 to axis -->
+  <line x1="500" y1="178" x2="500" y2="250" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="500" y="275" font-size="13" fill="#6B7280" text-anchor="middle" font-style="italic">x<tspan font-size="10" dy="3">2</tspan></text>
+
+  <!-- Center of mass marker -->
+  <line x1="310" y1="230" x2="310" y2="250" stroke="#8B0029" stroke-width="2"/>
+  <polygon points="300,230 310,210 320,230" fill="#8B0029"/>
+  <text x="310" y="275" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">x<tspan font-size="10" dy="3">com</tspan></text>
+
+  <!-- Formula -->
+  <text x="350" y="40" font-size="16" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">x</text>
+  <text x="362" y="46" font-size="11" fill="#8B0029">com</text>
+  <text x="380" y="40" font-size="16" fill="#8B0029" text-anchor="middle"> = </text>
+  <text x="480" y="34" font-size="14" fill="#8B0029" text-anchor="middle" font-style="italic">m<tspan font-size="10" dy="3">1</tspan><tspan dy="-3">x</tspan><tspan font-size="10" dy="3">1</tspan><tspan dy="-3"> + m</tspan><tspan font-size="10" dy="3">2</tspan><tspan dy="-3">x</tspan><tspan font-size="10" dy="3">2</tspan></text>
+  <line x1="420" y1="42" x2="570" y2="42" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="495" y="58" font-size="14" fill="#8B0029" text-anchor="middle" font-style="italic">m<tspan font-size="10" dy="3">1</tspan><tspan dy="-3"> + m</tspan><tspan font-size="10" dy="3">2</tspan></text>
+
+  <!-- Distance brackets -->
+  <line x1="60" y1="300" x2="310" y2="300" stroke="#2563EB" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+  <line x1="310" y1="295" x2="310" y2="305" stroke="#8B0029" stroke-width="2"/>
+</svg>

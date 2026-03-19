@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>등가속도 직선 운동 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
+.control-group { display: flex; flex-direction: column; gap: 4px; }
+.control-group label { font-size: 13px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .eq { color: #555; font-size: 12px; }
+.info-box .eq .katex { font-size: 13px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .theorem-eq { font-size: 14px; display: block; margin-top: 4px; }
+.theorem-box .katex { color: #fff; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div class="theorem-box">
+      등가속도 직선 운동
+      <span class="theorem-eq" id="theoremEq"></span>
+    </div>
+
+    <div class="control-group">
+      <label>초기 위치 <span id="x0Label"></span> = <span id="x0Val">0.0</span> m</label>
+      <input type="range" id="x0Slider" min="-5" max="5" value="0" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>초기 속도 <span id="v0Label"></span> = <span id="v0Val">2.0</span> m/s</label>
+      <input type="range" id="v0Slider" min="-5" max="5" value="2" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>가속도 <span id="aLabel"></span> = <span id="aVal">1.0</span> m/s²</label>
+      <input type="range" id="aSlider" min="-5" max="5" value="1" step="0.5">
+    </div>
+
+    <div class="info-box" id="infoBox">
+      <div class="eq" id="eqX"></div>
+      <div><span class="label">위치 x =</span> <span class="val" id="xInfo">0.00 m</span></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div class="eq" id="eqV"></div>
+      <div><span class="label">속도 v =</span> <span class="val" id="vInfo">0.00 m/s</span></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div><span class="label">가속도 a =</span> <span class="val" id="aInfo">0.00 m/s²</span></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div><span class="label">시간 t =</span> <span class="val" id="tInfo">0.00 s</span></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) {
+  return katex.renderToString(expr, { throwOnError: false });
+}
+
+function renderStaticKaTeX() {
+  document.getElementById('theoremEq').innerHTML = tex('x = x_0 + v_0 t + \\tfrac{1}{2}at^2');
+  document.getElementById('canvasTitle').innerHTML = '등가속도 직선 운동: ' + tex('x(t),\\; v(t),\\; a(t)');
+  document.getElementById('x0Label').innerHTML = tex('x_0');
+  document.getElementById('v0Label').innerHTML = tex('v_0');
+  document.getElementById('aLabel').innerHTML = tex('a');
+  document.getElementById('eqX').innerHTML = tex('x(t) = x_0 + v_0 t + \\tfrac{1}{2}at^2');
+  document.getElementById('eqV').innerHTML = tex('v(t) = v_0 + at');
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+const x0Slider = document.getElementById('x0Slider');
+const v0Slider = document.getElementById('v0Slider');
+const aSlider = document.getElementById('aSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+let running = false;
+let animId = null;
+let t = 0;
+const dt = 1/60;
+const tMax = 6; // seconds of total animation
+
+function getParams() {
+  return {
+    x0: parseFloat(x0Slider.value),
+    v0: parseFloat(v0Slider.value),
+    a: parseFloat(aSlider.value)
+  };
+}
+
+function getState(time) {
+  const { x0, v0, a } = getParams();
+  const x = x0 + v0 * time + 0.5 * a * time * time;
+  const v = v0 + a * time;
+  return { x, v, a };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width;
+  CH = rect.height;
+  canvas.width = CW * dpr;
+  canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px';
+  canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function updateLabels() {
+  document.getElementById('x0Val').textContent = parseFloat(x0Slider.value).toFixed(1);
+  document.getElementById('v0Val').textContent = parseFloat(v0Slider.value).toFixed(1);
+  document.getElementById('aVal').textContent = parseFloat(aSlider.value).toFixed(1);
+}
+
+function updateInfo() {
+  const { x, v, a } = getState(t);
+  document.getElementById('xInfo').textContent = x.toFixed(2) + ' m';
+  document.getElementById('vInfo').textContent = v.toFixed(2) + ' m/s';
+  document.getElementById('aInfo').textContent = a.toFixed(2) + ' m/s²';
+  document.getElementById('tInfo').textContent = t.toFixed(2) + ' s';
+}
+
+function drawArrow(x1, y1, x2, y2, color, lineWidth) {
+  const headLen = 10;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawTextWithBg(text, x, y, color, fontSize, align) {
+  ctx.font = (fontSize || 12) + 'px sans-serif';
+  ctx.textAlign = align || 'center';
+  const w = ctx.measureText(text).width;
+  const h = fontSize || 12;
+  const px = align === 'left' ? x : align === 'right' ? x - w : x - w/2;
+  ctx.fillStyle = 'rgba(250,250,250,0.85)';
+  ctx.fillRect(px - 3, y - h + 1, w + 6, h + 4);
+  ctx.fillStyle = color;
+  ctx.fillText(text, x, y);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  const { x0, v0, a } = getParams();
+
+  // Layout: top strip = particle animation, bottom = 3 stacked graphs
+  const animH = CH * 0.18;
+  const graphAreaTop = animH + 10;
+  const graphAreaH = CH - graphAreaTop - 10;
+  const graphH = graphAreaH / 3 - 8;
+  const graphLeft = 70;
+  const graphRight = CW - 20;
+  const graphW = graphRight - graphLeft;
+
+  // ===== PARTICLE ANIMATION STRIP =====
+  // Compute x range for display
+  let xMin = -10, xMax = 10;
+  // Check actual range over tMax
+  for (let tt = 0; tt <= tMax; tt += 0.1) {
+    const xx = x0 + v0 * tt + 0.5 * a * tt * tt;
+    if (xx < xMin) xMin = xx - 2;
+    if (xx > xMax) xMax = xx + 2;
+  }
+  xMin = Math.floor(xMin / 5) * 5;
+  xMax = Math.ceil(xMax / 5) * 5;
+  if (xMax - xMin < 10) { xMin -= 5; xMax += 5; }
+
+  const trackLeft = graphLeft;
+  const trackRight = graphRight;
+  const trackLen = trackRight - trackLeft;
+  const pxPerM = trackLen / (xMax - xMin);
+  const trackY = animH * 0.6;
+
+  // Ground
+  ctx.fillStyle = '#F3F4F6';
+  ctx.fillRect(0, trackY + 8, CW, animH - trackY);
+  ctx.strokeStyle = '#bbb';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(trackLeft, trackY + 8);
+  ctx.lineTo(trackRight, trackY + 8);
+  ctx.stroke();
+
+  // Ruler marks
+  ctx.fillStyle = '#888';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  for (let i = Math.ceil(xMin); i <= Math.floor(xMax); i++) {
+    const px = trackLeft + (i - xMin) * pxPerM;
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(px, trackY + 8);
+    ctx.lineTo(px, trackY + 16);
+    ctx.stroke();
+    if (i % 2 === 0) {
+      ctx.fillText(i + '', px, trackY + 28);
+    }
+  }
+  ctx.fillStyle = '#888';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('x (m)', trackRight, trackY + 28);
+
+  // Current position
+  const { x: xNow, v: vNow } = getState(t);
+  const particlePx = trackLeft + (xNow - xMin) * pxPerM;
+
+  // Trail
+  const trailSteps = Math.floor(t / dt);
+  ctx.fillStyle = 'rgba(139, 0, 41, 0.08)';
+  for (let i = 0; i < trailSteps; i += 3) {
+    const tt = i * dt;
+    const xx = x0 + v0 * tt + 0.5 * a * tt * tt;
+    const px = trackLeft + (xx - xMin) * pxPerM;
+    if (px > trackLeft && px < trackRight) {
+      ctx.beginPath();
+      ctx.arc(px, trackY, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // Particle
+  if (particlePx >= trackLeft - 10 && particlePx <= trackRight + 10) {
+    ctx.fillStyle = '#8B0029';
+    ctx.beginPath();
+    ctx.arc(particlePx, trackY, 10, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 9px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('m', particlePx, trackY);
+    ctx.textBaseline = 'alphabetic';
+
+    // Velocity arrow
+    if (Math.abs(vNow) > 0.1) {
+      const vScale = 8;
+      const vLen = Math.min(Math.abs(vNow) * vScale, 80);
+      const sign = vNow > 0 ? 1 : -1;
+      drawArrow(particlePx, trackY - 18, particlePx + vLen * sign, trackY - 18, '#2563EB', 2);
+      drawTextWithBg('v=' + vNow.toFixed(1), particlePx + vLen * sign * 0.5, trackY - 26, '#2563EB', 11, 'center');
+    }
+  }
+
+  // ===== THREE GRAPHS =====
+  const graphs = [
+    { label: 'x(t)', color: '#8B0029', yLabel: 'x (m)',
+      fn: (tt) => x0 + v0 * tt + 0.5 * a * tt * tt },
+    { label: 'v(t)', color: '#2563EB', yLabel: 'v (m/s)',
+      fn: (tt) => v0 + a * tt },
+    { label: 'a(t)', color: '#6B7280', yLabel: 'a (m/s²)',
+      fn: (tt) => a }
+  ];
+
+  graphs.forEach((g, idx) => {
+    const gTop = graphAreaTop + idx * (graphH + 8);
+    const gBot = gTop + graphH;
+    const gMid = (gTop + gBot) / 2;
+
+    // Compute y range
+    let yMin = Infinity, yMax = -Infinity;
+    for (let tt = 0; tt <= tMax; tt += 0.05) {
+      const yy = g.fn(tt);
+      if (yy < yMin) yMin = yy;
+      if (yy > yMax) yMax = yy;
+    }
+    const yPad = Math.max((yMax - yMin) * 0.15, 0.5);
+    yMin -= yPad;
+    yMax += yPad;
+
+    const yRange = yMax - yMin;
+
+    function tToPx(tt) { return graphLeft + (tt / tMax) * graphW; }
+    function yToPx(yy) { return gBot - ((yy - yMin) / yRange) * graphH; }
+
+    // Background
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(graphLeft, gTop, graphW, graphH);
+    ctx.strokeStyle = '#eee';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(graphLeft, gTop, graphW, graphH);
+
+    // Zero line if visible
+    if (yMin < 0 && yMax > 0) {
+      const zeroY = yToPx(0);
+      ctx.strokeStyle = '#ddd';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.moveTo(graphLeft, zeroY);
+      ctx.lineTo(graphRight, zeroY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Draw full curve (light)
+    ctx.strokeStyle = g.color;
+    ctx.globalAlpha = 0.25;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let tt = 0; tt <= tMax; tt += 0.02) {
+      const px = tToPx(tt);
+      const py = yToPx(g.fn(tt));
+      if (tt === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    // Draw curve up to current time (bold)
+    ctx.strokeStyle = g.color;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let tt = 0; tt <= t; tt += 0.02) {
+      const px = tToPx(tt);
+      const py = yToPx(g.fn(tt));
+      if (tt === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+
+    // Current point
+    const curPx = tToPx(t);
+    const curPy = yToPx(g.fn(t));
+    ctx.fillStyle = g.color;
+    ctx.beginPath();
+    ctx.arc(curPx, curPy, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Current value label
+    drawTextWithBg(g.fn(t).toFixed(2), curPx + 10, curPy - 8, g.color, 12, 'left');
+
+    // Y-axis label
+    ctx.fillStyle = g.color;
+    ctx.font = 'bold 13px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(g.yLabel, graphLeft - 6, gMid + 5);
+
+    // Graph label
+    ctx.fillStyle = g.color;
+    ctx.font = 'bold 13px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(g.label, graphLeft + 5, gTop + 16);
+
+    // Y-axis ticks
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#888';
+    const nTicks = 3;
+    for (let i = 0; i <= nTicks; i++) {
+      const yVal = yMin + (yRange * i / nTicks);
+      const py = yToPx(yVal);
+      ctx.fillText(yVal.toFixed(1), graphLeft - 4, py + 4);
+      ctx.strokeStyle = '#eee';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(graphLeft, py);
+      ctx.lineTo(graphRight, py);
+      ctx.stroke();
+    }
+  });
+
+  // Time axis label
+  ctx.fillStyle = '#888';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  for (let i = 0; i <= tMax; i++) {
+    const px = graphLeft + (i / tMax) * graphW;
+    ctx.fillText(i + '', px, CH - 2);
+  }
+  ctx.fillText('t (s)', graphLeft + graphW / 2, CH - 2);
+
+  // Time cursor line
+  const cursorX = graphLeft + (t / tMax) * graphW;
+  ctx.strokeStyle = 'rgba(139, 0, 41, 0.3)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(cursorX, graphAreaTop);
+  ctx.lineTo(cursorX, CH - 15);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function step() {
+  t += dt;
+  if (t >= tMax) {
+    t = tMax;
+    updateInfo();
+    draw();
+    stop();
+    return;
+  }
+  updateInfo();
+  draw();
+  if (running) animId = requestAnimationFrame(step);
+}
+
+function start() {
+  if (running) return;
+  running = true;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  if (animId) cancelAnimationFrame(animId);
+}
+
+function reset() {
+  stop();
+  t = 0;
+  updateInfo();
+  draw();
+}
+
+playBtn.addEventListener('click', () => {
+  if (running) stop(); else start();
+});
+resetBtn.addEventListener('click', reset);
+
+[x0Slider, v0Slider, aSlider].forEach(s => {
+  s.addEventListener('input', () => {
+    updateLabels();
+    reset();
+  });
+});
+
+window.addEventListener('resize', resize);
+
+renderStaticKaTeX();
+updateLabels();
+reset();
+resize();
+</script>
+</body>
+</html>

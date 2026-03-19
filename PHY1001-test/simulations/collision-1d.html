@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1차원 충돌 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.control-group select { width: 100%; padding: 4px 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.8; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box hr { border: none; border-top: 1px solid #e0c0c8; margin: 4px 0; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+.formula-overlay { position: absolute; bottom: 0; left: 0; right: 0; pointer-events: none; padding: 8px 16px 10px; background: rgba(250,250,250,0.92); border-top: 1px solid #eee; }
+.formula-overlay .formula-line { font-size: 14px; line-height: 1.7; color: #333; }
+.formula-overlay .formula-line.highlight { color: #8B0029; font-weight: 700; }
+.formula-overlay .katex { font-size: 15px; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 50vh; }
+  .controls { width: 100%; height: 50vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+    <div class="formula-overlay" id="formulaOverlay">
+      <div class="formula-line" id="formulaP"></div>
+      <div class="formula-line" id="formulaK"></div>
+      <div class="formula-line highlight" id="formulaVerify"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="theorem-box" id="theoremBox">
+      운동량 보존 법칙
+      <div id="theoremEq"></div>
+    </div>
+
+    <div class="control-group">
+      <label>충돌 유형</label>
+      <select id="collisionType">
+        <option value="elastic">탄성 충돌</option>
+        <option value="inelastic">완전 비탄성 충돌</option>
+        <option value="partial">비탄성 충돌 (e 조절)</option>
+      </select>
+    </div>
+
+    <div class="control-group" id="restitutionGroup" style="display:none">
+      <label>반발 계수 e = <span id="eVal">0.50</span></label>
+      <input type="range" id="eSlider" min="0" max="1" value="0.5" step="0.01">
+    </div>
+
+    <div class="control-group">
+      <label>m<sub>1</sub> = <span id="m1Val">2.0</span> kg</label>
+      <input type="range" id="m1Slider" min="0.5" max="10" value="2" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>v<sub>1i</sub> = <span id="v1iVal">4.0</span> m/s</label>
+      <input type="range" id="v1iSlider" min="0" max="10" value="4" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>m<sub>2</sub> = <span id="m2Val">3.0</span> kg</label>
+      <input type="range" id="m2Slider" min="0.5" max="10" value="3" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>v<sub>2i</sub> = <span id="v2iVal">0.0</span> m/s</label>
+      <input type="range" id="v2iSlider" min="-10" max="10" value="0" step="0.5">
+    </div>
+
+    <div class="info-box" id="infoBox">
+      <div><span class="label">충돌 전:</span></div>
+      <div>p<sub>i</sub> = <span class="val" id="piInfo">8.00</span> kg·m/s</div>
+      <div>K<sub>i</sub> = <span class="val" id="KiInfo">16.00</span> J</div>
+      <hr>
+      <div><span class="label">충돌 후:</span></div>
+      <div>v<sub>1f</sub> = <span class="val" id="v1fInfo">—</span> m/s</div>
+      <div>v<sub>2f</sub> = <span class="val" id="v2fInfo">—</span> m/s</div>
+      <div>p<sub>f</sub> = <span class="val" id="pfInfo">—</span> kg·m/s</div>
+      <div>K<sub>f</sub> = <span class="val" id="KfInfo">—</span> J</div>
+      <hr>
+      <div id="deltaKLine"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) {
+  return katex.renderToString(expr, { throwOnError: false });
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+const collisionType = document.getElementById('collisionType');
+const eSlider = document.getElementById('eSlider');
+const m1Slider = document.getElementById('m1Slider');
+const v1iSlider = document.getElementById('v1iSlider');
+const m2Slider = document.getElementById('m2Slider');
+const v2iSlider = document.getElementById('v2iSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+const restitutionGroup = document.getElementById('restitutionGroup');
+
+let dpr = window.devicePixelRatio || 1;
+let W, H;
+let running = false;
+let animId = null;
+let phase = 'before'; // 'before', 'colliding', 'after'
+let tAnim = 0;
+
+// Positions in meters (track from -5 to +10)
+const trackMin = -6, trackMax = 12;
+let x1, x2; // current positions
+let v1, v2; // current velocities
+let v1f_calc, v2f_calc; // post-collision velocities
+let collided = false;
+
+function getParams() {
+  const m1 = parseFloat(m1Slider.value);
+  const m2 = parseFloat(m2Slider.value);
+  const v1i = parseFloat(v1iSlider.value);
+  const v2i = parseFloat(v2iSlider.value);
+  const type = collisionType.value;
+  const e = parseFloat(eSlider.value);
+  return { m1, m2, v1i, v2i, type, e };
+}
+
+function computePostCollision() {
+  const { m1, m2, v1i, v2i, type, e } = getParams();
+  let v1f, v2f;
+  if (type === 'elastic') {
+    v1f = ((m1 - m2) * v1i + 2 * m2 * v2i) / (m1 + m2);
+    v2f = ((m2 - m1) * v2i + 2 * m1 * v1i) / (m1 + m2);
+  } else if (type === 'inelastic') {
+    v1f = v2f = (m1 * v1i + m2 * v2i) / (m1 + m2);
+  } else {
+    // Coefficient of restitution e
+    v2f = (m1 * v1i + m2 * v2i + m1 * e * (v1i - v2i)) / (m1 + m2);
+    v1f = v2f - e * (v1i - v2i);
+  }
+  return { v1f, v2f };
+}
+
+function blockWidth(m) {
+  return 30 + m * 4;
+}
+
+function initPositions() {
+  const { m1, m2 } = getParams();
+  const bw1 = blockWidth(m1);
+  const bw2 = blockWidth(m2);
+  x1 = -3;
+  x2 = 3;
+  const { v1i, v2i } = getParams();
+  v1 = v1i;
+  v2 = v2i;
+  collided = false;
+  phase = 'before';
+  const post = computePostCollision();
+  v1f_calc = post.v1f;
+  v2f_calc = post.v2f;
+}
+
+function updateLabels() {
+  document.getElementById('m1Val').textContent = parseFloat(m1Slider.value).toFixed(1);
+  document.getElementById('m2Val').textContent = parseFloat(m2Slider.value).toFixed(1);
+  document.getElementById('v1iVal').textContent = parseFloat(v1iSlider.value).toFixed(1);
+  document.getElementById('v2iVal').textContent = parseFloat(v2iSlider.value).toFixed(1);
+  document.getElementById('eVal').textContent = parseFloat(eSlider.value).toFixed(2);
+  restitutionGroup.style.display = collisionType.value === 'partial' ? '' : 'none';
+}
+
+function updateInfo() {
+  const { m1, m2, v1i, v2i } = getParams();
+  const pi = m1 * v1i + m2 * v2i;
+  const Ki = 0.5 * m1 * v1i * v1i + 0.5 * m2 * v2i * v2i;
+  document.getElementById('piInfo').textContent = pi.toFixed(2);
+  document.getElementById('KiInfo').textContent = Ki.toFixed(2);
+
+  if (collided) {
+    const pf = m1 * v1f_calc + m2 * v2f_calc;
+    const Kf = 0.5 * m1 * v1f_calc * v1f_calc + 0.5 * m2 * v2f_calc * v2f_calc;
+    document.getElementById('v1fInfo').textContent = v1f_calc.toFixed(2);
+    document.getElementById('v2fInfo').textContent = v2f_calc.toFixed(2);
+    document.getElementById('pfInfo').textContent = pf.toFixed(2);
+    document.getElementById('KfInfo').textContent = Kf.toFixed(2);
+    const dK = Kf - Ki;
+    document.getElementById('deltaKLine').innerHTML =
+      '<span class="label">' + tex('\\Delta K') + ' = </span><span class="val">' + dK.toFixed(2) + ' J</span>' +
+      (Math.abs(dK) < 0.01 ? ' (보존!)' : '');
+
+    document.getElementById('formulaP').innerHTML = tex(
+      'p_i = ' + pi.toFixed(2) + '\\;\\text{kg·m/s},\\quad p_f = ' + pf.toFixed(2) + '\\;\\text{kg·m/s}'
+    );
+    document.getElementById('formulaK').innerHTML = tex(
+      'K_i = ' + Ki.toFixed(2) + '\\;\\text{J},\\quad K_f = ' + Kf.toFixed(2) + '\\;\\text{J}'
+    );
+    const verify = Math.abs(pi - pf) < 0.01 ? '\\;\\checkmark' : '';
+    document.getElementById('formulaVerify').innerHTML = tex(
+      'p_i = p_f' + verify + ',\\quad \\Delta K = ' + dK.toFixed(2) + '\\;\\text{J}'
+    );
+  } else {
+    document.getElementById('v1fInfo').textContent = '—';
+    document.getElementById('v2fInfo').textContent = '—';
+    document.getElementById('pfInfo').textContent = '—';
+    document.getElementById('KfInfo').textContent = '—';
+    document.getElementById('deltaKLine').innerHTML = '';
+    document.getElementById('formulaP').innerHTML = tex('p_i = m_1 v_{1i} + m_2 v_{2i} = ' + pi.toFixed(2) + '\\;\\text{kg·m/s}');
+    document.getElementById('formulaK').innerHTML = tex('K_i = \\tfrac{1}{2}m_1 v_{1i}^2 + \\tfrac{1}{2}m_2 v_{2i}^2 = ' + Ki.toFixed(2) + '\\;\\text{J}');
+    document.getElementById('formulaVerify').innerHTML = '';
+  }
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 10;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lw;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawTextWithBg(text, x, y, font, color) {
+  ctx.font = font;
+  const m = ctx.measureText(text);
+  const pad = 3;
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillRect(x - m.width / 2 - pad, y - 12 - pad, m.width + pad * 2, 16 + pad * 2);
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center';
+  ctx.fillText(text, x, y);
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  W = rect.width;
+  H = rect.height;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function mToPixel(xm) {
+  const trackLeft = 60;
+  const trackRight = W - 20;
+  return trackLeft + (xm - trackMin) / (trackMax - trackMin) * (trackRight - trackLeft);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  const { m1, m2, v1i, v2i, type } = getParams();
+
+  const groundY = H * 0.55;
+
+  // Ground
+  ctx.fillStyle = '#F3F4F6';
+  ctx.fillRect(0, groundY, W, H - groundY);
+  ctx.strokeStyle = '#bbb';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, groundY);
+  ctx.lineTo(W, groundY);
+  ctx.stroke();
+
+  // Hatching
+  ctx.strokeStyle = '#ddd';
+  ctx.lineWidth = 1;
+  for (let hx = 0; hx < W; hx += 14) {
+    ctx.beginPath();
+    ctx.moveTo(hx, groundY);
+    ctx.lineTo(hx - 10, groundY + 10);
+    ctx.stroke();
+  }
+
+  // Ruler
+  ctx.fillStyle = '#888';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  for (let i = trackMin; i <= trackMax; i += 2) {
+    const px = mToPixel(i);
+    ctx.strokeStyle = '#aaa';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(px, groundY);
+    ctx.lineTo(px, groundY + 8);
+    ctx.stroke();
+    ctx.fillText(i + '', px, groundY + 20);
+  }
+
+  // Block 1
+  const bw1 = blockWidth(m1);
+  const bh1 = 40 + m1 * 2;
+  const bx1 = mToPixel(x1) - bw1 / 2;
+  const by1 = groundY - bh1;
+
+  ctx.fillStyle = 'rgba(139,0,41,0.12)';
+  ctx.strokeStyle = '#8B0029';
+  ctx.lineWidth = 2;
+  ctx.fillRect(bx1, by1, bw1, bh1);
+  ctx.strokeRect(bx1, by1, bw1, bh1);
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(m1.toFixed(1) + ' kg', bx1 + bw1 / 2, by1 + bh1 / 2);
+  ctx.textBaseline = 'alphabetic';
+
+  // Block 2 (if not merged)
+  const bw2 = blockWidth(m2);
+  const bh2 = 40 + m2 * 2;
+  const merged = collided && type === 'inelastic';
+
+  if (!merged) {
+    const bx2 = mToPixel(x2) - bw2 / 2;
+    const by2 = groundY - bh2;
+    ctx.fillStyle = 'rgba(37,99,235,0.12)';
+    ctx.strokeStyle = '#2563EB';
+    ctx.lineWidth = 2;
+    ctx.fillRect(bx2, by2, bw2, bh2);
+    ctx.strokeRect(bx2, by2, bw2, bh2);
+    ctx.fillStyle = '#2563EB';
+    ctx.font = 'bold 13px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(m2.toFixed(1) + ' kg', bx2 + bw2 / 2, by2 + bh2 / 2);
+    ctx.textBaseline = 'alphabetic';
+
+    // v2 arrow
+    if (Math.abs(v2) > 0.05) {
+      const vLen = Math.min(Math.abs(v2) * 12, 80);
+      const vDir = v2 > 0 ? 1 : -1;
+      const arrowX = bx2 + bw2 / 2;
+      const arrowY = by2 - 15;
+      drawArrow(arrowX, arrowY, arrowX + vLen * vDir, arrowY, '#2563EB', 2.5);
+      drawTextWithBg('v₂ = ' + v2.toFixed(1) + ' m/s', arrowX + vLen * vDir / 2, arrowY - 8, 'bold 13px sans-serif', '#2563EB');
+    }
+  } else {
+    // Merged block
+    const mergedW = bw1 + bw2;
+    const mergedH = Math.max(bh1, bh2);
+    const bxM = mToPixel(x1) - mergedW / 2;
+    const byM = groundY - mergedH;
+    ctx.fillStyle = 'rgba(100,50,130,0.12)';
+    ctx.strokeStyle = '#8B0029';
+    ctx.lineWidth = 2;
+    ctx.fillRect(bxM, byM, mergedW, mergedH);
+    ctx.strokeRect(bxM, byM, mergedW, mergedH);
+    ctx.fillStyle = '#8B0029';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText((m1 + m2).toFixed(1) + ' kg', bxM + mergedW / 2, byM + mergedH / 2);
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  // v1 arrow
+  if (Math.abs(v1) > 0.05) {
+    const vLen = Math.min(Math.abs(v1) * 12, 80);
+    const vDir = v1 > 0 ? 1 : -1;
+    const arrowX = mToPixel(x1);
+    const arrowY = by1 - 15;
+    drawArrow(arrowX, arrowY, arrowX + vLen * vDir, arrowY, '#8B0029', 2.5);
+    const label = merged ? 'v = ' + v1.toFixed(1) + ' m/s' : 'v₁ = ' + v1.toFixed(1) + ' m/s';
+    drawTextWithBg(label, arrowX + vLen * vDir / 2, arrowY - 8, 'bold 13px sans-serif', '#8B0029');
+  }
+
+  // Momentum bars (top right)
+  drawMomentumBars();
+  // Energy bars
+  drawEnergyBars();
+}
+
+function drawMomentumBars() {
+  const { m1, m2, v1i, v2i } = getParams();
+  const pi_total = m1 * v1i + m2 * v2i;
+  const p1_now = m1 * v1;
+  const p2_now = m2 * v2;
+  const pTotal = p1_now + p2_now;
+
+  const barX = W - 200;
+  const barTopY = 30;
+  const barW = 35;
+  const barGap = 10;
+  const maxBarH = H * 0.15;
+  const maxP = Math.max(Math.abs(m1 * v1i) + Math.abs(m2 * v2i), Math.abs(pi_total), 1);
+  const scale = maxBarH / maxP;
+
+  const baseY = barTopY + maxBarH + 5;
+
+  ctx.fillStyle = '#444';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('운동량 (kg·m/s)', barX + barW * 1.5 + barGap, barTopY - 5);
+
+  // Baseline
+  ctx.strokeStyle = '#999';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(barX - 5, baseY);
+  ctx.lineTo(barX + barW * 3 + barGap * 2 + 5, baseY);
+  ctx.stroke();
+
+  // p1 bar
+  const h1 = p1_now * scale;
+  ctx.fillStyle = 'rgba(139,0,41,0.5)';
+  if (h1 >= 0) {
+    ctx.fillRect(barX, baseY - h1, barW, h1);
+  } else {
+    ctx.fillRect(barX, baseY, barW, -h1);
+  }
+  ctx.strokeStyle = '#8B0029';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(barX, h1 >= 0 ? baseY - h1 : baseY, barW, Math.abs(h1) || 1);
+  ctx.fillStyle = '#8B0029';
+  ctx.font = '11px sans-serif';
+  ctx.fillText('p₁', barX + barW / 2, baseY + 16);
+  ctx.fillText(p1_now.toFixed(1), barX + barW / 2, h1 >= 0 ? baseY - h1 - 4 : baseY + Math.abs(h1) + 14);
+
+  // p2 bar
+  const h2 = p2_now * scale;
+  const x2Bar = barX + barW + barGap;
+  ctx.fillStyle = 'rgba(37,99,235,0.5)';
+  if (h2 >= 0) {
+    ctx.fillRect(x2Bar, baseY - h2, barW, h2);
+  } else {
+    ctx.fillRect(x2Bar, baseY, barW, -h2);
+  }
+  ctx.strokeStyle = '#2563EB';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x2Bar, h2 >= 0 ? baseY - h2 : baseY, barW, Math.abs(h2) || 1);
+  ctx.fillStyle = '#2563EB';
+  ctx.fillText('p₂', x2Bar + barW / 2, baseY + 16);
+  ctx.fillText(p2_now.toFixed(1), x2Bar + barW / 2, h2 >= 0 ? baseY - h2 - 4 : baseY + Math.abs(h2) + 14);
+
+  // pTotal bar
+  const hT = pTotal * scale;
+  const xTBar = x2Bar + barW + barGap;
+  ctx.fillStyle = 'rgba(100,100,100,0.3)';
+  if (hT >= 0) {
+    ctx.fillRect(xTBar, baseY - hT, barW, hT);
+  } else {
+    ctx.fillRect(xTBar, baseY, barW, -hT);
+  }
+  ctx.strokeStyle = '#444';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(xTBar, hT >= 0 ? baseY - hT : baseY, barW, Math.abs(hT) || 1);
+  ctx.fillStyle = '#444';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.fillText('p합', xTBar + barW / 2, baseY + 16);
+  ctx.fillText(pTotal.toFixed(1), xTBar + barW / 2, hT >= 0 ? baseY - hT - 4 : baseY + Math.abs(hT) + 14);
+}
+
+function drawEnergyBars() {
+  const { m1, m2, v1i, v2i } = getParams();
+  const Ki = 0.5 * m1 * v1i * v1i + 0.5 * m2 * v2i * v2i;
+  const K1now = 0.5 * m1 * v1 * v1;
+  const K2now = 0.5 * m2 * v2 * v2;
+  const Ktotal = K1now + K2now;
+
+  const barX = W - 200;
+  const barTopY = H * 0.30;
+  const barW = 35;
+  const barGap = 10;
+  const maxBarH = H * 0.13;
+  const maxK = Math.max(Ki, 1);
+  const scale = maxBarH / maxK;
+
+  const baseY = barTopY + maxBarH + 5;
+
+  ctx.fillStyle = '#444';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('운동에너지 (J)', barX + barW * 1.5 + barGap, barTopY - 5);
+
+  ctx.strokeStyle = '#999';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(barX - 5, baseY);
+  ctx.lineTo(barX + barW * 3 + barGap * 2 + 5, baseY);
+  ctx.stroke();
+
+  // Ki reference line
+  const kiH = Ki * scale;
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 3]);
+  ctx.beginPath();
+  ctx.moveTo(barX - 5, baseY - kiH);
+  ctx.lineTo(barX + barW * 3 + barGap * 2 + 5, baseY - kiH);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#aaa';
+  ctx.font = '10px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('K_i=' + Ki.toFixed(1), barX - 8, baseY - kiH + 4);
+  ctx.textAlign = 'center';
+
+  // K1 bar
+  const h1 = K1now * scale;
+  ctx.fillStyle = 'rgba(139,0,41,0.4)';
+  ctx.fillRect(barX, baseY - h1, barW, h1);
+  ctx.strokeStyle = '#8B0029';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(barX, baseY - h1, barW, Math.max(h1, 1));
+  ctx.fillStyle = '#8B0029';
+  ctx.font = '11px sans-serif';
+  ctx.fillText('K₁', barX + barW / 2, baseY + 16);
+  if (h1 > 2) ctx.fillText(K1now.toFixed(1), barX + barW / 2, baseY - h1 - 4);
+
+  // K2 bar
+  const h2 = K2now * scale;
+  const x2B = barX + barW + barGap;
+  ctx.fillStyle = 'rgba(37,99,235,0.4)';
+  ctx.fillRect(x2B, baseY - h2, barW, h2);
+  ctx.strokeStyle = '#2563EB';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x2B, baseY - h2, barW, Math.max(h2, 1));
+  ctx.fillStyle = '#2563EB';
+  ctx.fillText('K₂', x2B + barW / 2, baseY + 16);
+  if (h2 > 2) ctx.fillText(K2now.toFixed(1), x2B + barW / 2, baseY - h2 - 4);
+
+  // Ktotal bar
+  const hT = Ktotal * scale;
+  const xTB = x2B + barW + barGap;
+  ctx.fillStyle = 'rgba(100,100,100,0.25)';
+  ctx.fillRect(xTB, baseY - hT, barW, hT);
+  ctx.strokeStyle = '#444';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(xTB, baseY - hT, barW, Math.max(hT, 1));
+  ctx.fillStyle = '#444';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.fillText('K합', xTB + barW / 2, baseY + 16);
+  if (hT > 2) ctx.fillText(Ktotal.toFixed(1), xTB + barW / 2, baseY - hT - 4);
+}
+
+const dt = 1 / 60;
+
+function step() {
+  const { m1, m2, type } = getParams();
+
+  if (!collided) {
+    // Move blocks toward each other
+    x1 += v1 * dt;
+    x2 += v2 * dt;
+
+    // Check collision (edge-to-edge)
+    const bw1 = blockWidth(m1);
+    const bw2 = blockWidth(m2);
+    const r1 = bw1 / 2;
+    const r2 = bw2 / 2;
+    const pxPerM = (W - 80) / (trackMax - trackMin);
+    const dist = (x2 - x1) * pxPerM;
+    const minDist = r1 + r2;
+
+    if (dist <= minDist && v1 - v2 > 0) {
+      collided = true;
+      const post = computePostCollision();
+      v1f_calc = post.v1f;
+      v2f_calc = post.v2f;
+      v1 = v1f_calc;
+      v2 = v2f_calc;
+      if (type === 'inelastic') {
+        x2 = x1; // merge
+      }
+    }
+  } else {
+    x1 += v1 * dt;
+    if (type === 'inelastic') {
+      x2 = x1;
+    } else {
+      x2 += v2 * dt;
+    }
+  }
+
+  // Stop if both off screen
+  if (x1 > trackMax + 2 && x2 > trackMax + 2) { stop(); return; }
+  if (x1 < trackMin - 2 && x2 < trackMin - 2) { stop(); return; }
+
+  updateInfo();
+  draw();
+  if (running) animId = requestAnimationFrame(step);
+}
+
+function start() {
+  if (running) return;
+  running = true;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  if (animId) cancelAnimationFrame(animId);
+}
+
+function reset() {
+  stop();
+  initPositions();
+  updateLabels();
+  updateInfo();
+  draw();
+}
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+
+[m1Slider, v1iSlider, m2Slider, v2iSlider, eSlider].forEach(s => {
+  s.addEventListener('input', () => { updateLabels(); reset(); });
+});
+collisionType.addEventListener('change', () => { updateLabels(); reset(); });
+
+window.addEventListener('resize', resize);
+
+// Static KaTeX
+document.getElementById('theoremEq').innerHTML = tex('\\vec{p}_i = \\vec{p}_f');
+document.getElementById('canvasTitle').innerHTML = '1차원 충돌: ' + tex('m_1\\vec{v}_{1i} + m_2\\vec{v}_{2i} = m_1\\vec{v}_{1f} + m_2\\vec{v}_{2f}');
+
+reset();
+resize();
+</script>
+</body>
+</html>

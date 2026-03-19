@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 420" font-family="sans-serif">
+  <defs>
+    <marker id="arR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
+    </marker>
+    <marker id="arB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
+    </marker>
+    <marker id="arG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- Pivot / wall support (left) -->
+  <rect x="60" y="180" width="16" height="80" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <polygon points="68,180 58,200 78,200" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+
+  <!-- Beam -->
+  <rect x="68" y="170" width="480" height="16" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2" rx="2"/>
+
+  <!-- Block on beam -->
+  <rect x="360" y="126" width="44" height="44" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
+  <text x="382" y="153" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a1a">M</text>
+
+  <!-- Dimension lines -->
+  <!-- L total -->
+  <line x1="68" y1="310" x2="548" y2="310" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="68" y1="300" x2="68" y2="320" stroke="#6B7280" stroke-width="1"/>
+  <line x1="548" y1="300" x2="548" y2="320" stroke="#6B7280" stroke-width="1"/>
+  <text x="308" y="330" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">L</text>
+
+  <!-- x distance to block -->
+  <line x1="68" y1="350" x2="382" y2="350" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="68" y1="340" x2="68" y2="360" stroke="#6B7280" stroke-width="1"/>
+  <line x1="382" y1="340" x2="382" y2="360" stroke="#6B7280" stroke-width="1"/>
+  <text x="225" y="370" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">x</text>
+
+  <!-- L/2 to beam center -->
+  <line x1="68" y1="280" x2="308" y2="280" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="308" y1="270" x2="308" y2="290" stroke="#6B7280" stroke-width="1"/>
+  <text x="188" y="275" text-anchor="middle" font-size="13" fill="#6B7280" font-style="italic">L/2</text>
+
+  <!-- Forces -->
+  <!-- Weight of beam (mg) at center -->
+  <line x1="308" y1="186" x2="308" y2="245" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arR)"/>
+  <text x="322" y="240" font-size="14" fill="#8B0029" font-style="italic">mg</text>
+
+  <!-- Weight of block (Mg) -->
+  <line x1="382" y1="126" x2="382" y2="80" stroke="#8B0029" stroke-width="2.5"/>
+  <line x1="382" y1="170" x2="382" y2="245" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arR)"/>
+  <text x="396" y="240" font-size="14" fill="#8B0029" font-style="italic">Mg</text>
+
+  <!-- Normal force at right support -->
+  <polygon points="538,186 528,210 548,210" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <line x1="538" y1="170" x2="538" y2="110" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arB)"/>
+  <text x="556" y="118" font-size="14" fill="#2563EB" font-style="italic">F<tspan font-size="10" dy="4">R</tspan></text>
+
+  <!-- Force at left pivot -->
+  <line x1="68" y1="170" x2="68" y2="110" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arB)"/>
+  <text x="42" y="118" font-size="14" fill="#2563EB" font-style="italic">F<tspan font-size="10" dy="4">L</tspan></text>
+
+  <!-- Pivot dot -->
+  <circle cx="68" cy="178" r="4" fill="#8B0029"/>
+
+  <!-- Labels -->
+  <text x="350" y="40" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">보 위의 블록 (자유 물체 다이어그램)</text>
+</svg>

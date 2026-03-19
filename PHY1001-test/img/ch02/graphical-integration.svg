@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="sans-serif">
+  <defs>
+    <marker id="axA4" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1a1a1a"/>
+    </marker>
+  </defs>
+
+  <!-- Left graph: v-t graph with area = Δx -->
+  <g transform="translate(0,0)">
+    <!-- Axes -->
+    <line x1="80" y1="350" x2="370" y2="350" stroke="#1a1a1a" stroke-width="2" marker-end="url(#axA4)"/>
+    <line x1="80" y1="350" x2="80" y2="30" stroke="#1a1a1a" stroke-width="2" marker-end="url(#axA4)"/>
+    <text x="375" y="365" font-size="14" fill="#1a1a1a" font-style="italic">t</text>
+    <text x="62" y="25" font-size="14" fill="#1a1a1a" font-style="italic">v(t)</text>
+
+    <!-- Title -->
+    <text x="225" y="20" font-size="15" fill="#8B0029" text-anchor="middle" font-weight="bold">v-t 그래프의 넓이 = 변위</text>
+
+    <!-- v(t) curve -->
+    <path d="M 100,280 C 140,260 180,200 220,160 C 260,120 300,100 340,90"
+          fill="none" stroke="#2563EB" stroke-width="2.5"/>
+
+    <!-- Shaded area -->
+    <path d="M 140,245 C 160,225 200,175 240,140 C 270,118 310,100 330,93 L 330,350 L 140,350 Z"
+          fill="#8B0029" opacity="0.15"/>
+
+    <!-- t1, t2 marks -->
+    <line x1="140" y1="245" x2="140" y2="350" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+    <line x1="330" y1="93" x2="330" y2="350" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+    <text x="140" y="370" font-size="13" fill="#6B7280" text-anchor="middle" font-style="italic">t₁</text>
+    <text x="330" y="370" font-size="13" fill="#6B7280" text-anchor="middle" font-style="italic">t₂</text>
+
+    <!-- Area label -->
+    <text x="235" y="280" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold">넓이 = Δx</text>
+
+    <!-- Formula -->
+    <rect x="100" y="385" width="250" height="28" rx="5" fill="#f8f0f2" stroke="#e0c0c8" stroke-width="1"/>
+    <text x="225" y="405" font-size="13" fill="#8B0029" text-anchor="middle" font-style="italic">Δx = ∫ v(t) dt</text>
+  </g>
+
+  <!-- Right graph: a-t graph with area = Δv -->
+  <g transform="translate(400,0)">
+    <!-- Axes -->
+    <line x1="80" y1="200" x2="370" y2="200" stroke="#1a1a1a" stroke-width="2" marker-end="url(#axA4)"/>
+    <line x1="80" y1="380" x2="80" y2="30" stroke="#1a1a1a" stroke-width="2" marker-end="url(#axA4)"/>
+    <text x="375" y="215" font-size="14" fill="#1a1a1a" font-style="italic">t</text>
+    <text x="62" y="25" font-size="14" fill="#1a1a1a" font-style="italic">a(t)</text>
+
+    <!-- Title -->
+    <text x="225" y="20" font-size="15" fill="#2563EB" text-anchor="middle" font-weight="bold">a-t 그래프의 넓이 = 속도 변화</text>
+
+    <!-- a(t) curve — varying acceleration -->
+    <path d="M 100,110 C 140,100 180,120 220,140 C 260,160 300,150 340,130"
+          fill="none" stroke="#8B0029" stroke-width="2.5"/>
+
+    <!-- Shaded area -->
+    <path d="M 140,105 C 160,110 200,128 240,142 C 270,155 310,148 330,135 L 330,200 L 140,200 Z"
+          fill="#2563EB" opacity="0.15"/>
+
+    <!-- t1, t2 marks -->
+    <line x1="140" y1="105" x2="140" y2="200" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+    <line x1="330" y1="135" x2="330" y2="200" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+    <text x="140" y="220" font-size="13" fill="#6B7280" text-anchor="middle" font-style="italic">t₁</text>
+    <text x="330" y="220" font-size="13" fill="#6B7280" text-anchor="middle" font-style="italic">t₂</text>
+
+    <!-- Area label -->
+    <text x="235" y="180" font-size="14" fill="#2563EB" text-anchor="middle" font-weight="bold">넓이 = Δv</text>
+
+    <!-- 0 label -->
+    <text x="90" y="215" font-size="12" fill="#6B7280">0</text>
+
+    <!-- Negative area example below axis -->
+    <path d="M 140,200 C 180,220 220,250 260,260 C 280,265 310,250 330,200"
+          fill="none" stroke="#8B0029" stroke-width="2" stroke-dasharray="6 4"/>
+    <path d="M 140,200 C 180,220 220,250 260,260 C 280,265 310,250 330,200 Z"
+          fill="#8B0029" opacity="0.08"/>
+    <text x="235" y="250" font-size="12" fill="#8B0029" text-anchor="middle">음의 넓이 → 감속</text>
+
+    <!-- Formula -->
+    <rect x="100" y="285" width="250" height="28" rx="5" fill="#f0f4ff" stroke="#c0d0e8" stroke-width="1"/>
+    <text x="225" y="305" font-size="13" fill="#2563EB" text-anchor="middle" font-style="italic">Δv = ∫ a(t) dt</text>
+  </g>
+</svg>

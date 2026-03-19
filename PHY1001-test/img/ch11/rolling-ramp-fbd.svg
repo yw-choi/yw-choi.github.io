@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 420" font-family="sans-serif">
+  <defs>
+    <marker id="aR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="aB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="aG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+  </defs>
+
+  <!-- Incline surface -->
+  <polygon points="80,370 620,370 620,120" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <!-- Hatching on surface -->
+  <g stroke="#ddd" stroke-width="1">
+    <line x1="120" y1="370" x2="100" y2="380"/>
+    <line x1="160" y1="370" x2="140" y2="380"/>
+    <line x1="200" y1="370" x2="180" y2="380"/>
+    <line x1="240" y1="370" x2="220" y2="380"/>
+    <line x1="280" y1="370" x2="260" y2="380"/>
+    <line x1="320" y1="370" x2="300" y2="380"/>
+    <line x1="360" y1="370" x2="340" y2="380"/>
+    <line x1="400" y1="370" x2="380" y2="380"/>
+    <line x1="440" y1="370" x2="420" y2="380"/>
+    <line x1="480" y1="370" x2="460" y2="380"/>
+    <line x1="520" y1="370" x2="500" y2="380"/>
+    <line x1="560" y1="370" x2="540" y2="380"/>
+    <line x1="600" y1="370" x2="580" y2="380"/>
+  </g>
+
+  <!-- Angle arc -->
+  <path d="M 560,370 A 60,60 0 0,0 575,346" fill="none" stroke="#6B7280" stroke-width="1.5"/>
+  <text x="545" y="356" font-size="16" font-style="italic" fill="#6B7280">θ</text>
+
+  <!-- Ball on incline -->
+  <!-- Incline angle: atan(250/540) ≈ 24.8°. Position ball at roughly middle of incline -->
+  <g transform="translate(380, 232)">
+    <!-- Ball -->
+    <circle cx="0" cy="0" r="35" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
+    <circle cx="0" cy="0" r="3" fill="#1a1a1a"/>
+    <text x="0" y="5" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">M</text>
+
+    <!-- Weight: Mg downward -->
+    <line x1="0" y1="8" x2="0" y2="95" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aR)"/>
+    <text x="15" y="92" font-size="15" font-weight="bold" fill="#8B0029">Mg</text>
+
+    <!-- Normal force: perpendicular to incline surface, pointing away -->
+    <!-- Incline angle ~24.8°, normal direction: (-sin24.8, -cos24.8) ≈ (-0.42, -0.91) -->
+    <line x1="0" y1="-38" x2="-33" y2="-109" stroke="#2563EB" stroke-width="2.5" marker-end="url(#aB)"/>
+    <text x="-55" y="-95" font-size="15" font-weight="bold" fill="#2563EB">N</text>
+
+    <!-- Friction force: up the incline (static friction opposing motion down) -->
+    <!-- Up-incline direction: (-cos24.8, sin24.8) ≈ (-0.91, 0.42) but along incline up-left -->
+    <line x1="-18" y1="30" x2="-78" y2="58" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aR)"/>
+    <text x="-105" y="62" font-size="15" font-style="italic" font-weight="bold" fill="#8B0029">f<tspan baseline-shift="sub" font-size="11">s</tspan></text>
+
+    <!-- Acceleration arrow: down the incline -->
+    <line x1="22" y1="-30" x2="72" y2="-53" stroke="#6B7280" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#aG)"/>
+    <text x="80" y="-48" font-size="14" font-style="italic" fill="#6B7280">a<tspan baseline-shift="sub" font-size="10">com</tspan></text>
+
+    <!-- Rotation arrow (curved) -->
+    <path d="M 20,28 A 34,34 0 0,1 -10,35" fill="none" stroke="#2563EB" stroke-width="1.5" marker-end="url(#aB)"/>
+    <text x="-8" y="52" font-size="13" font-style="italic" fill="#2563EB">ω</text>
+  </g>
+
+  <!-- Coordinate system along incline (bottom right) -->
+  <g transform="translate(160, 340)">
+    <!-- x-axis along incline (down-right) -->
+    <line x1="0" y1="0" x2="50" y2="-23" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#aG)"/>
+    <text x="55" y="-18" font-size="13" font-style="italic" fill="#1a1a1a">x</text>
+    <!-- y-axis perpendicular to incline (up-left) -->
+    <line x1="0" y1="0" x2="-23" y2="-50" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#aG)"/>
+    <text x="-30" y="-48" font-size="13" font-style="italic" fill="#1a1a1a">y</text>
+  </g>
+
+  <!-- Force equations -->
+  <text x="40" y="30" font-size="14" fill="#8B0029" font-weight="bold">빗면 위의 구름 운동 자유 물체 다이어그램</text>
+  <text x="40" y="55" font-size="13" fill="#6B7280" font-style="italic">Mg sin θ − f</text>
+  <text x="172" y="55" font-size="13" fill="#6B7280" font-style="italic"><tspan baseline-shift="sub" font-size="10">s</tspan> = Ma</text>
+  <text x="228" y="55" font-size="13" fill="#6B7280" font-style="italic"><tspan baseline-shift="sub" font-size="10">com</tspan></text>
+  <text x="40" y="75" font-size="13" fill="#6B7280" font-style="italic">R f<tspan baseline-shift="sub" font-size="10">s</tspan> = I<tspan baseline-shift="sub" font-size="10">com</tspan>α</text>
+
+  <!-- Contact point label -->
+  <text x="360" y="280" font-size="12" fill="#6B7280">접촉점 P</text>
+</svg>

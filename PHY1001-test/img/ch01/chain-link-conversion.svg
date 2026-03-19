@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 350" font-family="sans-serif">
+  <defs>
+    <marker id="arrowR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="375" y="35" text-anchor="middle" font-size="18" font-weight="700" fill="#8B0029">단위 변환: Chain-link Method</text>
+
+  <!-- Example: 1 평 = ? m² -->
+  <text x="375" y="70" text-anchor="middle" font-size="15" fill="#6B7280">예시: 25평 아파트는 몇 m²?</text>
+
+  <!-- Step boxes -->
+  <rect x="40" y="95" width="130" height="55" rx="10" fill="#F3F4F6" stroke="#8B0029" stroke-width="2"/>
+  <text x="105" y="118" text-anchor="middle" font-size="16" font-weight="700" fill="#8B0029">25 평</text>
+  <text x="105" y="140" text-anchor="middle" font-size="12" fill="#6B7280">원래 값</text>
+
+  <!-- Arrow 1 -->
+  <line x1="175" y1="122" x2="225" y2="122" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
+
+  <!-- Conversion factor 1 -->
+  <rect x="230" y="95" width="160" height="55" rx="10" fill="rgba(139,0,41,0.08)" stroke="#8B0029" stroke-width="2"/>
+  <text x="310" y="113" text-anchor="middle" font-size="13" fill="#1a1a1a">1 평 = 3.3058 m²</text>
+  <line x1="250" y1="120" x2="370" y2="120" stroke="#6B7280" stroke-width="1"/>
+  <text x="310" y="140" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="600">변환 인수</text>
+
+  <!-- Arrow 2 -->
+  <line x1="395" y1="122" x2="445" y2="122" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
+
+  <!-- Result -->
+  <rect x="450" y="95" width="200" height="55" rx="10" fill="#F3F4F6" stroke="#2563EB" stroke-width="2"/>
+  <text x="550" y="118" text-anchor="middle" font-size="16" font-weight="700" fill="#2563EB">82.6 m²</text>
+  <text x="550" y="140" text-anchor="middle" font-size="12" fill="#6B7280">결과</text>
+
+  <!-- Formula -->
+  <text x="375" y="185" text-anchor="middle" font-size="14" fill="#1a1a1a">25 평  x  (3.3058 m²/ 1 평)  =  82.6 m²</text>
+
+  <!-- Divider -->
+  <line x1="60" y1="210" x2="690" y2="210" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- Second example: km/h → m/s -->
+  <text x="375" y="240" text-anchor="middle" font-size="15" fill="#6B7280">예시: KTX 속력 305 km/h = ? m/s</text>
+
+  <rect x="40" y="260" width="130" height="55" rx="10" fill="#F3F4F6" stroke="#8B0029" stroke-width="2"/>
+  <text x="105" y="283" text-anchor="middle" font-size="15" font-weight="700" fill="#8B0029">305 km/h</text>
+  <text x="105" y="305" text-anchor="middle" font-size="12" fill="#6B7280">원래 값</text>
+
+  <line x1="175" y1="287" x2="215" y2="287" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
+
+  <rect x="220" y="260" width="130" height="55" rx="10" fill="rgba(139,0,41,0.08)" stroke="#8B0029" stroke-width="2"/>
+  <text x="285" y="280" text-anchor="middle" font-size="12" fill="#1a1a1a">1 km</text>
+  <line x1="240" y1="286" x2="330" y2="286" stroke="#6B7280" stroke-width="1"/>
+  <text x="285" y="303" text-anchor="middle" font-size="12" fill="#1a1a1a">= 1000 m</text>
+
+  <line x1="355" y1="287" x2="395" y2="287" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
+
+  <rect x="400" y="260" width="130" height="55" rx="10" fill="rgba(139,0,41,0.08)" stroke="#8B0029" stroke-width="2"/>
+  <text x="465" y="280" text-anchor="middle" font-size="12" fill="#1a1a1a">1 h</text>
+  <line x1="420" y1="286" x2="510" y2="286" stroke="#6B7280" stroke-width="1"/>
+  <text x="465" y="303" text-anchor="middle" font-size="12" fill="#1a1a1a">= 3600 s</text>
+
+  <line x1="535" y1="287" x2="575" y2="287" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
+
+  <rect x="580" y="260" width="140" height="55" rx="10" fill="#F3F4F6" stroke="#2563EB" stroke-width="2"/>
+  <text x="650" y="283" text-anchor="middle" font-size="15" font-weight="700" fill="#2563EB">84.7 m/s</text>
+  <text x="650" y="305" text-anchor="middle" font-size="12" fill="#6B7280">결과</text>
+</svg>

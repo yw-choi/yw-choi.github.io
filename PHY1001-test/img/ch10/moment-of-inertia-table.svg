@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="sans-serif">
+  <!-- Title -->
+  <text x="400" y="35" text-anchor="middle" font-size="18" fill="#8B0029" font-weight="bold">주요 물체의 관성모멘트</text>
+
+  <!-- Row 1: Thin rod (center), Thin rod (end), Hoop -->
+  <!-- Item 1: Rod through center -->
+  <rect x="30" y="55" width="230" height="180" rx="8" fill="#F3F4F6" stroke="#e0c0c8" stroke-width="1"/>
+  <line x1="70" y1="140" x2="230" y2="140" stroke="#1a1a1a" stroke-width="3"/>
+  <circle cx="150" cy="140" r="4" fill="#8B0029"/>
+  <line x1="150" y1="110" x2="150" y2="170" stroke="#8B0029" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="150" y="105" text-anchor="middle" font-size="12" fill="#8B0029">회전축</text>
+  <!-- L label -->
+  <line x1="70" y1="160" x2="230" y2="160" stroke="#6B7280" stroke-width="1" marker-end="url(#ar2-gray)"/>
+  <text x="150" y="178" text-anchor="middle" font-size="13" fill="#6B7280" font-style="italic">L</text>
+  <text x="150" y="205" text-anchor="middle" font-size="14" fill="#1a1a1a" font-weight="bold">가느다란 막대 (중심)</text>
+  <text x="150" y="225" text-anchor="middle" font-size="15" fill="#8B0029" font-style="italic">I = (1/12)ML²</text>
+
+  <!-- Item 2: Rod through end -->
+  <rect x="285" y="55" width="230" height="180" rx="8" fill="#F3F4F6" stroke="#e0c0c8" stroke-width="1"/>
+  <line x1="310" y1="140" x2="490" y2="140" stroke="#1a1a1a" stroke-width="3"/>
+  <circle cx="310" cy="140" r="4" fill="#8B0029"/>
+  <line x1="310" y1="110" x2="310" y2="170" stroke="#8B0029" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="310" y="105" text-anchor="middle" font-size="12" fill="#8B0029">회전축</text>
+  <text x="400" y="178" text-anchor="middle" font-size="13" fill="#6B7280" font-style="italic">L</text>
+  <text x="400" y="205" text-anchor="middle" font-size="14" fill="#1a1a1a" font-weight="bold">가느다란 막대 (끝)</text>
+  <text x="400" y="225" text-anchor="middle" font-size="15" fill="#8B0029" font-style="italic">I = (1/3)ML²</text>
+
+  <!-- Item 3: Hoop (thin ring) -->
+  <rect x="540" y="55" width="230" height="180" rx="8" fill="#F3F4F6" stroke="#e0c0c8" stroke-width="1"/>
+  <circle cx="655" cy="135" r="45" fill="none" stroke="#1a1a1a" stroke-width="3"/>
+  <circle cx="655" cy="135" r="3" fill="#8B0029"/>
+  <text x="655" y="110" text-anchor="middle" font-size="12" fill="#8B0029">축</text>
+  <line x1="655" y1="135" x2="700" y2="135" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="680" y="130" font-size="13" fill="#6B7280" font-style="italic">R</text>
+  <text x="655" y="205" text-anchor="middle" font-size="14" fill="#1a1a1a" font-weight="bold">고리 (hoop)</text>
+  <text x="655" y="225" text-anchor="middle" font-size="15" fill="#8B0029" font-style="italic">I = MR²</text>
+
+  <!-- Row 2: Solid cylinder, Solid sphere, Hollow sphere -->
+  <!-- Item 4: Solid cylinder / disk -->
+  <rect x="30" y="260" width="230" height="180" rx="8" fill="#F3F4F6" stroke="#e0c0c8" stroke-width="1"/>
+  <ellipse cx="145" cy="330" rx="55" ry="20" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+  <line x1="90" y1="290" x2="90" y2="330" stroke="#1a1a1a" stroke-width="2"/>
+  <line x1="200" y1="290" x2="200" y2="330" stroke="#1a1a1a" stroke-width="2"/>
+  <ellipse cx="145" cy="290" rx="55" ry="20" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
+  <circle cx="145" cy="290" r="3" fill="#8B0029"/>
+  <line x1="145" y1="265" x2="145" y2="350" stroke="#8B0029" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <line x1="145" y1="290" x2="200" y2="290" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="175" y="285" font-size="13" fill="#6B7280" font-style="italic">R</text>
+  <text x="145" y="396" text-anchor="middle" font-size="14" fill="#1a1a1a" font-weight="bold">속이 찬 원통/원판</text>
+  <text x="145" y="416" text-anchor="middle" font-size="15" fill="#8B0029" font-style="italic">I = (1/2)MR²</text>
+
+  <!-- Item 5: Solid sphere -->
+  <rect x="285" y="260" width="230" height="180" rx="8" fill="#F3F4F6" stroke="#e0c0c8" stroke-width="1"/>
+  <circle cx="400" cy="330" r="45" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+  <circle cx="400" cy="330" r="3" fill="#8B0029"/>
+  <line x1="400" y1="275" x2="400" y2="385" stroke="#8B0029" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <line x1="400" y1="330" x2="445" y2="330" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="425" y="325" font-size="13" fill="#6B7280" font-style="italic">R</text>
+  <text x="400" y="396" text-anchor="middle" font-size="14" fill="#1a1a1a" font-weight="bold">속이 찬 구</text>
+  <text x="400" y="416" text-anchor="middle" font-size="15" fill="#8B0029" font-style="italic">I = (2/5)MR²</text>
+
+  <!-- Item 6: Hollow sphere -->
+  <rect x="540" y="260" width="230" height="180" rx="8" fill="#F3F4F6" stroke="#e0c0c8" stroke-width="1"/>
+  <circle cx="655" cy="330" r="45" fill="none" stroke="#1a1a1a" stroke-width="3"/>
+  <circle cx="655" cy="330" r="38" fill="#fff" stroke="none"/>
+  <circle cx="655" cy="330" r="38" fill="none" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="4 3"/>
+  <circle cx="655" cy="330" r="3" fill="#8B0029"/>
+  <line x1="655" y1="275" x2="655" y2="385" stroke="#8B0029" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <line x1="655" y1="330" x2="700" y2="330" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="680" y="325" font-size="13" fill="#6B7280" font-style="italic">R</text>
+  <text x="655" y="396" text-anchor="middle" font-size="14" fill="#1a1a1a" font-weight="bold">속이 빈 구</text>
+  <text x="655" y="416" text-anchor="middle" font-size="15" fill="#8B0029" font-style="italic">I = (2/3)MR²</text>
+
+  <defs>
+    <marker id="ar2-gray" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#6B7280"/>
+    </marker>
+  </defs>
+</svg>

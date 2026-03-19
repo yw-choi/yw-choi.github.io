@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>빗면 위의 마찰력 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
+.control-group { display: flex; flex-direction: column; gap: 4px; }
+.control-group label { font-size: 13px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .eq { color: #555; font-size: 12px; }
+.info-box .eq .katex { font-size: 13px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .theorem-eq { font-size: 15px; display: block; margin-top: 4px; }
+.theorem-box .katex { color: #fff; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+.formula-overlay { position: absolute; bottom: 0; left: 0; right: 0; pointer-events: none; padding: 10px 20px 12px; background: rgba(250,250,250,0.92); border-top: 1px solid #eee; }
+.formula-overlay .formula-line { font-size: 14px; line-height: 1.7; color: #333; }
+.formula-overlay .formula-line.highlight { color: #8B0029; font-weight: 700; }
+.formula-overlay .formula-line .katex { font-size: 15px; }
+.status-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; }
+.status-static { background: #e0f0e0; color: #2a7d2a; }
+.status-sliding { background: #f8e0e4; color: #8B0029; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 50vh; }
+  .controls { width: 100%; height: 50vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+    <div class="formula-overlay" id="formulaOverlay">
+      <div class="formula-line" id="formulaLine1"></div>
+      <div class="formula-line" id="formulaLine2"></div>
+      <div class="formula-line highlight" id="formulaLine3"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="theorem-box">
+      빗면 위의 마찰력
+      <span class="theorem-eq" id="theoremEq"></span>
+    </div>
+
+    <div class="control-group">
+      <label>빗면 각도 θ = <span id="angleVal">30</span>&deg;</label>
+      <input type="range" id="angleSlider" min="5" max="75" value="30" step="1">
+    </div>
+
+    <div class="control-group">
+      <label>질량 m = <span id="massVal">5.0</span> kg</label>
+      <input type="range" id="massSlider" min="1" max="20" value="5" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>정지 마찰 계수 <span id="musLabel"></span> = <span id="musVal">0.40</span></label>
+      <input type="range" id="musSlider" min="0.05" max="1.0" value="0.40" step="0.01">
+    </div>
+
+    <div class="control-group">
+      <label>운동 마찰 계수 <span id="mukLabel"></span> = <span id="mukVal">0.30</span></label>
+      <input type="range" id="mukSlider" min="0.02" max="0.99" value="0.30" step="0.01">
+    </div>
+
+    <div class="info-box" id="infoBox">
+      <div><span class="label">상태:</span> <span id="statusBadge" class="status-badge status-static">정지</span></div>
+      <div id="critAngleLine"></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div><span class="label">mg sin θ =</span> <span class="val" id="mgsinInfo">—</span></div>
+      <div><span class="label">mg cos θ =</span> <span class="val" id="mgcosInfo">—</span></div>
+      <div id="frictionLine"></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div><span class="label">가속도 a =</span> <span class="val" id="accelInfo">0.00 m/s²</span></div>
+      <div><span class="label">속력 v =</span> <span class="val" id="speedInfo">0.00 m/s</span></div>
+      <div><span class="label">변위 d =</span> <span class="val" id="dispInfo">0.00 m</span></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) {
+  return katex.renderToString(expr, { throwOnError: false });
+}
+
+function renderStaticKaTeX() {
+  document.getElementById('theoremEq').innerHTML = tex('f_{s,\\text{max}} = \\mu_s N,\\quad f_k = \\mu_k N');
+  document.getElementById('canvasTitle').innerHTML = '빗면 위의 마찰력: ' + tex('\\theta_c = \\tan^{-1}\\mu_s');
+  document.getElementById('musLabel').innerHTML = tex('\\mu_s');
+  document.getElementById('mukLabel').innerHTML = tex('\\mu_k');
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+const angleSlider = document.getElementById('angleSlider');
+const massSlider = document.getElementById('massSlider');
+const musSlider = document.getElementById('musSlider');
+const mukSlider = document.getElementById('mukSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let dpr = window.devicePixelRatio || 1;
+let W, H;
+let running = false;
+let animId = null;
+let t = 0;
+const dtAnim = 1/60;
+const g = 9.8;
+const maxSlideLen = 10; // max displacement in meters
+
+function getParams() {
+  const thetaDeg = parseFloat(angleSlider.value);
+  const theta = thetaDeg * Math.PI / 180;
+  const m = parseFloat(massSlider.value);
+  const mus = parseFloat(musSlider.value);
+  const muk = parseFloat(mukSlider.value);
+  return { thetaDeg, theta, m, mus, muk };
+}
+
+function isSliding() {
+  const { theta, mus } = getParams();
+  return Math.tan(theta) > mus;
+}
+
+function getAccel() {
+  const { theta, muk } = getParams();
+  if (!isSliding()) return 0;
+  return g * (Math.sin(theta) - muk * Math.cos(theta));
+}
+
+function getState() {
+  const a = getAccel();
+  let d = 0.5 * a * t * t;
+  let v = a * t;
+  if (d >= maxSlideLen) {
+    d = maxSlideLen;
+    const tEnd = Math.sqrt(2 * maxSlideLen / Math.max(a, 0.001));
+    v = a * tEnd;
+  }
+  return { d, v, a };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  W = rect.width; H = rect.height;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function updateLabels() {
+  document.getElementById('angleVal').textContent = angleSlider.value;
+  document.getElementById('massVal').textContent = parseFloat(massSlider.value).toFixed(1);
+  document.getElementById('musVal').textContent = parseFloat(musSlider.value).toFixed(2);
+  document.getElementById('mukVal').textContent = parseFloat(mukSlider.value).toFixed(2);
+}
+
+function updateInfo() {
+  const { thetaDeg, theta, m, mus, muk } = getParams();
+  const { d, v, a } = getState();
+  const sliding = isSliding();
+  const critAngle = Math.atan(mus) * 180 / Math.PI;
+
+  const badge = document.getElementById('statusBadge');
+  if (sliding) {
+    badge.textContent = '미끄러짐';
+    badge.className = 'status-badge status-sliding';
+  } else {
+    badge.textContent = '정지';
+    badge.className = 'status-badge status-static';
+  }
+
+  document.getElementById('critAngleLine').innerHTML =
+    '<span class="label">임계각 </span>' + tex('\\theta_c') + ' = ' +
+    tex('\\tan^{-1}(' + mus.toFixed(2) + ')') + ' = <span class="val">' + critAngle.toFixed(1) + '°</span>';
+
+  const mgsin = m * g * Math.sin(theta);
+  const mgcos = m * g * Math.cos(theta);
+  document.getElementById('mgsinInfo').textContent = mgsin.toFixed(2) + ' N';
+  document.getElementById('mgcosInfo').textContent = mgcos.toFixed(2) + ' N';
+
+  const frLine = document.getElementById('frictionLine');
+  if (sliding) {
+    const fk = muk * m * g * Math.cos(theta);
+    frLine.innerHTML = '<span class="label">' + tex('f_k') + ' =</span> <span class="val">' + fk.toFixed(2) + ' N</span>';
+  } else {
+    frLine.innerHTML = '<span class="label">' + tex('f_s') + ' =</span> <span class="val">' + mgsin.toFixed(2) + ' N</span> (= mg sin θ)';
+  }
+
+  document.getElementById('accelInfo').textContent = a.toFixed(2) + ' m/s²';
+  document.getElementById('speedInfo').textContent = v.toFixed(2) + ' m/s';
+  document.getElementById('dispInfo').textContent = d.toFixed(2) + ' m';
+
+  // Formula overlay
+  const { d: dd } = getState();
+  if (sliding) {
+    document.getElementById('formulaLine1').innerHTML = tex(
+      'a = g(\\sin\\theta - \\mu_k\\cos\\theta) = ' + a.toFixed(2) + '\\;\\text{m/s}^2'
+    );
+    document.getElementById('formulaLine2').innerHTML = tex(
+      'v = at = ' + v.toFixed(2) + '\\;\\text{m/s}'
+    );
+    document.getElementById('formulaLine3').innerHTML = tex(
+      'd = \\tfrac{1}{2}at^2 = ' + dd.toFixed(2) + '\\;\\text{m}'
+    );
+  } else {
+    document.getElementById('formulaLine1').innerHTML = tex(
+      'mg\\sin\\theta = ' + mgsin.toFixed(2) + '\\;\\text{N}'
+    );
+    document.getElementById('formulaLine2').innerHTML = tex(
+      'f_{s,\\text{max}} = \\mu_s N = ' + (mus * mgcos).toFixed(2) + '\\;\\text{N}'
+    );
+    document.getElementById('formulaLine3').innerHTML = tex(
+      'f_s = mg\\sin\\theta \\leq f_{s,\\text{max}} \\;\\Rightarrow\\; \\text{정지!}'
+    );
+  }
+}
+
+function drawArrow(x1, y1, x2, y2, color, lineWidth) {
+  const headLen = 11;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawTextWithBg(text, x, y, font, color) {
+  ctx.font = font;
+  const m = ctx.measureText(text);
+  const pad = 3;
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillRect(x - pad, y - parseInt(font) - pad + 3, m.width + 2*pad, parseInt(font) + 2*pad);
+  ctx.fillStyle = color;
+  ctx.fillText(text, x, y);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  const { thetaDeg, theta, m, mus, muk } = getParams();
+  const { d, v, a } = getState();
+  const sliding = isSliding();
+
+  const marginBottom = 90;
+  const baseY = H - marginBottom;
+  const leftX = 60;
+  const rightX = W - 40;
+  const baseLen = rightX - leftX;
+  const inclineH = baseLen * Math.tan(theta);
+
+  // Clamp incline height
+  const maxH = baseY - 60;
+  let scale = 1;
+  if (inclineH > maxH) scale = maxH / inclineH;
+  const actLen = baseLen * scale;
+  const actH = actLen * Math.tan(theta);
+
+  const bx = leftX;
+  const by = baseY;
+  const tx = leftX + actLen;
+  const ty = baseY - actH;
+
+  // Incline surface
+  ctx.fillStyle = '#F3F4F6';
+  ctx.beginPath();
+  ctx.moveTo(bx, by);
+  ctx.lineTo(tx, by);
+  ctx.lineTo(tx, ty);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Ground hatching
+  ctx.strokeStyle = '#ddd';
+  ctx.lineWidth = 1;
+  for (let hx = bx; hx <= tx; hx += 14) {
+    ctx.beginPath();
+    ctx.moveTo(hx, by);
+    ctx.lineTo(hx - 8, by + 8);
+    ctx.stroke();
+  }
+
+  // Angle arc
+  const arcR = Math.min(45, actLen * 0.15);
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(tx, by, arcR, Math.PI, Math.PI + theta, true);
+  ctx.stroke();
+  ctx.fillStyle = '#6B7280';
+  ctx.font = '15px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('θ = ' + thetaDeg + '°', tx - arcR - 20, by - 8);
+
+  // Block position on slope
+  const slopeLen = actLen / Math.cos(theta);
+  const pxPerMeter = slopeLen / maxSlideLen;
+  const blockDist = d * pxPerMeter;
+  // Block center measured from top along slope
+  const blockS = Math.min(blockDist, slopeLen - 30);
+  const cosT = Math.cos(theta);
+  const sinT = Math.sin(theta);
+
+  // Position from top of incline going down
+  const bcx = tx - blockS * cosT;
+  const bcy = ty + blockS * sinT;
+
+  // Draw block (rotated)
+  ctx.save();
+  ctx.translate(bcx, bcy);
+  ctx.rotate(-theta);
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.07)';
+  ctx.fillRect(-23, -23, 50, 50);
+
+  ctx.fillStyle = sliding ? '#fff0f3' : '#ffffff';
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2;
+  ctx.fillRect(-25, -25, 50, 50);
+  ctx.strokeRect(-25, -25, 50, 50);
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(m.toFixed(0) + ' kg', 0, 0);
+  ctx.textBaseline = 'alphabetic';
+  ctx.restore();
+
+  // Force arrows (from block center)
+  const fScale = 2.5; // pixels per Newton
+
+  // Weight (mg) - straight down
+  const mg = m * g;
+  const mgLen = Math.min(mg * fScale, 120);
+  drawArrow(bcx, bcy, bcx, bcy + mgLen, '#8B0029', 2.5);
+  drawTextWithBg('mg', bcx + 10, bcy + mgLen - 5, 'bold 14px sans-serif', '#8B0029');
+
+  // Normal force - perpendicular to surface, away
+  const N = m * g * Math.cos(theta);
+  const nLen = Math.min(N * fScale, 100);
+  const nx = bcx - nLen * sinT;
+  const ny = bcy - nLen * cosT;
+  drawArrow(bcx, bcy, nx, ny, '#2563EB', 2.5);
+  drawTextWithBg('N', nx - 12, ny + 5, 'bold 14px sans-serif', '#2563EB');
+
+  // Friction force - up along incline (opposing motion)
+  if (sliding) {
+    const fk = muk * N;
+    const fkLen = Math.min(fk * fScale, 80);
+    const fkx = bcx + fkLen * cosT;
+    const fky = bcy - fkLen * sinT;
+    drawArrow(bcx, bcy, fkx, fky, '#8B0029', 2.5);
+    drawTextWithBg('fk', fkx + 6, fky - 2, 'bold 14px sans-serif', '#8B0029');
+  } else {
+    const fs = m * g * Math.sin(theta);
+    const fsLen = Math.min(fs * fScale, 80);
+    if (fsLen > 3) {
+      const fsx = bcx + fsLen * cosT;
+      const fsy = bcy - fsLen * sinT;
+      drawArrow(bcx, bcy, fsx, fsy, '#8B0029', 2.5);
+      drawTextWithBg('fs', fsx + 6, fsy - 2, 'bold 14px sans-serif', '#8B0029');
+    }
+  }
+
+  // mg sin θ component (along incline, downhill)
+  const mgsinLen = Math.min(m * g * Math.sin(theta) * fScale, 100);
+  const mgsinx = bcx - mgsinLen * cosT;
+  const mgsiny = bcy + mgsinLen * sinT;
+  ctx.setLineDash([4, 3]);
+  drawArrow(bcx, bcy, mgsinx, mgsiny, '#6B7280', 1.5);
+  ctx.setLineDash([]);
+
+  // Velocity arrow (if moving)
+  if (v > 0.1) {
+    const vLen = Math.min(v * 8, 80);
+    const vx = bcx - vLen * cosT;
+    const vy = bcy + vLen * sinT;
+    drawArrow(bcx, bcy - 30 * cosT - 30 * 0, vx, vy - 30 * cosT, '#2563EB', 2);
+    drawTextWithBg('v = ' + v.toFixed(1) + ' m/s', (bcx + vx)/2 - 20, vy - 30 * cosT - 12, 'bold 13px sans-serif', '#2563EB');
+  }
+
+  // Critical angle indicator bar
+  const critAngle = Math.atan(mus) * 180 / Math.PI;
+  const barX = 20;
+  const barY = 50;
+  const barH = Math.min(H * 0.35, 200);
+  const barW = 14;
+
+  ctx.fillStyle = '#eee';
+  ctx.fillRect(barX, barY, barW, barH);
+
+  // Fill up to current angle
+  const angleFrac = thetaDeg / 75;
+  const fillH = angleFrac * barH;
+  ctx.fillStyle = sliding ? 'rgba(139,0,41,0.5)' : 'rgba(42,125,42,0.5)';
+  ctx.fillRect(barX, barY + barH - fillH, barW, fillH);
+
+  // Critical line
+  const critFrac = critAngle / 75;
+  const critY = barY + barH - critFrac * barH;
+  ctx.strokeStyle = '#8B0029';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(barX - 3, critY);
+  ctx.lineTo(barX + barW + 3, critY);
+  ctx.stroke();
+  ctx.fillStyle = '#8B0029';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('θc=' + critAngle.toFixed(0) + '°', barX + barW + 5, critY + 4);
+
+  ctx.strokeStyle = '#aaa';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(barX, barY, barW, barH);
+}
+
+function step() {
+  if (!isSliding()) {
+    stop();
+    return;
+  }
+  t += dtAnim;
+  const { d } = getState();
+  if (d >= maxSlideLen) {
+    const a = getAccel();
+    t = Math.sqrt(2 * maxSlideLen / Math.max(a, 0.001));
+    updateInfo();
+    draw();
+    stop();
+    return;
+  }
+  updateInfo();
+  draw();
+  if (running) animId = requestAnimationFrame(step);
+}
+
+function start() {
+  if (running) return;
+  if (!isSliding()) return;
+  running = true;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  if (animId) cancelAnimationFrame(animId);
+}
+
+function reset() {
+  stop();
+  t = 0;
+  updateInfo();
+  draw();
+}
+
+playBtn.addEventListener('click', () => {
+  if (running) stop(); else start();
+});
+resetBtn.addEventListener('click', reset);
+
+[angleSlider, massSlider, musSlider, mukSlider].forEach(s => {
+  s.addEventListener('input', () => {
+    // Ensure muk <= mus
+    const mus = parseFloat(musSlider.value);
+    const muk = parseFloat(mukSlider.value);
+    if (muk > mus) mukSlider.value = mus.toFixed(2);
+    updateLabels();
+    reset();
+  });
+});
+
+window.addEventListener('resize', resize);
+
+renderStaticKaTeX();
+updateLabels();
+reset();
+resize();
+</script>
+</body>
+</html>
