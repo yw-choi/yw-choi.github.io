@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 480" font-family="sans-serif">
+  <defs>
+    <marker id="ar1" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
+    </marker>
+    <marker id="ar2" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
+    </marker>
+    <marker id="ar3" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <text x="300" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">사다리 문제 (자유 물체 다이어그램)</text>
+
+  <!-- Wall (right) -->
+  <rect x="440" y="50" width="20" height="380" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <!-- Wall hatching -->
+  <g stroke="#ccc" stroke-width="1">
+    <line x1="460" y1="70" x2="475" y2="85"/>
+    <line x1="460" y1="100" x2="475" y2="115"/>
+    <line x1="460" y1="130" x2="475" y2="145"/>
+    <line x1="460" y1="160" x2="475" y2="175"/>
+    <line x1="460" y1="190" x2="475" y2="205"/>
+    <line x1="460" y1="220" x2="475" y2="235"/>
+    <line x1="460" y1="250" x2="475" y2="265"/>
+    <line x1="460" y1="280" x2="475" y2="295"/>
+    <line x1="460" y1="310" x2="475" y2="325"/>
+    <line x1="460" y1="340" x2="475" y2="355"/>
+    <line x1="460" y1="370" x2="475" y2="385"/>
+    <line x1="460" y1="400" x2="475" y2="415"/>
+  </g>
+
+  <!-- Ground -->
+  <line x1="40" y1="430" x2="460" y2="430" stroke="#6B7280" stroke-width="2"/>
+  <g stroke="#ccc" stroke-width="1">
+    <line x1="60" y1="430" x2="50" y2="445"/>
+    <line x1="90" y1="430" x2="80" y2="445"/>
+    <line x1="120" y1="430" x2="110" y2="445"/>
+    <line x1="150" y1="430" x2="140" y2="445"/>
+    <line x1="180" y1="430" x2="170" y2="445"/>
+    <line x1="210" y1="430" x2="200" y2="445"/>
+    <line x1="240" y1="430" x2="230" y2="445"/>
+    <line x1="270" y1="430" x2="260" y2="445"/>
+    <line x1="300" y1="430" x2="290" y2="445"/>
+    <line x1="330" y1="430" x2="320" y2="445"/>
+    <line x1="360" y1="430" x2="350" y2="445"/>
+    <line x1="390" y1="430" x2="380" y2="445"/>
+    <line x1="420" y1="430" x2="410" y2="445"/>
+  </g>
+
+  <!-- Ladder -->
+  <line x1="140" y1="430" x2="440" y2="100" stroke="#1a1a1a" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Angle theta at base -->
+  <path d="M200,430 A60,60 0 0,0 180,395" fill="none" stroke="#6B7280" stroke-width="1.5"/>
+  <text x="208" y="412" font-size="14" fill="#6B7280" font-style="italic">&theta;</text>
+
+  <!-- Weight mg at center of ladder -->
+  <circle cx="290" cy="265" r="3" fill="#8B0029"/>
+  <line x1="290" y1="265" x2="290" y2="345" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar1)"/>
+  <text x="306" y="340" font-size="14" fill="#8B0029" font-style="italic">mg</text>
+
+  <!-- Normal force at wall (Fw, horizontal, pointing left) -->
+  <line x1="440" y1="100" x2="370" y2="100" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar2)"/>
+  <text x="385" y="88" font-size="14" fill="#2563EB" font-style="italic">F<tspan font-size="10" dy="4">w</tspan></text>
+
+  <!-- Normal force at ground (N, vertical, pointing up) -->
+  <line x1="140" y1="430" x2="140" y2="360" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar2)"/>
+  <text x="120" y="375" font-size="14" fill="#2563EB" font-style="italic">N</text>
+
+  <!-- Friction at ground (f, horizontal, pointing right) -->
+  <line x1="140" y1="430" x2="210" y2="430" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar1)"/>
+  <text x="185" y="455" font-size="14" fill="#8B0029" font-style="italic">f</text>
+
+  <!-- Dimension: h (height) -->
+  <line x1="500" y1="100" x2="500" y2="430" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="493" y1="100" x2="507" y2="100" stroke="#6B7280" stroke-width="1"/>
+  <line x1="493" y1="430" x2="507" y2="430" stroke="#6B7280" stroke-width="1"/>
+  <text x="518" y="270" font-size="14" fill="#6B7280" font-style="italic">h</text>
+
+  <!-- Dimension: a (base) -->
+  <line x1="140" y1="460" x2="440" y2="460" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="140" y1="453" x2="140" y2="467" stroke="#6B7280" stroke-width="1"/>
+  <line x1="440" y1="453" x2="440" y2="467" stroke="#6B7280" stroke-width="1"/>
+  <text x="290" y="475" font-size="14" fill="#6B7280" font-style="italic">a</text>
+
+  <!-- Label: frictionless wall -->
+  <text x="440" y="55" text-anchor="end" font-size="12" fill="#6B7280">마찰 없는 벽</text>
+  <!-- Label: rough floor -->
+  <text x="80" y="455" font-size="12" fill="#6B7280">거친 바닥</text>
+</svg>

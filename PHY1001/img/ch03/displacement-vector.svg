@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" font-family="sans-serif">
+  <defs>
+    <marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
+    </marker>
+    <marker id="arrow-gray" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#6B7280"/>
+    </marker>
+  </defs>
+  <!-- Ground/background -->
+  <rect x="40" y="320" width="620" height="60" fill="#F3F4F6" rx="4"/>
+  <text x="350" y="360" text-anchor="middle" font-size="13" fill="#6B7280">지면</text>
+  <!-- Curved path -->
+  <path d="M 120 300 C 180 180, 250 120, 320 160 C 390 200, 420 100, 520 280"
+        fill="none" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="280" y="110" font-size="14" fill="#6B7280">실제 경로</text>
+  <!-- Start point -->
+  <circle cx="120" cy="300" r="6" fill="#2563EB"/>
+  <text x="100" y="295" font-size="14" fill="#2563EB" font-weight="bold">A</text>
+  <text x="80" y="275" font-size="13" fill="#6B7280">출발점</text>
+  <!-- End point -->
+  <circle cx="520" cy="280" r="6" fill="#2563EB"/>
+  <text x="530" y="275" font-size="14" fill="#2563EB" font-weight="bold">B</text>
+  <text x="530" y="295" font-size="13" fill="#6B7280">도착점</text>
+  <!-- Displacement vector -->
+  <line x1="120" y1="300" x2="515" y2="280" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrow-red)"/>
+  <text x="310" y="310" font-size="16" fill="#8B0029" font-weight="bold" font-style="italic">d</text>
+  <text x="325" y="310" font-size="14" fill="#8B0029">(변위)</text>
+  <!-- Distance label on path -->
+  <text x="380" y="145" font-size="13" fill="#6B7280" font-style="italic">거리(distance) = 경로의 길이</text>
+  <!-- Arrow pointing to path -->
+  <line x1="378" y1="148" x2="360" y2="165" stroke="#6B7280" stroke-width="1" marker-end="url(#arrow-gray)"/>
+</svg>

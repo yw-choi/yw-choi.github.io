@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 420" font-family="sans-serif">
+  <defs>
+    <marker id="arrRedR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
+    </marker>
+    <marker id="arrBlueR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
+    </marker>
+    <marker id="arrGrayR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- Divider -->
+  <line x1="375" y1="30" x2="375" y2="350" stroke="#eee" stroke-width="1.5" stroke-dasharray="6 4"/>
+
+  <!-- === Time t (left) === -->
+  <text x="188" y="30" font-size="18" fill="#1a1a1a" text-anchor="middle" font-weight="bold">시각 t</text>
+
+  <!-- Rocket body at time t -->
+  <rect x="130" y="100" width="80" height="160" rx="10" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
+  <!-- Nose cone -->
+  <polygon points="130,100 170,50 210,100" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
+
+  <!-- Labels -->
+  <text x="170" y="170" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="bold">M</text>
+  <text x="170" y="195" font-size="12" fill="#6B7280" text-anchor="middle">(로켓+연료)</text>
+
+  <!-- velocity arrow upward -->
+  <line x1="170" y1="48" x2="170" y2="-5" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrBlueR)"/>
+  <text x="195" y="20" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">v</text>
+
+  <!-- Exhaust hint -->
+  <text x="170" y="290" font-size="13" fill="#6B7280" text-anchor="middle">총 운동량: Mv</text>
+
+  <!-- === Time t + dt (right) === -->
+  <text x="562" y="30" font-size="18" fill="#1a1a1a" text-anchor="middle" font-weight="bold">시각 t + dt</text>
+
+  <!-- Rocket body (smaller - fuel consumed) -->
+  <rect x="500" y="100" width="80" height="130" rx="10" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
+  <polygon points="500,100 540,55 580,100" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
+
+  <text x="540" y="160" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="bold">M - dM</text>
+
+  <!-- velocity arrow (v + dv) -->
+  <line x1="540" y1="53" x2="540" y2="-10" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrBlueR)"/>
+  <text x="565" y="15" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">v + dv</text>
+
+  <!-- Exhaust gas -->
+  <ellipse cx="540" cy="270" rx="25" ry="15" fill="rgba(139,0,41,0.1)" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="540" y="275" font-size="12" fill="#8B0029" text-anchor="middle" font-weight="bold">dM</text>
+
+  <!-- Exhaust velocity arrow (downward) -->
+  <line x1="540" y1="288" x2="540" y2="340" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRedR)"/>
+  <text x="565" y="320" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">U</text>
+  <text x="565" y="338" font-size="11" fill="#6B7280">(배기가스 속도)</text>
+
+  <!-- Exhaust flame -->
+  <path d="M 520,232 Q 530,250 540,245 Q 550,250 560,232" stroke="#8B0029" stroke-width="1.5" fill="rgba(139,0,41,0.2)"/>
+  <path d="M 525,240 Q 535,265 540,258 Q 545,265 555,240" stroke="#8B0029" stroke-width="1" fill="rgba(139,0,41,0.1)"/>
+
+  <!-- Rocket equation box -->
+  <rect x="80" y="360" width="590" height="45" rx="8" fill="#f8f0f2" stroke="#e0c0c8" stroke-width="1"/>
+  <text x="375" y="382" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold">치올코프스키 로켓 방정식</text>
+  <text x="375" y="398" font-size="13" fill="#8B0029" text-anchor="middle" font-style="italic">v<tspan font-size="10" dy="3">f</tspan><tspan dy="-3"> - v</tspan><tspan font-size="10" dy="3">i</tspan><tspan dy="-3"> = v</tspan><tspan font-size="10" dy="3">rel</tspan><tspan dy="-3"> ln(M</tspan><tspan font-size="10" dy="3">i</tspan><tspan dy="-3">/M</tspan><tspan font-size="10" dy="3">f</tspan><tspan dy="-3">)</tspan></text>
+</svg>

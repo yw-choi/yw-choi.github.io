@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" font-family="sans-serif">
+  <defs>
+    <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#8B0029"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#2563EB"/>
+    </marker>
+    <marker id="arrowGray" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- Background region -->
+  <rect x="80" y="40" width="540" height="320" rx="12" fill="#F3F4F6" stroke="none"/>
+
+  <!-- Point A -->
+  <circle cx="160" cy="300" r="10" fill="#8B0029"/>
+  <text x="160" y="340" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">A</text>
+
+  <!-- Point B -->
+  <circle cx="540" cy="100" r="10" fill="#8B0029"/>
+  <text x="540" y="80" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">B</text>
+
+  <!-- Path 1: straight line -->
+  <line x1="170" y1="295" x2="530" y2="105" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+  <text x="370" y="175" text-anchor="middle" font-size="14" fill="#8B0029" transform="rotate(-28,370,175)">경로 1</text>
+
+  <!-- Path 2: curved top -->
+  <path d="M170,295 C250,100 400,50 530,105" fill="none" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <text x="320" y="85" text-anchor="middle" font-size="14" fill="#2563EB">경로 2</text>
+
+  <!-- Path 3: curved bottom -->
+  <path d="M170,295 C300,370 450,340 530,105" fill="none" stroke="#6B7280" stroke-width="2.5" marker-end="url(#arrowGray)"/>
+  <text x="400" y="340" text-anchor="middle" font-size="14" fill="#6B7280">경로 3</text>
+
+  <!-- Equation box -->
+  <rect x="380" y="220" width="260" height="70" rx="8" fill="white" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="510" y="248" text-anchor="middle" font-size="15" fill="#1a1a1a">보존력이 하는 일:</text>
+  <text x="510" y="275" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029" font-style="italic">W₁ = W₂ = W₃</text>
+
+  <!-- Title -->
+  <text x="350" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a1a">보존력: 경로에 무관한 일</text>
+</svg>

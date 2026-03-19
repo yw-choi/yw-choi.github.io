@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 380" font-family="sans-serif">
+  <defs>
+    <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#8B0029"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="390" y="35" text-anchor="middle" font-size="18" font-weight="700" fill="#8B0029">미터(m)의 정의 변천사</text>
+
+  <!-- Timeline axis -->
+  <line x1="60" y1="120" x2="720" y2="120" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+
+  <!-- 1792 -->
+  <circle cx="120" cy="120" r="8" fill="#8B0029"/>
+  <text x="120" y="100" text-anchor="middle" font-size="14" font-weight="700" fill="#8B0029">1792</text>
+  <rect x="40" y="145" width="160" height="65" rx="8" fill="#F3F4F6" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="120" y="167" text-anchor="middle" font-size="12" fill="#1a1a1a">지구 자오선의</text>
+  <text x="120" y="185" text-anchor="middle" font-size="12" fill="#1a1a1a">북극~적도 거리의</text>
+  <text x="120" y="203" text-anchor="middle" font-size="12" fill="#8B0029" font-weight="600">1/10,000,000</text>
+
+  <!-- 1889 -->
+  <circle cx="300" cy="120" r="8" fill="#8B0029"/>
+  <text x="300" y="100" text-anchor="middle" font-size="14" font-weight="700" fill="#8B0029">1889</text>
+  <rect x="220" y="145" width="160" height="65" rx="8" fill="#F3F4F6" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="300" y="167" text-anchor="middle" font-size="12" fill="#1a1a1a">백금-이리듐 합금</text>
+  <text x="300" y="185" text-anchor="middle" font-size="12" fill="#1a1a1a">미터 원기</text>
+  <text x="300" y="203" text-anchor="middle" font-size="12" fill="#8B0029" font-weight="600">(국제 미터 원기)</text>
+
+  <!-- 1960 -->
+  <circle cx="480" cy="120" r="8" fill="#2563EB"/>
+  <text x="480" y="100" text-anchor="middle" font-size="14" font-weight="700" fill="#2563EB">1960</text>
+  <rect x="400" y="145" width="160" height="65" rx="8" fill="#F3F4F6" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="480" y="167" text-anchor="middle" font-size="12" fill="#1a1a1a">크립톤-86 원자의</text>
+  <text x="480" y="185" text-anchor="middle" font-size="12" fill="#1a1a1a">특정 파장의</text>
+  <text x="480" y="203" text-anchor="middle" font-size="12" fill="#2563EB" font-weight="600">1,650,763.73배</text>
+
+  <!-- 1983 (현재) -->
+  <circle cx="660" cy="120" r="8" fill="#8B0029"/>
+  <text x="660" y="100" text-anchor="middle" font-size="14" font-weight="700" fill="#8B0029">1983</text>
+  <rect x="575" y="145" width="170" height="80" rx="8" fill="rgba(139,0,41,0.08)" stroke="#8B0029" stroke-width="2"/>
+  <text x="660" y="167" text-anchor="middle" font-size="12" fill="#1a1a1a">빛이 진공에서</text>
+  <text x="660" y="185" text-anchor="middle" font-size="12" fill="#8B0029" font-weight="700">1/299,792,458 초</text>
+  <text x="660" y="203" text-anchor="middle" font-size="12" fill="#1a1a1a">동안 이동하는 거리</text>
+  <text x="660" y="220" text-anchor="middle" font-size="11" fill="#8B0029" font-weight="600">(현재 정의)</text>
+
+  <!-- Bottom annotation -->
+  <text x="390" y="280" text-anchor="middle" font-size="14" fill="#6B7280">실물 기준</text>
+  <line x1="200" y1="275" x2="350" y2="275" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="390" y="310" text-anchor="middle" font-size="14" fill="#2563EB" font-weight="600">자연 상수 기준</text>
+  <line x1="430" y1="305" x2="580" y2="305" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <text x="390" y="355" text-anchor="middle" font-size="13" fill="#6B7280" font-style="italic">누구나, 어디서나 재현 가능한 정의를 향해</text>
+</svg>

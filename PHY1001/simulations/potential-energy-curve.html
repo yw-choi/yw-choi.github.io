@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>퍼텐셜에너지 곡선 탐색기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; cursor: crosshair; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 270px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 14px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+.legend { font-size: 11px; line-height: 1.8; }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-swatch { width: 18px; height: 4px; border-radius: 2px; }
+button { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; flex: 1; }
+button:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area" id="canvasArea">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>퍼텐셜에너지 곡선 탐색기</h2>
+      <div class="subtitle">Potential Energy Curve Explorer (Ch.8)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label id="emecLabel">역학적 에너지 E<sub>mec</sub> = <span id="emecVal">5.0</span> J</label>
+      <input type="range" id="emecSlider" min="0" max="12" value="5" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>입자 위치 x = <span id="xVal">-3.0</span></label>
+      <input type="range" id="xSlider" min="-4" max="6" value="-3" step="0.05">
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 운동 시작</button>
+      <button id="resetBtn">&#8635; 초기화</button>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><span class="legend-swatch" style="background:#8B0029"></span> U(x) 퍼텐셜에너지 곡선</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#2563EB"></span> E<sub>mec</sub> 역학적 에너지</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#16a34a"></span> K = E<sub>mec</sub> − U(x)</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#6B7280"></span> F(x) = −dU/dx</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const emecSlider = document.getElementById('emecSlider');
+const xSlider = document.getElementById('xSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+// Potential energy function: U(x) = x^4/8 - 2x^2/2 + 2
+// This has a double-well shape
+function U(x) {
+  return x * x * x * x / 8 - x * x + 4;
+}
+
+function dUdx(x) {
+  return x * x * x / 2 - 2 * x;
+}
+
+function F(x) {
+  return -dUdx(x);
+}
+
+const xMin = -4, xMax = 6;
+const uMin = -1, uMax = 14;
+
+let Emec = 5.0;
+let xPos = -3.0;
+let vx = 0;
+let running = false, animId = null, lastTs = null;
+let initialX = -3.0;
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+// Coordinate transforms
+const margin = { left: 55, right: 25, top: 50, bottom: 55 };
+function gw() { return CW - margin.left - margin.right; }
+function gh() { return CH * 0.6 - margin.top - margin.bottom; }
+function px(x) { return margin.left + (x - xMin) / (xMax - xMin) * gw(); }
+function py(u) { return margin.top + gh() - (u - uMin) / (uMax - uMin) * gh(); }
+function invPx(pxVal) { return xMin + (pxVal - margin.left) / gw() * (xMax - xMin); }
+function invPy(pyVal) { return uMin + (margin.top + gh() - pyVal) / gh() * (uMax - uMin); }
+
+function findTurningPoints(emec) {
+  const pts = [];
+  const step = 0.01;
+  for (let x = xMin; x < xMax; x += step) {
+    const u1 = U(x) - emec;
+    const u2 = U(x + step) - emec;
+    if (u1 * u2 <= 0) {
+      // Linear interpolation
+      const frac = Math.abs(u1) / (Math.abs(u1) + Math.abs(u2));
+      pts.push(x + frac * step);
+    }
+  }
+  return pts;
+}
+
+function findEquilibria() {
+  const pts = [];
+  const step = 0.01;
+  for (let x = xMin + 0.1; x < xMax - 0.1; x += step) {
+    const f1 = dUdx(x);
+    const f2 = dUdx(x + step);
+    if (f1 * f2 <= 0) {
+      const frac = Math.abs(f1) / (Math.abs(f1) + Math.abs(f2));
+      const xEq = x + frac * step;
+      // Check stability: d²U/dx² > 0 → stable, < 0 → unstable
+      const d2U = (dUdx(xEq + 0.01) - dUdx(xEq - 0.01)) / 0.02;
+      pts.push({ x: xEq, stable: d2U > 0 });
+    }
+  }
+  return pts;
+}
+
+function reset() {
+  if (animId) cancelAnimationFrame(animId);
+  running = false; animId = null; lastTs = null;
+  Emec = parseFloat(emecSlider.value);
+  xPos = parseFloat(xSlider.value);
+  initialX = xPos;
+  vx = 0;
+  playBtn.textContent = '\u25B6 운동 시작';
+  playBtn.classList.remove('running');
+  updateInfo(); draw();
+}
+
+function start() {
+  if (running) { stop(); return; }
+  // Check if particle can exist at current position
+  const uNow = U(xPos);
+  if (uNow > Emec) {
+    return; // Can't start here
+  }
+  running = true; lastTs = null;
+  // Determine initial velocity direction (positive)
+  const kNow = Emec - uNow;
+  vx = Math.sqrt(2 * kNow); // m=1 for simplicity
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  xSlider.disabled = true;
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  playBtn.textContent = '\u25B6 운동 시작';
+  playBtn.classList.remove('running');
+  xSlider.disabled = false;
+}
+
+function step(ts) {
+  if (!running) return;
+  if (!lastTs) { lastTs = ts; animId = requestAnimationFrame(step); return; }
+  const dtReal = Math.min((ts - lastTs) / 1000, 0.03);
+  lastTs = ts;
+
+  // Simple dynamics with m=1
+  const force = F(xPos);
+  vx += force * dtReal;
+  xPos += vx * dtReal;
+
+  // Clamp to bounds
+  if (xPos < xMin + 0.05 || xPos > xMax - 0.05) {
+    vx = -vx * 0.95;
+    xPos = Math.max(xMin + 0.05, Math.min(xMax - 0.05, xPos));
+  }
+
+  // Enforce energy conservation (correct numerical drift)
+  const uNow = U(xPos);
+  const kTarget = Emec - uNow;
+  if (kTarget < 0) {
+    // Hit turning point, reverse
+    vx = -vx;
+    xPos -= vx * dtReal;
+  } else {
+    const speed = Math.sqrt(2 * Math.max(kTarget, 0));
+    vx = vx >= 0 ? speed : -speed;
+  }
+
+  xSlider.value = xPos.toFixed(2);
+  document.getElementById('xVal').textContent = xPos.toFixed(2);
+  updateInfo(); draw();
+  animId = requestAnimationFrame(step);
+}
+
+function updateInfo() {
+  Emec = parseFloat(emecSlider.value);
+  const uNow = U(xPos);
+  const kNow = Math.max(Emec - uNow, 0);
+  const fNow = F(xPos);
+
+  const box = document.getElementById('infoBox');
+  let html = '';
+  html += '<span class="label">위치:</span> <span class="val">x = ' + xPos.toFixed(2) + '</span><br>';
+  html += tex('U(x)') + ' = <span class="val">' + uNow.toFixed(2) + ' J</span><br>';
+  html += tex('K = E_{\\text{mec}} - U') + ' = <span class="val">' + kNow.toFixed(2) + ' J</span>';
+  if (kNow <= 0.01) html += ' <span style="color:#8B0029;font-weight:700">(반환점!)</span>';
+  html += '<br>' + tex('F(x) = -dU/dx') + ' = <span class="val">' + fNow.toFixed(2) + ' N</span>';
+  if (fNow > 0.05) html += ' <span style="color:#2563EB">(+x 방향)</span>';
+  else if (fNow < -0.05) html += ' <span style="color:#8B0029">(−x 방향)</span>';
+  box.innerHTML = html;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  Emec = parseFloat(emecSlider.value);
+
+  const graphH = CH * 0.6;
+  const forceH = CH * 0.4;
+
+  drawUCurve(0, 0, CW, graphH);
+  drawFCurve(0, graphH, CW, forceH);
+}
+
+function drawUCurve(ox, oy, w, h) {
+  ctx.save();
+
+  // Grid
+  ctx.strokeStyle = '#e8e8e8'; ctx.lineWidth = 0.5;
+  for (let x = Math.ceil(xMin); x <= xMax; x++) {
+    ctx.beginPath(); ctx.moveTo(px(x), margin.top); ctx.lineTo(px(x), margin.top + gh()); ctx.stroke();
+  }
+  for (let u = 0; u <= uMax; u += 2) {
+    ctx.beginPath(); ctx.moveTo(margin.left, py(u)); ctx.lineTo(margin.left + gw(), py(u)); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(margin.left, margin.top + gh()); ctx.lineTo(margin.left + gw(), margin.top + gh()); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(margin.left, margin.top + gh()); ctx.lineTo(margin.left, margin.top); ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#1a1a1a'; ctx.font = '13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('x', margin.left + gw() + 15, margin.top + gh() + 5);
+  ctx.textAlign = 'right';
+  ctx.fillText('U(x)', margin.left - 8, margin.top - 5);
+
+  // Tick labels
+  ctx.font = '10px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (let x = Math.ceil(xMin); x <= xMax; x++) {
+    ctx.fillStyle = '#888';
+    ctx.fillText(x, px(x), margin.top + gh() + 4);
+  }
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (let u = 0; u <= uMax; u += 2) {
+    if (u < uMin) continue;
+    ctx.fillStyle = '#888';
+    ctx.fillText(u.toFixed(0), margin.left - 6, py(u));
+  }
+
+  // Shaded region K = Emec - U(x) where K > 0
+  ctx.fillStyle = 'rgba(22,163,106,0.12)';
+  ctx.beginPath();
+  let started = false;
+  for (let xi = xMin; xi <= xMax; xi += 0.05) {
+    const u = U(xi);
+    if (u <= Emec) {
+      if (!started) { ctx.moveTo(px(xi), py(Emec)); started = true; }
+      ctx.lineTo(px(xi), py(u));
+    } else if (started) {
+      ctx.lineTo(px(xi), py(Emec));
+      ctx.closePath(); ctx.fill();
+      ctx.beginPath(); started = false;
+    }
+  }
+  if (started) {
+    ctx.lineTo(px(xMax), py(Emec));
+    ctx.closePath(); ctx.fill();
+  }
+
+  // U(x) curve
+  ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  for (let xi = xMin; xi <= xMax; xi += 0.05) {
+    const u = U(xi);
+    if (u > uMax + 2) continue;
+    if (xi === xMin || U(xi - 0.05) > uMax + 2) ctx.moveTo(px(xi), py(u));
+    else ctx.lineTo(px(xi), py(u));
+  }
+  ctx.stroke();
+
+  // Emec line
+  ctx.strokeStyle = '#2563EB'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]);
+  ctx.beginPath(); ctx.moveTo(margin.left, py(Emec)); ctx.lineTo(margin.left + gw(), py(Emec)); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#2563EB'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('E_mec = ' + Emec.toFixed(1) + ' J', margin.left + gw() - 100, py(Emec) - 6);
+
+  // Turning points
+  const tps = findTurningPoints(Emec);
+  tps.forEach(tp => {
+    ctx.fillStyle = '#8B0029';
+    ctx.beginPath(); ctx.arc(px(tp), py(Emec), 6, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#8B0029'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('반환점', px(tp), py(Emec) - 10);
+  });
+
+  // Equilibrium points
+  const eqs = findEquilibria();
+  eqs.forEach(eq => {
+    const uEq = U(eq.x);
+    if (eq.stable) {
+      ctx.fillStyle = '#16a34a';
+      ctx.beginPath(); ctx.arc(px(eq.x), py(uEq), 5, 0, Math.PI * 2); ctx.fill();
+      ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('안정', px(eq.x), py(uEq) + 16);
+    } else {
+      ctx.strokeStyle = '#d97706'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(px(eq.x), py(uEq), 5, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = '#d97706'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('불안정', px(eq.x), py(uEq) + 16);
+    }
+  });
+
+  // Current particle position
+  const uNow = U(xPos);
+  const kNow = Math.max(Emec - uNow, 0);
+
+  // K bar at particle position
+  if (kNow > 0.1 && uNow <= Emec) {
+    ctx.strokeStyle = '#16a34a'; ctx.lineWidth = 2;
+    ctx.setLineDash([3, 2]);
+    ctx.beginPath();
+    ctx.moveTo(px(xPos), py(uNow));
+    ctx.lineTo(px(xPos), py(Emec));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#16a34a'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left';
+    const midY = (py(uNow) + py(Emec)) / 2;
+    ctx.fillText('K=' + kNow.toFixed(1), px(xPos) + 6, midY);
+  }
+
+  // Particle dot
+  ctx.fillStyle = '#2563EB';
+  ctx.beginPath(); ctx.arc(px(xPos), py(Math.min(uNow, Emec)), 8, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(px(xPos), py(Math.min(uNow, Emec)), 8, 0, Math.PI * 2); ctx.stroke();
+
+  // U(x) label
+  ctx.fillStyle = '#8B0029'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('U(x)', px(xMax) - 45, py(U(xMax - 0.3)) - 8);
+
+  ctx.restore();
+}
+
+function drawFCurve(ox, oy, w, h) {
+  ctx.save();
+  ctx.translate(0, oy);
+
+  const fMargin = { left: 55, right: 25, top: 20, bottom: 35 };
+  const fgw = CW - fMargin.left - fMargin.right;
+  const fgh = h - fMargin.top - fMargin.bottom;
+
+  // Find F range
+  let fMin = -8, fMax = 8;
+
+  function fpx(x) { return fMargin.left + (x - xMin) / (xMax - xMin) * fgw; }
+  function fpy(f) { return fMargin.top + fgh / 2 - (f / fMax) * fgh * 0.45; }
+
+  // Separator
+  ctx.strokeStyle = 'rgba(139,0,41,0.15)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(20, 0); ctx.lineTo(w - 20, 0); ctx.stroke();
+
+  // Grid
+  ctx.strokeStyle = '#e8e8e8'; ctx.lineWidth = 0.5;
+  for (let x = Math.ceil(xMin); x <= xMax; x++) {
+    ctx.beginPath(); ctx.moveTo(fpx(x), fMargin.top); ctx.lineTo(fpx(x), fMargin.top + fgh); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(fMargin.left, fpy(0)); ctx.lineTo(fMargin.left + fgw, fpy(0)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(fMargin.left, fMargin.top); ctx.lineTo(fMargin.left, fMargin.top + fgh); ctx.stroke();
+
+  // Labels
+  ctx.fillStyle = '#1a1a1a'; ctx.font = '13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('x', fMargin.left + fgw + 15, fpy(0) + 5);
+  ctx.textAlign = 'right';
+  ctx.fillText('F(x)', fMargin.left - 8, fMargin.top + 5);
+
+  // F(x) curve
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let xi = xMin; xi <= xMax; xi += 0.05) {
+    const f = F(xi);
+    if (Math.abs(f) > fMax * 1.5) continue;
+    if (xi === xMin) ctx.moveTo(fpx(xi), fpy(f));
+    else ctx.lineTo(fpx(xi), fpy(f));
+  }
+  ctx.stroke();
+
+  // Zero line label
+  ctx.fillStyle = '#6B7280'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+  ctx.fillText('0', fMargin.left - 6, fpy(0) + 3);
+
+  // Current position marker
+  const fNow = F(xPos);
+  ctx.fillStyle = '#6B7280';
+  ctx.beginPath(); ctx.arc(fpx(xPos), fpy(fNow), 6, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(fpx(xPos), fpy(fNow), 6, 0, Math.PI * 2); ctx.stroke();
+
+  // Force direction arrow at particle
+  if (Math.abs(fNow) > 0.3) {
+    const arrowLen = Math.min(Math.abs(fNow) * 5, 40);
+    const dir = fNow > 0 ? 1 : -1;
+    ctx.strokeStyle = fNow > 0 ? '#2563EB' : '#8B0029';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(fpx(xPos), fpy(fNow));
+    ctx.lineTo(fpx(xPos) + dir * arrowLen, fpy(fNow));
+    ctx.stroke();
+    // Arrow head
+    ctx.fillStyle = ctx.strokeStyle;
+    ctx.beginPath();
+    ctx.moveTo(fpx(xPos) + dir * arrowLen, fpy(fNow));
+    ctx.lineTo(fpx(xPos) + dir * (arrowLen - 7), fpy(fNow) - 4);
+    ctx.lineTo(fpx(xPos) + dir * (arrowLen - 7), fpy(fNow) + 4);
+    ctx.closePath(); ctx.fill();
+  }
+
+  // F = -dU/dx label
+  ctx.fillStyle = '#6B7280'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('F(x) = -dU/dx', fMargin.left + fgw - 110, fMargin.top + 14);
+
+  ctx.restore();
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML = '퍼텐셜에너지 곡선: ' + tex('F(x) = -\\dfrac{dU}{dx}');
+  document.getElementById('theoremBox').innerHTML =
+    tex('K(x) = E_{\\text{mec}} - U(x)') + '<br>' +
+    tex('F(x) = -\\dfrac{dU}{dx}');
+  document.getElementById('formulaBox').innerHTML =
+    '<b>퍼텐셜에너지 곡선:</b><br>' +
+    tex('U(x) = \\tfrac{1}{8}x^4 - x^2 + 4') + '<br>' +
+    '<b>반환점:</b> ' + tex('U(x) = E_{\\text{mec}}') + ' (K = 0)<br>' +
+    '<b>평형점:</b> ' + tex('F = -dU/dx = 0');
+}
+
+emecSlider.addEventListener('input', () => {
+  document.getElementById('emecVal').textContent = parseFloat(emecSlider.value).toFixed(1);
+  Emec = parseFloat(emecSlider.value);
+  if (running) { stop(); }
+  updateInfo(); draw();
+});
+
+xSlider.addEventListener('input', () => {
+  xPos = parseFloat(xSlider.value);
+  document.getElementById('xVal').textContent = xPos.toFixed(2);
+  updateInfo(); draw();
+});
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', () => {
+  xSlider.disabled = false;
+  xPos = -3; xSlider.value = -3;
+  document.getElementById('xVal').textContent = '-3.00';
+  Emec = 5; emecSlider.value = 5;
+  document.getElementById('emecVal').textContent = '5.0';
+  reset();
+});
+
+window.addEventListener('resize', resize);
+
+renderStatic();
+reset();
+resize();
+</script>
+</body>
+</html>

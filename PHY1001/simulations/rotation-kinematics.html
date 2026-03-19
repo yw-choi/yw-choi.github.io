@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>회전 운동학 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
+.control-group { display: flex; flex-direction: column; gap: 4px; }
+.control-group label { font-size: 13px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .eq { color: #555; font-size: 12px; }
+.info-box .eq .katex { font-size: 13px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .theorem-eq { font-size: 15px; display: block; margin-top: 4px; }
+.theorem-box .katex { color: #fff; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 20px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 20px; color: #8B0029; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 50vh; }
+  .controls { width: 100%; height: 50vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div class="theorem-box">
+      회전 운동학
+      <span class="theorem-eq" id="theoremEq"></span>
+    </div>
+
+    <div class="control-group">
+      <label>초기 각속도 <span id="omega0Label"></span> = <span id="omega0Val">2.0</span> rad/s</label>
+      <input type="range" id="omega0Slider" min="-6" max="6" value="2" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>각가속도 <span id="alphaLabel"></span> = <span id="alphaVal">0.5</span> rad/s²</label>
+      <input type="range" id="alphaSlider" min="-3" max="3" value="0.5" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>반지름 r = <span id="radiusVal">1.0</span> m</label>
+      <input type="range" id="radiusSlider" min="0.3" max="2.0" value="1.0" step="0.1">
+    </div>
+
+    <div class="info-box" id="infoBox">
+      <div class="eq" id="eqTheta"></div>
+      <div><span class="label">시간 t:</span> <span class="val" id="timeInfo">0.00 s</span></div>
+      <div><span class="label" id="thetaInfoLabel"></span> <span class="val" id="thetaInfo">0.00 rad</span></div>
+      <div><span class="label" id="omegaInfoLabel"></span> <span class="val" id="omegaInfo">0.00 rad/s</span></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div class="eq" id="eqLinear"></div>
+      <div><span class="label">접선 속력 v:</span> <span class="val" id="vInfo">0.00 m/s</span></div>
+      <div><span class="label" id="atLabel"></span> <span class="val" id="atInfo">0.00 m/s²</span></div>
+      <div><span class="label" id="arLabel"></span> <span class="val" id="arInfo">0.00 m/s²</span></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) {
+  return katex.renderToString(expr, { throwOnError: false });
+}
+
+function renderStaticKaTeX() {
+  document.getElementById('theoremEq').innerHTML = tex('v = \\omega r,\\; a_t = \\alpha r');
+  document.getElementById('canvasTitle').innerHTML = '회전 운동학: ' + tex('\\theta(t),\\; \\omega(t)');
+  document.getElementById('omega0Label').innerHTML = tex('\\omega_0');
+  document.getElementById('alphaLabel').innerHTML = tex('\\alpha');
+  document.getElementById('eqTheta').innerHTML = tex('\\theta = \\omega_0 t + \\tfrac{1}{2}\\alpha t^2');
+  document.getElementById('eqLinear').innerHTML = tex('v = \\omega r,\\; a_t = \\alpha r,\\; a_r = \\omega^2 r');
+  document.getElementById('thetaInfoLabel').innerHTML = tex('\\theta') + ' =';
+  document.getElementById('omegaInfoLabel').innerHTML = tex('\\omega') + ' =';
+  document.getElementById('atLabel').innerHTML = tex('a_t') + ' =';
+  document.getElementById('arLabel').innerHTML = tex('a_r') + ' =';
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+const omega0Slider = document.getElementById('omega0Slider');
+const alphaSlider = document.getElementById('alphaSlider');
+const radiusSlider = document.getElementById('radiusSlider');
+
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+let running = false;
+let animId = null;
+let t = 0;
+const dt = 1 / 60;
+const maxTime = 20;
+
+// Trail for point P
+let trail = [];
+const maxTrail = 200;
+
+// Graph data
+let thetaHistory = [];
+let omegaHistory = [];
+
+function getParams() {
+  return {
+    omega0: parseFloat(omega0Slider.value),
+    alpha: parseFloat(alphaSlider.value),
+    r: parseFloat(radiusSlider.value)
+  };
+}
+
+function getState() {
+  const { omega0, alpha, r } = getParams();
+  const theta = omega0 * t + 0.5 * alpha * t * t;
+  const omega = omega0 + alpha * t;
+  const v = omega * r;
+  const at = alpha * r;
+  const ar = omega * omega * r;
+  return { theta, omega, v, at, ar };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width;
+  CH = rect.height;
+  canvas.width = CW * dpr;
+  canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px';
+  canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function updateLabels() {
+  document.getElementById('omega0Val').textContent = parseFloat(omega0Slider.value).toFixed(1);
+  document.getElementById('alphaVal').textContent = parseFloat(alphaSlider.value).toFixed(1);
+  document.getElementById('radiusVal').textContent = parseFloat(radiusSlider.value).toFixed(1);
+}
+
+function updateInfo() {
+  const { theta, omega, v, at, ar } = getState();
+  document.getElementById('timeInfo').textContent = t.toFixed(2) + ' s';
+  document.getElementById('thetaInfo').textContent = theta.toFixed(2) + ' rad';
+  document.getElementById('omegaInfo').textContent = omega.toFixed(2) + ' rad/s';
+  document.getElementById('vInfo').textContent = v.toFixed(2) + ' m/s';
+  document.getElementById('atInfo').textContent = at.toFixed(2) + ' m/s²';
+  document.getElementById('arInfo').textContent = ar.toFixed(2) + ' m/s²';
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 10;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lw;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawTextWithBg(text, x, y, color, fontSize) {
+  ctx.font = (fontSize || 14) + 'px sans-serif';
+  const m = ctx.measureText(text);
+  const pad = 3;
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillRect(x - pad, y - fontSize + 1, m.width + 2 * pad, fontSize + 2);
+  ctx.fillStyle = color;
+  ctx.textAlign = 'left';
+  ctx.fillText(text, x, y);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  const { omega0, alpha, r } = getParams();
+  const { theta, omega, v, at, ar } = getState();
+
+  // --- Disk area (left half) ---
+  const diskCX = CW * 0.28;
+  const diskCY = CH * 0.48;
+  const diskR = Math.min(CW * 0.2, CH * 0.35);
+
+  // Disk
+  ctx.fillStyle = '#F3F4F6';
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(diskCX, diskCY, diskR, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.stroke();
+
+  // Reference line (dashed)
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 3]);
+  ctx.beginPath();
+  ctx.moveTo(diskCX, diskCY);
+  ctx.lineTo(diskCX + diskR + 10, diskCY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Radius line to point P
+  const px = diskCX + diskR * Math.cos(theta);
+  const py = diskCY - diskR * Math.sin(theta);
+  ctx.strokeStyle = '#8B0029';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(diskCX, diskCY);
+  ctx.lineTo(px, py);
+  ctx.stroke();
+
+  // Trail
+  trail.push({ x: px, y: py });
+  if (trail.length > maxTrail) trail.shift();
+  if (trail.length > 1) {
+    ctx.strokeStyle = 'rgba(37,99,235,0.25)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(trail[0].x, trail[0].y);
+    for (let i = 1; i < trail.length; i++) {
+      ctx.lineTo(trail[i].x, trail[i].y);
+    }
+    ctx.stroke();
+  }
+
+  // Point P
+  ctx.fillStyle = '#8B0029';
+  ctx.beginPath();
+  ctx.arc(px, py, 7, 0, 2 * Math.PI);
+  ctx.fill();
+  drawTextWithBg('P', px + 12, py - 5, '#8B0029', 16);
+
+  // Angle arc
+  if (Math.abs(theta) > 0.05) {
+    const arcR = 30;
+    ctx.strokeStyle = '#8B0029';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    const thetaMod = theta % (2 * Math.PI);
+    if (thetaMod >= 0) {
+      ctx.arc(diskCX, diskCY, arcR, 0, -thetaMod, true);
+    } else {
+      ctx.arc(diskCX, diskCY, arcR, 0, -thetaMod, false);
+    }
+    ctx.stroke();
+    const labelAngle = -thetaMod / 2;
+    drawTextWithBg('θ', diskCX + (arcR + 12) * Math.cos(labelAngle), diskCY + (arcR + 12) * Math.sin(labelAngle), '#8B0029', 16);
+  }
+
+  // Velocity vector (tangent to circle at P)
+  if (Math.abs(omega) > 0.05) {
+    const vScale = Math.min(Math.abs(v) * 15, diskR * 0.8);
+    const tangentAngle = theta + Math.PI / 2;
+    const dir = omega >= 0 ? 1 : -1;
+    const vx = px + dir * vScale * Math.cos(tangentAngle);
+    const vy = py - dir * vScale * Math.sin(tangentAngle);
+    drawArrow(px, py, vx, vy, '#2563EB', 2.5);
+    drawTextWithBg('v = ' + Math.abs(v).toFixed(1) + ' m/s', vx + 5, vy - 8, '#2563EB', 13);
+  }
+
+  // Centripetal acceleration (inward)
+  if (ar > 0.1) {
+    const arScale = Math.min(ar * 8, diskR * 0.5);
+    const arx = px + arScale * Math.cos(theta + Math.PI);
+    const ary = py - arScale * Math.sin(theta + Math.PI);
+    drawArrow(px, py, arx, ary, '#8B0029', 2);
+    drawTextWithBg('ar', arx - 15, ary + 15, '#8B0029', 12);
+  }
+
+  // Center
+  ctx.fillStyle = '#1a1a1a';
+  ctx.beginPath();
+  ctx.arc(diskCX, diskCY, 3, 0, 2 * Math.PI);
+  ctx.fill();
+
+  // Angular velocity direction
+  if (Math.abs(omega) > 0.05) {
+    const omegaDir = omega > 0 ? 'CCW ↺' : 'CW ↻';
+    drawTextWithBg('ω: ' + omegaDir, diskCX - 25, diskCY + diskR + 25, '#8B0029', 14);
+  }
+
+  // --- Graphs (right half) ---
+  const graphLeft = CW * 0.56;
+  const graphRight = CW - 30;
+  const graphW = graphRight - graphLeft;
+
+  // θ(t) graph
+  const g1Top = 55;
+  const g1Bot = CH * 0.45;
+  const g1H = g1Bot - g1Top;
+  drawGraph(graphLeft, g1Top, graphW, g1H, thetaHistory, 'θ (rad)', '#8B0029');
+
+  // ω(t) graph
+  const g2Top = CH * 0.52;
+  const g2Bot = CH - 25;
+  const g2H = g2Bot - g2Top;
+  drawGraph(graphLeft, g2Top, graphW, g2H, omegaHistory, 'ω (rad/s)', '#2563EB');
+}
+
+function drawGraph(gx, gy, gw, gh, data, label, color) {
+  // Background
+  ctx.fillStyle = '#fefefe';
+  ctx.strokeStyle = '#ddd';
+  ctx.lineWidth = 1;
+  ctx.fillRect(gx, gy, gw, gh);
+  ctx.strokeRect(gx, gy, gw, gh);
+
+  // Label
+  ctx.fillStyle = color;
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText(label, gx + 5, gy + 16);
+
+  // Time axis
+  ctx.fillStyle = '#888';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('t (s)', gx + gw - 5, gy + gh - 5);
+
+  // Zero line
+  const midY = gy + gh / 2;
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(gx, midY);
+  ctx.lineTo(gx + gw, midY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  if (data.length < 2) return;
+
+  // Auto-scale
+  let maxVal = 1;
+  for (let i = 0; i < data.length; i++) {
+    if (Math.abs(data[i].v) > maxVal) maxVal = Math.abs(data[i].v);
+  }
+  maxVal *= 1.15;
+
+  const tMax = Math.max(data[data.length - 1].t, 5);
+  const pxPerSec = gw / tMax;
+  const pxPerVal = (gh / 2) / maxVal;
+
+  // Grid values
+  ctx.fillStyle = '#aaa';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText(maxVal.toFixed(1), gx - 4, gy + 12);
+  ctx.fillText((-maxVal).toFixed(1), gx - 4, gy + gh - 3);
+
+  // Plot
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let i = 0; i < data.length; i++) {
+    const px = gx + data[i].t * pxPerSec;
+    const py = midY - data[i].v * pxPerVal;
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  // Current value marker
+  if (data.length > 0) {
+    const last = data[data.length - 1];
+    const lx = gx + last.t * pxPerSec;
+    const ly = midY - last.v * pxPerVal;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(lx, ly, 4, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+}
+
+function step() {
+  t += dt;
+  if (t > maxTime) {
+    stop();
+    return;
+  }
+  const { theta, omega } = getState();
+  thetaHistory.push({ t, v: theta });
+  omegaHistory.push({ t, v: omega });
+  updateInfo();
+  draw();
+  if (running) animId = requestAnimationFrame(step);
+}
+
+function start() {
+  if (running) return;
+  running = true;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  if (animId) cancelAnimationFrame(animId);
+}
+
+function reset() {
+  stop();
+  t = 0;
+  trail = [];
+  thetaHistory = [];
+  omegaHistory = [];
+  const { theta, omega } = getState();
+  thetaHistory.push({ t: 0, v: theta });
+  omegaHistory.push({ t: 0, v: omega });
+  updateInfo();
+  draw();
+}
+
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+
+[omega0Slider, alphaSlider, radiusSlider].forEach(s => {
+  s.addEventListener('input', () => { updateLabels(); reset(); });
+});
+
+window.addEventListener('resize', resize);
+
+renderStaticKaTeX();
+updateLabels();
+reset();
+resize();
+</script>
+</body>
+</html>
