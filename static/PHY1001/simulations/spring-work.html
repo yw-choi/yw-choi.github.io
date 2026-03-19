@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>용수철 힘이 하는 일</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; }
+canvas { width: 100%; height: 100%; display: block; }
+.controls { width: 260px; padding: 16px; background: #faf5f6; border-left: 2px solid rgba(139,0,41,0.15); overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+h2 { color: #8B0029; font-size: 1.05rem; margin-bottom: 2px; }
+.subtitle { color: #888; font-size: 0.72rem; margin-bottom: 8px; }
+label { display: block; font-size: 0.8rem; color: #555; margin-bottom: 2px; }
+.slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.slider-row input[type="range"] { flex: 1; accent-color: #8B0029; }
+.slider-val { font-size: 0.8rem; font-weight: 600; color: #8B0029; min-width: 60px; text-align: right; }
+.info-box { background: white; border: 1px solid rgba(139,0,41,0.15); border-radius: 10px; padding: 10px; font-size: 0.75rem; line-height: 1.7; }
+.info-box .val { color: #8B0029; font-weight: 700; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 0.72rem; line-height: 1.7; color: #555; }
+.formula-box b { color: #8B0029; }
+.btn-row { display: flex; gap: 8px; }
+button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.btn-primary { background: #8B0029; color: white; }
+.btn-primary:hover { background: #a3003a; }
+.btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+.btn-secondary { background: rgba(139,0,41,0.1); color: #8B0029; }
+.btn-secondary:hover { background: rgba(139,0,41,0.2); }
+.check-line { font-size: 0.72rem; color: #2e7d32; font-weight: 600; margin-top: 2px; }
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { flex: none; height: 55vh; }
+  .controls { width: 100%; border-left: none; border-top: 2px solid rgba(139,0,41,0.15); height: 45vh; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>용수철 힘이 하는 일</h2>
+      <div class="subtitle">Work Done by a Spring Force (Ch.7.4)</div>
+    </div>
+
+    <div class="formula-box">
+      <b>훅 법칙:</b> F = −kx<br>
+      <b>용수철이 한 일:</b> W<sub>s</sub> = ½kx<sub>i</sub>² − ½kx<sub>f</sub>²
+    </div>
+
+    <div>
+      <label>용수철 상수 k</label>
+      <div class="slider-row">
+        <input type="range" id="sl-k" min="10" max="200" step="5" value="80">
+        <span class="slider-val" id="val-k">80 N/m</span>
+      </div>
+    </div>
+
+    <div>
+      <label>초기 위치 x<sub>i</sub></label>
+      <div class="slider-row">
+        <input type="range" id="sl-xi" min="-0.30" max="0.30" step="0.01" value="0.20">
+        <span class="slider-val" id="val-xi">0.20 m</span>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-primary" id="btn-release">놓기 (Release)</button>
+      <button class="btn-secondary" id="btn-reset">리셋 (Reset)</button>
+    </div>
+
+    <div class="info-box" id="info-box">
+      위치: x = <span class="val" id="info-x">0.20 m</span><br>
+      용수철 힘: F = −kx = <span class="val" id="info-f">−16.0 N</span><br>
+      용수철이 한 일: W<sub>s</sub> = <span class="val" id="info-w">0.00 J</span><br>
+      운동에너지: K = ½mv² = <span class="val" id="info-k">0.00 J</span><br>
+      속력: v = <span class="val" id="info-v">0.00 m/s</span><br>
+      <div class="check-line" id="info-check">W<sub>s</sub> = ΔK ✓ (일-에너지 정리)</div>
+    </div>
+
+    <div style="font-size:0.68rem; color:#999; margin-top:auto;">
+      블록 질량 m = 1 kg (고정) · 마찰 없음
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let W, H;
+
+function resizeCanvas() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  W = rect.width;
+  H = rect.height;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); draw(); });
+
+// DOM elements
+const slK = document.getElementById('sl-k');
+const slXi = document.getElementById('sl-xi');
+const valK = document.getElementById('val-k');
+const valXi = document.getElementById('val-xi');
+const btnRelease = document.getElementById('btn-release');
+const btnReset = document.getElementById('btn-reset');
+const infoX = document.getElementById('info-x');
+const infoF = document.getElementById('info-f');
+const infoW = document.getElementById('info-w');
+const infoK = document.getElementById('info-k');
+const infoV = document.getElementById('info-v');
+const infoCheck = document.getElementById('info-check');
+
+// Physics constants
+const mass = 1.0; // kg
+
+// State
+let k = 80;
+let xi = 0.20;
+let x = 0.20;    // current position
+let v = 0;        // current velocity
+let running = false;
+let paused = false;
+let t = 0;        // simulation time
+let animId = null;
+let lastTimestamp = null;
+
+function getParams() {
+  k = parseFloat(slK.value);
+  xi = parseFloat(slXi.value);
+}
+
+function updateLabels() {
+  valK.textContent = k + ' N/m';
+  valXi.textContent = xi.toFixed(2) + ' m';
+}
+
+function updateInfo() {
+  const F = -k * x;
+  const Ws = 0.5 * k * xi * xi - 0.5 * k * x * x;
+  const KE = 0.5 * mass * v * v;
+  const speed = Math.abs(v);
+
+  infoX.textContent = x.toFixed(3) + ' m';
+  infoF.textContent = F.toFixed(2) + ' N';
+  infoW.textContent = Ws.toFixed(3) + ' J';
+  infoK.textContent = KE.toFixed(3) + ' J';
+  infoV.textContent = speed.toFixed(3) + ' m/s';
+
+  const diff = Math.abs(Ws - KE);
+  if (diff < 0.01) {
+    infoCheck.innerHTML = 'W<sub>s</sub> = ΔK ✓ (일-에너지 정리)';
+    infoCheck.style.color = '#2e7d32';
+  } else {
+    infoCheck.innerHTML = 'W<sub>s</sub> ≈ ΔK (오차: ' + diff.toFixed(4) + ' J)';
+    infoCheck.style.color = '#d32f2f';
+  }
+}
+
+function resetSim() {
+  running = false;
+  paused = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  lastTimestamp = null;
+  t = 0;
+  getParams();
+  x = xi;
+  v = 0;
+  updateLabels();
+  updateInfo();
+  btnRelease.textContent = '놓기 (Release)';
+  slK.disabled = false;
+  slXi.disabled = false;
+  draw();
+}
+
+function release() {
+  // Paused → resume
+  if (paused) {
+    paused = false;
+    running = true;
+    lastTimestamp = null;
+    btnRelease.textContent = '⏸ 일시정지';
+    animId = requestAnimationFrame(animate);
+    return;
+  }
+  // Running → pause
+  if (running) {
+    running = false;
+    paused = true;
+    if (animId) cancelAnimationFrame(animId);
+    animId = null;
+    btnRelease.textContent = '▶ 계속';
+    return;
+  }
+  // Stopped → start
+  getParams();
+  x = xi;
+  v = 0;
+  t = 0;
+  running = true;
+  paused = false;
+  lastTimestamp = null;
+  btnRelease.textContent = '⏸ 일시정지';
+  slK.disabled = true;
+  slXi.disabled = true;
+  animId = requestAnimationFrame(animate);
+}
+
+function animate(timestamp) {
+  if (!running) return;
+  if (lastTimestamp === null) { lastTimestamp = timestamp; }
+  const dtReal = (timestamp - lastTimestamp) / 1000;
+  lastTimestamp = timestamp;
+
+  // Clamp dt to avoid large jumps
+  const dt = Math.min(dtReal, 0.05);
+
+  // Analytical solution: x(t) = xi * cos(omega * t)
+  const omega = Math.sqrt(k / mass);
+  t += dt;
+  x = xi * Math.cos(omega * t);
+  v = -xi * omega * Math.sin(omega * t);
+
+  updateInfo();
+  draw();
+  animId = requestAnimationFrame(animate);
+}
+
+// ---- Drawing ----
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  const sceneH = H * 0.5;
+  const graphH = H * 0.5;
+
+  drawScene(0, 0, W, sceneH);
+  drawGraph(0, sceneH, W, graphH);
+}
+
+function drawScene(ox, oy, w, h) {
+  ctx.save();
+  ctx.translate(ox, oy);
+
+  // Ground line
+  const groundY = h * 0.62;
+  const wallX = w * 0.08;
+  const eqX = w * 0.40; // equilibrium position in pixels
+  const blockW = 40;
+  const blockH = 36;
+
+  // Pixels per meter
+  const ppm = w * 0.7;
+
+  // Block center x in pixels
+  const blockCenterX = eqX + x * ppm;
+
+  // Draw wall
+  ctx.fillStyle = '#d0d0d0';
+  ctx.fillRect(wallX - 10, groundY - 80, 10, 100);
+  // Wall hatching
+  ctx.strokeStyle = '#888';
+  ctx.lineWidth = 1;
+  for (let yy = groundY - 80; yy < groundY + 20; yy += 8) {
+    ctx.beginPath();
+    ctx.moveTo(wallX - 10, yy);
+    ctx.lineTo(wallX - 0, yy + 8);
+    ctx.stroke();
+  }
+
+  // Draw ground
+  ctx.strokeStyle = '#aaa';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(wallX - 10, groundY + blockH / 2);
+  ctx.lineTo(w - 20, groundY + blockH / 2);
+  ctx.stroke();
+
+  // Draw spring (zigzag)
+  const springStartX = wallX;
+  const springEndX = blockCenterX - blockW / 2;
+  const springY = groundY;
+  const coils = 12;
+  const amplitude = 10;
+
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(springStartX, springY);
+  const segLen = (springEndX - springStartX) / (coils * 2 + 2);
+  // Lead-in
+  ctx.lineTo(springStartX + segLen, springY);
+  for (let i = 0; i < coils; i++) {
+    const sx = springStartX + segLen + (i * 2 + 1) * segLen;
+    const sy1 = springY - amplitude;
+    const sy2 = springY + amplitude;
+    ctx.lineTo(sx, sy1);
+    ctx.lineTo(sx + segLen, sy2);
+  }
+  ctx.lineTo(springEndX, springY);
+  ctx.stroke();
+
+  // Draw block
+  ctx.fillStyle = '#F3F4F6';
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2;
+  ctx.fillRect(blockCenterX - blockW / 2, groundY - blockH / 2, blockW, blockH);
+  ctx.strokeRect(blockCenterX - blockW / 2, groundY - blockH / 2, blockW, blockH);
+  // Block label
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('m', blockCenterX, groundY);
+
+  // Draw equilibrium marker
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 3]);
+  ctx.beginPath();
+  ctx.moveTo(eqX, groundY - 55);
+  ctx.lineTo(eqX, groundY + blockH / 2 + 20);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#6B7280';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('x = 0', eqX, groundY + blockH / 2 + 34);
+
+  // Draw x_i marker if not running or show it always
+  const xiPx = eqX + xi * ppm;
+  ctx.strokeStyle = '#2563EB';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(xiPx, groundY - 50);
+  ctx.lineTo(xiPx, groundY + blockH / 2 + 10);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#2563EB';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('x_i', xiPx, groundY - 56);
+
+  // Draw force arrow on block
+  const F = -k * x;
+  if (Math.abs(F) > 0.5) {
+    const arrowScale = ppm * 0.003; // scale force to pixels
+    const arrowLen = F * arrowScale;
+    const arrowY = groundY;
+    const arrowStartX = blockCenterX + (F > 0 ? blockW / 2 + 4 : -blockW / 2 - 4);
+    const arrowEndX = arrowStartX + arrowLen;
+
+    ctx.strokeStyle = '#8B0029';
+    ctx.fillStyle = '#8B0029';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(arrowStartX, arrowY);
+    ctx.lineTo(arrowEndX, arrowY);
+    ctx.stroke();
+
+    // Arrow head
+    const headSize = 7;
+    const dir = F > 0 ? 1 : -1;
+    ctx.beginPath();
+    ctx.moveTo(arrowEndX, arrowY);
+    ctx.lineTo(arrowEndX - dir * headSize, arrowY - headSize * 0.6);
+    ctx.lineTo(arrowEndX - dir * headSize, arrowY + headSize * 0.6);
+    ctx.closePath();
+    ctx.fill();
+
+    // Force label
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('F', (arrowStartX + arrowEndX) / 2, arrowY - 12);
+  }
+
+  // Position axis with arrow
+  const axisY = groundY + blockH / 2 + 52;
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(eqX - 20, axisY);
+  ctx.lineTo(w - 30, axisY);
+  ctx.stroke();
+  // x-axis arrow
+  ctx.beginPath();
+  ctx.moveTo(w - 30, axisY);
+  ctx.lineTo(w - 36, axisY - 3);
+  ctx.moveTo(w - 30, axisY);
+  ctx.lineTo(w - 36, axisY + 3);
+  ctx.stroke();
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = 'italic 13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('x', w - 22, axisY + 1);
+
+  // Current position indicator on axis
+  ctx.fillStyle = '#8B0029';
+  ctx.beginPath();
+  ctx.arc(blockCenterX, axisY, 4, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.font = '10px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(x.toFixed(2) + ' m', blockCenterX, axisY + 14);
+
+  ctx.restore();
+}
+
+function drawGraph(ox, oy, w, h) {
+  ctx.save();
+  ctx.translate(ox, oy);
+
+  // Separator line
+  ctx.strokeStyle = 'rgba(139,0,41,0.15)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(20, 0);
+  ctx.lineTo(w - 20, 0);
+  ctx.stroke();
+
+  // Graph area
+  const margin = { left: 60, right: 30, top: 35, bottom: 35 };
+  const gw = w - margin.left - margin.right;
+  const gh = h - margin.top - margin.bottom;
+  const gx = margin.left;
+  const gy = margin.top;
+
+  // Axis range
+  const xRange = 0.35; // -0.35 to 0.35 m
+  const fMax = k * xRange; // max force magnitude
+
+  // Map physics to pixels
+  function px(xVal) { return gx + (xVal / xRange + 1) * 0.5 * gw; }
+  function py(fVal) { return gy + gh * 0.5 - (fVal / fMax) * gh * 0.45; }
+
+  // Title
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('F(x) vs x — 면적 = 용수철이 한 일', gx + gw / 2, gy - 14);
+
+  // Grid and axes
+  ctx.strokeStyle = '#e0e0e0';
+  ctx.lineWidth = 0.5;
+  // Vertical grid lines
+  for (let xv = -0.3; xv <= 0.301; xv += 0.1) {
+    const px_ = px(xv);
+    ctx.beginPath();
+    ctx.moveTo(px_, gy);
+    ctx.lineTo(px_, gy + gh);
+    ctx.stroke();
+  }
+  // Horizontal grid lines
+  for (let fv = -fMax; fv <= fMax * 1.01; fv += fMax * 0.25) {
+    const py_ = py(fv);
+    ctx.beginPath();
+    ctx.moveTo(gx, py_);
+    ctx.lineTo(gx + gw, py_);
+    ctx.stroke();
+  }
+
+  // x-axis
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(gx, py(0));
+  ctx.lineTo(gx + gw, py(0));
+  ctx.stroke();
+  // y-axis at x=0
+  ctx.beginPath();
+  ctx.moveTo(px(0), gy);
+  ctx.lineTo(px(0), gy + gh);
+  ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('x (m)', gx + gw / 2, gy + gh + 28);
+  ctx.save();
+  ctx.translate(gx - 40, gy + gh / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('F (N)', 0, 0);
+  ctx.restore();
+
+  // Tick labels on x-axis
+  ctx.font = '9px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  for (let xv = -0.3; xv <= 0.301; xv += 0.1) {
+    if (Math.abs(xv) < 0.001) continue;
+    ctx.fillText(xv.toFixed(1), px(xv), py(0) + 4);
+  }
+  ctx.fillText('0', px(0) + 10, py(0) + 4);
+
+  // Tick labels on F-axis
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  const fTick = Math.round(fMax * 0.5);
+  for (let fv = -fTick * 2; fv <= fTick * 2 + 0.1; fv += fTick) {
+    if (Math.abs(fv) < 0.1) continue;
+    if (Math.abs(fv) > fMax) continue;
+    ctx.fillText(fv.toFixed(0), gx - 6, py(fv));
+  }
+
+  // Shade area under F(x) from xi to current x (this is the NEGATIVE of work)
+  // W_s = integral from xi to xf of F dx = integral of (-kx) dx
+  // If x < xi (moving toward eq): positive work, shade blue
+  // If x > xi (moving away from eq): negative work, shade red
+  // Actually: shade the area between F(x) line, from xi to current x
+  const xCur = x;
+  const xStart = xi;
+  const xEnd = xCur;
+
+  if (Math.abs(xEnd - xStart) > 0.001) {
+    // We need to shade between the line F=-kx and F=0, from xStart to xEnd
+    // The work is the negative of this area (W = -integral of F dx ... no)
+    // Actually W = integral from xi to xf of (-kx) dx
+    // The area under F(x) curve from xi to xf, where F(x) = -kx
+    // Shade segments that may cross zero
+
+    const steps = 100;
+    const dx = (xEnd - xStart) / steps;
+
+    for (let i = 0; i < steps; i++) {
+      const xA = xStart + i * dx;
+      const xB = xStart + (i + 1) * dx;
+      const fA = -k * xA;
+      const fB = -k * xB;
+
+      // Determine if this segment contributes positive or negative work
+      // dW = F dx; if F and dx have same sign → positive work
+      const avgF = (fA + fB) / 2;
+      const dW = avgF * (xB - xA);
+
+      if (dW > 0) {
+        ctx.fillStyle = 'rgba(37,99,235,0.3)'; // blue = positive work
+      } else {
+        ctx.fillStyle = 'rgba(139,0,41,0.3)'; // red = negative work
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(px(xA), py(0));
+      ctx.lineTo(px(xA), py(fA));
+      ctx.lineTo(px(xB), py(fB));
+      ctx.lineTo(px(xB), py(0));
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+
+  // Draw F(x) = -kx line
+  ctx.strokeStyle = '#8B0029';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(px(-xRange), py(-k * (-xRange)));
+  ctx.lineTo(px(xRange), py(-k * xRange));
+  ctx.stroke();
+
+  // Label the line
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'italic 11px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('F = −kx', px(xRange) - 50, py(-k * xRange) - 8);
+
+  // Mark xi position
+  ctx.strokeStyle = '#2563EB';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([4, 3]);
+  ctx.beginPath();
+  ctx.moveTo(px(xi), py(0) - 3);
+  ctx.lineTo(px(xi), py(-k * xi) + (xi > 0 ? 3 : -3));
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#2563EB';
+  ctx.font = '10px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('x_i', px(xi), gy + gh + 18);
+
+  // Mark current x position
+  ctx.fillStyle = '#8B0029';
+  ctx.beginPath();
+  ctx.arc(px(xCur), py(-k * xCur), 5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Current x label
+  ctx.font = '10px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('x', px(xCur), gy + gh + 18);
+
+  // Work value annotation near shaded area
+  const Ws = 0.5 * k * xi * xi - 0.5 * k * xCur * xCur;
+  if (running && Math.abs(xEnd - xStart) > 0.005) {
+    const midX = (xStart + xEnd) / 2;
+    const labelY = py(0) + (Ws >= 0 ? 18 : -12);
+    ctx.fillStyle = Ws >= 0 ? '#2563EB' : '#8B0029';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    // Only show if there's enough room
+    if (Math.abs(px(xEnd) - px(xStart)) > 30) {
+      ctx.fillText('W = ' + Ws.toFixed(2) + ' J', px(midX), labelY);
+    }
+  }
+
+  ctx.restore();
+}
+
+// ---- Event handlers ----
+slK.addEventListener('input', () => {
+  if (!running) {
+    getParams();
+    x = xi;
+    v = 0;
+    updateLabels();
+    updateInfo();
+    draw();
+  }
+});
+
+slXi.addEventListener('input', () => {
+  if (!running) {
+    getParams();
+    x = xi;
+    v = 0;
+    updateLabels();
+    updateInfo();
+    draw();
+  }
+});
+
+btnRelease.addEventListener('click', release);
+btnReset.addEventListener('click', resetSim);
+
+// Init
+resetSim();
+</script>
+</body>
+</html>

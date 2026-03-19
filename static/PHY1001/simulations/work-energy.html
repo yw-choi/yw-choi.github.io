@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>일-운동에너지 정리 시뮬레이션</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
+.control-group { display: flex; flex-direction: column; gap: 4px; }
+.control-group label { font-size: 13px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .eq { color: #555; font-size: 11.5px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.5; }
+.theorem-box .theorem-eq { font-size: 16px; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 50vh; }
+  .controls { width: 100%; height: 50vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+  </div>
+  <div class="controls">
+    <div class="theorem-box">
+      일-운동에너지 정리<br>
+      <span class="theorem-eq">&Delta;K = K<sub>f</sub> &minus; K<sub>i</sub> = W</span>
+    </div>
+
+    <div class="control-group">
+      <label>힘의 크기 F = <span id="forceVal">20.0</span> N</label>
+      <input type="range" id="forceSlider" min="1" max="50" value="20" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>힘의 각도 &phi; = <span id="angleVal">30</span>&deg;</label>
+      <input type="range" id="angleSlider" min="0" max="90" value="30" step="1">
+    </div>
+
+    <div class="control-group">
+      <label>질량 m = <span id="massVal">5.0</span> kg</label>
+      <input type="range" id="massSlider" min="1" max="20" value="5" step="0.5">
+    </div>
+
+    <div class="info-box" id="infoBox">
+      <div><span class="label">변위 d:</span> <span class="val" id="dispInfo">0.00 m</span></div>
+      <div><span class="label">속력 v:</span> <span class="val" id="speedInfo">0.00 m/s</span></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div><span class="eq">W = Fd cos&phi;</span></div>
+      <div><span class="label">일 W =</span> <span class="val" id="workInfo">0.00 J</span></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div><span class="eq">K = &frac12;mv&sup2;</span></div>
+      <div><span class="label">K<sub>f</sub> =</span> <span class="val" id="kfInfo">0.00 J</span></div>
+      <div><span class="label">&Delta;K =</span> <span class="val" id="dkInfo">0.00 J</span></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div style="text-align:center;font-weight:700;color:#8B0029" id="verifyLine">W = &Delta;K &check;</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+const forceSlider = document.getElementById('forceSlider');
+const angleSlider = document.getElementById('angleSlider');
+const massSlider = document.getElementById('massSlider');
+const forceVal = document.getElementById('forceVal');
+const angleVal = document.getElementById('angleVal');
+const massVal = document.getElementById('massVal');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let dpr = window.devicePixelRatio || 1;
+let W, H;
+let running = false;
+let animId = null;
+
+// Physics state — analytical solution, no integration error
+const maxDisp = 8; // 0m to 8m
+let t = 0;         // elapsed time
+const dtAnim = 1 / 60;
+
+// Derived from current params at each frame
+function getParams() {
+  const F = parseFloat(forceSlider.value);
+  const phiDeg = parseFloat(angleSlider.value);
+  const phi = phiDeg * Math.PI / 180;
+  const m = parseFloat(massSlider.value);
+  return { F, phi, phiDeg, m };
+}
+
+// Analytical: constant acceleration from rest
+// a = F cos(phi) / m, v0 = 0, x0 = 0
+// x(t) = ½ a t², v(t) = a t
+function getState() {
+  const { F, phi, m } = getParams();
+  const a = F * Math.cos(phi) / m;
+  let xNow = 0.5 * a * t * t;
+  let vNow = a * t;
+  // Clamp to maxDisp
+  if (xNow >= maxDisp) {
+    xNow = maxDisp;
+    // time to reach maxDisp: t_end = sqrt(2*maxDisp/a)
+    const tEnd = Math.sqrt(2 * maxDisp / a);
+    vNow = a * tEnd;
+  }
+  const d = xNow;
+  const work = F * d * Math.cos(phi);    // W = F d cos φ
+  const Kf = 0.5 * m * vNow * vNow;     // K = ½mv²
+  // Analytically: W = F cos(φ) * d = F cos(φ) * ½ a t² = F cos(φ) * ½ * (F cos(φ)/m) * t²
+  // K = ½m(at)² = ½m * (F cos(φ)/m)² * t² = (F cos(φ))² t² / (2m)
+  // These are identical, so W = K = ΔK exactly.
+  return { x: xNow, v: vNow, d, work, Kf, a };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  W = rect.width;
+  H = rect.height;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function updateLabels() {
+  forceVal.textContent = parseFloat(forceSlider.value).toFixed(1);
+  angleVal.textContent = angleSlider.value;
+  massVal.textContent = parseFloat(massSlider.value).toFixed(1);
+}
+
+function updateInfo() {
+  const { d, v, work, Kf } = getState();
+  document.getElementById('dispInfo').textContent = d.toFixed(2) + ' m';
+  document.getElementById('speedInfo').textContent = v.toFixed(2) + ' m/s';
+  document.getElementById('workInfo').textContent = work.toFixed(2) + ' J';
+  document.getElementById('kfInfo').textContent = Kf.toFixed(2) + ' J';
+  document.getElementById('dkInfo').textContent = Kf.toFixed(2) + ' J';
+  const verify = document.getElementById('verifyLine');
+  verify.textContent = 'W = ' + work.toFixed(2) + ' J  =  \u0394K = ' + Kf.toFixed(2) + ' J  \u2713';
+}
+
+function drawArrow(x1, y1, x2, y2, color, lineWidth) {
+  const headLen = 12;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  const { F, phi, phiDeg, m } = getParams();
+  const { x, v, d, work, Kf } = getState();
+
+  const groundY = H * 0.65;
+  const trackLeft = 70;
+  const trackRight = W - 30;
+  const trackLen = trackRight - trackLeft;
+  const pxPerMeter = trackLen / maxDisp;
+
+  // Title
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 20px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('일-운동에너지 정리:  \u0394K = W', 20, 30);
+
+  // Ground
+  ctx.fillStyle = '#F3F4F6';
+  ctx.fillRect(0, groundY, W, H - groundY);
+  ctx.strokeStyle = '#bbb';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, groundY);
+  ctx.lineTo(W, groundY);
+  ctx.stroke();
+
+  // Hatching on ground
+  ctx.strokeStyle = '#ddd';
+  ctx.lineWidth = 1;
+  for (let hx = 0; hx < W; hx += 14) {
+    ctx.beginPath();
+    ctx.moveTo(hx, groundY);
+    ctx.lineTo(hx - 10, groundY + 10);
+    ctx.stroke();
+  }
+
+  // Ruler marks
+  ctx.fillStyle = '#888';
+  ctx.font = '14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.strokeStyle = '#aaa';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= maxDisp; i++) {
+    const px = trackLeft + i * pxPerMeter;
+    ctx.beginPath();
+    ctx.moveTo(px, groundY);
+    ctx.lineTo(px, groundY + 10);
+    ctx.stroke();
+    ctx.fillText(i + ' m', px, groundY + 24);
+  }
+
+  // Displacement arrow (blue, along ground)
+  if (d > 0.05) {
+    const dStartPx = trackLeft;
+    const dEndPx = trackLeft + x * pxPerMeter;
+    const arrowY = groundY + 42;
+    drawArrow(dStartPx, arrowY, dEndPx, arrowY, '#2563EB', 2.5);
+    ctx.fillStyle = '#2563EB';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('d = ' + d.toFixed(2) + ' m', (dStartPx + dEndPx) / 2, arrowY - 10);
+  }
+
+  // Block
+  const blockW = 50;
+  const blockH = 50;
+  const blockCenterX = trackLeft + x * pxPerMeter;
+  const blockLeft = blockCenterX - blockW / 2;
+  const blockTop = groundY - blockH;
+
+  // Block shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.08)';
+  ctx.fillRect(blockLeft + 3, blockTop + 3, blockW, blockH);
+
+  ctx.fillStyle = '#F3F4F6';
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2;
+  ctx.fillRect(blockLeft, blockTop, blockW, blockH);
+  ctx.strokeRect(blockLeft, blockTop, blockW, blockH);
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = 'bold 15px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(m.toFixed(0) + ' kg', blockCenterX, blockTop + blockH / 2);
+  ctx.textBaseline = 'alphabetic';
+
+  // Force arrow (red, at angle phi from horizontal)
+  const arrowLen = Math.max(F * 2, 40);
+  const forceStartX = blockCenterX + blockW / 2;
+  const forceStartY = blockTop + blockH / 2;
+  const forceEndX = forceStartX + arrowLen * Math.cos(-phi);
+  const forceEndY = forceStartY + arrowLen * Math.sin(-phi);
+  drawArrow(forceStartX, forceStartY, forceEndX, forceEndY, '#8B0029', 3);
+
+  // Force label
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('F = ' + F.toFixed(0) + ' N', forceEndX + 8, forceEndY - 4);
+
+  // Angle arc
+  if (phiDeg > 2) {
+    const arcR = 32;
+    ctx.strokeStyle = '#8B0029';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(forceStartX, forceStartY, arcR, 0, -phi, true);
+    ctx.stroke();
+    // Angle label
+    const labelAngle = -phi / 2;
+    ctx.fillStyle = '#8B0029';
+    ctx.font = '16px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('\u03C6 = ' + phiDeg + '\u00B0', forceStartX + arcR * Math.cos(labelAngle) + 6, forceStartY + arcR * Math.sin(labelAngle) + 5);
+  }
+
+  // Velocity arrow (blue, horizontal, above block)
+  if (Math.abs(v) > 0.05) {
+    const vLen = Math.min(Math.abs(v) * 10, 100);
+    const vSign = v > 0 ? 1 : -1;
+    const vStartX = blockCenterX;
+    const vStartY = blockTop - 20;
+    const vEndX = vStartX + vLen * vSign;
+    drawArrow(vStartX, vStartY, vEndX, vStartY, '#2563EB', 2.5);
+    ctx.fillStyle = '#2563EB';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('v = ' + v.toFixed(1) + ' m/s', (vStartX + vEndX) / 2, vStartY - 10);
+  }
+
+  // Energy bar chart (top-right area)
+  const barAreaRight = W - 20;
+  const barAreaTop = 50;
+  const barWidth = 44;
+  const barGap = 20;
+  const maxBarH = Math.min(H * 0.28, 140);
+  const maxE = Math.max(work, Kf, 10);
+  const eScale = maxBarH / maxE;
+
+  const barBaseY = barAreaTop + maxBarH;
+
+  // Bar chart title
+  ctx.fillStyle = '#444';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  const chartCenterX = barAreaRight - barWidth - barGap / 2;
+  ctx.fillText('에너지 (J)', chartCenterX, barAreaTop - 10);
+
+  // Baseline
+  ctx.strokeStyle = '#999';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(barAreaRight - 2 * barWidth - barGap - 12, barBaseY);
+  ctx.lineTo(barAreaRight + 12, barBaseY);
+  ctx.stroke();
+
+  // W bar (left)
+  const wBarX = barAreaRight - 2 * barWidth - barGap;
+  const wBarH = Math.max(work * eScale, 0);
+  ctx.fillStyle = 'rgba(139, 0, 41, 0.7)';
+  ctx.fillRect(wBarX, barBaseY - wBarH, barWidth, wBarH);
+  ctx.strokeStyle = '#8B0029';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(wBarX, barBaseY - wBarH, barWidth, Math.max(wBarH, 1));
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('W', wBarX + barWidth / 2, barBaseY + 18);
+  ctx.font = '13px sans-serif';
+  ctx.fillText(work.toFixed(1), wBarX + barWidth / 2, barBaseY - wBarH - 6);
+
+  // K bar (right)
+  const kBarX = barAreaRight - barWidth;
+  const kBarH = Math.max(Kf * eScale, 0);
+  ctx.fillStyle = 'rgba(37, 99, 235, 0.7)';
+  ctx.fillRect(kBarX, barBaseY - kBarH, barWidth, kBarH);
+  ctx.strokeStyle = '#2563EB';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(kBarX, barBaseY - kBarH, barWidth, Math.max(kBarH, 1));
+  ctx.fillStyle = '#2563EB';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('\u0394K', kBarX + barWidth / 2, barBaseY + 18);
+  ctx.font = '13px sans-serif';
+  ctx.fillText(Kf.toFixed(1), kBarX + barWidth / 2, barBaseY - kBarH - 6);
+
+  // Real-time formula on canvas
+  ctx.fillStyle = '#333';
+  ctx.font = '16px sans-serif';
+  ctx.textAlign = 'left';
+  const formulaY = H * 0.65 + 72;
+  ctx.fillText('W = Fd cos\u03C6 = ' + F.toFixed(0) + ' \u00D7 ' + d.toFixed(2) + ' \u00D7 cos' + phiDeg + '\u00B0 = ' + work.toFixed(2) + ' J', 20, formulaY);
+  ctx.fillText('K = \u00BDmv\u00B2 = \u00BD \u00D7 ' + m.toFixed(0) + ' \u00D7 ' + v.toFixed(2) + '\u00B2 = ' + Kf.toFixed(2) + ' J', 20, formulaY + 24);
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.fillText('W = \u0394K = ' + work.toFixed(2) + ' J  \u2713', 20, formulaY + 52);
+}
+
+function step() {
+  const { F, phi, m } = getParams();
+  const a = F * Math.cos(phi) / m;
+
+  t += dtAnim;
+
+  // Check if reached maxDisp
+  const xNow = 0.5 * a * t * t;
+  if (xNow >= maxDisp) {
+    // Clamp t to exact time at maxDisp
+    t = Math.sqrt(2 * maxDisp / a);
+    updateInfo();
+    draw();
+    stop();
+    return;
+  }
+
+  updateInfo();
+  draw();
+  if (running) animId = requestAnimationFrame(step);
+}
+
+function start() {
+  if (running) return;
+  running = true;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  if (animId) cancelAnimationFrame(animId);
+}
+
+function reset() {
+  stop();
+  t = 0;
+  updateInfo();
+  draw();
+}
+
+playBtn.addEventListener('click', () => {
+  if (running) stop(); else start();
+});
+resetBtn.addEventListener('click', reset);
+
+[forceSlider, angleSlider, massSlider].forEach(s => {
+  s.addEventListener('input', () => {
+    updateLabels();
+    reset();
+  });
+});
+
+window.addEventListener('resize', resize);
+updateLabels();
+reset();
+resize();
+</script>
+</body>
+</html>
