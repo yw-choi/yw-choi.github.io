@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" font-family="sans-serif">
+  <defs>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
+    </marker>
+    <marker id="arrowGray" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- Table surface -->
+  <rect x="100" y="220" width="400" height="20" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
+  <!-- Hatching -->
+  <line x1="120" y1="240" x2="110" y2="250" stroke="#6B7280" stroke-width="1"/>
+  <line x1="150" y1="240" x2="140" y2="250" stroke="#6B7280" stroke-width="1"/>
+  <line x1="180" y1="240" x2="170" y2="250" stroke="#6B7280" stroke-width="1"/>
+  <line x1="210" y1="240" x2="200" y2="250" stroke="#6B7280" stroke-width="1"/>
+  <line x1="240" y1="240" x2="230" y2="250" stroke="#6B7280" stroke-width="1"/>
+  <line x1="270" y1="240" x2="260" y2="250" stroke="#6B7280" stroke-width="1"/>
+  <line x1="300" y1="240" x2="290" y2="250" stroke="#6B7280" stroke-width="1"/>
+  <line x1="330" y1="240" x2="320" y2="250" stroke="#6B7280" stroke-width="1"/>
+  <line x1="360" y1="240" x2="350" y2="250" stroke="#6B7280" stroke-width="1"/>
+  <line x1="390" y1="240" x2="380" y2="250" stroke="#6B7280" stroke-width="1"/>
+  <line x1="420" y1="240" x2="410" y2="250" stroke="#6B7280" stroke-width="1"/>
+  <line x1="450" y1="240" x2="440" y2="250" stroke="#6B7280" stroke-width="1"/>
+  <line x1="480" y1="240" x2="470" y2="250" stroke="#6B7280" stroke-width="1"/>
+
+  <!-- Block on table -->
+  <rect x="120" y="140" width="100" height="80" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2" rx="3"/>
+  <text x="170" y="185" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a1a">m</text>
+
+  <!-- Separator -->
+  <line x1="300" y1="60" x2="300" y2="320" stroke="#6B7280" stroke-width="1" stroke-dasharray="6 4"/>
+
+  <!-- FBD label -->
+  <text x="450" y="55" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">자유물체도 (FBD)</text>
+
+  <!-- FBD dot -->
+  <circle cx="450" cy="180" r="5" fill="#1a1a1a"/>
+
+  <!-- Normal force arrow (up) -->
+  <line x1="450" y1="180" x2="450" y2="90" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+  <text x="470" y="95" font-size="14" fill="#8B0029" font-weight="bold">
+    <tspan font-style="italic">F</tspan><tspan font-size="11" dy="4">N</tspan>
+  </text>
+
+  <!-- Weight arrow (down) -->
+  <line x1="450" y1="180" x2="450" y2="270" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+  <text x="470" y="268" font-size="14" fill="#8B0029" font-weight="bold">
+    <tspan font-style="italic">F</tspan><tspan font-size="11" dy="4">g</tspan><tspan dy="-4"> = m</tspan><tspan font-style="italic">g</tspan>
+  </text>
+
+  <!-- Labels -->
+  <text x="170" y="130" text-anchor="middle" font-size="13" fill="#6B7280">정지 상태</text>
+  <text x="170" y="55" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">물체 위의 블록</text>
+
+  <!-- Equilibrium note -->
+  <text x="450" y="310" text-anchor="middle" font-size="13" fill="#6B7280">
+    <tspan font-style="italic">F</tspan><tspan font-size="10" dy="3">N</tspan><tspan dy="-3"> = m</tspan><tspan font-style="italic">g</tspan><tspan> (평형)</tspan>
+  </text>
+</svg>

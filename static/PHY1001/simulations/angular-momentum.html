@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>각운동량 보존 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
+.control-group { display: flex; flex-direction: column; gap: 4px; }
+.control-group label { font-size: 13px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .theorem-eq { font-size: 15px; display: block; margin-top: 4px; }
+.theorem-box .katex { color: #fff; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.verify-line { text-align: center; font-weight: 700; color: #8B0029; margin-top: 4px; }
+.verify-line .katex { font-size: 13px; }
+.canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 20px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 20px; color: #8B0029; }
+.formula-overlay { position: absolute; bottom: 0; left: 0; right: 0; pointer-events: none; padding: 10px 20px 12px; background: rgba(250,250,250,0.92); border-top: 1px solid #eee; }
+.formula-overlay .formula-line { font-size: 15px; line-height: 1.7; color: #333; }
+.formula-overlay .formula-line.highlight { color: #8B0029; font-weight: 700; }
+.formula-overlay .katex { font-size: 16px; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 50vh; }
+  .controls { width: 100%; height: 50vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+    <div class="formula-overlay" id="formulaOverlay">
+      <div class="formula-line" id="formulaI"></div>
+      <div class="formula-line" id="formulaL"></div>
+      <div class="formula-line highlight" id="formulaVerify"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="theorem-box">
+      각운동량 보존
+      <span class="theorem-eq" id="theoremEq"></span>
+    </div>
+
+    <div class="control-group">
+      <label>추의 질량 m = <span id="massVal">2.0</span> kg (각 2개)</label>
+      <input type="range" id="massSlider" min="0.5" max="5" value="2" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>추의 거리 r = <span id="radiusVal">0.80</span> m</label>
+      <input type="range" id="radiusSlider" min="10" max="100" value="80" step="1">
+    </div>
+
+    <div class="control-group">
+      <label>원판 질량 M = <span id="plateMassVal">5.0</span> kg</label>
+      <input type="range" id="plateMassSlider" min="2" max="15" value="5" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>원판 반지름 R = <span id="plateRadiusVal">0.50</span> m</label>
+      <input type="range" id="plateRadiusSlider" min="30" max="100" value="50" step="1">
+    </div>
+
+    <div class="info-box" id="infoBox">
+      <div><span class="label" id="Ilabel"></span> <span class="val" id="Ival"></span> kg·m²</div>
+      <div><span class="label" id="omegaLabel"></span> <span class="val" id="omegaVal"></span> rad/s</div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div><span class="label" id="Llabel"></span> <span class="val" id="Lval"></span> kg·m²/s</div>
+      <div><span class="label" id="L0label"></span> <span class="val" id="L0val"></span> kg·m²/s</div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div class="verify-line" id="verifyLine"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+function renderStaticKaTeX() {
+  document.getElementById('theoremEq').innerHTML = tex('I_i\\omega_i = I_f\\omega_f');
+  document.getElementById('canvasTitle').innerHTML = '각운동량 보존: ' + tex('L = I\\omega = \\text{const}');
+  document.getElementById('Ilabel').innerHTML = tex('I') + ' =';
+  document.getElementById('omegaLabel').innerHTML = tex('\\omega') + ' =';
+  document.getElementById('Llabel').innerHTML = tex('L = I\\omega') + ' =';
+  document.getElementById('L0label').innerHTML = tex('L_0') + ' (초기) =';
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+const massSlider = document.getElementById('massSlider');
+const radiusSlider = document.getElementById('radiusSlider');
+const plateMassSlider = document.getElementById('plateMassSlider');
+const plateRadiusSlider = document.getElementById('plateRadiusSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+let running = false, animId = null;
+
+// State
+let angle = 0; // current rotation angle
+let omega = 3; // initial angular velocity (rad/s)
+const omega0 = 3;
+let currentR; // current radius of masses (animated)
+let targetR;
+let L0; // conserved angular momentum
+let transitioning = false;
+let transitionTime = 0;
+const transitionDuration = 1.5; // seconds
+
+function getParams() {
+  const m = parseFloat(massSlider.value);
+  const r = parseFloat(radiusSlider.value) / 100; // convert to meters
+  const Mp = parseFloat(plateMassSlider.value);
+  const Rp = parseFloat(plateRadiusSlider.value) / 100;
+  return { m, r, Mp, Rp };
+}
+
+function calcI(m, r, Mp, Rp) {
+  // Plate: ½MR² + 2 point masses at distance r
+  return 0.5 * Mp * Rp * Rp + 2 * m * r * r;
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function updateLabels() {
+  document.getElementById('massVal').textContent = parseFloat(massSlider.value).toFixed(1);
+  document.getElementById('radiusVal').textContent = (parseFloat(radiusSlider.value) / 100).toFixed(2);
+  document.getElementById('plateMassVal').textContent = parseFloat(plateMassSlider.value).toFixed(1);
+  document.getElementById('plateRadiusVal').textContent = (parseFloat(plateRadiusSlider.value) / 100).toFixed(2);
+}
+
+function updateInfo() {
+  const { m, Mp, Rp } = getParams();
+  const I = calcI(m, currentR, Mp, Rp);
+  document.getElementById('Ival').textContent = I.toFixed(3);
+  document.getElementById('omegaVal').textContent = omega.toFixed(2);
+  document.getElementById('Lval').textContent = (I * omega).toFixed(3);
+  document.getElementById('L0val').textContent = L0.toFixed(3);
+
+  const L = I * omega;
+  const check = Math.abs(L - L0) < 0.01 ? '\\;\\checkmark' : '';
+  document.getElementById('verifyLine').innerHTML = tex(
+    'L = ' + L.toFixed(3) + ' = L_0 = ' + L0.toFixed(3) + check
+  );
+
+  // Formula overlay
+  document.getElementById('formulaI').innerHTML = tex(
+    'I = \\tfrac{1}{2}MR^2 + 2mr^2 = \\tfrac{1}{2}(' + Mp.toFixed(1) + ')(' + Rp.toFixed(2) + ')^2 + 2(' +
+    m.toFixed(1) + ')(' + currentR.toFixed(2) + ')^2 = ' + I.toFixed(3) + '\\;\\text{kg\\cdot m}^2'
+  );
+  document.getElementById('formulaL').innerHTML = tex(
+    'L = I\\omega = ' + I.toFixed(3) + ' \\times ' + omega.toFixed(2) + ' = ' + L.toFixed(3) + '\\;\\text{kg\\cdot m}^2\\text{/s}'
+  );
+  document.getElementById('formulaVerify').innerHTML = tex(
+    'I_i\\omega_i = I_f\\omega_f \\quad \\Rightarrow \\quad \\omega_f = \\frac{I_i}{I_f}\\omega_i'
+  );
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  const { m, Mp, Rp } = getParams();
+
+  const centerX = CW / 2;
+  const centerY = CH / 2 - 20;
+  const scale = Math.min(CW, CH) * 0.35; // pixels per meter
+
+  // Draw platform (disk)
+  const diskR = Rp * scale;
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, diskR, 0, 2 * Math.PI);
+  ctx.fillStyle = '#F3F4F6';
+  ctx.fill();
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Radial lines on disk (show rotation)
+  ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1;
+  for (let i = 0; i < 8; i++) {
+    const a = angle + i * Math.PI / 4;
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + diskR * Math.cos(a), centerY + diskR * Math.sin(a));
+    ctx.stroke();
+  }
+
+  // Center pivot
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, 5, 0, 2 * Math.PI);
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fill();
+
+  // Draw the two masses on the platform
+  const massR = Math.max(10, m * 4);
+  const massPixR = currentR * scale;
+
+  for (let i = 0; i < 2; i++) {
+    const a = angle + i * Math.PI;
+    const mx = centerX + massPixR * Math.cos(a);
+    const my = centerY + massPixR * Math.sin(a);
+
+    // Rod from center to mass
+    ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(mx, my);
+    ctx.stroke();
+
+    // Mass
+    ctx.beginPath();
+    ctx.arc(mx, my, massR, 0, 2 * Math.PI);
+    ctx.fillStyle = '#8B0029';
+    ctx.fill();
+    ctx.strokeStyle = '#6a0020';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Mass label
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('m', mx, my);
+  }
+
+  // Rotation direction arrow
+  const arrowR = diskR + 20;
+  ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 2;
+  const arcStart = angle - 0.3;
+  const arcEnd = angle + 0.8;
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, arrowR, arcStart, arcEnd);
+  ctx.stroke();
+  // Arrowhead
+  const ahx = centerX + arrowR * Math.cos(arcEnd);
+  const ahy = centerY + arrowR * Math.sin(arcEnd);
+  const ahAngle = arcEnd + Math.PI / 2;
+  ctx.fillStyle = '#8B0029';
+  ctx.beginPath();
+  ctx.moveTo(ahx, ahy);
+  ctx.lineTo(ahx - 10 * Math.cos(ahAngle - 0.4), ahy - 10 * Math.sin(ahAngle - 0.4));
+  ctx.lineTo(ahx - 10 * Math.cos(ahAngle + 0.4), ahy - 10 * Math.sin(ahAngle + 0.4));
+  ctx.closePath();
+  ctx.fill();
+
+  // omega label near arrow
+  ctx.fillStyle = '#8B0029'; ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillText('ω = ' + omega.toFixed(2) + ' rad/s', centerX + arrowR + 15, centerY - arrowR * 0.3);
+
+  // Radius label
+  ctx.strokeStyle = '#2563EB'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+  const rLabelAngle = angle + Math.PI / 4;
+  ctx.beginPath();
+  ctx.moveTo(centerX, centerY);
+  ctx.lineTo(centerX + massPixR * Math.cos(rLabelAngle), centerY + massPixR * Math.sin(rLabelAngle));
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#2563EB'; ctx.font = '14px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('r = ' + currentR.toFixed(2) + ' m',
+    centerX + massPixR * 0.5 * Math.cos(rLabelAngle) - 20 * Math.sin(rLabelAngle),
+    centerY + massPixR * 0.5 * Math.sin(rLabelAngle) + 20 * Math.cos(rLabelAngle));
+
+  // Angular momentum bar
+  const barX = 20;
+  const barY = 50;
+  const barMaxH = 100;
+  const barW = 30;
+  const I = calcI(m, currentR, Mp, Rp);
+  const L = I * omega;
+  const barScale = barMaxH / Math.max(L0 * 1.2, 1);
+  const barH = L * barScale;
+  const baseY = barY + barMaxH;
+
+  ctx.fillStyle = '#444'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('L (kg·m²/s)', barX + barW / 2 + 15, barY - 5);
+
+  ctx.fillStyle = 'rgba(139, 0, 41, 0.7)';
+  ctx.fillRect(barX, baseY - barH, barW, barH);
+  ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 1.5;
+  ctx.strokeRect(barX, baseY - barH, barW, Math.max(barH, 1));
+
+  // L0 reference line
+  const l0H = L0 * barScale;
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+  ctx.beginPath();
+  ctx.moveTo(barX - 5, baseY - l0H);
+  ctx.lineTo(barX + barW + 15, baseY - l0H);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#6B7280'; ctx.font = '11px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('L₀', barX + barW + 18, baseY - l0H + 4);
+
+  ctx.fillStyle = '#8B0029'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(L.toFixed(2), barX + barW / 2, baseY - barH - 6);
+
+  ctx.strokeStyle = '#999'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(barX - 5, baseY); ctx.lineTo(barX + barW + 5, baseY); ctx.stroke();
+
+  ctx.textBaseline = 'alphabetic';
+}
+
+function step() {
+  const { m, r, Mp, Rp } = getParams();
+  const dtFrame = 1 / 60;
+
+  if (transitioning) {
+    transitionTime += dtFrame;
+    const frac = Math.min(transitionTime / transitionDuration, 1);
+    // Smooth easing
+    const ease = frac < 0.5 ? 2 * frac * frac : 1 - Math.pow(-2 * frac + 2, 2) / 2;
+    const startR = transitioning === 'in' ? currentR : currentR;
+    // We stored the initial R when transition began
+    currentR = transStartR + (targetR - transStartR) * ease;
+    if (frac >= 1) {
+      currentR = targetR;
+      transitioning = false;
+    }
+    // Conserve angular momentum
+    const I = calcI(m, currentR, Mp, Rp);
+    omega = L0 / I;
+  }
+
+  angle += omega * dtFrame;
+  if (angle > 2 * Math.PI) angle -= 2 * Math.PI;
+
+  updateInfo();
+  draw();
+  if (running) animId = requestAnimationFrame(step);
+}
+
+let transStartR = 0;
+
+function start() {
+  if (running) return;
+  running = true;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  if (animId) cancelAnimationFrame(animId);
+}
+
+function reset() {
+  stop();
+  const { m, r, Mp, Rp } = getParams();
+  currentR = r;
+  targetR = r;
+  omega = omega0;
+  angle = 0;
+  transitioning = false;
+  L0 = calcI(m, r, Mp, Rp) * omega;
+  updateInfo();
+  draw();
+}
+
+// When radius slider changes during running, trigger transition
+radiusSlider.addEventListener('input', () => {
+  updateLabels();
+  const { m, r, Mp, Rp } = getParams();
+  if (running) {
+    targetR = r;
+    transStartR = currentR;
+    transitioning = 'in';
+    transitionTime = 0;
+  } else {
+    reset();
+  }
+});
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+
+[massSlider, plateMassSlider, plateRadiusSlider].forEach(s => {
+  s.addEventListener('input', () => {
+    updateLabels();
+    reset();
+  });
+});
+
+window.addEventListener('resize', resize);
+renderStaticKaTeX();
+updateLabels();
+reset();
+resize();
+</script>
+</body>
+</html>

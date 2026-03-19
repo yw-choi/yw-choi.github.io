@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 480" font-family="sans-serif">
+  <!-- Title -->
+  <text x="390" y="35" text-anchor="middle" font-size="18" fill="#8B0029" font-weight="bold">병진 운동 vs 회전 운동</text>
+
+  <!-- Column headers -->
+  <rect x="30" y="50" width="230" height="35" rx="6" fill="#8B0029"/>
+  <text x="145" y="74" text-anchor="middle" font-size="15" fill="#fff" font-weight="bold">병진 운동</text>
+
+  <rect x="275" y="50" width="230" height="35" rx="6" fill="#8B0029"/>
+  <text x="390" y="74" text-anchor="middle" font-size="15" fill="#fff" font-weight="bold">회전 운동</text>
+
+  <rect x="520" y="50" width="230" height="35" rx="6" fill="#6B7280"/>
+  <text x="635" y="74" text-anchor="middle" font-size="15" fill="#fff" font-weight="bold">관계</text>
+
+  <!-- Row backgrounds -->
+  <rect x="30" y="90" width="720" height="36" fill="#F3F4F6" rx="4"/>
+  <rect x="30" y="162" width="720" height="36" fill="#F3F4F6" rx="4"/>
+  <rect x="30" y="234" width="720" height="36" fill="#F3F4F6" rx="4"/>
+  <rect x="30" y="306" width="720" height="36" fill="#F3F4F6" rx="4"/>
+  <rect x="30" y="378" width="720" height="36" fill="#F3F4F6" rx="4"/>
+
+  <!-- Row 1: Position -->
+  <text x="145" y="113" text-anchor="middle" font-size="14" fill="#1a1a1a">위치: <tspan font-style="italic">x</tspan></text>
+  <text x="390" y="113" text-anchor="middle" font-size="14" fill="#1a1a1a">각위치: <tspan font-style="italic">θ</tspan></text>
+  <text x="635" y="113" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">s = θr</text>
+
+  <!-- Row 2: Velocity -->
+  <text x="145" y="149" text-anchor="middle" font-size="14" fill="#1a1a1a">속도: <tspan font-style="italic">v = dx/dt</tspan></text>
+  <text x="390" y="149" text-anchor="middle" font-size="14" fill="#1a1a1a">각속도: <tspan font-style="italic">ω = dθ/dt</tspan></text>
+  <text x="635" y="149" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">v = ωr</text>
+
+  <!-- Row 3: Acceleration -->
+  <text x="145" y="185" text-anchor="middle" font-size="14" fill="#1a1a1a">가속도: <tspan font-style="italic">a = dv/dt</tspan></text>
+  <text x="390" y="185" text-anchor="middle" font-size="14" fill="#1a1a1a">각가속도: <tspan font-style="italic">α = dω/dt</tspan></text>
+  <text x="635" y="185" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">a_t = αr</text>
+
+  <!-- Row 4: Mass / I -->
+  <text x="145" y="221" text-anchor="middle" font-size="14" fill="#1a1a1a">질량: <tspan font-style="italic">m</tspan></text>
+  <text x="390" y="221" text-anchor="middle" font-size="14" fill="#1a1a1a">관성모멘트: <tspan font-style="italic">I</tspan></text>
+  <text x="635" y="221" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">I = Σm_ir_i²</text>
+
+  <!-- Row 5: Force / Torque -->
+  <text x="145" y="257" text-anchor="middle" font-size="14" fill="#1a1a1a">힘: <tspan font-style="italic">F</tspan></text>
+  <text x="390" y="257" text-anchor="middle" font-size="14" fill="#1a1a1a">토크: <tspan font-style="italic">τ</tspan></text>
+  <text x="635" y="257" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">τ = rF sinφ</text>
+
+  <!-- Row 6: Newton's 2nd Law -->
+  <text x="145" y="293" text-anchor="middle" font-size="14" fill="#1a1a1a">뉴턴 제2법칙:</text>
+  <text x="390" y="293" text-anchor="middle" font-size="14" fill="#1a1a1a">뉴턴 제2법칙:</text>
+  <text x="635" y="293" text-anchor="middle" font-size="14" fill="#6B7280">—</text>
+  <text x="145" y="329" text-anchor="middle" font-size="15" fill="#8B0029" font-weight="bold" font-style="italic">F = ma</text>
+  <text x="390" y="329" text-anchor="middle" font-size="15" fill="#8B0029" font-weight="bold" font-style="italic">τ = Iα</text>
+
+  <!-- Row 7: KE -->
+  <text x="145" y="365" text-anchor="middle" font-size="14" fill="#1a1a1a">운동에너지:</text>
+  <text x="390" y="365" text-anchor="middle" font-size="14" fill="#1a1a1a">회전 운동에너지:</text>
+  <text x="635" y="365" text-anchor="middle" font-size="14" fill="#6B7280">—</text>
+  <text x="145" y="401" text-anchor="middle" font-size="15" fill="#8B0029" font-weight="bold" font-style="italic">K = ½mv²</text>
+  <text x="390" y="401" text-anchor="middle" font-size="15" fill="#8B0029" font-weight="bold" font-style="italic">K = ½Iω²</text>
+
+  <!-- Row 8: Work -->
+  <text x="145" y="437" text-anchor="middle" font-size="14" fill="#1a1a1a">일: <tspan font-style="italic">W = Fd</tspan></text>
+  <text x="390" y="437" text-anchor="middle" font-size="14" fill="#1a1a1a">일: <tspan font-style="italic">W = τθ</tspan></text>
+  <text x="635" y="437" text-anchor="middle" font-size="14" fill="#6B7280">—</text>
+
+  <!-- Row 9: Power -->
+  <text x="145" y="468" text-anchor="middle" font-size="14" fill="#1a1a1a">일률: <tspan font-style="italic">P = Fv</tspan></text>
+  <text x="390" y="468" text-anchor="middle" font-size="14" fill="#1a1a1a">일률: <tspan font-style="italic">P = τω</tspan></text>
+  <text x="635" y="468" text-anchor="middle" font-size="14" fill="#6B7280">—</text>
+
+  <!-- Vertical separators -->
+  <line x1="270" y1="50" x2="270" y2="480" stroke="#e0c0c8" stroke-width="1"/>
+  <line x1="515" y1="50" x2="515" y2="480" stroke="#e0c0c8" stroke-width="1"/>
+</svg>

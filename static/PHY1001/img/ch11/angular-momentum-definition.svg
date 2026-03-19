@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 400" font-family="sans-serif">
+  <defs>
+    <marker id="aRed" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="aBlu" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="aBlk" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#1a1a1a">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="325" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">각운동량: ℓ = r × p</text>
+
+  <!-- Origin O -->
+  <circle cx="150" cy="280" r="5" fill="#1a1a1a"/>
+  <text x="135" y="300" font-size="16" font-weight="bold" fill="#1a1a1a">O</text>
+
+  <!-- r vector -->
+  <line x1="150" y1="280" x2="380" y2="160" stroke="#6B7280" stroke-width="2" marker-end="url(#aBlk)"/>
+  <text x="250" y="205" font-size="18" font-weight="bold" font-style="italic" fill="#6B7280">r</text>
+
+  <!-- Particle at end of r -->
+  <circle cx="390" cy="155" r="10" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
+  <text x="395" y="142" font-size="14" font-style="italic" fill="#1a1a1a">m</text>
+
+  <!-- p = mv (momentum vector) -->
+  <line x1="400" y1="155" x2="530" y2="110" stroke="#2563EB" stroke-width="2.5" marker-end="url(#aBlu)"/>
+  <text x="540" y="115" font-size="18" font-weight="bold" font-style="italic" fill="#2563EB">p = mv</text>
+
+  <!-- v vector (smaller, parallel to p) -->
+  <line x1="400" y1="155" x2="470" y2="130" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#aBlu)"/>
+  <text x="450" y="148" font-size="14" font-style="italic" fill="#2563EB">v</text>
+
+  <!-- Angle phi -->
+  <path d="M 365,172 A 35,35 0 0,0 415,148" fill="none" stroke="#6B7280" stroke-width="1.5"/>
+  <text x="405" y="188" font-size="16" font-style="italic" fill="#6B7280">φ</text>
+
+  <!-- Angular momentum vector (out of page) -->
+  <g transform="translate(150, 140)">
+    <circle cx="0" cy="0" r="14" fill="none" stroke="#8B0029" stroke-width="2"/>
+    <circle cx="0" cy="0" r="4" fill="#8B0029"/>
+    <text x="20" y="5" font-size="18" font-weight="bold" font-style="italic" fill="#8B0029">ℓ</text>
+    <text x="20" y="22" font-size="12" fill="#6B7280">(지면 밖으로)</text>
+  </g>
+
+  <!-- Perpendicular distance (r sin phi) -->
+  <line x1="150" y1="280" x2="285" y2="118" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <rect x="280" y="123" width="8" height="8" fill="none" stroke="#6B7280" stroke-width="1" transform="rotate(-32, 285, 118)"/>
+  <text x="195" y="188" font-size="14" font-style="italic" fill="#6B7280">r sin φ</text>
+
+  <!-- Formulas -->
+  <rect x="30" y="320" width="590" height="65" rx="8" fill="#f8f0f2" stroke="#e0c0c8" stroke-width="1"/>
+  <text x="325" y="345" text-anchor="middle" font-size="15" fill="#8B0029" font-weight="bold">ℓ = r × p = r × mv</text>
+  <text x="325" y="368" text-anchor="middle" font-size="14" fill="#6B7280">|ℓ| = rmv sin φ = r⊥ mv</text>
+</svg>

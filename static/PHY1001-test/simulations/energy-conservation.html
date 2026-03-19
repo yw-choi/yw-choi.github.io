@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>역학적 에너지 보존 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 14px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.check-row { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.check-row input { accent-color: #8B0029; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>역학적 에너지 보존</h2>
+      <div class="subtitle">Conservation of Mechanical Energy (Ch.8)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>초기 높이 h = <span id="heightVal">3.0</span> m</label>
+      <input type="range" id="heightSlider" min="0.5" max="5" value="3" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>질량 m = <span id="massVal">2.0</span> kg</label>
+      <input type="range" id="massSlider" min="0.5" max="5" value="2" step="0.1">
+    </div>
+
+    <div class="check-row">
+      <input type="checkbox" id="frictionCheck">
+      <label for="frictionCheck">마찰 포함 (운동마찰계수 μ<sub>k</sub>)</label>
+    </div>
+
+    <div class="control-group" id="frictionGroup" style="display:none">
+      <label>μ<sub>k</sub> = <span id="muVal">0.10</span></label>
+      <input type="range" id="muSlider" min="0.01" max="0.40" value="0.10" step="0.01">
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const heightSlider = document.getElementById('heightSlider');
+const massSlider = document.getElementById('massSlider');
+const muSlider = document.getElementById('muSlider');
+const frictionCheck = document.getElementById('frictionCheck');
+const frictionGroup = document.getElementById('frictionGroup');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+const g = 9.8;
+let running = false, animId = null, lastTs = null;
+
+// Track shape: slope down then flat
+// slope from (0, h) to (slopeLen, 0), then flat to end
+const trackTotalLen = 12; // meters total track length
+let slopeFrac = 0.45; // fraction of track that is slope
+
+// Physics state
+let s = 0; // distance traveled along track
+let v = 0;
+let totalDist = 0;
+
+function getParams() {
+  const h = parseFloat(heightSlider.value);
+  const m = parseFloat(massSlider.value);
+  const mu = frictionCheck.checked ? parseFloat(muSlider.value) : 0;
+  const slopeLen = trackTotalLen * slopeFrac;
+  const theta = Math.atan2(h, slopeLen);
+  return { h, m, mu, slopeLen, theta };
+}
+
+function getTrackY(sPos) {
+  const { h, slopeLen } = getParams();
+  // s is distance along track surface
+  // slope surface length
+  const slopeSurfLen = Math.sqrt(slopeLen * slopeLen + h * h);
+  if (sPos <= slopeSurfLen) {
+    const frac = sPos / slopeSurfLen;
+    return h * (1 - frac);
+  }
+  return 0;
+}
+
+function getTotalTrackLen() {
+  const { h, slopeLen } = getParams();
+  const slopeSurfLen = Math.sqrt(slopeLen * slopeLen + h * h);
+  const flatLen = trackTotalLen - slopeLen;
+  return slopeSurfLen + flatLen;
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function reset() {
+  if (animId) cancelAnimationFrame(animId);
+  running = false; animId = null; lastTs = null;
+  s = 0; v = 0; totalDist = 0;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  updateInfo(); draw();
+}
+
+function start() {
+  if (running) return;
+  running = true;
+  lastTs = null;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+}
+
+function step(ts) {
+  if (!running) return;
+  if (!lastTs) { lastTs = ts; animId = requestAnimationFrame(step); return; }
+  const dtReal = Math.min((ts - lastTs) / 1000, 0.05);
+  lastTs = ts;
+
+  const { h, m, mu, slopeLen, theta } = getParams();
+  const slopeSurfLen = Math.sqrt(slopeLen * slopeLen + h * h);
+  const totalLen = getTotalTrackLen();
+
+  // Acceleration depends on position
+  let a;
+  if (s < slopeSurfLen) {
+    // On slope
+    a = g * Math.sin(theta) - mu * g * Math.cos(theta);
+  } else {
+    // On flat
+    a = -mu * g;
+  }
+
+  // If friction causes negative velocity on flat, stop
+  if (s >= slopeSurfLen && v <= 0.001 && a <= 0) {
+    v = 0;
+    updateInfo(); draw(); stop(); return;
+  }
+
+  v += a * dtReal;
+  if (v < 0) v = 0;
+  s += v * dtReal;
+  totalDist += Math.abs(v * dtReal);
+
+  if (s >= totalLen) {
+    s = totalLen;
+    v = 0;
+    updateInfo(); draw(); stop(); return;
+  }
+
+  updateInfo(); draw();
+  animId = requestAnimationFrame(step);
+}
+
+function updateInfo() {
+  const { h, m, mu, slopeLen, theta } = getParams();
+  const yNow = getTrackY(s);
+  const K = 0.5 * m * v * v;
+  const U = m * g * yNow;
+  const Emec = K + U;
+  const Emec0 = m * g * h;
+  const Eth = Emec0 - Emec;
+
+  const infoBox = document.getElementById('infoBox');
+  let html = '';
+  html += '<span class="label">높이 y:</span> <span class="val">' + yNow.toFixed(2) + ' m</span><br>';
+  html += '<span class="label">속력 v:</span> <span class="val">' + v.toFixed(2) + ' m/s</span><br>';
+  html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
+  html += tex('K = \\tfrac{1}{2}mv^2') + ' = <span class="val">' + K.toFixed(2) + ' J</span><br>';
+  html += tex('U = mgy') + ' = <span class="val">' + U.toFixed(2) + ' J</span><br>';
+  html += tex('E_{\\text{mec}} = K + U') + ' = <span class="val">' + Emec.toFixed(2) + ' J</span>';
+  if (mu > 0) {
+    html += '<br>' + tex('E_{\\text{th}} = f_k d') + ' = <span class="val">' + Eth.toFixed(2) + ' J</span>';
+    html += '<br><span style="color:#2e7d32;font-weight:700">' + tex('E_{\\text{mec}} + E_{\\text{th}}') + ' = <span class="val">' + (Emec + Eth).toFixed(2) + ' J</span> ' + tex('= E_0\\;\\checkmark') + '</span>';
+  } else {
+    html += '<br><span style="color:#2e7d32;font-weight:700">' + tex('E_{\\text{mec}}') + ' = <span class="val">' + Emec.toFixed(2) + ' J = const \\checkmark</span></span>';
+  }
+  infoBox.innerHTML = html;
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 10;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath(); ctx.fill();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  const { h, m, mu, slopeLen } = getParams();
+  const slopeSurfLen = Math.sqrt(slopeLen * slopeLen + h * h);
+  const flatLen = trackTotalLen - slopeLen;
+
+  // Track layout in pixels
+  const padL = 60, padR = 30, padTop = 60, padBot = 120;
+  const trackW = CW - padL - padR;
+  const maxH = CH - padTop - padBot;
+  const ppm = trackW / trackTotalLen; // pixels per meter horizontal
+  const hPx = Math.min(h * ppm * 0.6, maxH * 0.7);
+  const groundY = padTop + hPx + 40;
+
+  // Slope start/end in pixels
+  const slopeStartPx = padL;
+  const slopeEndPx = padL + slopeLen * ppm;
+  const slopeTopY = groundY - hPx;
+
+  // Draw track
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(slopeStartPx, slopeTopY);
+  ctx.lineTo(slopeEndPx, groundY);
+  ctx.lineTo(padL + trackTotalLen * ppm, groundY);
+  ctx.stroke();
+
+  // Ground hatching on flat part
+  ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1;
+  for (let hx = slopeEndPx; hx < padL + trackTotalLen * ppm; hx += 14) {
+    ctx.beginPath(); ctx.moveTo(hx, groundY); ctx.lineTo(hx - 8, groundY + 8); ctx.stroke();
+  }
+  // Slope hatching
+  const slopeAngle = Math.atan2(hPx, slopeEndPx - slopeStartPx);
+  ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1;
+  for (let i = 0; i < 15; i++) {
+    const frac = i / 15;
+    const sx = slopeStartPx + frac * (slopeEndPx - slopeStartPx);
+    const sy = slopeTopY + frac * (groundY - slopeTopY);
+    ctx.beginPath();
+    ctx.moveTo(sx, sy);
+    ctx.lineTo(sx - 6 * Math.cos(slopeAngle + 1.2), sy + 6 * Math.sin(slopeAngle + 1.2));
+    ctx.stroke();
+  }
+
+  // Height dimension
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+  ctx.beginPath(); ctx.moveTo(slopeStartPx - 15, slopeTopY); ctx.lineTo(slopeStartPx - 15, groundY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#6B7280'; ctx.font = '13px sans-serif'; ctx.textAlign = 'right';
+  ctx.fillText('h = ' + h.toFixed(1) + ' m', slopeStartPx - 20, (slopeTopY + groundY) / 2 + 4);
+
+  // Ball position
+  const yNow = getTrackY(s);
+  let ballPxX, ballPxY;
+  if (s <= slopeSurfLen) {
+    const frac = s / slopeSurfLen;
+    ballPxX = slopeStartPx + frac * (slopeEndPx - slopeStartPx);
+    ballPxY = slopeTopY + frac * (groundY - slopeTopY);
+  } else {
+    const flatDist = s - slopeSurfLen;
+    ballPxX = slopeEndPx + flatDist * ppm;
+    ballPxY = groundY;
+  }
+  const ballR = 14;
+  ballPxY -= ballR;
+
+  // Ball shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.08)';
+  ctx.beginPath(); ctx.arc(ballPxX + 2, ballPxY + 2, ballR, 0, Math.PI * 2); ctx.fill();
+  // Ball
+  ctx.fillStyle = '#F3F4F6'; ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(ballPxX, ballPxY, ballR, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('m', ballPxX, ballPxY);
+  ctx.textBaseline = 'alphabetic';
+
+  // Velocity arrow
+  if (v > 0.1) {
+    const vLen = Math.min(v * 12, 80);
+    let vAngle;
+    if (s < slopeSurfLen) {
+      vAngle = Math.atan2(groundY - slopeTopY, slopeEndPx - slopeStartPx);
+    } else {
+      vAngle = 0;
+    }
+    const vx = ballPxX + vLen * Math.cos(vAngle);
+    const vy = ballPxY + vLen * Math.sin(vAngle);
+    drawArrow(ballPxX, ballPxY, vx, vy, '#2563EB', 2.5);
+    ctx.fillStyle = '#2563EB'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('v = ' + v.toFixed(1) + ' m/s', vx + 6, vy - 4);
+  }
+
+  // Energy bar chart
+  const Emec0 = m * g * h;
+  const K = 0.5 * m * v * v;
+  const U = m * g * yNow;
+  const Eth = Emec0 - K - U;
+  const maxBarH = Math.min(CH * 0.22, 130);
+  const eScale = Emec0 > 0 ? maxBarH / Emec0 : 1;
+
+  const barW = 36, barGap = 10;
+  const numBars = mu > 0 ? 3 : 2;
+  const barTotalW = numBars * barW + (numBars - 1) * barGap;
+  const barStartX = CW - padR - barTotalW - 10;
+  const barBaseY = groundY + 8;
+  const barTitleY = barBaseY - maxBarH - 22;
+
+  ctx.fillStyle = '#444'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('에너지 (J)', barStartX + barTotalW / 2, barTitleY);
+
+  // Baseline
+  ctx.strokeStyle = '#999'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(barStartX - 8, barBaseY); ctx.lineTo(barStartX + barTotalW + 8, barBaseY); ctx.stroke();
+
+  function drawBar(idx, val, color, label) {
+    const bx = barStartX + idx * (barW + barGap);
+    const bh = Math.max(val * eScale, 0);
+    ctx.fillStyle = color + '99';
+    ctx.fillRect(bx, barBaseY - bh, barW, bh);
+    ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+    ctx.strokeRect(bx, barBaseY - bh, barW, Math.max(bh, 1));
+    ctx.fillStyle = color; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(label, bx + barW / 2, barBaseY + 16);
+    // Value
+    const topOfBar = barBaseY - bh;
+    if (topOfBar - 6 < barTitleY + 14) {
+      ctx.fillStyle = '#fff'; ctx.font = '11px sans-serif';
+      ctx.fillText(val.toFixed(1), bx + barW / 2, topOfBar + 14);
+    } else {
+      ctx.fillStyle = color; ctx.font = '11px sans-serif';
+      ctx.fillText(val.toFixed(1), bx + barW / 2, topOfBar - 4);
+    }
+  }
+
+  drawBar(0, K, '#2563EB', 'K');
+  drawBar(1, U, '#8B0029', 'U');
+  if (mu > 0) drawBar(2, Eth, '#6B7280', 'E_th');
+
+  // Emec line
+  const emecBarH = (K + U) * eScale;
+  ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 3]);
+  ctx.beginPath();
+  ctx.moveTo(barStartX - 8, barBaseY - Emec0 * eScale);
+  ctx.lineTo(barStartX + barTotalW + 8, barBaseY - Emec0 * eScale);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#8B0029'; ctx.font = '11px sans-serif'; ctx.textAlign = 'right';
+  ctx.fillText('E₀ = ' + Emec0.toFixed(1), barStartX - 12, barBaseY - Emec0 * eScale + 4);
+
+  // Friction indicator
+  if (mu > 0 && v > 0.1 && s >= slopeSurfLen * 0.1) {
+    ctx.fillStyle = 'rgba(200,100,0,0.6)'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('마찰: μk = ' + mu.toFixed(2), ballPxX, ballPxY + ballR + 20);
+  }
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML = '역학적 에너지 보존: ' + tex('K + U = E_{\\text{mec}}');
+  document.getElementById('theoremBox').innerHTML = '역학적 에너지 보존<br>' + tex('\\Delta K + \\Delta U = 0') + '<br>' + tex('K_f + U_f = K_i + U_i');
+  updateFormula();
+}
+
+function updateFormula() {
+  const mu = frictionCheck.checked ? parseFloat(muSlider.value) : 0;
+  const box = document.getElementById('formulaBox');
+  if (mu > 0) {
+    box.innerHTML = '<b>마찰이 있을 때:</b><br>' +
+      tex('\\Delta E_{\\text{mec}} = -f_k d') + '<br>' +
+      tex('(K_f + U_f) - (K_i + U_i) = -\\mu_k N d');
+  } else {
+    box.innerHTML = '<b>보존력만 작용:</b><br>' +
+      tex('K_i + U_i = K_f + U_f') + '<br>' +
+      tex('\\tfrac{1}{2}mv^2 + mgy = mgh');
+  }
+}
+
+frictionCheck.addEventListener('change', () => {
+  frictionGroup.style.display = frictionCheck.checked ? 'flex' : 'none';
+  updateFormula(); reset();
+});
+
+[heightSlider, massSlider, muSlider].forEach(sl => {
+  sl.addEventListener('input', () => {
+    document.getElementById('heightVal').textContent = parseFloat(heightSlider.value).toFixed(1);
+    document.getElementById('massVal').textContent = parseFloat(massSlider.value).toFixed(1);
+    document.getElementById('muVal').textContent = parseFloat(muSlider.value).toFixed(2);
+    updateFormula(); reset();
+  });
+});
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+window.addEventListener('resize', resize);
+
+renderStatic();
+document.getElementById('heightVal').textContent = parseFloat(heightSlider.value).toFixed(1);
+document.getElementById('massVal').textContent = parseFloat(massSlider.value).toFixed(1);
+document.getElementById('muVal').textContent = parseFloat(muSlider.value).toFixed(2);
+reset();
+resize();
+</script>
+</body>
+</html>

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>응력-변형률 곡선 탐색기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
+.control-group { display: flex; flex-direction: column; gap: 4px; }
+.control-group label { font-size: 13px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.control-group select { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .eq { color: #555; font-size: 12px; }
+.info-box .eq .katex { font-size: 13px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .theorem-eq { font-size: 14px; display: block; margin-top: 4px; }
+.theorem-box .katex { color: #fff; }
+.canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 20px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 20px; color: #8B0029; }
+button.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+button.play-btn:hover { background: #35a035; }
+button.play-btn.running { background: #b8860b; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+button.reset-btn:hover { background: #a3003a; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.region-label { border-radius: 6px; padding: 6px 10px; font-size: 13px; font-weight: 700; text-align: center; }
+.region-elastic { background: #e3f2fd; color: #1565c0; }
+.region-plastic { background: #fff3e0; color: #e65100; }
+.region-necking { background: #fce4ec; color: #c62828; }
+.region-fracture { background: #f5f5f5; color: #424242; }
+.material-props { background: #f0f4ff; border: 1px solid #c0d0f0; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
+.material-props .label { color: #2563EB; font-weight: 700; }
+.material-props .val { font-family: 'Courier New', monospace; font-weight: 600; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 50vh; }
+  .controls { width: 100%; height: 50vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div class="theorem-box">
+      탄성 (Elasticity)
+      <span class="theorem-eq" id="theoremEq"></span>
+    </div>
+
+    <div class="control-group">
+      <label>재료 선택</label>
+      <select id="materialSelect">
+        <option value="steel">구조용 강철 (Steel)</option>
+        <option value="aluminum">알루미늄 (Aluminum)</option>
+        <option value="copper">구리 (Copper)</option>
+        <option value="rubber">고무 (Rubber)</option>
+        <option value="concrete">콘크리트 (Concrete)</option>
+        <option value="bone">뼈 (Bone)</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>단면적 A = <span id="areaVal">1.00</span> cm&sup2;</label>
+      <input type="range" id="areaSlider" min="0.1" max="5.0" value="1.0" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>원래 길이 L = <span id="lengthVal">1.00</span> m</label>
+      <input type="range" id="lengthSlider" min="0.2" max="3.0" value="1.0" step="0.1">
+    </div>
+
+    <div class="material-props" id="matProps">
+      <div><span class="label">영률 E = </span><span class="val" id="youngVal"></span></div>
+      <div><span class="label">항복 응력 </span><span id="syLabel"></span><span class="val" id="syVal"></span></div>
+      <div><span class="label">극한 강도 </span><span id="suLabel"></span><span class="val" id="suVal"></span></div>
+    </div>
+
+    <div class="info-box" id="infoBox">
+      <div class="eq" id="stressEq"></div>
+      <div><span class="label">인가 응력 </span><span id="sigmaLabel"></span><span class="val" id="sigmaInfo"></span></div>
+      <div><span class="label">변형률 </span><span id="epsilonLabel"></span><span class="val" id="epsilonInfo"></span></div>
+      <div><span class="label">변형량 </span><span id="deltaLLabel"></span><span class="val" id="deltaLInfo"></span></div>
+    </div>
+
+    <div class="region-label" id="regionLabel">탄성 영역</div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 인장 시험 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) {
+  return katex.renderToString(expr, { throwOnError: false });
+}
+
+// Material data: E (GPa), Sy (MPa), Su (MPa), fracture strain
+const materials = {
+  steel:    { name: '강철', E: 200, Sy: 250, Su: 400, eFrac: 0.25, color: '#555' },
+  aluminum: { name: '알루미늄', E: 70, Sy: 95, Su: 110, eFrac: 0.17, color: '#90A4AE' },
+  copper:   { name: '구리', E: 120, Sy: 70, Su: 220, eFrac: 0.40, color: '#E65100' },
+  rubber:   { name: '고무', E: 0.01, Sy: 5, Su: 15, eFrac: 5.0, color: '#4CAF50' },
+  concrete: { name: '콘크리트', E: 30, Sy: 20, Su: 35, eFrac: 0.003, color: '#9E9E9E' },
+  bone:     { name: '뼈', E: 18, Sy: 120, Su: 130, eFrac: 0.03, color: '#FFF9C4' },
+};
+
+function renderStaticKaTeX() {
+  document.getElementById('theoremEq').innerHTML = tex('\\text{stress} = E \\times \\text{strain}');
+  document.getElementById('canvasTitle').innerHTML = '응력-변형률 곡선: ' + tex('\\sigma = E\\varepsilon');
+  document.getElementById('stressEq').innerHTML = tex('\\sigma = F/A,\\quad \\varepsilon = \\Delta L / L');
+  document.getElementById('sigmaLabel').innerHTML = tex('\\sigma') + ' = ';
+  document.getElementById('epsilonLabel').innerHTML = tex('\\varepsilon') + ' = ';
+  document.getElementById('deltaLLabel').innerHTML = tex('\\Delta L') + ' = ';
+  document.getElementById('syLabel').innerHTML = tex('S_y') + ' = ';
+  document.getElementById('suLabel').innerHTML = tex('S_u') + ' = ';
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const materialSelect = document.getElementById('materialSelect');
+const areaSlider = document.getElementById('areaSlider');
+const lengthSlider = document.getElementById('lengthSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+let running = false;
+let animId = null;
+let currentStrain = 0;
+let fractured = false;
+const strainSpeed = 0.0008;
+
+function getMat() {
+  return materials[materialSelect.value];
+}
+
+// Generate stress from strain for material (simplified model)
+function stressFromStrain(strain, mat) {
+  const ey = mat.Sy / (mat.E * 1000); // yield strain
+  const eu = mat.eFrac * 0.6; // strain at ultimate
+  const ef = mat.eFrac;
+
+  if (strain <= ey) {
+    // Linear elastic
+    return mat.E * 1000 * strain; // E in GPa -> MPa
+  } else if (strain <= eu) {
+    // Strain hardening (parabolic)
+    const t = (strain - ey) / (eu - ey);
+    return mat.Sy + (mat.Su - mat.Sy) * (2 * t - t * t);
+  } else if (strain <= ef) {
+    // Necking (decreasing)
+    const t = (strain - eu) / (ef - eu);
+    return mat.Su - (mat.Su - mat.Sy * 0.7) * t * t;
+  } else {
+    return 0; // fractured
+  }
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width;
+  CH = rect.height;
+  canvas.width = CW * dpr;
+  canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px';
+  canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function updateLabels() {
+  document.getElementById('areaVal').textContent = parseFloat(areaSlider.value).toFixed(2);
+  document.getElementById('lengthVal').textContent = parseFloat(lengthSlider.value).toFixed(2);
+}
+
+function updateMaterialProps() {
+  const mat = getMat();
+  document.getElementById('youngVal').textContent = mat.E + ' GPa';
+  document.getElementById('syVal').textContent = mat.Sy + ' MPa';
+  document.getElementById('suVal').textContent = mat.Su + ' MPa';
+}
+
+function updateInfo() {
+  const mat = getMat();
+  const A = parseFloat(areaSlider.value) * 1e-4; // cm² → m²
+  const L = parseFloat(lengthSlider.value);
+  const stress = stressFromStrain(currentStrain, mat);
+  const deltaL = currentStrain * L;
+  const force = stress * 1e6 * A; // MPa to Pa, times m²
+
+  document.getElementById('sigmaInfo').textContent = stress.toFixed(1) + ' MPa';
+  document.getElementById('epsilonInfo').textContent = currentStrain < 0.001
+    ? (currentStrain * 1e6).toFixed(0) + ' \u00B5\u03B5'
+    : (currentStrain * 100).toFixed(3) + ' %';
+  document.getElementById('deltaLInfo').textContent = (deltaL * 1000).toFixed(3) + ' mm';
+
+  // Region label
+  const ey = mat.Sy / (mat.E * 1000);
+  const eu = mat.eFrac * 0.6;
+  const ef = mat.eFrac;
+  const regionLabel = document.getElementById('regionLabel');
+
+  if (currentStrain >= ef || fractured) {
+    regionLabel.textContent = '파단 (Fracture)';
+    regionLabel.className = 'region-label region-fracture';
+  } else if (currentStrain > eu) {
+    regionLabel.textContent = '네킹 (Necking)';
+    regionLabel.className = 'region-label region-necking';
+  } else if (currentStrain > ey) {
+    regionLabel.textContent = '소성 변형 (Plastic)';
+    regionLabel.className = 'region-label region-plastic';
+  } else {
+    regionLabel.textContent = '탄성 영역 (Elastic)';
+    regionLabel.className = 'region-label region-elastic';
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  const mat = getMat();
+
+  // Graph area
+  const gLeft = 80;
+  const gRight = CW - 40;
+  const gTop = 60;
+  const gBottom = CH * 0.55;
+  const gW = gRight - gLeft;
+  const gH = gBottom - gTop;
+
+  // Strain range
+  const maxStrain = mat.eFrac * 1.1;
+  const maxStress = mat.Su * 1.2;
+
+  // Draw axes
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(gLeft, gBottom);
+  ctx.lineTo(gRight, gBottom);
+  ctx.moveTo(gLeft, gBottom);
+  ctx.lineTo(gLeft, gTop);
+  ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = '14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('변형률 (Strain)', (gLeft + gRight) / 2, gBottom + 35);
+  ctx.save();
+  ctx.translate(25, (gTop + gBottom) / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('응력 (MPa)', 0, 0);
+  ctx.restore();
+
+  // Grid lines and ticks
+  ctx.strokeStyle = '#eee';
+  ctx.lineWidth = 1;
+  const nTicksX = 5;
+  const nTicksY = 5;
+  for (let i = 1; i <= nTicksX; i++) {
+    const x = gLeft + (gW * i / nTicksX);
+    ctx.beginPath();
+    ctx.moveTo(x, gTop);
+    ctx.lineTo(x, gBottom);
+    ctx.stroke();
+    ctx.fillStyle = '#888';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'center';
+    const strVal = (maxStrain * i / nTicksX);
+    ctx.fillText(strVal < 0.01 ? strVal.toExponential(1) : strVal.toFixed(2), x, gBottom + 16);
+  }
+  for (let i = 1; i <= nTicksY; i++) {
+    const y = gBottom - (gH * i / nTicksY);
+    ctx.beginPath();
+    ctx.moveTo(gLeft, y);
+    ctx.lineTo(gRight, y);
+    ctx.stroke();
+    ctx.fillStyle = '#888';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText((maxStress * i / nTicksY).toFixed(0), gLeft - 8, y + 4);
+  }
+
+  // Draw full curve (faded)
+  ctx.strokeStyle = 'rgba(139,0,41,0.2)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  const steps = 300;
+  for (let i = 0; i <= steps; i++) {
+    const e = (mat.eFrac * i) / steps;
+    const s = stressFromStrain(e, mat);
+    const px = gLeft + (e / maxStrain) * gW;
+    const py = gBottom - (s / maxStress) * gH;
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  // Draw active curve (up to current strain)
+  if (currentStrain > 0) {
+    ctx.strokeStyle = '#8B0029';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    const activeSteps = Math.min(Math.floor(steps * currentStrain / mat.eFrac), steps);
+    for (let i = 0; i <= activeSteps; i++) {
+      const e = (currentStrain * i) / activeSteps;
+      const s = stressFromStrain(e, mat);
+      const px = gLeft + (e / maxStrain) * gW;
+      const py = gBottom - (s / maxStress) * gH;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+
+    // Current point
+    const curStress = stressFromStrain(currentStrain, mat);
+    const cpx = gLeft + (currentStrain / maxStrain) * gW;
+    const cpy = gBottom - (curStress / maxStress) * gH;
+    if (!fractured) {
+      ctx.fillStyle = '#8B0029';
+      ctx.beginPath();
+      ctx.arc(cpx, cpy, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Cross-hair lines
+      ctx.strokeStyle = 'rgba(139,0,41,0.3)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.moveTo(cpx, gBottom);
+      ctx.lineTo(cpx, cpy);
+      ctx.moveTo(gLeft, cpy);
+      ctx.lineTo(cpx, cpy);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  // Yield and ultimate markers
+  const ey = mat.Sy / (mat.E * 1000);
+  const eu = mat.eFrac * 0.6;
+  // Yield point marker
+  const ypx = gLeft + (ey / maxStrain) * gW;
+  const ypy = gBottom - (mat.Sy / maxStress) * gH;
+  ctx.fillStyle = '#2563EB';
+  ctx.beginPath();
+  ctx.arc(ypx, ypy, 4, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('항복점', ypx + 8, ypy - 5);
+
+  // Ultimate point marker
+  const upx = gLeft + (eu / maxStrain) * gW;
+  const upy = gBottom - (mat.Su / maxStress) * gH;
+  ctx.fillStyle = '#E65100';
+  ctx.beginPath();
+  ctx.arc(upx, upy, 4, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillText('극한 강도', upx + 8, upy - 5);
+
+  // Fracture point
+  const fpx = gLeft + (mat.eFrac / maxStrain) * gW;
+  const fpy = gBottom - (stressFromStrain(mat.eFrac * 0.999, mat) / maxStress) * gH;
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(fpx - 5, fpy - 5);
+  ctx.lineTo(fpx + 5, fpy + 5);
+  ctx.moveTo(fpx + 5, fpy - 5);
+  ctx.lineTo(fpx - 5, fpy + 5);
+  ctx.stroke();
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = '11px sans-serif';
+  ctx.fillText('파단', fpx + 8, fpy + 5);
+
+  // Young's modulus slope line (extended)
+  ctx.strokeStyle = 'rgba(37,99,235,0.4)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 4]);
+  const slopeEndStrain = ey * 3;
+  const slopeEndStress = mat.E * 1000 * slopeEndStrain;
+  ctx.beginPath();
+  ctx.moveTo(gLeft, gBottom);
+  ctx.lineTo(gLeft + (slopeEndStrain / maxStrain) * gW, gBottom - (slopeEndStress / maxStress) * gH);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#2563EB';
+  ctx.font = 'bold 12px sans-serif';
+  const eLabelX = gLeft + (slopeEndStrain / maxStrain) * gW;
+  const eLabelY = gBottom - (slopeEndStress / maxStress) * gH;
+  ctx.fillText('E (기울기)', eLabelX + 5, eLabelY + 15);
+
+  // Specimen visualization (bottom half)
+  const specTop = CH * 0.62;
+  const specMidY = CH * 0.78;
+  const specW = CW * 0.5;
+  const specH = 50;
+  const specLeft = (CW - specW) / 2;
+
+  // Title
+  ctx.fillStyle = '#444';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('시편 (' + mat.name + ')', CW / 2, specTop);
+
+  const L0 = parseFloat(lengthSlider.value);
+  const deltaL = currentStrain * L0;
+
+  if (!fractured) {
+    // Stretched specimen
+    const stretch = currentStrain * specW * 0.3 / Math.max(mat.eFrac, 0.01);
+    const necking = currentStrain > eu ? (currentStrain - eu) / (mat.eFrac - eu) * 0.6 : 0;
+
+    ctx.fillStyle = mat.color || '#aaa';
+    ctx.strokeStyle = '#1a1a1a';
+    ctx.lineWidth = 2;
+
+    if (necking > 0) {
+      // Draw with necking
+      ctx.beginPath();
+      const halfW = specW / 2 + stretch;
+      const neckReduction = necking * specH * 0.4;
+      ctx.moveTo(CW / 2 - halfW, specMidY - specH / 2);
+      ctx.lineTo(CW / 2 + halfW, specMidY - specH / 2);
+      ctx.quadraticCurveTo(CW / 2 + halfW * 0.3, specMidY - specH / 2 + neckReduction, CW / 2 + halfW, specMidY + specH / 2);
+      ctx.lineTo(CW / 2 - halfW, specMidY + specH / 2);
+      ctx.quadraticCurveTo(CW / 2 - halfW * 0.3, specMidY + specH / 2 - neckReduction, CW / 2 - halfW, specMidY - specH / 2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    } else {
+      const halfW = specW / 2 + stretch;
+      ctx.fillRect(CW / 2 - halfW, specMidY - specH / 2, halfW * 2, specH);
+      ctx.strokeRect(CW / 2 - halfW, specMidY - specH / 2, halfW * 2, specH);
+    }
+
+    // Force arrows
+    const arrowLen = 50;
+    // Left arrow (pulling left)
+    drawArrow(CW / 2 - specW / 2 - stretch - 10, specMidY, CW / 2 - specW / 2 - stretch - arrowLen, specMidY, '#8B0029', 2.5);
+    ctx.fillStyle = '#8B0029';
+    ctx.font = 'bold 13px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('F', CW / 2 - specW / 2 - stretch - arrowLen - 5, specMidY + 5);
+    // Right arrow (pulling right)
+    drawArrow(CW / 2 + specW / 2 + stretch + 10, specMidY, CW / 2 + specW / 2 + stretch + arrowLen, specMidY, '#8B0029', 2.5);
+    ctx.fillStyle = '#8B0029';
+    ctx.textAlign = 'left';
+    ctx.fillText('F', CW / 2 + specW / 2 + stretch + arrowLen + 5, specMidY + 5);
+
+    // Dimension: original length
+    const dimY = specMidY + specH / 2 + 25;
+    ctx.strokeStyle = '#6B7280';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(CW / 2 - specW / 2, dimY);
+    ctx.lineTo(CW / 2 + specW / 2, dimY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#6B7280';
+    ctx.font = '13px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('L = ' + L0.toFixed(2) + ' m', CW / 2, dimY + 16);
+
+    // Delta L
+    if (currentStrain > 0) {
+      const dlDimY = dimY + 30;
+      ctx.fillStyle = '#2563EB';
+      ctx.font = '13px sans-serif';
+      ctx.fillText('\u0394L = ' + (deltaL * 1000).toFixed(3) + ' mm', CW / 2, dlDimY + 4);
+    }
+  } else {
+    // Fractured specimen — two halves
+    ctx.fillStyle = mat.color || '#aaa';
+    ctx.strokeStyle = '#1a1a1a';
+    ctx.lineWidth = 2;
+    const gap = 30;
+    ctx.fillRect(CW / 2 - specW / 2 - 20, specMidY - specH / 2, specW / 2 - gap / 2, specH);
+    ctx.strokeRect(CW / 2 - specW / 2 - 20, specMidY - specH / 2, specW / 2 - gap / 2, specH);
+    ctx.fillRect(CW / 2 + gap / 2, specMidY - specH / 2, specW / 2, specH);
+    ctx.strokeRect(CW / 2 + gap / 2, specMidY - specH / 2, specW / 2, specH);
+
+    // Jagged fracture edges
+    ctx.strokeStyle = '#c62828';
+    ctx.lineWidth = 2;
+    const fracX1 = CW / 2 - gap / 2 - 20 + specW / 2;
+    const fracX2 = CW / 2 + gap / 2;
+    for (let edge of [fracX1, fracX2]) {
+      ctx.beginPath();
+      ctx.moveTo(edge, specMidY - specH / 2);
+      ctx.lineTo(edge + (edge === fracX1 ? 5 : -5), specMidY - specH / 4);
+      ctx.lineTo(edge + (edge === fracX1 ? -3 : 3), specMidY);
+      ctx.lineTo(edge + (edge === fracX1 ? 4 : -4), specMidY + specH / 4);
+      ctx.lineTo(edge, specMidY + specH / 2);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = '#c62828';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('파단!', CW / 2, specMidY + specH / 2 + 30);
+  }
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 12;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lw;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function step() {
+  const mat = getMat();
+  currentStrain += strainSpeed * mat.eFrac;
+  if (currentStrain >= mat.eFrac) {
+    currentStrain = mat.eFrac;
+    fractured = true;
+    stop();
+  }
+  updateInfo();
+  draw();
+  if (running) animId = requestAnimationFrame(step);
+}
+
+function start() {
+  if (running || fractured) return;
+  running = true;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  playBtn.textContent = '\u25B6 인장 시험 시작';
+  playBtn.classList.remove('running');
+  if (animId) cancelAnimationFrame(animId);
+}
+
+function reset() {
+  stop();
+  currentStrain = 0;
+  fractured = false;
+  updateInfo();
+  updateMaterialProps();
+  draw();
+}
+
+playBtn.addEventListener('click', () => {
+  if (running) stop(); else start();
+});
+resetBtn.addEventListener('click', reset);
+
+materialSelect.addEventListener('change', reset);
+[areaSlider, lengthSlider].forEach(s => {
+  s.addEventListener('input', () => {
+    updateLabels();
+    updateInfo();
+    draw();
+  });
+});
+
+window.addEventListener('resize', resize);
+
+renderStaticKaTeX();
+updateLabels();
+updateMaterialProps();
+updateInfo();
+resize();
+</script>
+</body>
+</html>

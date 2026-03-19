@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 380" font-family="sans-serif">
+  <defs>
+    <marker id="flowArrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0,0 10,3.5 0,7" fill="#8B0029"/>
+    </marker>
+    <marker id="flowArrowGray" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0,0 10,3.5 0,7" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="375" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a1a">마찰이 있는 계의 에너지 흐름</text>
+
+  <!-- K box -->
+  <rect x="40" y="80" width="140" height="80" rx="12" fill="rgba(37,99,235,0.1)" stroke="#2563EB" stroke-width="2"/>
+  <text x="110" y="115" text-anchor="middle" font-size="15" font-weight="bold" fill="#2563EB">운동에너지</text>
+  <text x="110" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#2563EB" font-style="italic">K</text>
+
+  <!-- U box -->
+  <rect x="300" y="80" width="140" height="80" rx="12" fill="rgba(139,0,41,0.1)" stroke="#8B0029" stroke-width="2"/>
+  <text x="370" y="115" text-anchor="middle" font-size="15" font-weight="bold" fill="#8B0029">퍼텐셜에너지</text>
+  <text x="370" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029" font-style="italic">U</text>
+
+  <!-- Emec bracket -->
+  <rect x="25" y="60" width="430" height="115" rx="16" fill="none" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="240" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B7280">역학적 에너지 E_mec = K + U</text>
+
+  <!-- Double arrows between K and U -->
+  <line x1="185" y1="105" x2="295" y2="105" stroke="#8B0029" stroke-width="2" marker-end="url(#flowArrow)"/>
+  <line x1="295" y1="135" x2="185" y2="135" stroke="#8B0029" stroke-width="2" marker-end="url(#flowArrow)"/>
+  <text x="240" y="98" text-anchor="middle" font-size="11" fill="#6B7280">변환</text>
+
+  <!-- Thermal energy box -->
+  <rect x="530" y="80" width="180" height="80" rx="12" fill="rgba(107,114,128,0.1)" stroke="#6B7280" stroke-width="2"/>
+  <text x="620" y="115" text-anchor="middle" font-size="15" font-weight="bold" fill="#6B7280">열에너지</text>
+  <text x="620" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#6B7280" font-style="italic">E_th</text>
+
+  <!-- Arrow from Emec to thermal -->
+  <line x1="460" y1="120" x2="525" y2="120" stroke="#6B7280" stroke-width="2.5" marker-end="url(#flowArrowGray)"/>
+  <text x="492" y="110" text-anchor="middle" font-size="12" fill="#6B7280">마찰</text>
+
+  <!-- Lower section: equations -->
+  <rect x="40" y="210" width="320" height="70" rx="10" fill="white" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="200" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">마찰이 있을 때</text>
+  <text x="200" y="260" text-anchor="middle" font-size="15" font-style="italic" fill="#1a1a1a">ΔE_mec = −f_k d = −ΔE_th</text>
+
+  <rect x="400" y="210" width="310" height="70" rx="10" fill="white" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="555" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#2563EB">에너지 보존 법칙</text>
+  <text x="555" y="260" text-anchor="middle" font-size="15" font-style="italic" fill="#1a1a1a">ΔE_mec + ΔE_th = 0</text>
+
+  <!-- Bottom note -->
+  <rect x="120" y="310" width="510" height="50" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
+  <text x="375" y="335" text-anchor="middle" font-size="14" fill="#1a1a1a">외력이 있을 때: ΔE_mec + ΔE_th + ΔE_int = W (외력이 한 일)</text>
+  <text x="375" y="352" text-anchor="middle" font-size="12" fill="#6B7280">에너지 총량은 항상 보존된다</text>
+</svg>

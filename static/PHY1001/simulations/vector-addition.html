@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>벡터 덧셈과 성분 분해</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { width: 100%; height: 100%; display: block; }
+.controls { width: 260px; padding: 16px; background: #faf5f6; border-left: 2px solid rgba(139,0,41,0.15); overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+h2 { color: #8B0029; font-size: 1.05rem; margin-bottom: 2px; }
+.subtitle { color: #888; font-size: 0.72rem; margin-bottom: 6px; }
+label { display: block; font-size: 0.8rem; color: #555; margin-bottom: 2px; }
+.slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.slider-row input[type="range"] { flex: 1; accent-color: #8B0029; }
+.slider-val { font-size: 0.8rem; font-weight: 600; color: #8B0029; min-width: 50px; text-align: right; }
+.section-label { font-size: 0.75rem; font-weight: 700; margin-top: 4px; padding: 3px 6px; border-radius: 4px; }
+.section-a { color: #8B0029; background: rgba(139,0,41,0.08); }
+.section-b { color: #2563EB; background: rgba(37,99,235,0.08); }
+.info-box { background: white; border: 1px solid rgba(139,0,41,0.15); border-radius: 10px; padding: 10px; font-size: 0.76rem; line-height: 1.9; }
+.info-box .katex { font-size: 0.85em; }
+.info-box .val { font-weight: 700; }
+.info-box .val-a { color: #8B0029; }
+.info-box .val-b { color: #2563EB; }
+.info-box .val-s { color: #7c3aed; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 0.76rem; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 0.88em; }
+.check-row { display: flex; align-items: center; gap: 6px; }
+.check-box { width: 16px; height: 16px; accent-color: #8B0029; }
+.check-label { font-size: 0.78rem; color: #444; }
+
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute; white-space: nowrap; font-size: 13px; line-height: 1; pointer-events: none;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.95em; }
+.canvas-overlay .katex-label.with-bg {
+  background: rgba(255,255,255,0.88); padding: 1px 4px; border-radius: 3px;
+}
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { flex: none; height: 55vh; }
+  .controls { width: 100%; border-left: none; border-top: 2px solid rgba(139,0,41,0.15); height: 45vh; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-a" style="color:#8B0029;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lbl-b" style="color:#2563EB;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lbl-s" style="color:#7c3aed;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lbl-b-shifted" style="color:#2563EB;font-weight:bold;"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>벡터 덧셈과 성분 분해</h2>
+      <div class="subtitle">Vector Addition & Components (Ch.3)</div>
+    </div>
+
+    <div class="formula-box" id="formula-box"></div>
+
+    <div class="section-label section-a" id="section-a-label"></div>
+    <div>
+      <label id="lbl-mag-a"></label>
+      <div class="slider-row">
+        <input type="range" id="sl-mag-a" min="1" max="10" step="0.5" value="5">
+        <span class="slider-val" id="val-mag-a">5.0</span>
+      </div>
+    </div>
+    <div>
+      <label id="lbl-ang-a"></label>
+      <div class="slider-row">
+        <input type="range" id="sl-ang-a" min="0" max="360" step="1" value="30">
+        <span class="slider-val" id="val-ang-a">30°</span>
+      </div>
+    </div>
+
+    <div class="section-label section-b" id="section-b-label"></div>
+    <div>
+      <label id="lbl-mag-b"></label>
+      <div class="slider-row">
+        <input type="range" id="sl-mag-b" min="1" max="10" step="0.5" value="4">
+        <span class="slider-val" id="val-mag-b">4.0</span>
+      </div>
+    </div>
+    <div>
+      <label id="lbl-ang-b"></label>
+      <div class="slider-row">
+        <input type="range" id="sl-ang-b" min="0" max="360" step="1" value="120">
+        <span class="slider-val" id="val-ang-b">120°</span>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <div class="check-row">
+        <input type="checkbox" class="check-box" id="chk-components" checked>
+        <span class="check-label">성분(components) 표시</span>
+      </div>
+      <div class="check-row">
+        <input type="checkbox" class="check-box" id="chk-headtotail" checked>
+        <span class="check-label">머리-꼬리(head-to-tail) 표시</span>
+      </div>
+    </div>
+
+    <div class="info-box" id="info-box"></div>
+  </div>
+</div>
+
+<script>
+function kx(tex) {
+  return katex.renderToString(tex, { throwOnError: false });
+}
+
+function initKaTeXContent() {
+  document.getElementById('formula-box').innerHTML =
+    '<b>벡터 덧셈:</b> ' + kx('\\vec{s} = \\vec{a} + \\vec{b}') + '<br>' +
+    '<b>성분 분해:</b> ' + kx('s_x = a_x + b_x,\\; s_y = a_y + b_y');
+
+  document.getElementById('section-a-label').innerHTML = '벡터 ' + kx('\\vec{a}');
+  document.getElementById('section-b-label').innerHTML = '벡터 ' + kx('\\vec{b}');
+  document.getElementById('lbl-mag-a').innerHTML = '크기 ' + kx('|\\vec{a}|');
+  document.getElementById('lbl-ang-a').innerHTML = '각도 ' + kx('\\theta_a');
+  document.getElementById('lbl-mag-b').innerHTML = '크기 ' + kx('|\\vec{b}|');
+  document.getElementById('lbl-ang-b').innerHTML = '각도 ' + kx('\\theta_b');
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let W, H;
+
+function resizeCanvas() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  W = rect.width;
+  H = rect.height;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+const slMagA = document.getElementById('sl-mag-a');
+const slAngA = document.getElementById('sl-ang-a');
+const slMagB = document.getElementById('sl-mag-b');
+const slAngB = document.getElementById('sl-ang-b');
+const valMagA = document.getElementById('val-mag-a');
+const valAngA = document.getElementById('val-ang-a');
+const valMagB = document.getElementById('val-mag-b');
+const valAngB = document.getElementById('val-ang-b');
+const chkComponents = document.getElementById('chk-components');
+const chkHeadToTail = document.getElementById('chk-headtotail');
+const infoBox = document.getElementById('info-box');
+
+const lblA = document.getElementById('lbl-a');
+const lblB = document.getElementById('lbl-b');
+const lblS = document.getElementById('lbl-s');
+const lblBShifted = document.getElementById('lbl-b-shifted');
+
+function getParams() {
+  return {
+    magA: parseFloat(slMagA.value),
+    angA: parseFloat(slAngA.value),
+    magB: parseFloat(slMagB.value),
+    angB: parseFloat(slAngB.value),
+    showComp: chkComponents.checked,
+    showHT: chkHeadToTail.checked,
+  };
+}
+
+function updateLabels() {
+  const p = getParams();
+  valMagA.textContent = p.magA.toFixed(1);
+  valAngA.textContent = p.angA + '°';
+  valMagB.textContent = p.magB.toFixed(1);
+  valAngB.textContent = p.angB + '°';
+}
+
+function updateInfo() {
+  const p = getParams();
+  const aRad = p.angA * Math.PI / 180;
+  const bRad = p.angB * Math.PI / 180;
+  const ax = p.magA * Math.cos(aRad);
+  const ay = p.magA * Math.sin(aRad);
+  const bx = p.magB * Math.cos(bRad);
+  const by = p.magB * Math.sin(bRad);
+  const sx = ax + bx;
+  const sy = ay + by;
+  const sMag = Math.sqrt(sx * sx + sy * sy);
+  const sAng = ((Math.atan2(sy, sx) * 180 / Math.PI) + 360) % 360;
+
+  infoBox.innerHTML =
+    kx('\\vec{a}') + ' = <span class="val val-a">' + ax.toFixed(2) + '</span>' + kx('\\hat{\\imath}') +
+    ' + <span class="val val-a">' + ay.toFixed(2) + '</span>' + kx('\\hat{\\jmath}') + '<br>' +
+    kx('\\vec{b}') + ' = <span class="val val-b">' + bx.toFixed(2) + '</span>' + kx('\\hat{\\imath}') +
+    ' + <span class="val val-b">' + by.toFixed(2) + '</span>' + kx('\\hat{\\jmath}') + '<br>' +
+    '<hr style="border:none;border-top:1px solid rgba(139,0,41,0.15);margin:3px 0">' +
+    kx('\\vec{s} = \\vec{a}+\\vec{b}') + ' = <span class="val val-s">' + sx.toFixed(2) + '</span>' + kx('\\hat{\\imath}') +
+    ' + <span class="val val-s">' + sy.toFixed(2) + '</span>' + kx('\\hat{\\jmath}') + '<br>' +
+    kx('|\\vec{s}|') + ' = <span class="val val-s">' + sMag.toFixed(2) + '</span>, ' +
+    kx('\\theta_s') + ' = <span class="val val-s">' + sAng.toFixed(1) + '°</span>';
+}
+
+function drawArrow(x1, y1, x2, y2, color, lineWidth, dashed) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  if (len < 2) return;
+  const angle = Math.atan2(dy, dx);
+  const headLen = Math.min(12, len * 0.3);
+
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  ctx.lineCap = 'round';
+  if (dashed) ctx.setLineDash([5, 4]);
+  else ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawDashedLine(x1, y1, x2, y2, color, lineWidth) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  ctx.setLineDash([4, 3]);
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  const p = getParams();
+
+  const aRad = p.angA * Math.PI / 180;
+  const bRad = p.angB * Math.PI / 180;
+  const ax = p.magA * Math.cos(aRad);
+  const ay = p.magA * Math.sin(aRad);
+  const bx = p.magB * Math.cos(bRad);
+  const by = p.magB * Math.sin(bRad);
+  const sx = ax + bx;
+  const sy = ay + by;
+
+  // Scale: find max extent
+  const maxCoord = Math.max(
+    Math.abs(ax), Math.abs(ay), Math.abs(bx), Math.abs(by),
+    Math.abs(sx), Math.abs(sy), p.magA, p.magB, 1
+  );
+  const margin = 80;
+  const usableW = W - 2 * margin;
+  const usableH = H - 2 * margin;
+  const scale = Math.min(usableW, usableH) / (maxCoord * 2.4);
+
+  const originX = W * 0.45;
+  const originY = H * 0.50;
+
+  function toScreen(vx, vy) {
+    return [originX + vx * scale, originY - vy * scale];
+  }
+
+  // Grid
+  ctx.strokeStyle = '#e8e8e8';
+  ctx.lineWidth = 0.5;
+  const gridStep = Math.max(1, Math.ceil(maxCoord / 5));
+  for (let g = -20; g <= 20; g++) {
+    const gv = g * gridStep;
+    const [gx1] = toScreen(gv, -20 * gridStep);
+    const [gx2] = toScreen(gv, 20 * gridStep);
+    const [, gy1] = toScreen(-20 * gridStep, gv);
+    const [, gy2] = toScreen(20 * gridStep, gv);
+    ctx.beginPath(); ctx.moveTo(gx1, originY - 20 * gridStep * scale); ctx.lineTo(gx2, originY + 20 * gridStep * scale); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(originX - 20 * gridStep * scale, originY - gv * scale); ctx.lineTo(originX + 20 * gridStep * scale, originY - gv * scale); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#999';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(0, originY); ctx.lineTo(W, originY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(originX, 0); ctx.lineTo(originX, H); ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#999';
+  ctx.font = 'italic 14px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('x', W - 20, originY - 12);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText('y', originX + 14, 16);
+
+  // Origin dot
+  ctx.fillStyle = '#999';
+  ctx.beginPath();
+  ctx.arc(originX, originY, 3, 0, Math.PI * 2);
+  ctx.fill();
+
+  const [aEndX, aEndY] = toScreen(ax, ay);
+  const [bEndX, bEndY] = toScreen(bx, by);
+  const [sEndX, sEndY] = toScreen(sx, sy);
+
+  // Show components as dashed lines
+  if (p.showComp) {
+    // a components
+    const [axEnd] = toScreen(ax, 0);
+    const [, ayEnd] = toScreen(0, ay);
+    drawDashedLine(originX, originY, axEnd, originY, 'rgba(139,0,41,0.4)', 1);
+    drawDashedLine(axEnd, originY, aEndX, aEndY, 'rgba(139,0,41,0.4)', 1);
+
+    // b components
+    const [bxEnd] = toScreen(bx, 0);
+    const [, byEnd] = toScreen(0, by);
+    drawDashedLine(originX, originY, bxEnd, originY, 'rgba(37,99,235,0.4)', 1);
+    drawDashedLine(bxEnd, originY, bEndX, bEndY, 'rgba(37,99,235,0.4)', 1);
+
+    // s components
+    const [sxEnd] = toScreen(sx, 0);
+    const [, syEnd] = toScreen(0, sy);
+    drawDashedLine(originX, originY, sxEnd, originY, 'rgba(124,58,237,0.4)', 1);
+    drawDashedLine(sxEnd, originY, sEndX, sEndY, 'rgba(124,58,237,0.4)', 1);
+
+    // Component labels on axes
+    if (Math.abs(ax) > 0.3) {
+      ctx.fillStyle = 'rgba(139,0,41,0.7)';
+      ctx.font = '11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText('a_x=' + ax.toFixed(1), (originX + axEnd) / 2, originY + 4);
+    }
+    if (Math.abs(bx) > 0.3) {
+      ctx.fillStyle = 'rgba(37,99,235,0.7)';
+      ctx.font = '11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText('b_x=' + bx.toFixed(1), (originX + bxEnd) / 2, originY + 18);
+    }
+  }
+
+  // Head-to-tail: draw b shifted to tip of a
+  if (p.showHT) {
+    const [bShiftEndX, bShiftEndY] = toScreen(ax + bx, ay + by);
+    drawArrow(aEndX, aEndY, bShiftEndX, bShiftEndY, 'rgba(37,99,235,0.5)', 2, true);
+
+    // Label for shifted b
+    const midBSX = (aEndX + bShiftEndX) / 2;
+    const midBSY = (aEndY + bShiftEndY) / 2;
+    posLabel(lblBShifted, midBSX + 6, midBSY - 18, kx("\\vec{b}'"));
+  } else {
+    lblBShifted.style.display = 'none';
+  }
+
+  // Draw vector a (red)
+  drawArrow(originX, originY, aEndX, aEndY, '#8B0029', 2.5, false);
+  // Draw vector b (blue)
+  drawArrow(originX, originY, bEndX, bEndY, '#2563EB', 2.5, false);
+  // Draw sum vector s (purple)
+  drawArrow(originX, originY, sEndX, sEndY, '#7c3aed', 2.5, false);
+
+  // Angle arcs
+  const arcR = 28;
+  // angle a
+  if (p.angA > 2 && p.angA < 358) {
+    ctx.strokeStyle = 'rgba(139,0,41,0.5)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(originX, originY, arcR, 0, -aRad, aRad > 0);
+    ctx.stroke();
+  }
+  // angle b
+  if (p.angB > 2 && p.angB < 358) {
+    ctx.strokeStyle = 'rgba(37,99,235,0.5)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(originX, originY, arcR + 8, 0, -bRad, bRad > 0);
+    ctx.stroke();
+  }
+
+  // Labels (KaTeX overlay)
+  const aMidX = (originX + aEndX) / 2;
+  const aMidY = (originY + aEndY) / 2;
+  const aPerp = Math.atan2(-(aEndX - originX), aEndY - originY);
+  posLabel(lblA, aMidX + 16 * Math.cos(aPerp) - 10, aMidY + 16 * Math.sin(aPerp) - 10,
+    kx('\\vec{a}'));
+
+  const bMidX = (originX + bEndX) / 2;
+  const bMidY = (originY + bEndY) / 2;
+  const bPerp = Math.atan2(-(bEndX - originX), bEndY - originY);
+  posLabel(lblB, bMidX + 16 * Math.cos(bPerp) - 10, bMidY + 16 * Math.sin(bPerp) - 10,
+    kx('\\vec{b}'));
+
+  const sMidX = (originX + sEndX) / 2;
+  const sMidY = (originY + sEndY) / 2;
+  const sPerp = Math.atan2(-(sEndX - originX), sEndY - originY);
+  posLabel(lblS, sMidX - 16 * Math.cos(sPerp) - 10, sMidY - 16 * Math.sin(sPerp) - 10,
+    kx('\\vec{s}'));
+
+  // Canvas title
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText('벡터 덧셈: ', 14, 12);
+}
+
+function update() {
+  updateLabels();
+  updateInfo();
+  draw();
+}
+
+[slMagA, slAngA, slMagB, slAngB].forEach(s => s.addEventListener('input', update));
+[chkComponents, chkHeadToTail].forEach(c => c.addEventListener('change', update));
+
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); draw(); });
+
+initKaTeXContent();
+update();
+</script>
+</body>
+</html>

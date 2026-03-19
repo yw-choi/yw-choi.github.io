@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>스케일 탐험기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
+.control-group { display: flex; flex-direction: column; gap: 4px; }
+.control-group label { font-size: 13px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.concept-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.concept-box .katex { color: #fff; }
+.tab-row { display: flex; gap: 4px; }
+.tab-btn { flex: 1; padding: 8px 4px; font-size: 12px; border: 1px solid #8B0029; background: #fff; color: #8B0029; border-radius: 6px; cursor: pointer; font-weight: 600; }
+.tab-btn.active { background: #8B0029; color: #fff; }
+
+.canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 20px; font-weight: 700; color: #8B0029; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title">우주의 스케일 탐험기</div>
+  </div>
+  <div class="controls">
+    <div class="concept-box">
+      물리량의 스케일<br>
+      <span style="font-size:12px;font-weight:400">슬라이더를 움직여 다양한 스케일을 탐험하세요</span>
+    </div>
+
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="setCategory('length')" id="tabLength">길이</button>
+      <button class="tab-btn" onclick="setCategory('time')" id="tabTime">시간</button>
+      <button class="tab-btn" onclick="setCategory('mass')" id="tabMass">질량</button>
+    </div>
+
+    <div class="control-group">
+      <label>스케일: <span id="expDisplay"></span></label>
+      <input type="range" id="expSlider" min="-18" max="27" value="0" step="1">
+    </div>
+
+    <div class="info-box" id="infoBox">
+      <span class="label">현재 스케일:</span> <span class="val" id="scaleText"></span><br>
+      <span class="label">대표 물체:</span> <span id="objectText">사람 팔 길이</span><br>
+      <span class="label">SI 접두어:</span> <span id="prefixText">-</span>
+    </div>
+
+    <div class="info-box" id="detailBox">
+      <span class="label">참고:</span><br>
+      <span id="detailText">일상적 스케일. 사람이 직접 경험하는 크기입니다.</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+
+const expDisplayEl = document.getElementById('expDisplay');
+
+const lengthData = [
+  { exp: -18, name: '쿼크', detail: '양성자 내부 구성요소 (~10⁻¹⁸ m)' },
+  { exp: -15, name: '양성자', detail: '양성자의 지름 (~1 fm)' },
+  { exp: -14, name: '원자핵', detail: '원자핵 크기 (~10 fm)' },
+  { exp: -10, name: '원자', detail: '수소 원자 지름 (~1 Å = 0.1 nm)' },
+  { exp: -9, name: 'DNA 이중나선 폭', detail: 'DNA 이중나선 지름 (~2 nm)' },
+  { exp: -8, name: '반도체 트랜지스터', detail: '삼성 GAA 트랜지스터 게이트 (~3 nm)' },
+  { exp: -7, name: '가시광선 파장', detail: '빨간빛 ~700 nm, 보라빛 ~400 nm' },
+  { exp: -6, name: '적혈구', detail: '사람 적혈구 지름 (~7 μm)' },
+  { exp: -5, name: '머리카락 굵기', detail: '사람 머리카락 (~50 μm)' },
+  { exp: -4, name: '모래알', detail: '가는 모래알 (~0.1 mm)' },
+  { exp: -3, name: '개미', detail: '개미 몸길이 (~2 mm)' },
+  { exp: -2, name: '동전', detail: '100원 동전 지름 (~2.3 cm)' },
+  { exp: -1, name: '손바닥 폭', detail: '성인 손바닥 (~10 cm)' },
+  { exp: 0, name: '팔 길이', detail: '사람 팔 길이 (~1 m)' },
+  { exp: 1, name: '교실', detail: '교실 한 변 (~10 m)' },
+  { exp: 2, name: '운동장', detail: '축구장 길이 (~100 m)' },
+  { exp: 3, name: '서강대→남산', detail: '약 3 km 거리' },
+  { exp: 4, name: '서울 시내', detail: '서울 동서 폭 (~37 km)' },
+  { exp: 5, name: '서울→부산', detail: '약 330 km' },
+  { exp: 6, name: '한반도 길이', detail: '약 1,100 km' },
+  { exp: 7, name: '지구 지름', detail: '약 12,742 km' },
+  { exp: 8, name: '지구-달 거리', detail: '약 384,400 km' },
+  { exp: 9, name: '태양 지름', detail: '약 1,392,000 km' },
+  { exp: 11, name: '지구-태양 거리', detail: '1 AU ≈ 1.5×10¹¹ m' },
+  { exp: 13, name: '태양계 크기', detail: '해왕성 궤도 ~60 AU' },
+  { exp: 16, name: '가장 가까운 별', detail: '프록시마 센타우리 ~4.2 광년' },
+  { exp: 21, name: '우리 은하 크기', detail: '지름 ~10만 광년' },
+  { exp: 23, name: '가장 가까운 은하', detail: '안드로메다 은하 ~250만 광년' },
+  { exp: 27, name: '관측 가능한 우주', detail: '지름 ~930억 광년' },
+];
+
+const timeData = [
+  { exp: -24, name: '쿼크 상호작용', detail: '강한 핵력의 특성 시간 (~10⁻²⁴ s)' },
+  { exp: -22, name: '불안정 입자 수명', detail: 'W/Z 보손 수명 (~10⁻²² s)' },
+  { exp: -15, name: '빛이 원자 통과', detail: '빛이 원자 하나를 지나는 시간 (~1 fs)' },
+  { exp: -12, name: '분자 진동', detail: '분자 진동 주기 (~1 ps)' },
+  { exp: -9, name: 'CPU 클럭', detail: '3 GHz CPU의 한 클럭 (~0.3 ns)' },
+  { exp: -6, name: '카메라 플래시', detail: '스트로보 플래시 지속 시간 (~1 μs)' },
+  { exp: -3, name: '눈 깜빡임', detail: '사람의 눈 깜빡임 (~150 ms)' },
+  { exp: 0, name: '심장 박동', detail: '심장 한 번 뛰는 시간 (~1 s)' },
+  { exp: 1, name: '100m 달리기', detail: '우사인 볼트 기록 9.58 s' },
+  { exp: 2, name: '수업 시간', detail: '대학 강의 75분 = 4500 s' },
+  { exp: 3, name: '점심-저녁 사이', detail: '약 5시간 = 18000 s' },
+  { exp: 4, name: '하루', detail: '86,400 s' },
+  { exp: 5, name: '학기', detail: '약 16주 ≈ 10⁷ s' },
+  { exp: 7, name: '1년', detail: '3.156×10⁷ s' },
+  { exp: 9, name: '사람 수명', detail: '약 80년 ≈ 2.5×10⁹ s' },
+  { exp: 11, name: '인류 문명', detail: '약 5000년 ≈ 1.6×10¹¹ s' },
+  { exp: 14, name: '공룡 멸종 이후', detail: '약 6600만 년' },
+  { exp: 17, name: '우주의 나이', detail: '약 138억 년 ≈ 4.4×10¹⁷ s' },
+];
+
+const massData = [
+  { exp: -30, name: '전자', detail: '9.109×10⁻³¹ kg' },
+  { exp: -27, name: '양성자', detail: '1.673×10⁻²⁷ kg' },
+  { exp: -26, name: '수소 원자', detail: '1.674×10⁻²⁷ kg ≈ 양성자+전자' },
+  { exp: -23, name: '아미노산', detail: '글리신 분자 ~1.25×10⁻²² kg' },
+  { exp: -18, name: 'DNA 분자', detail: '사람 1번 염색체 DNA ~10⁻¹⁷ kg' },
+  { exp: -15, name: '적혈구 한 개', detail: '약 10⁻¹³ kg' },
+  { exp: -10, name: '모래알', detail: '약 10⁻⁷ ~ 10⁻⁵ kg' },
+  { exp: -6, name: '개미', detail: '약 1~2 mg' },
+  { exp: -3, name: '동전', detail: '100원 동전 5.42 g' },
+  { exp: -1, name: '사과', detail: '약 200 g' },
+  { exp: 0, name: '물 1리터', detail: '1 kg (물의 밀도 기준)' },
+  { exp: 1, name: '서강대 학생', detail: '약 60~80 kg' },
+  { exp: 2, name: '피아노', detail: '그랜드 피아노 ~400 kg' },
+  { exp: 3, name: '자동차', detail: '승용차 ~1500 kg' },
+  { exp: 5, name: 'KTX', detail: '약 400 톤 = 4×10⁵ kg' },
+  { exp: 7, name: '에펠탑', detail: '약 7300 톤' },
+  { exp: 10, name: '피라미드', detail: '쿠푸 대피라미드 ~6×10⁹ kg' },
+  { exp: 15, name: '소행성', detail: '세레스 ~9.4×10²⁰ kg' },
+  { exp: 22, name: '달', detail: '7.342×10²² kg' },
+  { exp: 24, name: '지구', detail: '5.972×10²⁴ kg' },
+  { exp: 27, name: '목성', detail: '1.898×10²⁷ kg' },
+  { exp: 30, name: '태양', detail: '1.989×10³⁰ kg' },
+  { exp: 42, name: '우리 은하', detail: '~2×10⁴² kg (별 ~1000억 개)' },
+  { exp: 53, name: '관측 가능한 우주', detail: '~10⁵³ kg' },
+];
+
+const datasets = { length: lengthData, time: timeData, mass: massData };
+const units = { length: 'm', time: 's', mass: 'kg' };
+const ranges = { length: [-18, 27], time: [-24, 17], mass: [-30, 53] };
+
+const prefixes = {
+  '-18': 'a (아토)', '-15': 'f (펨토)', '-12': 'p (피코)',
+  '-9': 'n (나노)', '-6': 'μ (마이크로)', '-3': 'm (밀리)',
+  '0': '- (없음)', '3': 'k (킬로)', '6': 'M (메가)',
+  '9': 'G (기가)', '12': 'T (테라)', '15': 'P (페타)',
+};
+
+let category = 'length';
+
+function setCategory(cat) {
+  category = cat;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab' + cat.charAt(0).toUpperCase() + cat.slice(1)).classList.add('active');
+  const [mn, mx] = ranges[cat];
+  const slider = document.getElementById('expSlider');
+  slider.min = mn;
+  slider.max = mx;
+  slider.value = 0;
+  document.getElementById('canvas').parentElement.querySelector('.canvas-title').textContent =
+    cat === 'length' ? '길이 스케일 탐험기' :
+    cat === 'time' ? '시간 스케일 탐험기' : '질량 스케일 탐험기';
+  update();
+}
+
+function renderExp(exp) {
+  try {
+    return katex.renderToString('10^{' + exp + '}', { throwOnError: false });
+  } catch(e) {
+    return '10^' + exp;
+  }
+}
+
+function update() {
+  const exp = parseInt(document.getElementById('expSlider').value);
+  expDisplayEl.innerHTML = renderExp(exp) + ' ' + units[category];
+
+  const data = datasets[category];
+  const unit = units[category];
+
+  // Find closest object
+  let closest = data[0];
+  let minDist = Infinity;
+  for (const d of data) {
+    const dist = Math.abs(d.exp - exp);
+    if (dist < minDist) { minDist = dist; closest = d; }
+  }
+
+  try {
+    document.getElementById('scaleText').innerHTML = katex.renderToString('10^{' + exp + '} \\text{ ' + unit + '}', { throwOnError: false });
+  } catch(e) {
+    document.getElementById('scaleText').textContent = '10^' + exp + ' ' + unit;
+  }
+  document.getElementById('objectText').textContent = closest.name;
+  document.getElementById('prefixText').textContent = prefixes[String(exp)] || '-';
+  document.getElementById('detailText').textContent = closest.detail;
+
+  draw(exp, data);
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  update();
+}
+
+function drawTextWithBg(text, x, y, font, color, align) {
+  ctx.save();
+  ctx.font = font;
+  ctx.textAlign = align || 'center';
+  const m = ctx.measureText(text);
+  const pad = 3;
+  const h = parseInt(font) || 14;
+  const xOff = align === 'center' ? -m.width/2 : align === 'right' ? -m.width : 0;
+  ctx.fillStyle = 'rgba(250,250,250,0.85)';
+  ctx.fillRect(x + xOff - pad, y - h + 1, m.width + pad*2, h + pad);
+  ctx.fillStyle = color;
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
+function draw(currentExp, data) {
+  const W = canvas.width / dpr;
+  const H = canvas.height / dpr;
+  ctx.clearRect(0, 0, W, H);
+
+  const marginL = 50;
+  const marginR = 30;
+  const lineY = H * 0.55;
+  const [mn, mx] = ranges[category];
+  const totalRange = mx - mn;
+  const usableW = W - marginL - marginR;
+
+  // Background gradient bands
+  const bandColors = ['rgba(139,0,41,0.03)', 'rgba(37,99,235,0.03)'];
+  for (let i = 0; i < totalRange; i++) {
+    const x1 = marginL + i / totalRange * usableW;
+    const x2 = marginL + (i+1) / totalRange * usableW;
+    ctx.fillStyle = bandColors[i % 2];
+    ctx.fillRect(x1, lineY - 40, x2 - x1, 80);
+  }
+
+  // Draw scale line
+  ctx.strokeStyle = '#bbb';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(marginL, lineY);
+  ctx.lineTo(W - marginR, lineY);
+  ctx.stroke();
+
+  // Draw tick marks
+  for (let e = mn; e <= mx; e++) {
+    const x = marginL + (e - mn) / totalRange * usableW;
+    const isMajor = e % 3 === 0;
+    ctx.strokeStyle = isMajor ? '#888' : '#ccc';
+    ctx.lineWidth = isMajor ? 1.5 : 0.5;
+    ctx.beginPath();
+    ctx.moveTo(x, lineY - (isMajor ? 14 : 7));
+    ctx.lineTo(x, lineY + (isMajor ? 14 : 7));
+    ctx.stroke();
+
+    if (isMajor) {
+      ctx.fillStyle = '#888';
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(e, x, lineY + 30);
+    }
+  }
+
+  // Exponent axis label
+  ctx.fillStyle = '#6B7280';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('지수 (10의 거듭제곱)', W / 2, lineY + 48);
+
+  // Draw data points
+  const labelPositions = [];
+  for (const d of data) {
+    const x = marginL + (d.exp - mn) / totalRange * usableW;
+    const dist = Math.abs(d.exp - currentExp);
+    const isActive = dist === 0;
+    const isNear = dist <= 2;
+
+    ctx.fillStyle = isActive ? '#8B0029' : isNear ? '#a3003a' : '#ccc';
+    ctx.beginPath();
+    ctx.arc(x, lineY, isActive ? 7 : isNear ? 5 : 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (isActive) {
+      // Active label above
+      drawTextWithBg(d.name, x, lineY - 60, 'bold 14px sans-serif', '#8B0029', 'center');
+      drawTextWithBg(d.detail, x, lineY - 78, '11px sans-serif', '#2563EB', 'center');
+    } else if (isNear) {
+      // Check overlap with existing labels
+      let labelY = lineY + 55;
+      for (const lp of labelPositions) {
+        if (Math.abs(lp.x - x) < 50 && Math.abs(lp.y - labelY) < 14) {
+          labelY += 16;
+        }
+      }
+      labelPositions.push({ x, y: labelY });
+      drawTextWithBg(d.name, x, labelY, '11px sans-serif', '#6B7280', 'center');
+    }
+  }
+
+  // Draw current position indicator
+  const curX = marginL + (currentExp - mn) / totalRange * usableW;
+
+  // Glow
+  ctx.save();
+  ctx.shadowColor = '#8B0029';
+  ctx.shadowBlur = 12;
+  ctx.strokeStyle = '#8B0029';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(curX, lineY - 45);
+  ctx.lineTo(curX, lineY + 45);
+  ctx.stroke();
+  ctx.restore();
+
+  // Triangle marker
+  ctx.fillStyle = '#8B0029';
+  ctx.beginPath();
+  ctx.moveTo(curX - 9, lineY - 45);
+  ctx.lineTo(curX + 9, lineY - 45);
+  ctx.lineTo(curX, lineY - 32);
+  ctx.closePath();
+  ctx.fill();
+}
+
+document.getElementById('expSlider').addEventListener('input', update);
+window.addEventListener('resize', resize);
+resize();
+</script>
+</body>
+</html>

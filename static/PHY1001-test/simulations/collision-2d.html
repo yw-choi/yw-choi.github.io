@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2차원 충돌 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.control-group select { width: 100%; padding: 4px 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.8; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box hr { border: none; border-top: 1px solid #e0c0c8; margin: 4px 0; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+.formula-overlay { position: absolute; bottom: 0; left: 0; right: 0; pointer-events: none; padding: 8px 16px 10px; background: rgba(250,250,250,0.92); border-top: 1px solid #eee; }
+.formula-overlay .formula-line { font-size: 14px; line-height: 1.6; color: #333; }
+.formula-overlay .formula-line.highlight { color: #8B0029; font-weight: 700; }
+.formula-overlay .katex { font-size: 14px; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 50vh; }
+  .controls { width: 100%; height: 50vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+    <div class="formula-overlay" id="formulaOverlay">
+      <div class="formula-line" id="formulaPx"></div>
+      <div class="formula-line" id="formulaPy"></div>
+      <div class="formula-line highlight" id="formulaK"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="theorem-box">
+      2차원 탄성 충돌
+      <div id="theoremEq"></div>
+    </div>
+
+    <div class="control-group">
+      <label>m<sub>1</sub> = <span id="m1Val">2.0</span> kg</label>
+      <input type="range" id="m1Slider" min="0.5" max="8" value="2" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>v<sub>1i</sub> = <span id="v1iVal">5.0</span> m/s</label>
+      <input type="range" id="v1iSlider" min="1" max="10" value="5" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>m<sub>2</sub> = <span id="m2Val">2.0</span> kg</label>
+      <input type="range" id="m2Slider" min="0.5" max="8" value="2" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>충돌 변수 b = <span id="bVal">0.50</span> (0=정면, 1=스침)</label>
+      <input type="range" id="bSlider" min="0" max="0.99" value="0.5" step="0.01">
+    </div>
+
+    <div class="info-box" id="infoBox">
+      <div><span class="label">충돌 전:</span></div>
+      <div>p<sub>x,i</sub> = <span class="val" id="pxiInfo">—</span></div>
+      <div>p<sub>y,i</sub> = <span class="val" id="pyiInfo">0.00</span></div>
+      <div>K<sub>i</sub> = <span class="val" id="KiInfo">—</span> J</div>
+      <hr>
+      <div><span class="label">충돌 후:</span></div>
+      <div>&#x3B8;<sub>1</sub> = <span class="val" id="theta1Info">—</span></div>
+      <div>&#x3B8;<sub>2</sub> = <span class="val" id="theta2Info">—</span></div>
+      <div>v<sub>1f</sub> = <span class="val" id="v1fInfo">—</span> m/s</div>
+      <div>v<sub>2f</sub> = <span class="val" id="v2fInfo">—</span> m/s</div>
+      <div>p<sub>x,f</sub> = <span class="val" id="pxfInfo">—</span></div>
+      <div>p<sub>y,f</sub> = <span class="val" id="pyfInfo">—</span></div>
+      <div>K<sub>f</sub> = <span class="val" id="KfInfo">—</span> J</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) {
+  return katex.renderToString(expr, { throwOnError: false });
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+const m1Slider = document.getElementById('m1Slider');
+const v1iSlider = document.getElementById('v1iSlider');
+const m2Slider = document.getElementById('m2Slider');
+const bSlider = document.getElementById('bSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+let running = false;
+let animId = null;
+let collided = false;
+
+// Physics state in meters
+// m1 approaches from left, m2 at rest at origin
+let x1, y1, x2, y2;
+let vx1, vy1, vx2, vy2;
+// Post-collision values
+let vx1f, vy1f, vx2f, vy2f;
+// Trails
+let trail1 = [], trail2 = [];
+
+function getParams() {
+  return {
+    m1: parseFloat(m1Slider.value),
+    m2: parseFloat(m2Slider.value),
+    v1i: parseFloat(v1iSlider.value),
+    b: parseFloat(bSlider.value)
+  };
+}
+
+function radius(m) { return 12 + m * 3; }
+
+function compute2DElasticCollision() {
+  // 2D elastic collision: m1 moving along x, m2 at rest
+  // Impact parameter b determines scattering angle
+  // For equal masses, theta1 + theta2 = 90 degrees
+  const { m1, m2, v1i, b } = getParams();
+
+  // Contact angle: sin(alpha) = b, alpha is the angle of the line connecting centers at contact
+  const alpha = Math.asin(b);
+
+  // In CM frame, solve elastic collision
+  // CM velocity
+  const vcm = m1 * v1i / (m1 + m2);
+
+  // Velocities in CM frame
+  const u1 = v1i - vcm; // m1 velocity in CM (along x)
+  const u2 = -vcm;      // m2 velocity in CM (along x)
+
+  // In CM frame, elastic collision reverses velocities along the line of contact
+  // Line of contact makes angle alpha with x-axis
+  // After collision in CM, velocities rotate by pi about the contact line direction
+  const cosA = Math.cos(alpha);
+  const sinA = Math.sin(alpha);
+
+  // m1 velocity in CM frame: (u1, 0)
+  // Decompose along contact normal (cosA, sinA) and tangent (-sinA, cosA)
+  const u1n = u1 * cosA;
+  const u1t = -u1 * sinA;
+
+  // After elastic collision: normal component reverses, tangent preserved
+  // (for equal mass both swap, for unequal use 1D formulas along normal)
+  const u1n_after = ((m1 - m2) * u1n) / (m1 + m2);
+  const u2n_after = (2 * m1 * u1n) / (m1 + m2);
+
+  // Convert back to x,y in CM frame
+  const u1x_after = u1n_after * cosA + u1t * (-sinA);
+  const u1y_after = u1n_after * sinA + u1t * cosA;
+
+  const u2n_cm = u2 * cosA;
+  const u2t_cm = -u2 * sinA;
+  const u2n_cm_after = u2n_after + (u2n_cm - 0); // Already accounted: u2 was in x-direction only
+  // Simpler: recompute from momentum conservation
+  // Actually let's use the direct approach
+
+  // m2 in CM: (u2, 0), decompose along contact normal
+  const v2n_cm = u2 * cosA;
+  const v2t_cm = -u2 * sinA;
+  const v2n_after = u2n_after; // from 1D elastic formula along normal
+  // tangent preserved
+  const u2x_after = v2n_after * cosA + v2t_cm * (-sinA);
+  const u2y_after = v2n_after * sinA + v2t_cm * cosA;
+
+  // Transform back to lab frame
+  vx1f = u1x_after + vcm;
+  vy1f = u1y_after;
+  vx2f = u2x_after + vcm;
+  vy2f = u2y_after;
+
+  return { vx1f, vy1f, vx2f, vy2f };
+}
+
+function initPositions() {
+  const { m1, m2, v1i, b } = getParams();
+  // m2 at center, m1 approaches from left
+  x1 = -6; y1 = -b * 2; // offset by impact parameter
+  x2 = 0; y2 = 0;
+  vx1 = v1i; vy1 = 0;
+  vx2 = 0; vy2 = 0;
+  collided = false;
+  trail1 = []; trail2 = [];
+  compute2DElasticCollision();
+}
+
+function updateLabels() {
+  document.getElementById('m1Val').textContent = parseFloat(m1Slider.value).toFixed(1);
+  document.getElementById('m2Val').textContent = parseFloat(m2Slider.value).toFixed(1);
+  document.getElementById('v1iVal').textContent = parseFloat(v1iSlider.value).toFixed(1);
+  document.getElementById('bVal').textContent = parseFloat(bSlider.value).toFixed(2);
+}
+
+function updateInfo() {
+  const { m1, m2, v1i } = getParams();
+  const pxi = m1 * v1i;
+  const Ki = 0.5 * m1 * v1i * v1i;
+  document.getElementById('pxiInfo').textContent = pxi.toFixed(2) + ' kg·m/s';
+  document.getElementById('pyiInfo').textContent = '0.00 kg·m/s';
+  document.getElementById('KiInfo').textContent = Ki.toFixed(2);
+
+  if (collided) {
+    const v1fMag = Math.sqrt(vx1f * vx1f + vy1f * vy1f);
+    const v2fMag = Math.sqrt(vx2f * vx2f + vy2f * vy2f);
+    const theta1 = Math.atan2(-vy1f, vx1f) * 180 / Math.PI; // negative because y is down in screen
+    const theta2 = Math.atan2(vy2f, vx2f) * 180 / Math.PI;
+    const pxf = m1 * vx1f + m2 * vx2f;
+    const pyf = m1 * vy1f + m2 * vy2f;
+    const Kf = 0.5 * m1 * v1fMag * v1fMag + 0.5 * m2 * v2fMag * v2fMag;
+
+    document.getElementById('theta1Info').textContent = Math.abs(theta1).toFixed(1) + '\u00B0';
+    document.getElementById('theta2Info').textContent = Math.abs(theta2).toFixed(1) + '\u00B0';
+    document.getElementById('v1fInfo').textContent = v1fMag.toFixed(2);
+    document.getElementById('v2fInfo').textContent = v2fMag.toFixed(2);
+    document.getElementById('pxfInfo').textContent = pxf.toFixed(2) + ' kg·m/s';
+    document.getElementById('pyfInfo').textContent = pyf.toFixed(2) + ' kg·m/s';
+    document.getElementById('KfInfo').textContent = Kf.toFixed(2);
+
+    document.getElementById('formulaPx').innerHTML = tex(
+      'p_{x,i} = ' + pxi.toFixed(2) + ',\\;p_{x,f} = ' + pxf.toFixed(2) + '\\;\\text{kg·m/s}'
+    );
+    document.getElementById('formulaPy').innerHTML = tex(
+      'p_{y,i} = 0,\\;p_{y,f} = ' + pyf.toFixed(2) + '\\;\\text{kg·m/s}'
+    );
+    document.getElementById('formulaK').innerHTML = tex(
+      'K_i = ' + Ki.toFixed(2) + ',\\;K_f = ' + Kf.toFixed(2) + '\\;\\text{J}\\;' +
+      (Math.abs(Ki - Kf) < 0.1 ? '\\checkmark' : '')
+    );
+  } else {
+    ['theta1Info', 'theta2Info', 'v1fInfo', 'v2fInfo', 'pxfInfo', 'pyfInfo', 'KfInfo'].forEach(id => {
+      document.getElementById(id).textContent = '\u2014';
+    });
+    document.getElementById('formulaPx').innerHTML = tex('p_{x,i} = m_1 v_{1i} = ' + pxi.toFixed(2) + '\\;\\text{kg·m/s}');
+    document.getElementById('formulaPy').innerHTML = tex('p_{y,i} = 0');
+    document.getElementById('formulaK').innerHTML = tex('K_i = \\tfrac{1}{2}m_1 v_{1i}^2 = ' + Ki.toFixed(2) + '\\;\\text{J}');
+  }
+}
+
+function drawArrow(ax, ay, bx, by, color, lw) {
+  const headLen = 10;
+  const angle = Math.atan2(by - ay, bx - ax);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lw;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(ax, ay);
+  ctx.lineTo(bx, by);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(bx, by);
+  ctx.lineTo(bx - headLen * Math.cos(angle - 0.35), by - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(bx - headLen * Math.cos(angle + 0.35), by - headLen * Math.sin(angle + 0.35));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawTextWithBg(text, x, y, font, color) {
+  ctx.font = font;
+  const m = ctx.measureText(text);
+  const pad = 3;
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillRect(x - m.width / 2 - pad, y - 12 - pad, m.width + pad * 2, 16 + pad * 2);
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center';
+  ctx.fillText(text, x, y);
+}
+
+// Coordinate transform: physics meters -> canvas pixels
+const scale = 40; // pixels per meter
+function toScreen(xm, ym) {
+  return {
+    sx: CW * 0.35 + xm * scale,
+    sy: CH * 0.45 - ym * scale
+  };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width;
+  CH = rect.height;
+  canvas.width = CW * dpr;
+  canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px';
+  canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  const { m1, m2, v1i, b } = getParams();
+
+  // Grid
+  ctx.strokeStyle = '#f0f0f0';
+  ctx.lineWidth = 1;
+  for (let gx = -10; gx <= 15; gx++) {
+    const { sx } = toScreen(gx, 0);
+    ctx.beginPath(); ctx.moveTo(sx, 0); ctx.lineTo(sx, CH); ctx.stroke();
+  }
+  for (let gy = -8; gy <= 8; gy++) {
+    const { sy } = toScreen(0, gy);
+    ctx.beginPath(); ctx.moveTo(0, sy); ctx.lineTo(CW, sy); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 1.5;
+  const { sx: ox, sy: oy } = toScreen(0, 0);
+  ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(CW, oy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, CH); ctx.stroke();
+  ctx.fillStyle = '#999';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('x', CW - 10, oy - 5);
+  ctx.fillText('y', ox + 12, 15);
+
+  // Impact parameter line (dashed)
+  if (!collided) {
+    const { sx: sx1, sy: sy1 } = toScreen(x1, y1);
+    const { sx: sx2, sy: sy2 } = toScreen(x2, y2);
+    // Draw horizontal line at y2 level and vertical offset
+    ctx.strokeStyle = '#6B7280';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(sx1, sy1);
+    ctx.lineTo(sx2, sy1);
+    ctx.stroke();
+    // Vertical b line
+    ctx.strokeStyle = '#8B0029';
+    ctx.beginPath();
+    ctx.moveTo(sx2, sy1);
+    ctx.lineTo(sx2, sy2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    // b label
+    if (Math.abs(b) > 0.02) {
+      const midY = (sy1 + sy2) / 2;
+      drawTextWithBg('b', sx2 + 15, midY, 'bold 14px sans-serif', '#8B0029');
+    }
+  }
+
+  // Trails
+  if (trail1.length > 1) {
+    ctx.strokeStyle = 'rgba(139,0,41,0.3)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i < trail1.length; i++) {
+      const { sx, sy } = toScreen(trail1[i][0], trail1[i][1]);
+      if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+    }
+    ctx.stroke();
+  }
+  if (trail2.length > 1) {
+    ctx.strokeStyle = 'rgba(37,99,235,0.3)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i < trail2.length; i++) {
+      const { sx, sy } = toScreen(trail2[i][0], trail2[i][1]);
+      if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+    }
+    ctx.stroke();
+  }
+
+  // Ball 1
+  const r1px = radius(m1);
+  const { sx: s1x, sy: s1y } = toScreen(x1, y1);
+  ctx.beginPath();
+  ctx.arc(s1x, s1y, r1px, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(139,0,41,0.15)';
+  ctx.fill();
+  ctx.strokeStyle = '#8B0029';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('m\u2081', s1x, s1y);
+  ctx.textBaseline = 'alphabetic';
+
+  // Ball 2
+  const r2px = radius(m2);
+  const { sx: s2x, sy: s2y } = toScreen(x2, y2);
+  ctx.beginPath();
+  ctx.arc(s2x, s2y, r2px, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(37,99,235,0.15)';
+  ctx.fill();
+  ctx.strokeStyle = '#2563EB';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = '#2563EB';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('m\u2082', s2x, s2y);
+  ctx.textBaseline = 'alphabetic';
+
+  // Velocity arrows
+  const vScale = 12;
+  // v1
+  const v1mag = Math.sqrt(vx1 * vx1 + vy1 * vy1);
+  if (v1mag > 0.1) {
+    const endX = s1x + vx1 * vScale;
+    const endY = s1y - vy1 * vScale;
+    drawArrow(s1x, s1y, endX, endY, '#8B0029', 2.5);
+    drawTextWithBg('v\u2081=' + v1mag.toFixed(1), (s1x + endX) / 2, Math.min(s1y, endY) - 15, 'bold 12px sans-serif', '#8B0029');
+  }
+  // v2
+  const v2mag = Math.sqrt(vx2 * vx2 + vy2 * vy2);
+  if (v2mag > 0.1) {
+    const endX = s2x + vx2 * vScale;
+    const endY = s2y - vy2 * vScale;
+    drawArrow(s2x, s2y, endX, endY, '#2563EB', 2.5);
+    drawTextWithBg('v\u2082=' + v2mag.toFixed(1), (s2x + endX) / 2, Math.max(s2y, endY) + 20, 'bold 12px sans-serif', '#2563EB');
+  }
+
+  // Momentum vectors (bottom left)
+  drawMomentumVectors();
+}
+
+function drawMomentumVectors() {
+  const { m1, m2 } = getParams();
+  const baseX = 60, baseY = CH - 80;
+  const pScale = 6;
+
+  ctx.fillStyle = '#444';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('운동량 벡터', baseX, baseY - 60);
+
+  // p1 vector
+  const p1x = m1 * vx1, p1y = m1 * vy1;
+  if (Math.sqrt(p1x * p1x + p1y * p1y) > 0.1) {
+    drawArrow(baseX, baseY, baseX + p1x * pScale, baseY - p1y * pScale, '#8B0029', 2);
+    ctx.fillStyle = '#8B0029';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('p\u2081', baseX + p1x * pScale + 5, baseY - p1y * pScale);
+  }
+  // p2 vector
+  const p2x = m2 * vx2, p2y = m2 * vy2;
+  if (Math.sqrt(p2x * p2x + p2y * p2y) > 0.1) {
+    drawArrow(baseX, baseY, baseX + p2x * pScale, baseY - p2y * pScale, '#2563EB', 2);
+    ctx.fillStyle = '#2563EB';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('p\u2082', baseX + p2x * pScale + 5, baseY - p2y * pScale);
+  }
+  // Total momentum
+  const ptx = p1x + p2x, pty = p1y + p2y;
+  if (Math.sqrt(ptx * ptx + pty * pty) > 0.1) {
+    drawArrow(baseX, baseY, baseX + ptx * pScale, baseY - pty * pScale, '#444', 2.5);
+    ctx.fillStyle = '#444';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.fillText('p\u2081+p\u2082', baseX + ptx * pScale + 5, baseY - pty * pScale - 5);
+  }
+
+  // Origin dot
+  ctx.beginPath();
+  ctx.arc(baseX, baseY, 3, 0, Math.PI * 2);
+  ctx.fillStyle = '#444';
+  ctx.fill();
+}
+
+const dt = 1 / 60;
+let frameCount = 0;
+
+function step() {
+  frameCount++;
+
+  if (!collided) {
+    x1 += vx1 * dt;
+    y1 += vy1 * dt;
+    x2 += vx2 * dt;
+    y2 += vy2 * dt;
+
+    // Check collision
+    const dx = x2 - x1, dy = y2 - y1;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const { m1, m2 } = getParams();
+    const minDist = (radius(m1) + radius(m2)) / scale;
+
+    if (dist <= minDist && (vx1 - vx2) * dx + (vy1 - vy2) * dy > 0) {
+      collided = true;
+      vx1 = vx1f;
+      vy1 = vy1f;
+      vx2 = vx2f;
+      vy2 = vy2f;
+    }
+  } else {
+    x1 += vx1 * dt;
+    y1 += vy1 * dt;
+    x2 += vx2 * dt;
+    y2 += vy2 * dt;
+  }
+
+  // Record trails
+  if (frameCount % 3 === 0) {
+    trail1.push([x1, y1]);
+    trail2.push([x2, y2]);
+  }
+
+  // Stop if off-screen
+  const { sx: s1x } = toScreen(x1, y1);
+  const { sx: s2x } = toScreen(x2, y2);
+  if (s1x > CW + 50 && s2x > CW + 50) { stop(); return; }
+  if (s1x < -50 && s2x < -50) { stop(); return; }
+
+  updateInfo();
+  draw();
+  if (running) animId = requestAnimationFrame(step);
+}
+
+function start() {
+  if (running) return;
+  running = true;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  if (animId) cancelAnimationFrame(animId);
+}
+
+function reset() {
+  stop();
+  frameCount = 0;
+  initPositions();
+  updateLabels();
+  updateInfo();
+  draw();
+}
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+
+[m1Slider, v1iSlider, m2Slider, bSlider].forEach(s => {
+  s.addEventListener('input', () => { updateLabels(); reset(); });
+});
+
+window.addEventListener('resize', resize);
+
+document.getElementById('theoremEq').innerHTML = tex('\\vec{p}_i = \\vec{p}_f,\\; K_i = K_f');
+document.getElementById('canvasTitle').innerHTML = '2차원 탄성 충돌';
+
+reset();
+resize();
+</script>
+</body>
+</html>

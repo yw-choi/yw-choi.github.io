@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 450" font-family="sans-serif">
+  <defs>
+    <marker id="arrowDown" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#8B0029"/>
+    </marker>
+    <marker id="arrowUp" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#2563EB"/>
+    </marker>
+  </defs>
+
+  <!-- Ground -->
+  <rect x="40" y="380" width="570" height="40" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
+  <!-- Hatching -->
+  <line x1="50" y1="390" x2="40" y2="400" stroke="#ccc" stroke-width="1"/>
+  <line x1="70" y1="390" x2="60" y2="400" stroke="#ccc" stroke-width="1"/>
+  <line x1="90" y1="390" x2="80" y2="400" stroke="#ccc" stroke-width="1"/>
+  <line x1="110" y1="390" x2="100" y2="400" stroke="#ccc" stroke-width="1"/>
+  <line x1="130" y1="390" x2="120" y2="400" stroke="#ccc" stroke-width="1"/>
+  <line x1="150" y1="390" x2="140" y2="400" stroke="#ccc" stroke-width="1"/>
+  <line x1="170" y1="390" x2="160" y2="400" stroke="#ccc" stroke-width="1"/>
+  <line x1="190" y1="390" x2="180" y2="400" stroke="#ccc" stroke-width="1"/>
+  <line x1="210" y1="390" x2="200" y2="400" stroke="#ccc" stroke-width="1"/>
+  <line x1="230" y1="390" x2="220" y2="400" stroke="#ccc" stroke-width="1"/>
+  <line x1="250" y1="390" x2="240" y2="400" stroke="#ccc" stroke-width="1"/>
+
+  <!-- Reference line y=0 -->
+  <line x1="40" y1="380" x2="300" y2="380" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="310" y="385" font-size="14" fill="#6B7280">y = 0 (기준점)</text>
+
+  <!-- y-axis -->
+  <line x1="80" y1="380" x2="80" y2="50" stroke="#1a1a1a" stroke-width="1.5"/>
+  <polygon points="80,50 76,62 84,62" fill="#1a1a1a"/>
+  <text x="68" y="45" font-size="14" font-style="italic" fill="#1a1a1a">y</text>
+
+  <!-- Lower position -->
+  <rect x="120" y="330" width="50" height="50" rx="4" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
+  <text x="145" y="360" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a1a">m</text>
+  <!-- y_i dimension -->
+  <line x1="100" y1="355" x2="100" y2="380" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="55" y="370" text-anchor="middle" font-size="13" fill="#6B7280" font-style="italic">y_i</text>
+
+  <!-- Upper position -->
+  <rect x="120" y="120" width="50" height="50" rx="4" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
+  <text x="145" y="150" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a1a">m</text>
+  <!-- y_f dimension -->
+  <line x1="100" y1="145" x2="100" y2="380" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="55" y="265" text-anchor="middle" font-size="13" fill="#6B7280" font-style="italic">y_f</text>
+
+  <!-- Upward arrow (displacement) -->
+  <line x1="200" y1="345" x2="200" y2="155" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrowUp)"/>
+  <text x="225" y="250" font-size="14" font-weight="bold" fill="#2563EB">Δy</text>
+
+  <!-- Gravity arrow -->
+  <line x1="145" y1="170" x2="145" y2="230" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowDown)"/>
+  <text x="155" y="210" font-size="14" font-weight="bold" fill="#8B0029">mg</text>
+
+  <!-- Equations -->
+  <rect x="340" y="80" width="280" height="200" rx="10" fill="white" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="480" y="110" text-anchor="middle" font-size="15" font-weight="bold" fill="#8B0029">중력 퍼텐셜에너지</text>
+  <text x="480" y="145" text-anchor="middle" font-size="14" fill="#1a1a1a">중력이 한 일:</text>
+  <text x="480" y="170" text-anchor="middle" font-size="15" font-style="italic" fill="#1a1a1a">W_g = −mg(y_f − y_i)</text>
+  <text x="480" y="205" text-anchor="middle" font-size="14" fill="#1a1a1a">퍼텐셜에너지 정의:</text>
+  <text x="480" y="230" text-anchor="middle" font-size="16" font-weight="bold" font-style="italic" fill="#8B0029">ΔU = −W_g = mgΔy</text>
+  <text x="480" y="265" text-anchor="middle" font-size="16" font-weight="bold" font-style="italic" fill="#8B0029">U(y) = mgy</text>
+
+  <!-- Note -->
+  <rect x="340" y="310" width="280" height="55" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
+  <text x="480" y="333" text-anchor="middle" font-size="13" fill="#6B7280">기준점(y=0) 선택은 자유</text>
+  <text x="480" y="353" text-anchor="middle" font-size="13" fill="#6B7280">ΔU만 물리적 의미를 가짐</text>
+</svg>

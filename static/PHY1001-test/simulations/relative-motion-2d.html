@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2차원 상대 운동 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 13px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 12px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .theorem-eq { font-size: 15px; display: block; margin-top: 4px; }
+.theorem-box .katex { color: #fff; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 11px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 16px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 16px; color: #8B0029; }
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>2차원 상대 운동</h2>
+      <div class="subtitle">Relative Motion in 2D (Ch.4)</div>
+    </div>
+
+    <div class="theorem-box">
+      상대 속도 관계
+      <span class="theorem-eq" id="theoremEq"></span>
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="control-group">
+      <label>강물 속력 <span id="vrLabel"></span> = <span id="vrVal">2.0</span> m/s</label>
+      <input type="range" id="vrSlider" min="0" max="5" value="2" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>보트 속력 (강 기준) <span id="vbLabel"></span> = <span id="vbVal">4.0</span> m/s</label>
+      <input type="range" id="vbSlider" min="1" max="10" value="4" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>보트 방향각 = <span id="headingVal">90</span>&deg; (강 기준, 수직 방향 = 90&deg;)</label>
+      <input type="range" id="headingSlider" min="0" max="180" value="90" step="1">
+    </div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 출발</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+function renderStaticKaTeX() {
+  document.getElementById('theoremEq').innerHTML = tex('\\vec{v}_{PG} = \\vec{v}_{PR} + \\vec{v}_{RG}');
+  document.getElementById('canvasTitle').innerHTML = '상대 운동: ' + tex('\\vec{v}_{PG} = \\vec{v}_{PR} + \\vec{v}_{RG}');
+  document.getElementById('vrLabel').innerHTML = tex('v_{RG}');
+  document.getElementById('vbLabel').innerHTML = tex('v_{PR}');
+  document.getElementById('formulaBox').innerHTML =
+    '<b>P</b>: 보트, <b>R</b>: 강물, <b>G</b>: 지면<br>' +
+    tex('\\vec{v}_{PR}') + ': 강물에 대한 보트 속도<br>' +
+    tex('\\vec{v}_{RG}') + ': 지면에 대한 강물 속도<br>' +
+    tex('\\vec{v}_{PG}') + ': 지면에 대한 보트 속도<br>' +
+    '<b>벡터 합:</b> ' + tex('\\vec{v}_{PG} = \\vec{v}_{PR} + \\vec{v}_{RG}');
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let W, H;
+
+const vrSlider = document.getElementById('vrSlider');
+const vbSlider = document.getElementById('vbSlider');
+const headingSlider = document.getElementById('headingSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let running = false;
+let animId = null;
+let t = 0;
+let lastTimestamp = null;
+let trailRiver = [];
+let trailGround = [];
+let finished = false;
+
+const riverWidth = 10; // meters
+
+function getParams() {
+  return {
+    vr: parseFloat(vrSlider.value),    // river speed (rightward)
+    vb: parseFloat(vbSlider.value),    // boat speed relative to river
+    headingDeg: parseFloat(headingSlider.value) // heading angle from x-axis in river frame
+  };
+}
+
+function getState() {
+  const { vr, vb, headingDeg } = getParams();
+  const headingRad = headingDeg * Math.PI / 180;
+
+  // Boat velocity in river frame
+  const vbx_r = vb * Math.cos(headingRad); // x component in river frame
+  const vby_r = vb * Math.sin(headingRad); // y component in river frame (across river)
+
+  // Boat velocity in ground frame
+  const vbx_g = vbx_r + vr; // river flows in +x direction
+  const vby_g = vby_r;
+
+  // Boat position in river frame
+  const bx_r = vbx_r * t;
+  const by_r = vby_r * t;
+
+  // Boat position in ground frame
+  const bx_g = vbx_g * t;
+  const by_g = vby_g * t;
+
+  const vPG = Math.sqrt(vbx_g * vbx_g + vby_g * vby_g);
+  const anglePG = Math.atan2(vby_g, vbx_g) * 180 / Math.PI;
+
+  // Time to cross
+  const tCross = vby_r > 0.01 ? riverWidth / vby_r : Infinity;
+
+  return { vbx_r, vby_r, vbx_g, vby_g, bx_r, by_r, bx_g, by_g, vPG, anglePG, tCross, vr, vb };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  W = rect.width;
+  H = rect.height;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function updateLabels() {
+  document.getElementById('vrVal').textContent = parseFloat(vrSlider.value).toFixed(1);
+  document.getElementById('vbVal').textContent = parseFloat(vbSlider.value).toFixed(1);
+  document.getElementById('headingVal').textContent = headingSlider.value;
+}
+
+function updateInfo() {
+  const st = getState();
+  const { vr, vb, headingDeg } = getParams();
+
+  const infoBox = document.getElementById('infoBox');
+  infoBox.innerHTML =
+    '<div>' + tex('t') + ' = <span class="val">' + t.toFixed(2) + ' s</span></div>' +
+    '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">' +
+    '<div><span class="label">강물 기준 보트 속도:</span></div>' +
+    '<div>' + tex('\\vec{v}_{PR}') + ' = (' + st.vbx_r.toFixed(2) + ', ' + st.vby_r.toFixed(2) + ') m/s</div>' +
+    '<div><span class="label">강물 속도 (지면 기준):</span></div>' +
+    '<div>' + tex('\\vec{v}_{RG}') + ' = (' + vr.toFixed(2) + ', 0) m/s</div>' +
+    '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">' +
+    '<div><span class="label">지면 기준 보트 속도:</span></div>' +
+    '<div>' + tex('\\vec{v}_{PG}') + ' = (' + st.vbx_g.toFixed(2) + ', ' + st.vby_g.toFixed(2) + ') m/s</div>' +
+    '<div>' + tex('|\\vec{v}_{PG}|') + ' = <span class="val">' + st.vPG.toFixed(2) + ' m/s</span></div>' +
+    '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">' +
+    '<div><span class="label">도강 시간:</span> <span class="val">' +
+    (st.tCross < 1000 ? st.tCross.toFixed(2) + ' s' : '\u221E') + '</span></div>' +
+    '<div><span class="label">하류 이동:</span> <span class="val">' +
+    (st.tCross < 1000 ? (st.vbx_g * st.tCross).toFixed(2) + ' m' : '\u221E') + '</span></div>';
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 9;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  const len = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+  if (len < 3) return;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lw;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawTextWithBg(text, tx, ty, font, color, align) {
+  ctx.font = font;
+  ctx.textAlign = align || 'center';
+  const m = ctx.measureText(text);
+  const th = parseInt(font) || 12;
+  const pad = 3;
+  let bx = tx - pad;
+  if (align === 'center') bx = tx - m.width / 2 - pad;
+  else if (align === 'right') bx = tx - m.width - pad;
+  ctx.fillStyle = 'rgba(255,255,255,0.88)';
+  ctx.fillRect(bx, ty - th + 1 - pad, m.width + pad * 2, th + pad * 2);
+  ctx.fillStyle = color;
+  ctx.fillText(text, tx, ty);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  const st = getState();
+  const { vr, vb, headingDeg } = getParams();
+
+  // Layout: left half = river frame, right half = ground frame, bottom = vector diagram
+  const viewW = W * 0.5;
+  const viewH = H * 0.6;
+  const vecH = H * 0.4;
+
+  drawRiverView(0, 0, viewW, viewH, st, 'river');
+  drawRiverView(viewW, 0, viewW, viewH, st, 'ground');
+  drawVectorDiagram(0, viewH, W, vecH, st);
+}
+
+function drawRiverView(ox, oy, w, h, st, mode) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(ox, oy, w, h);
+  ctx.clip();
+  ctx.translate(ox, oy);
+
+  const isRiver = mode === 'river';
+  const title = isRiver ? '강물 기준 (River Frame)' : '지면 기준 (Ground Frame)';
+  const titleColor = isRiver ? '#2563EB' : '#8B0029';
+
+  // Title
+  ctx.fillStyle = titleColor;
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(title, w / 2, 22);
+
+  // River banks
+  const padL = 30, padR = 30, padTop = 38, padBot = 20;
+  const viewW = w - padL - padR;
+  const viewH = h - padTop - padBot;
+
+  // Scale: y maps riverWidth (0 at bottom bank, 10 at top bank)
+  // x range: determine from motion
+  const tCross = st.tCross < 1000 ? st.tCross : 20;
+  let xRange;
+  if (isRiver) {
+    xRange = Math.max(Math.abs(st.vbx_r) * tCross * 1.3, 5);
+  } else {
+    xRange = Math.max(Math.abs(st.vbx_g) * tCross * 1.3, 5);
+  }
+  // Center x range around 0 for river frame, around midpoint for ground
+  const xMin = isRiver ? -xRange * 0.3 : -xRange * 0.15;
+  const xMax = isRiver ? xRange * 0.7 : xRange * 0.85;
+
+  const scaleX = viewW / (xMax - xMin);
+  const scaleY = viewH / riverWidth;
+
+  function toX(xm) { return padL + (xm - xMin) * scaleX; }
+  function toY(ym) { return padTop + viewH - ym * scaleY; }
+
+  // River background
+  ctx.fillStyle = 'rgba(37, 99, 235, 0.06)';
+  ctx.fillRect(padL, padTop, viewW, viewH);
+
+  // Water flow arrows (in ground frame)
+  if (!isRiver && st.vr > 0.1) {
+    ctx.strokeStyle = 'rgba(37,99,235,0.15)';
+    ctx.lineWidth = 1;
+    const flowSpacing = viewH / 6;
+    for (let i = 1; i <= 5; i++) {
+      const fy = padTop + i * flowSpacing;
+      const arrowLen = Math.min(st.vr * scaleX * 0.4, viewW * 0.15);
+      for (let fx = padL + 30; fx < padL + viewW - 30; fx += 70) {
+        ctx.strokeStyle = 'rgba(37,99,235,0.2)';
+        ctx.beginPath();
+        ctx.moveTo(fx, fy);
+        ctx.lineTo(fx + arrowLen, fy);
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(37,99,235,0.2)';
+        ctx.beginPath();
+        ctx.moveTo(fx + arrowLen, fy);
+        ctx.lineTo(fx + arrowLen - 4, fy - 3);
+        ctx.lineTo(fx + arrowLen - 4, fy + 3);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+  }
+
+  // Banks
+  ctx.fillStyle = '#e8dcc8';
+  ctx.fillRect(padL, toY(0), viewW, padBot + 5);
+  ctx.fillRect(padL, padTop - 5, viewW, 8);
+
+  ctx.strokeStyle = '#a08860';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(padL, toY(0));
+  ctx.lineTo(padL + viewW, toY(0));
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(padL, toY(riverWidth));
+  ctx.lineTo(padL + viewW, toY(riverWidth));
+  ctx.stroke();
+
+  // Labels
+  ctx.fillStyle = '#6B7280';
+  ctx.font = '10px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('남쪽 강둑', padL + viewW - 4, toY(0) + 14);
+  ctx.fillText('북쪽 강둑', padL + viewW - 4, toY(riverWidth) - 6);
+
+  // Starting point marker
+  const startX = toX(0);
+  const startY = toY(0);
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(startX, toY(0));
+  ctx.lineTo(startX, toY(riverWidth));
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Trail
+  const trail = isRiver ? trailRiver : trailGround;
+  if (trail.length > 1) {
+    ctx.strokeStyle = titleColor;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(toX(trail[0][0]), toY(trail[0][1]));
+    for (let i = 1; i < trail.length; i++) {
+      ctx.lineTo(toX(trail[i][0]), toY(trail[i][1]));
+    }
+    ctx.stroke();
+  }
+
+  // Boat position
+  const bx = isRiver ? st.bx_r : st.bx_g;
+  const by = isRiver ? st.by_r : st.by_g;
+  const boatPx = toX(bx);
+  const boatPy = toY(by);
+
+  // Boat shape (triangle)
+  ctx.fillStyle = titleColor;
+  ctx.beginPath();
+  const boatSize = 8;
+  const headingRad = headingDeg * Math.PI / 180;
+  // Point in heading direction
+  const boatDir = isRiver ? headingRad : Math.atan2(st.vby_g, st.vbx_g);
+  ctx.moveTo(boatPx + boatSize * Math.cos(boatDir - Math.PI / 2),
+             boatPy - boatSize * Math.sin(boatDir - Math.PI / 2));
+  ctx.lineTo(boatPx + boatSize * 1.3 * Math.cos(boatDir),
+             boatPy - boatSize * 1.3 * Math.sin(boatDir));
+  ctx.lineTo(boatPx + boatSize * Math.cos(boatDir + Math.PI / 2),
+             boatPy - boatSize * Math.sin(boatDir + Math.PI / 2));
+  ctx.closePath();
+  ctx.fill();
+
+  // Velocity arrow
+  const vScale = Math.min(scaleX * 0.5, 15);
+  if (isRiver) {
+    // Show v_PR
+    if (st.vb > 0.3) {
+      const vx = st.vbx_r * vScale;
+      const vy = -st.vby_r * vScale;
+      drawArrow(boatPx, boatPy, boatPx + vx, boatPy + vy, '#2563EB', 2);
+      drawTextWithBg('v_PR', boatPx + vx + 8, boatPy + vy - 4, 'bold 11px sans-serif', '#2563EB', 'left');
+    }
+  } else {
+    // Show v_PG
+    if (st.vPG > 0.3) {
+      const vx = st.vbx_g * vScale;
+      const vy = -st.vby_g * vScale;
+      drawArrow(boatPx, boatPy, boatPx + vx, boatPy + vy, '#8B0029', 2);
+      drawTextWithBg('v_PG', boatPx + vx + 8, boatPy + vy - 4, 'bold 11px sans-serif', '#8B0029', 'left');
+    }
+    // Also show v_RG (river velocity)
+    if (st.vr > 0.3) {
+      const vrx = st.vr * vScale;
+      drawArrow(boatPx, boatPy + 15, boatPx + vrx, boatPy + 15, '#6B7280', 1.5);
+      drawTextWithBg('v_RG', boatPx + vrx + 6, boatPy + 12, '10px sans-serif', '#6B7280', 'left');
+    }
+  }
+
+  // Border
+  ctx.strokeStyle = '#ddd';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(0.5, 0.5, w - 1, h - 1);
+
+  ctx.restore();
+}
+
+function drawVectorDiagram(ox, oy, w, h, st) {
+  ctx.save();
+  ctx.translate(ox, oy);
+
+  // Separator
+  ctx.strokeStyle = '#ddd';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(20, 0);
+  ctx.lineTo(w - 20, 0);
+  ctx.stroke();
+
+  // Title
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('속도 벡터 합성 (Head-to-Tail)', w / 2, 24);
+
+  const { vr, vb, headingDeg } = getParams();
+  const headingRad = headingDeg * Math.PI / 180;
+
+  // Vector diagram area
+  const cx = w * 0.5;
+  const cy = oy > 0 ? h * 0.55 : h * 0.55;
+  const maxV = Math.max(vb + vr + 1, 8);
+  const vScale = Math.min((w * 0.35) / maxV, (h * 0.3) / maxV);
+
+  // Draw v_PR (blue) - boat velocity relative to river
+  const vPRx = vb * Math.cos(headingRad) * vScale;
+  const vPRy = -vb * Math.sin(headingRad) * vScale;
+
+  // Start point
+  const startX = cx - (st.vbx_g * vScale) / 2;
+  const startY = cy + (st.vby_g * vScale) / 2;
+
+  // v_PR arrow (blue)
+  drawArrow(startX, startY, startX + vPRx, startY + vPRy, '#2563EB', 2.5);
+  drawTextWithBg('v_PR = ' + vb.toFixed(1) + ' m/s', startX + vPRx / 2 - 15, startY + vPRy / 2 - 10, 'bold 12px sans-serif', '#2563EB', 'center');
+
+  // v_RG arrow (gray) - from tip of v_PR
+  const tipPRx = startX + vPRx;
+  const tipPRy = startY + vPRy;
+  const vRGx = vr * vScale;
+  drawArrow(tipPRx, tipPRy, tipPRx + vRGx, tipPRy, '#6B7280', 2.5);
+  if (vr > 0.1) {
+    drawTextWithBg('v_RG = ' + vr.toFixed(1) + ' m/s', tipPRx + vRGx / 2, tipPRy - 12, 'bold 12px sans-serif', '#6B7280', 'center');
+  }
+
+  // v_PG arrow (red) - resultant from start to tip of v_RG
+  const endX = tipPRx + vRGx;
+  const endY = tipPRy;
+  if (st.vPG > 0.3) {
+    drawArrow(startX, startY, endX, endY, '#8B0029', 3);
+    const midX = (startX + endX) / 2;
+    const midY = (startY + endY) / 2;
+    drawTextWithBg('v_PG = ' + st.vPG.toFixed(2) + ' m/s', midX, midY + 18, 'bold 13px sans-serif', '#8B0029', 'center');
+  }
+
+  // Equation with current values
+  const eqY = h - 20;
+  ctx.fillStyle = '#333';
+  ctx.font = '13px sans-serif';
+  ctx.textAlign = 'center';
+  const eqText = 'v_PG = (' + st.vbx_g.toFixed(2) + ', ' + st.vby_g.toFixed(2) + ') m/s,  |v_PG| = ' + st.vPG.toFixed(2) + ' m/s';
+  drawTextWithBg(eqText, w / 2, eqY, '12px sans-serif', '#333', 'center');
+
+  ctx.restore();
+}
+
+function animate(timestamp) {
+  if (!running) return;
+  if (lastTimestamp === null) lastTimestamp = timestamp;
+  const dtReal = (timestamp - lastTimestamp) / 1000;
+  lastTimestamp = timestamp;
+  const dt = Math.min(dtReal, 0.05);
+
+  t += dt;
+  const st = getState();
+
+  trailRiver.push([st.bx_r, st.by_r]);
+  trailGround.push([st.bx_g, st.by_g]);
+
+  // Check if crossed
+  if (st.by_r >= riverWidth || st.by_g >= riverWidth) {
+    t = st.tCross;
+    const stFinal = getState();
+    trailRiver.push([stFinal.bx_r, riverWidth]);
+    trailGround.push([stFinal.bx_g, riverWidth]);
+    finished = true;
+    updateInfo();
+    draw();
+    stop();
+    return;
+  }
+
+  // Safety: if heading is purely horizontal, stop after some time
+  if (t > 30) {
+    stop();
+    return;
+  }
+
+  updateInfo();
+  draw();
+  animId = requestAnimationFrame(animate);
+}
+
+function start() {
+  if (running || finished) return;
+  running = true;
+  lastTimestamp = null;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(animate);
+}
+
+function stop() {
+  running = false;
+  playBtn.textContent = '\u25B6 출발';
+  playBtn.classList.remove('running');
+  if (animId) cancelAnimationFrame(animId);
+}
+
+function reset() {
+  stop();
+  t = 0;
+  trailRiver = [];
+  trailGround = [];
+  finished = false;
+  lastTimestamp = null;
+  updateInfo();
+  draw();
+}
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+[vrSlider, vbSlider, headingSlider].forEach(s => s.addEventListener('input', () => { updateLabels(); reset(); }));
+window.addEventListener('resize', resize);
+
+renderStaticKaTeX();
+updateLabels();
+reset();
+resize();
+</script>
+</body>
+</html>

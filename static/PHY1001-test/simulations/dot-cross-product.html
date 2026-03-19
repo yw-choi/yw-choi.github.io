@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>내적과 외적 시각화</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { width: 100%; height: 100%; display: block; }
+.controls { width: 260px; padding: 16px; background: #faf5f6; border-left: 2px solid rgba(139,0,41,0.15); overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+h2 { color: #8B0029; font-size: 1.05rem; margin-bottom: 2px; }
+.subtitle { color: #888; font-size: 0.72rem; margin-bottom: 6px; }
+label { display: block; font-size: 0.8rem; color: #555; margin-bottom: 2px; }
+.slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.slider-row input[type="range"] { flex: 1; accent-color: #8B0029; }
+.slider-val { font-size: 0.8rem; font-weight: 600; color: #8B0029; min-width: 50px; text-align: right; }
+.info-box { background: white; border: 1px solid rgba(139,0,41,0.15); border-radius: 10px; padding: 10px; font-size: 0.76rem; line-height: 2.0; }
+.info-box .katex { font-size: 0.88em; }
+.info-box .val { font-weight: 700; color: #8B0029; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 0.76rem; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 0.88em; }
+.mode-toggle { display: flex; border-radius: 8px; overflow: hidden; border: 2px solid #8B0029; }
+.mode-btn { flex: 1; padding: 8px 4px; border: none; font-size: 0.78rem; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.15s; background: white; color: #8B0029; }
+.mode-btn.active { background: #8B0029; color: white; }
+.mode-btn:hover:not(.active) { background: rgba(139,0,41,0.08); }
+
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute; white-space: nowrap; font-size: 13px; line-height: 1; pointer-events: none;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.95em; }
+.canvas-overlay .katex-label.with-bg {
+  background: rgba(255,255,255,0.88); padding: 1px 4px; border-radius: 3px;
+}
+.canvas-overlay .graph-title {
+  position: absolute; white-space: nowrap; font-size: 12px; font-weight: bold; color: #8B0029; pointer-events: none;
+}
+.canvas-overlay .graph-title .katex { font-size: 0.9em; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { flex: none; height: 55vh; }
+  .controls { width: 100%; border-left: none; border-top: 2px solid rgba(139,0,41,0.15); height: 45vh; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-a" style="color:#8B0029;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lbl-b" style="color:#2563EB;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lbl-proj" style="color:#6B7280;"></div>
+      <div class="katex-label with-bg" id="lbl-result" style="color:#8B0029;font-weight:bold;font-size:14px;"></div>
+      <div class="graph-title" id="lbl-graph-title"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>내적과 외적 시각화</h2>
+      <div class="subtitle">Dot & Cross Product (Ch.3)</div>
+    </div>
+
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="btn-dot">내적 (Dot)</button>
+      <button class="mode-btn" id="btn-cross">외적 (Cross)</button>
+    </div>
+
+    <div class="formula-box" id="formula-box"></div>
+
+    <div>
+      <label id="lbl-mag-a"></label>
+      <div class="slider-row">
+        <input type="range" id="sl-mag-a" min="1" max="10" step="0.5" value="6">
+        <span class="slider-val" id="val-mag-a">6.0</span>
+      </div>
+    </div>
+    <div>
+      <label id="lbl-mag-b"></label>
+      <div class="slider-row">
+        <input type="range" id="sl-mag-b" min="1" max="10" step="0.5" value="5">
+        <span class="slider-val" id="val-mag-b">5.0</span>
+      </div>
+    </div>
+    <div>
+      <label id="lbl-phi"></label>
+      <div class="slider-row">
+        <input type="range" id="sl-phi" min="0" max="360" step="1" value="45">
+        <span class="slider-val" id="val-phi">45°</span>
+      </div>
+    </div>
+
+    <div class="info-box" id="info-box"></div>
+
+    <div style="font-size:0.68rem; color:#999; margin-top:auto;">
+      벡터 <span style="color:#8B0029;">a</span> 는 x축 위에 고정, 벡터 <span style="color:#2563EB;">b</span> 와의 사잇각 φ를 조절
+    </div>
+  </div>
+</div>
+
+<script>
+function kx(tex) {
+  return katex.renderToString(tex, { throwOnError: false });
+}
+
+let mode = 'dot'; // 'dot' or 'cross'
+
+function initKaTeXContent() {
+  updateFormulaBox();
+  document.getElementById('lbl-mag-a').innerHTML = '크기 ' + kx('|\\vec{a}|');
+  document.getElementById('lbl-mag-b').innerHTML = '크기 ' + kx('|\\vec{b}|');
+  document.getElementById('lbl-phi').innerHTML = '사잇각 ' + kx('\\phi');
+}
+
+function updateFormulaBox() {
+  const fb = document.getElementById('formula-box');
+  if (mode === 'dot') {
+    fb.innerHTML =
+      '<b>내적 (Dot Product):</b><br>' +
+      kx('\\vec{a}\\cdot\\vec{b} = ab\\cos\\phi') + '<br>' +
+      kx('= a(b\\cos\\phi) = a \\times') + ' (정사영)';
+  } else {
+    fb.innerHTML =
+      '<b>외적 (Cross Product):</b><br>' +
+      kx('|\\vec{a}\\times\\vec{b}| = ab\\sin\\phi') + '<br>' +
+      '= 평행사변형의 넓이';
+  }
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let W, H;
+
+function resizeCanvas() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  W = rect.width;
+  H = rect.height;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+const slMagA = document.getElementById('sl-mag-a');
+const slMagB = document.getElementById('sl-mag-b');
+const slPhi = document.getElementById('sl-phi');
+const valMagA = document.getElementById('val-mag-a');
+const valMagB = document.getElementById('val-mag-b');
+const valPhi = document.getElementById('val-phi');
+const infoBox = document.getElementById('info-box');
+const btnDot = document.getElementById('btn-dot');
+const btnCross = document.getElementById('btn-cross');
+
+const lblA = document.getElementById('lbl-a');
+const lblB = document.getElementById('lbl-b');
+const lblProj = document.getElementById('lbl-proj');
+const lblResult = document.getElementById('lbl-result');
+const lblGraphTitle = document.getElementById('lbl-graph-title');
+
+function getParams() {
+  return {
+    a: parseFloat(slMagA.value),
+    b: parseFloat(slMagB.value),
+    phiDeg: parseFloat(slPhi.value),
+    phi: parseFloat(slPhi.value) * Math.PI / 180,
+  };
+}
+
+function updateLabels() {
+  const p = getParams();
+  valMagA.textContent = p.a.toFixed(1);
+  valMagB.textContent = p.b.toFixed(1);
+  valPhi.textContent = p.phiDeg + '°';
+}
+
+function updateInfo() {
+  const p = getParams();
+  const dot = p.a * p.b * Math.cos(p.phi);
+  const cross = p.a * p.b * Math.sin(p.phi);
+  const crossAbs = Math.abs(cross);
+
+  if (mode === 'dot') {
+    infoBox.innerHTML =
+      kx('\\vec{a}\\cdot\\vec{b} = ab\\cos\\phi') + '<br>' +
+      '= <span class="val">' + p.a.toFixed(1) + '</span> × <span class="val">' +
+      p.b.toFixed(1) + '</span> × cos <span class="val">' + p.phiDeg + '°</span><br>' +
+      '= <span class="val" style="font-size:1.1em;">' + dot.toFixed(2) + '</span><br>' +
+      '<hr style="border:none;border-top:1px solid rgba(139,0,41,0.15);margin:3px 0">' +
+      '정사영: ' + kx('b\\cos\\phi') + ' = <span class="val">' + (p.b * Math.cos(p.phi)).toFixed(2) + '</span><br>' +
+      kx('\\cos\\phi') + ' = <span class="val">' + Math.cos(p.phi).toFixed(3) + '</span>';
+  } else {
+    infoBox.innerHTML =
+      kx('|\\vec{a}\\times\\vec{b}| = ab\\sin\\phi') + '<br>' +
+      '= <span class="val">' + p.a.toFixed(1) + '</span> × <span class="val">' +
+      p.b.toFixed(1) + '</span> × sin <span class="val">' + p.phiDeg + '°</span><br>' +
+      '= <span class="val" style="font-size:1.1em;">' + crossAbs.toFixed(2) + '</span><br>' +
+      '<hr style="border:none;border-top:1px solid rgba(139,0,41,0.15);margin:3px 0">' +
+      '방향: ' + kx('\\hat{k}') + ' (' + (cross >= 0 ? '지면 밖으로 ⊙' : '지면 안으로 ⊗') + ')<br>' +
+      kx('\\sin\\phi') + ' = <span class="val">' + Math.sin(p.phi).toFixed(3) + '</span>';
+  }
+}
+
+function drawArrow(x1, y1, x2, y2, color, lineWidth) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  if (len < 2) return;
+  const angle = Math.atan2(dy, dx);
+  const headLen = Math.min(12, len * 0.3);
+
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  ctx.lineCap = 'round';
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  const p = getParams();
+
+  const sceneH = H * 0.55;
+  const graphH = H * 0.45;
+
+  drawScene(p, 0, 0, W, sceneH);
+  drawGraph(p, 0, sceneH, W, graphH);
+}
+
+function drawScene(p, ox, oy, w, h) {
+  ctx.save();
+  ctx.translate(ox, oy);
+
+  const originX = w * 0.28;
+  const originY = h * 0.55;
+  const maxMag = Math.max(p.a, p.b);
+  const scale = Math.min(w * 0.35, h * 0.35) / maxMag;
+
+  // Vector a along x-axis (red)
+  const aEndX = originX + p.a * scale;
+  const aEndY = originY;
+
+  // Vector b at angle phi (blue)
+  const bEndX = originX + p.b * scale * Math.cos(-p.phi);
+  const bEndY = originY + p.b * scale * Math.sin(-p.phi);
+
+  // Light axes
+  ctx.strokeStyle = '#ddd';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(originX - 30, originY); ctx.lineTo(w - 20, originY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(originX, oy + 20); ctx.lineTo(originX, originY + 40); ctx.stroke();
+
+  if (mode === 'dot') {
+    // Projection of b onto a (along x-axis)
+    const projLen = p.b * Math.cos(p.phi) * scale;
+    const projEndX = originX + projLen;
+
+    // Projection bracket
+    if (Math.abs(projLen) > 5) {
+      // Shaded projection region
+      ctx.fillStyle = 'rgba(139,0,41,0.08)';
+      ctx.fillRect(
+        Math.min(originX, projEndX), originY - 3,
+        Math.abs(projLen), 6
+      );
+
+      // Projection dashed line from b tip to x-axis
+      ctx.strokeStyle = '#6B7280';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.moveTo(bEndX, bEndY);
+      ctx.lineTo(projEndX, originY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Projection segment (thick)
+      ctx.strokeStyle = '#6B7280';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(originX, originY + 12);
+      ctx.lineTo(projEndX, originY + 12);
+      ctx.stroke();
+      // End ticks
+      ctx.beginPath();
+      ctx.moveTo(originX, originY + 8);
+      ctx.lineTo(originX, originY + 16);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(projEndX, originY + 8);
+      ctx.lineTo(projEndX, originY + 16);
+      ctx.stroke();
+
+      // Label for projection
+      const projMid = (originX + projEndX) / 2;
+      posLabel(lblProj, ox + projMid - 20, oy + originY + 20, kx('b\\cos\\phi'));
+    } else {
+      lblProj.style.display = 'none';
+    }
+
+    // Right angle marker at projection point
+    if (Math.abs(p.phi) > 0.05 && Math.abs(p.phi - Math.PI) > 0.05) {
+      const rSize = 8;
+      ctx.strokeStyle = '#6B7280';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(projEndX, originY - rSize);
+      ctx.lineTo(projEndX + (bEndX > projEndX ? rSize : -rSize), originY - rSize);
+      ctx.lineTo(projEndX + (bEndX > projEndX ? rSize : -rSize), originY);
+      ctx.stroke();
+    }
+  } else {
+    // Cross product: parallelogram
+    const parX = [
+      originX, aEndX,
+      aEndX + (bEndX - originX), bEndX
+    ];
+    const parY = [
+      originY, aEndY,
+      aEndY + (bEndY - originY), bEndY
+    ];
+    ctx.fillStyle = 'rgba(124,58,237,0.12)';
+    ctx.strokeStyle = 'rgba(124,58,237,0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(parX[0], parY[0]);
+    ctx.lineTo(parX[1], parY[1]);
+    ctx.lineTo(parX[2], parY[2]);
+    ctx.lineTo(parX[3], parY[3]);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Height line (perpendicular from b to a-axis)
+    const heightLen = p.b * Math.sin(p.phi) * scale;
+    if (Math.abs(heightLen) > 5) {
+      ctx.strokeStyle = '#6B7280';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.moveTo(bEndX, bEndY);
+      ctx.lineTo(bEndX, originY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Height label
+      const hMidY = (bEndY + originY) / 2;
+      posLabel(lblProj, ox + bEndX + 6, oy + hMidY - 8, kx('b\\sin\\phi'));
+    } else {
+      lblProj.style.display = 'none';
+    }
+
+    // Area label in parallelogram center
+    const cx = (parX[0] + parX[1] + parX[2] + parX[3]) / 4;
+    const cy = (parY[0] + parY[1] + parY[2] + parY[3]) / 4;
+    const area = Math.abs(p.a * p.b * Math.sin(p.phi));
+    if (area > 0.5) {
+      posLabel(lblResult, ox + cx - 40, oy + cy - 10,
+        kx('\\text{넓이} = ' + area.toFixed(1)));
+      lblResult.style.color = '#7c3aed';
+    } else {
+      lblResult.style.display = 'none';
+    }
+  }
+
+  // Angle arc
+  if (p.phiDeg > 2 && p.phiDeg < 358) {
+    const arcR = Math.min(35, p.b * scale * 0.4);
+    ctx.strokeStyle = '#6B7280';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(originX, originY, arcR, 0, -p.phi, p.phi > 0);
+    ctx.stroke();
+
+    // Phi label
+    const phiMid = -p.phi / 2;
+    ctx.fillStyle = '#6B7280';
+    ctx.font = '13px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('φ = ' + p.phiDeg + '°', originX + arcR * Math.cos(phiMid) + 6, originY + arcR * Math.sin(phiMid));
+  }
+
+  // Draw vectors
+  drawArrow(originX, originY, aEndX, aEndY, '#8B0029', 2.5);
+  drawArrow(originX, originY, bEndX, bEndY, '#2563EB', 2.5);
+
+  // Vector labels
+  posLabel(lblA, ox + aEndX + 6, oy + aEndY - 16, kx('\\vec{a}'));
+  posLabel(lblB, ox + bEndX + 6, oy + bEndY - 16, kx('\\vec{b}'));
+
+  // Dot product result display (top-right of scene for dot mode)
+  if (mode === 'dot') {
+    const dot = p.a * p.b * Math.cos(p.phi);
+    posLabel(lblResult, ox + w - 180, oy + 16,
+      kx('\\vec{a}\\cdot\\vec{b} = ' + dot.toFixed(2)));
+    lblResult.style.color = dot >= 0 ? '#8B0029' : '#d32f2f';
+    lblResult.style.fontSize = '15px';
+  }
+
+  // Title
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 15px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText(mode === 'dot' ? '내적: 정사영 시각화' : '외적: 평행사변형 넓이', 14, 12);
+
+  ctx.restore();
+}
+
+function drawGraph(p, ox, oy, w, h) {
+  ctx.save();
+  ctx.translate(ox, oy);
+
+  // Separator
+  ctx.strokeStyle = 'rgba(139,0,41,0.15)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(20, 0);
+  ctx.lineTo(w - 20, 0);
+  ctx.stroke();
+
+  const margin = { left: 55, right: 25, top: 30, bottom: 30 };
+  const gw = w - margin.left - margin.right;
+  const gh = h - margin.top - margin.bottom;
+  const gx = margin.left;
+  const gy = margin.top;
+
+  const maxVal = p.a * p.b;
+
+  function px(deg) { return gx + (deg / 360) * gw; }
+  function py(val) { return gy + gh / 2 - (val / maxVal) * (gh / 2) * 0.9; }
+
+  // Graph title
+  if (mode === 'dot') {
+    lblGraphTitle.innerHTML = kx('\\vec{a}\\cdot\\vec{b}') + ' vs ' + kx('\\phi');
+  } else {
+    lblGraphTitle.innerHTML = kx('|\\vec{a}\\times\\vec{b}|') + ' vs ' + kx('\\phi');
+  }
+  lblGraphTitle.style.left = (ox + gx + gw / 2) + 'px';
+  lblGraphTitle.style.top = (oy + gy - 22) + 'px';
+  lblGraphTitle.style.transform = 'translateX(-50%)';
+  lblGraphTitle.style.display = 'block';
+
+  // Grid
+  ctx.strokeStyle = '#e8e8e8';
+  ctx.lineWidth = 0.5;
+  for (let d = 0; d <= 360; d += 90) {
+    const gxp = px(d);
+    ctx.beginPath(); ctx.moveTo(gxp, gy); ctx.lineTo(gxp, gy + gh); ctx.stroke();
+  }
+  for (let v = -1; v <= 1; v += 0.5) {
+    const gyp = py(v * maxVal);
+    ctx.beginPath(); ctx.moveTo(gx, gyp); ctx.lineTo(gx + gw, gyp); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(gx, py(0)); ctx.lineTo(gx + gw, py(0)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx, gy + gh); ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText('φ (°)', gx + gw / 2, gy + gh + 14);
+
+  // Tick labels x-axis
+  ctx.font = '9px sans-serif';
+  for (let d = 0; d <= 360; d += 90) {
+    ctx.fillStyle = '#1a1a1a';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(d + '°', px(d), py(0) + 4);
+  }
+
+  // Tick labels y-axis
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  const yTick = Math.round(maxVal);
+  if (yTick > 0) {
+    for (let v = -yTick; v <= yTick; v += yTick) {
+      if (v === 0) continue;
+      ctx.fillText(v.toFixed(0), gx - 6, py(v));
+    }
+  }
+
+  // Plot curve
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let d = 0; d <= 360; d += 1) {
+    const rad = d * Math.PI / 180;
+    let val;
+    if (mode === 'dot') {
+      val = p.a * p.b * Math.cos(rad);
+      ctx.strokeStyle = '#8B0029';
+    } else {
+      val = p.a * p.b * Math.sin(rad);
+      ctx.strokeStyle = '#7c3aed';
+    }
+    const xp = px(d);
+    const yp = py(val);
+    if (d === 0) ctx.moveTo(xp, yp);
+    else ctx.lineTo(xp, yp);
+  }
+  ctx.stroke();
+
+  // Current position marker
+  const curRad = p.phi;
+  let curVal;
+  if (mode === 'dot') {
+    curVal = p.a * p.b * Math.cos(curRad);
+  } else {
+    curVal = p.a * p.b * Math.sin(curRad);
+  }
+  const markerX = px(p.phiDeg);
+  const markerY = py(curVal);
+
+  // Vertical dashed line to marker
+  ctx.strokeStyle = 'rgba(139,0,41,0.3)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(markerX, py(0));
+  ctx.lineTo(markerX, markerY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Marker dot
+  ctx.fillStyle = mode === 'dot' ? '#8B0029' : '#7c3aed';
+  ctx.beginPath();
+  ctx.arc(markerX, markerY, 5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Value label at marker
+  ctx.fillStyle = mode === 'dot' ? '#8B0029' : '#7c3aed';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = curVal >= 0 ? 'top' : 'bottom';
+  const labelOffset = curVal >= 0 ? -14 : 14;
+  ctx.fillText(curVal.toFixed(2), markerX, markerY + labelOffset);
+
+  // Curve label
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  if (mode === 'dot') {
+    ctx.fillStyle = '#8B0029';
+    ctx.fillText('ab cos φ', gx + gw - 55, py(p.a * p.b * Math.cos(350 * Math.PI / 180)) - 4);
+  } else {
+    ctx.fillStyle = '#7c3aed';
+    ctx.fillText('ab sin φ', gx + gw - 55, py(p.a * p.b * Math.sin(350 * Math.PI / 180)) - 4);
+  }
+
+  ctx.restore();
+}
+
+function setMode(m) {
+  mode = m;
+  btnDot.classList.toggle('active', m === 'dot');
+  btnCross.classList.toggle('active', m === 'cross');
+  updateFormulaBox();
+  update();
+}
+
+function update() {
+  updateLabels();
+  updateInfo();
+  draw();
+}
+
+btnDot.addEventListener('click', () => setMode('dot'));
+btnCross.addEventListener('click', () => setMode('cross'));
+[slMagA, slMagB, slPhi].forEach(s => s.addEventListener('input', update));
+
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); draw(); });
+
+initKaTeXContent();
+update();
+</script>
+</body>
+</html>

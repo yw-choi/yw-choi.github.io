@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" font-family="sans-serif">
+  <defs>
+    <marker id="axArr" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1a1a1a"/>
+    </marker>
+    <marker id="secArr" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
+    </marker>
+  </defs>
+
+  <!-- Axes -->
+  <line x1="80" y1="340" x2="650" y2="340" stroke="#1a1a1a" stroke-width="2" marker-end="url(#axArr)"/>
+  <line x1="80" y1="340" x2="80" y2="30" stroke="#1a1a1a" stroke-width="2" marker-end="url(#axArr)"/>
+  <text x="660" y="345" font-size="15" fill="#1a1a1a" font-style="italic">t</text>
+  <text x="70" y="25" font-size="15" fill="#1a1a1a" font-style="italic">x</text>
+
+  <!-- Curve: x(t) - a gentle parabola-like curve -->
+  <path d="M 120,300 C 180,290 250,250 320,180 C 390,110 480,80 580,70"
+        fill="none" stroke="#2563EB" stroke-width="2.5"/>
+
+  <!-- Point 1: t1, x1 -->
+  <circle cx="180" cy="282" r="5" fill="#8B0029"/>
+  <line x1="180" y1="282" x2="180" y2="340" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="80" y1="282" x2="180" y2="282" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="180" y="360" font-size="13" fill="#6B7280" text-anchor="middle" font-style="italic">t₁</text>
+  <text x="65" y="287" font-size="13" fill="#6B7280" text-anchor="end" font-style="italic">x₁</text>
+
+  <!-- Point 2: t2, x2 -->
+  <circle cx="460" cy="92" r="5" fill="#8B0029"/>
+  <line x1="460" y1="92" x2="460" y2="340" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="80" y1="92" x2="460" y2="92" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="460" y="360" font-size="13" fill="#6B7280" text-anchor="middle" font-style="italic">t₂</text>
+  <text x="65" y="97" font-size="13" fill="#6B7280" text-anchor="end" font-style="italic">x₂</text>
+
+  <!-- Secant line (red) -->
+  <line x1="130" y1="310" x2="530" y2="60" stroke="#8B0029" stroke-width="2.5" stroke-dasharray="8 4"/>
+
+  <!-- Delta x brace -->
+  <line x1="470" y1="282" x2="470" y2="92" stroke="#8B0029" stroke-width="2" marker-end="url(#secArr)"/>
+  <line x1="470" y1="282" x2="460" y2="282" stroke="#8B0029" stroke-width="1"/>
+  <text x="505" y="190" font-size="14" fill="#8B0029" font-weight="bold">Δx = x₂ − x₁</text>
+
+  <!-- Delta t -->
+  <line x1="180" y1="300" x2="460" y2="300" stroke="#2563EB" stroke-width="2"/>
+  <line x1="460" y1="300" x2="460" y2="282" stroke="#2563EB" stroke-width="1"/>
+  <text x="320" y="318" font-size="14" fill="#2563EB" font-weight="bold">Δt = t₂ − t₁</text>
+
+  <!-- Slope label -->
+  <text x="350" y="50" font-size="15" fill="#8B0029" text-anchor="middle" font-weight="bold">기울기 = 평균 속도</text>
+  <text x="350" y="70" font-size="14" fill="#8B0029" text-anchor="middle" font-style="italic">v_avg = Δx / Δt</text>
+
+  <!-- Curve label -->
+  <text x="590" y="60" font-size="14" fill="#2563EB" font-style="italic">x(t)</text>
+</svg>

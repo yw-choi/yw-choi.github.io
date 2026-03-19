@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" font-family="sans-serif">
+  <defs>
+    <marker id="ad-r" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
+    </marker>
+    <marker id="ad-b" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
+    </marker>
+    <marker id="ad-g" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#6B7280"/>
+    </marker>
+  </defs>
+  <!-- Vector a -->
+  <line x1="100" y1="300" x2="550" y2="300" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ad-r)"/>
+  <text x="330" y="330" font-size="18" fill="#8B0029" font-weight="bold" font-style="italic">a</text>
+  <!-- Vector b -->
+  <line x1="100" y1="300" x2="420" y2="110" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ad-b)"/>
+  <text x="240" y="180" font-size="18" fill="#2563EB" font-weight="bold" font-style="italic">b</text>
+  <!-- Angle arc -->
+  <path d="M 180 300 A 80 80 0 0 0 157 260" fill="none" stroke="#6B7280" stroke-width="1.5"/>
+  <text x="185" y="275" font-size="16" fill="#6B7280" font-style="italic">&phi;</text>
+  <!-- Projection of b onto a -->
+  <line x1="420" y1="110" x2="340" y2="300" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <!-- Projection segment highlighted -->
+  <line x1="100" y1="300" x2="340" y2="300" stroke="#6B7280" stroke-width="2" marker-end="url(#ad-g)"/>
+  <!-- Projection brace/label -->
+  <text x="190" y="360" font-size="14" fill="#6B7280" font-style="italic">b</text>
+  <text x="200" y="360" font-size="14" fill="#6B7280"> cos </text>
+  <text x="238" y="360" font-size="14" fill="#6B7280" font-style="italic">&phi;</text>
+  <text x="250" y="360" font-size="13" fill="#6B7280"> (b의 a 방향 사영)</text>
+  <!-- Bracket under projection -->
+  <line x1="100" y1="345" x2="100" y2="340" stroke="#6B7280" stroke-width="1"/>
+  <line x1="100" y1="345" x2="340" y2="345" stroke="#6B7280" stroke-width="1"/>
+  <line x1="340" y1="345" x2="340" y2="340" stroke="#6B7280" stroke-width="1"/>
+  <!-- Right angle marker -->
+  <rect x="325" y="285" width="15" height="15" fill="none" stroke="#6B7280" stroke-width="1"/>
+  <!-- Formula -->
+  <text x="450" y="80" font-size="16" fill="#8B0029" font-weight="bold">a &middot; b = ab cos &phi;</text>
+  <text x="450" y="110" font-size="14" fill="#6B7280">= (a 방향 b의 사영) &times; a</text>
+</svg>

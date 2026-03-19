@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>관성모멘트와 토크 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
+.control-group { display: flex; flex-direction: column; gap: 4px; }
+.control-group label { font-size: 13px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.control-group select { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .eq { color: #555; font-size: 12px; }
+.info-box .eq .katex { font-size: 13px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .theorem-eq { font-size: 15px; display: block; margin-top: 4px; }
+.theorem-box .katex { color: #fff; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 20px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 20px; color: #8B0029; }
+.verify-line { text-align: center; font-weight: 700; color: #8B0029; font-size: 12px; margin-top: 2px; }
+.verify-line .katex { font-size: 13px; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 50vh; }
+  .controls { width: 100%; height: 50vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div class="theorem-box">
+      회전의 뉴턴 제2법칙
+      <span class="theorem-eq" id="theoremEq"></span>
+    </div>
+
+    <div class="control-group">
+      <label>물체 형태</label>
+      <select id="shapeSelect">
+        <option value="hoop">고리 (hoop): I = MR²</option>
+        <option value="disk" selected>원판 (disk): I = ½MR²</option>
+        <option value="sphere">속이 찬 구: I = ⅖MR²</option>
+        <option value="shell">속이 빈 구: I = ⅔MR²</option>
+        <option value="rod-center">막대 (중심): I = ¹⁄₁₂ML²</option>
+        <option value="rod-end">막대 (끝): I = ⅓ML²</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>토크 τ = <span id="torqueVal">5.0</span> N·m</label>
+      <input type="range" id="torqueSlider" min="0" max="15" value="5" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>질량 M = <span id="massVal">2.0</span> kg</label>
+      <input type="range" id="massSlider" min="0.5" max="10" value="2" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>크기 R(또는 L) = <span id="sizeVal">0.5</span> m</label>
+      <input type="range" id="sizeSlider" min="0.2" max="1.5" value="0.5" step="0.05">
+    </div>
+
+    <div class="info-box" id="infoBox">
+      <div class="eq" id="eqI"></div>
+      <div><span class="label">I =</span> <span class="val" id="iInfo">0.00 kg·m²</span></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div class="eq" id="eqAlpha"></div>
+      <div><span class="label" id="alphaInfoLabel"></span> <span class="val" id="alphaInfo">0.00 rad/s²</span></div>
+      <div><span class="label" id="omegaInfoLabel"></span> <span class="val" id="omegaInfo">0.00 rad/s</span></div>
+      <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
+      <div class="eq" id="eqKR"></div>
+      <div><span class="label">K =</span> <span class="val" id="kInfo">0.00 J</span></div>
+      <div><span class="label">W =</span> <span class="val" id="wInfo">0.00 J</span></div>
+      <div class="verify-line" id="verifyLine"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) {
+  return katex.renderToString(expr, { throwOnError: false });
+}
+
+function renderStaticKaTeX() {
+  document.getElementById('theoremEq').innerHTML = tex('\\tau_{\\text{net}} = I\\alpha');
+  document.getElementById('canvasTitle').innerHTML = tex('\\tau = I\\alpha') + ' 검증';
+  document.getElementById('eqAlpha').innerHTML = tex('\\alpha = \\tau / I');
+  document.getElementById('eqKR').innerHTML = tex('K = \\tfrac{1}{2}I\\omega^2 = W = \\tau\\theta');
+  document.getElementById('alphaInfoLabel').innerHTML = tex('\\alpha') + ' =';
+  document.getElementById('omegaInfoLabel').innerHTML = tex('\\omega') + ' =';
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+const shapeSelect = document.getElementById('shapeSelect');
+const torqueSlider = document.getElementById('torqueSlider');
+const massSlider = document.getElementById('massSlider');
+const sizeSlider = document.getElementById('sizeSlider');
+
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+let running = false;
+let animId = null;
+let t = 0;
+const dtFrame = 1 / 60;
+const maxTime = 15;
+
+const shapes = {
+  'hoop':       { name: '고리',   factor: 1,     formula: 'MR^2' },
+  'disk':       { name: '원판',   factor: 0.5,   formula: '\\tfrac{1}{2}MR^2' },
+  'sphere':     { name: '속이 찬 구', factor: 0.4, formula: '\\tfrac{2}{5}MR^2' },
+  'shell':      { name: '속이 빈 구', factor: 2/3, formula: '\\tfrac{2}{3}MR^2' },
+  'rod-center': { name: '막대(중심)', factor: 1/12, formula: '\\tfrac{1}{12}ML^2' },
+  'rod-end':    { name: '막대(끝)', factor: 1/3,  formula: '\\tfrac{1}{3}ML^2' }
+};
+
+function getParams() {
+  const shape = shapeSelect.value;
+  const tau = parseFloat(torqueSlider.value);
+  const M = parseFloat(massSlider.value);
+  const R = parseFloat(sizeSlider.value);
+  const I = shapes[shape].factor * M * R * R;
+  return { shape, tau, M, R, I };
+}
+
+function getState() {
+  const { tau, I } = getParams();
+  const alpha = I > 0 ? tau / I : 0;
+  const omega = alpha * t;
+  const theta = 0.5 * alpha * t * t;
+  const K = 0.5 * I * omega * omega;
+  const W = tau * theta;
+  return { alpha, omega, theta, K, W };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width;
+  CH = rect.height;
+  canvas.width = CW * dpr;
+  canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px';
+  canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function updateLabels() {
+  document.getElementById('torqueVal').textContent = parseFloat(torqueSlider.value).toFixed(1);
+  document.getElementById('massVal').textContent = parseFloat(massSlider.value).toFixed(1);
+  document.getElementById('sizeVal').textContent = parseFloat(sizeSlider.value).toFixed(2);
+}
+
+function updateInfo() {
+  const { shape, I } = getParams();
+  const { alpha, omega, theta, K, W } = getState();
+  document.getElementById('eqI').innerHTML = tex('I = ' + shapes[shape].formula);
+  document.getElementById('iInfo').textContent = I.toFixed(4) + ' kg·m²';
+  document.getElementById('alphaInfo').textContent = alpha.toFixed(2) + ' rad/s²';
+  document.getElementById('omegaInfo').textContent = omega.toFixed(2) + ' rad/s';
+  document.getElementById('kInfo').textContent = K.toFixed(2) + ' J';
+  document.getElementById('wInfo').textContent = W.toFixed(2) + ' J';
+  document.getElementById('verifyLine').innerHTML = tex(
+    'K = ' + K.toFixed(2) + '\\;\\text{J} = W = ' + W.toFixed(2) + '\\;\\text{J}\\;\\checkmark'
+  );
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 10;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lw;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawTextWithBg(text, x, y, color, fontSize) {
+  ctx.font = (fontSize || 14) + 'px sans-serif';
+  const m = ctx.measureText(text);
+  const pad = 3;
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillRect(x - pad, y - fontSize + 1, m.width + 2 * pad, fontSize + 2);
+  ctx.fillStyle = color;
+  ctx.textAlign = 'left';
+  ctx.fillText(text, x, y);
+}
+
+function drawShape(cx, cy, R, theta, shape) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(-theta);
+
+  const drawR = R;
+
+  if (shape === 'hoop') {
+    ctx.strokeStyle = '#1a1a1a';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(0, 0, drawR, 0, 2 * Math.PI);
+    ctx.stroke();
+  } else if (shape === 'disk') {
+    ctx.fillStyle = '#F3F4F6';
+    ctx.strokeStyle = '#1a1a1a';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0, 0, drawR, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.stroke();
+    // Spokes
+    ctx.strokeStyle = '#ddd';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 8; i++) {
+      const a = i * Math.PI / 4;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(drawR * Math.cos(a), drawR * Math.sin(a));
+      ctx.stroke();
+    }
+  } else if (shape === 'sphere' || shape === 'shell') {
+    ctx.fillStyle = shape === 'sphere' ? '#F3F4F6' : 'transparent';
+    ctx.strokeStyle = '#1a1a1a';
+    ctx.lineWidth = shape === 'shell' ? 3 : 2;
+    ctx.beginPath();
+    ctx.arc(0, 0, drawR, 0, 2 * Math.PI);
+    if (shape === 'sphere') ctx.fill();
+    ctx.stroke();
+    // Equator line
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, drawR, drawR * 0.3, 0, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  } else if (shape === 'rod-center' || shape === 'rod-end') {
+    ctx.strokeStyle = '#1a1a1a';
+    ctx.lineWidth = 6;
+    ctx.lineCap = 'round';
+    if (shape === 'rod-center') {
+      ctx.beginPath();
+      ctx.moveTo(-drawR, 0);
+      ctx.lineTo(drawR, 0);
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(drawR * 2, 0);
+      ctx.stroke();
+    }
+  }
+
+  // Reference mark on the rim
+  const markX = shape === 'rod-end' ? drawR * 2 : drawR;
+  ctx.fillStyle = '#8B0029';
+  ctx.beginPath();
+  ctx.arc(markX, 0, 5, 0, 2 * Math.PI);
+  ctx.fill();
+
+  ctx.restore();
+
+  // Rotation axis
+  ctx.fillStyle = '#1a1a1a';
+  ctx.beginPath();
+  ctx.arc(cx, cy, 3, 0, 2 * Math.PI);
+  ctx.fill();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  const { shape, tau, M, R, I } = getParams();
+  const { alpha, omega, theta, K, W } = getState();
+
+  const objCX = CW * 0.28;
+  const objCY = CH * 0.45;
+  const drawR = Math.min(CW * 0.17, CH * 0.28);
+
+  // Draw shape
+  drawShape(objCX, objCY, drawR, theta, shape);
+
+  // Torque arc arrow
+  if (tau > 0.1) {
+    const tauArcR = drawR + 20;
+    ctx.strokeStyle = '#8B0029';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.arc(objCX, objCY, tauArcR, -0.3, -1.8, true);
+    ctx.stroke();
+    // Arrowhead
+    const arrowAngle = -1.8;
+    const ax = objCX + tauArcR * Math.cos(arrowAngle);
+    const ay = objCY + tauArcR * Math.sin(arrowAngle);
+    const tangent = arrowAngle - Math.PI / 2;
+    ctx.fillStyle = '#8B0029';
+    ctx.beginPath();
+    ctx.moveTo(ax, ay);
+    ctx.lineTo(ax + 10 * Math.cos(tangent - 0.4), ay + 10 * Math.sin(tangent - 0.4));
+    ctx.lineTo(ax + 10 * Math.cos(tangent + 0.4), ay + 10 * Math.sin(tangent + 0.4));
+    ctx.closePath();
+    ctx.fill();
+    drawTextWithBg('τ = ' + tau.toFixed(1) + ' N·m', objCX + tauArcR + 8, objCY - tauArcR * 0.6, '#8B0029', 14);
+  }
+
+  // Info text on canvas
+  drawTextWithBg(shapes[shape].name + ' (M=' + M.toFixed(1) + ' kg)', objCX - 50, objCY + drawR + 45, '#1a1a1a', 13);
+
+  // --- Energy bar chart ---
+  const barAreaLeft = CW * 0.56;
+  const barAreaTop = 55;
+  const barAreaBottom = CH * 0.42;
+  const barAreaH = barAreaBottom - barAreaTop;
+
+  ctx.fillStyle = '#444';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('에너지 (J)', barAreaLeft + 80, barAreaTop - 8);
+
+  const barW = 55;
+  const barGap = 30;
+  const maxE = Math.max(K, W, 1);
+  const eScale = (barAreaH - 30) / maxE;
+  const barBaseY = barAreaBottom;
+
+  // Baseline
+  ctx.strokeStyle = '#999';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(barAreaLeft, barBaseY);
+  ctx.lineTo(barAreaLeft + 2 * barW + barGap + 20, barBaseY);
+  ctx.stroke();
+
+  // K bar
+  const kBarX = barAreaLeft + 10;
+  const kBarH = Math.max(K * eScale, 0);
+  ctx.fillStyle = 'rgba(37, 99, 235, 0.7)';
+  ctx.fillRect(kBarX, barBaseY - kBarH, barW, kBarH);
+  ctx.strokeStyle = '#2563EB';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(kBarX, barBaseY - kBarH, barW, Math.max(kBarH, 1));
+  ctx.fillStyle = '#2563EB';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('K', kBarX + barW / 2, barBaseY + 18);
+  // Value
+  ctx.font = '12px sans-serif';
+  const kLabelY = barBaseY - kBarH - 6;
+  if (kLabelY < barAreaTop + 10) {
+    ctx.fillStyle = '#fff';
+    ctx.fillText(K.toFixed(1), kBarX + barW / 2, barBaseY - kBarH + 16);
+  } else {
+    ctx.fillStyle = '#2563EB';
+    ctx.fillText(K.toFixed(1), kBarX + barW / 2, kLabelY);
+  }
+
+  // W bar
+  const wBarX = kBarX + barW + barGap;
+  const wBarH = Math.max(W * eScale, 0);
+  ctx.fillStyle = 'rgba(139, 0, 41, 0.7)';
+  ctx.fillRect(wBarX, barBaseY - wBarH, barW, wBarH);
+  ctx.strokeStyle = '#8B0029';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(wBarX, barBaseY - wBarH, barW, Math.max(wBarH, 1));
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('W=τθ', wBarX + barW / 2, barBaseY + 18);
+  ctx.font = '12px sans-serif';
+  const wLabelY = barBaseY - wBarH - 6;
+  if (wLabelY < barAreaTop + 10) {
+    ctx.fillStyle = '#fff';
+    ctx.fillText(W.toFixed(1), wBarX + barW / 2, barBaseY - wBarH + 16);
+  } else {
+    ctx.fillStyle = '#8B0029';
+    ctx.fillText(W.toFixed(1), wBarX + barW / 2, wLabelY);
+  }
+
+  // --- ω(t) graph ---
+  const graphLeft = CW * 0.56;
+  const graphTop = CH * 0.52;
+  const graphRight = CW - 20;
+  const graphBottom = CH - 25;
+  const graphW = graphRight - graphLeft;
+  const graphH = graphBottom - graphTop;
+
+  ctx.fillStyle = '#fefefe';
+  ctx.strokeStyle = '#ddd';
+  ctx.lineWidth = 1;
+  ctx.fillRect(graphLeft, graphTop, graphW, graphH);
+  ctx.strokeRect(graphLeft, graphTop, graphW, graphH);
+
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('ω (rad/s)', graphLeft + 5, graphTop + 16);
+
+  ctx.fillStyle = '#888';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('t (s)', graphLeft + graphW - 5, graphBottom - 5);
+
+  // Zero line
+  ctx.strokeStyle = '#eee';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(graphLeft, graphTop + graphH / 2);
+  ctx.lineTo(graphRight, graphTop + graphH / 2);
+  ctx.stroke();
+
+  // Plot ω = αt (linear)
+  if (t > 0.01) {
+    const { alpha: alphaVal } = getState();
+    const omegaMax = alphaVal > 0 ? omega * 1.2 : 1;
+    const tMax = Math.max(t * 1.2, 3);
+    const pxPerSec = graphW / tMax;
+    const pxPerOmega = omegaMax > 0 ? (graphH - 20) / omegaMax : 1;
+
+    // Scale labels
+    ctx.fillStyle = '#aaa';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(omegaMax.toFixed(1), graphLeft - 4, graphTop + 12);
+
+    ctx.strokeStyle = '#2563EB';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    const steps = 100;
+    for (let i = 0; i <= steps; i++) {
+      const ti = (i / steps) * t;
+      const oi = alpha * ti;
+      const px = graphLeft + ti * pxPerSec;
+      const py = graphBottom - 10 - oi * pxPerOmega;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+
+    // Current point
+    const cpx = graphLeft + t * pxPerSec;
+    const cpy = graphBottom - 10 - omega * pxPerOmega;
+    ctx.fillStyle = '#2563EB';
+    ctx.beginPath();
+    ctx.arc(cpx, cpy, 4, 0, 2 * Math.PI);
+    ctx.fill();
+
+    // Label: α = τ/I
+    drawTextWithBg('기울기 = α = τ/I = ' + alpha.toFixed(2), graphLeft + 10, graphBottom - 20, '#8B0029', 12);
+  }
+}
+
+function step() {
+  t += dtFrame;
+  if (t > maxTime) { stop(); return; }
+  updateInfo();
+  draw();
+  if (running) animId = requestAnimationFrame(step);
+}
+
+function start() {
+  if (running) return;
+  running = true;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  if (animId) cancelAnimationFrame(animId);
+}
+
+function reset() {
+  stop();
+  t = 0;
+  updateInfo();
+  draw();
+}
+
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+
+[torqueSlider, massSlider, sizeSlider].forEach(s => {
+  s.addEventListener('input', () => { updateLabels(); reset(); });
+});
+shapeSelect.addEventListener('change', () => { reset(); });
+
+window.addEventListener('resize', resize);
+
+renderStaticKaTeX();
+updateLabels();
+reset();
+resize();
+</script>
+</body>
+</html>

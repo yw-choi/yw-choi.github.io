@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" font-family="sans-serif">
+  <defs>
+    <marker id="a-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
+    </marker>
+    <marker id="a-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
+    </marker>
+    <marker id="a-gry" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#6B7280"/>
+    </marker>
+  </defs>
+  <!-- Circle -->
+  <circle cx="350" cy="220" r="160" fill="none" stroke="#6B7280" stroke-width="2"/>
+  <!-- Center -->
+  <circle cx="350" cy="220" r="3" fill="#6B7280"/>
+  <text x="355" y="235" font-size="13" fill="#6B7280">O</text>
+  <!-- Radius label -->
+  <line x1="350" y1="220" x2="510" y2="220" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="425" y="215" font-size="14" fill="#6B7280" font-style="italic">r</text>
+  <!-- Particle at top -->
+  <circle cx="350" cy="60" r="7" fill="#F3F4F6" stroke="#8B0029" stroke-width="2"/>
+  <line x1="350" y1="60" x2="430" y2="60" stroke="#2563EB" stroke-width="2.5" marker-end="url(#a-blue)"/>
+  <text x="435" y="55" font-size="15" fill="#2563EB" font-weight="bold" font-style="italic">v</text>
+  <line x1="350" y1="60" x2="350" y2="130" stroke="#8B0029" stroke-width="2.5" marker-end="url(#a-red)"/>
+  <text x="355" y="115" font-size="15" fill="#8B0029" font-weight="bold" font-style="italic">a</text>
+  <!-- Particle at right -->
+  <circle cx="510" cy="220" r="7" fill="#F3F4F6" stroke="#8B0029" stroke-width="2"/>
+  <line x1="510" y1="220" x2="510" y2="145" stroke="#2563EB" stroke-width="2.5" marker-end="url(#a-blue)"/>
+  <text x="518" y="155" font-size="15" fill="#2563EB" font-weight="bold" font-style="italic">v</text>
+  <line x1="510" y1="220" x2="440" y2="220" stroke="#8B0029" stroke-width="2.5" marker-end="url(#a-red)"/>
+  <text x="455" y="240" font-size="15" fill="#8B0029" font-weight="bold" font-style="italic">a</text>
+  <!-- Particle at bottom -->
+  <circle cx="350" cy="380" r="7" fill="#F3F4F6" stroke="#8B0029" stroke-width="2"/>
+  <line x1="350" y1="380" x2="270" y2="380" stroke="#2563EB" stroke-width="2.5" marker-end="url(#a-blue)"/>
+  <text x="260" y="375" font-size="15" fill="#2563EB" font-weight="bold" font-style="italic">v</text>
+  <line x1="350" y1="380" x2="350" y2="310" stroke="#8B0029" stroke-width="2.5" marker-end="url(#a-red)"/>
+  <text x="355" y="330" font-size="15" fill="#8B0029" font-weight="bold" font-style="italic">a</text>
+  <!-- Particle at left -->
+  <circle cx="190" cy="220" r="7" fill="#F3F4F6" stroke="#8B0029" stroke-width="2"/>
+  <line x1="190" y1="220" x2="190" y2="295" stroke="#2563EB" stroke-width="2.5" marker-end="url(#a-blue)"/>
+  <text x="170" y="285" font-size="15" fill="#2563EB" font-weight="bold" font-style="italic">v</text>
+  <line x1="190" y1="220" x2="260" y2="220" stroke="#8B0029" stroke-width="2.5" marker-end="url(#a-red)"/>
+  <text x="230" y="240" font-size="15" fill="#8B0029" font-weight="bold" font-style="italic">a</text>
+  <!-- Legend box -->
+  <rect x="30" y="30" width="200" height="70" rx="6" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
+  <line x1="45" y1="55" x2="85" y2="55" stroke="#2563EB" stroke-width="2.5" marker-end="url(#a-blue)"/>
+  <text x="95" y="60" font-size="14" fill="#2563EB">속도 (접선 방향)</text>
+  <line x1="45" y1="82" x2="85" y2="82" stroke="#8B0029" stroke-width="2.5" marker-end="url(#a-red)"/>
+  <text x="95" y="87" font-size="14" fill="#8B0029">가속도 (중심 방향)</text>
+</svg>
