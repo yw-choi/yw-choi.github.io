@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>용수철 힘이 하는 일</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
@@ -17,10 +19,12 @@ label { display: block; font-size: 0.8rem; color: #555; margin-bottom: 2px; }
 .slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
 .slider-row input[type="range"] { flex: 1; accent-color: #8B0029; }
 .slider-val { font-size: 0.8rem; font-weight: 600; color: #8B0029; min-width: 60px; text-align: right; }
-.info-box { background: white; border: 1px solid rgba(139,0,41,0.15); border-radius: 10px; padding: 10px; font-size: 0.75rem; line-height: 1.7; }
+.info-box { background: white; border: 1px solid rgba(139,0,41,0.15); border-radius: 10px; padding: 10px; font-size: 0.78rem; line-height: 1.9; }
 .info-box .val { color: #8B0029; font-weight: 700; }
-.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 0.72rem; line-height: 1.7; color: #555; }
+.info-box .katex { font-size: 0.85em; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 0.78rem; line-height: 2.0; color: #555; }
 .formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 0.88em; }
 .btn-row { display: flex; gap: 8px; }
 button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
 .btn-primary { background: #8B0029; color: white; }
@@ -28,7 +32,37 @@ button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.8
 .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
 .btn-secondary { background: rgba(139,0,41,0.1); color: #8B0029; }
 .btn-secondary:hover { background: rgba(139,0,41,0.2); }
-.check-line { font-size: 0.72rem; color: #2e7d32; font-weight: 600; margin-top: 2px; }
+.check-line { font-size: 0.75rem; color: #2e7d32; font-weight: 600; margin-top: 2px; }
+.check-line .katex { font-size: 0.88em; }
+
+/* KaTeX overlay labels on canvas */
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute;
+  white-space: nowrap;
+  font-size: 11px;
+  line-height: 1;
+  pointer-events: none;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.92em; }
+.canvas-overlay .katex-label.with-bg {
+  background: rgba(255,255,255,0.85);
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+.canvas-overlay .graph-title {
+  position: absolute;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: bold;
+  color: #8B0029;
+  pointer-events: none;
+}
+.canvas-overlay .graph-title .katex { font-size: 0.9em; }
+
 @media (max-width: 700px) {
   .container { flex-direction: column; }
   .canvas-area { flex: none; height: 55vh; }
@@ -40,6 +74,13 @@ button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.8
 <div class="container">
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <!-- KaTeX labels positioned over canvas via JS -->
+      <div class="katex-label with-bg" id="lbl-force" style="color:#8B0029;font-weight:bold;"></div>
+      <div class="graph-title" id="lbl-graph-title"></div>
+      <div class="katex-label" id="lbl-graph-fline" style="color:#8B0029;"></div>
+      <div class="katex-label with-bg" id="lbl-graph-work" style="font-weight:bold;"></div>
+    </div>
   </div>
   <div class="controls">
     <div>
@@ -47,10 +88,7 @@ button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.8
       <div class="subtitle">Work Done by a Spring Force (Ch.7.4)</div>
     </div>
 
-    <div class="formula-box">
-      <b>훅 법칙:</b> F = −kx<br>
-      <b>용수철이 한 일:</b> W<sub>s</sub> = ½kx<sub>i</sub>² − ½kx<sub>f</sub>²
-    </div>
+    <div class="formula-box" id="formula-box"></div>
 
     <div>
       <label>용수철 상수 k</label>
@@ -61,7 +99,7 @@ button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.8
     </div>
 
     <div>
-      <label>초기 위치 x<sub>i</sub></label>
+      <label id="lbl-xi-label"></label>
       <div class="slider-row">
         <input type="range" id="sl-xi" min="-0.30" max="0.30" step="0.01" value="0.20">
         <span class="slider-val" id="val-xi">0.20 m</span>
@@ -73,14 +111,7 @@ button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.8
       <button class="btn-secondary" id="btn-reset">리셋 (Reset)</button>
     </div>
 
-    <div class="info-box" id="info-box">
-      위치: x = <span class="val" id="info-x">0.20 m</span><br>
-      용수철 힘: F = −kx = <span class="val" id="info-f">−16.0 N</span><br>
-      용수철이 한 일: W<sub>s</sub> = <span class="val" id="info-w">0.00 J</span><br>
-      운동에너지: K = ½mv² = <span class="val" id="info-k">0.00 J</span><br>
-      속력: v = <span class="val" id="info-v">0.00 m/s</span><br>
-      <div class="check-line" id="info-check">W<sub>s</sub> = ΔK ✓ (일-에너지 정리)</div>
-    </div>
+    <div class="info-box" id="info-box"></div>
 
     <div style="font-size:0.68rem; color:#999; margin-top:auto;">
       블록 질량 m = 1 kg (고정) · 마찰 없음
@@ -89,6 +120,23 @@ button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.8
 </div>
 
 <script>
+// --- KaTeX helper ---
+function kx(tex) {
+  return katex.renderToString(tex, { throwOnError: false });
+}
+
+// --- Init KaTeX-rendered static content ---
+function initKaTeXContent() {
+  // Formula box
+  document.getElementById('formula-box').innerHTML =
+    '<b>훅 법칙:</b> ' + kx('F = -kx') + '<br>' +
+    '<b>용수철이 한 일:</b> ' + kx('W_s = \\tfrac{1}{2}kx_i^2 - \\tfrac{1}{2}kx_f^2');
+
+  // Slider label
+  document.getElementById('lbl-xi-label').innerHTML = '초기 위치 ' + kx('x_i');
+}
+
+// --- Canvas setup ---
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 let dpr = window.devicePixelRatio || 1;
@@ -115,24 +163,28 @@ const valK = document.getElementById('val-k');
 const valXi = document.getElementById('val-xi');
 const btnRelease = document.getElementById('btn-release');
 const btnReset = document.getElementById('btn-reset');
-const infoX = document.getElementById('info-x');
-const infoF = document.getElementById('info-f');
-const infoW = document.getElementById('info-w');
-const infoK = document.getElementById('info-k');
-const infoV = document.getElementById('info-v');
-const infoCheck = document.getElementById('info-check');
+const infoBox = document.getElementById('info-box');
+const infoCheckEl = document.createElement('div');
+infoCheckEl.className = 'check-line';
+// Will be appended after info-box content is built
+
+// Overlay labels
+const lblForce = document.getElementById('lbl-force');
+const lblGraphTitle = document.getElementById('lbl-graph-title');
+const lblGraphFLine = document.getElementById('lbl-graph-fline');
+const lblGraphWork = document.getElementById('lbl-graph-work');
 
 // Physics constants
-const mass = 1.0; // kg
+const mass = 1.0;
 
 // State
 let k = 80;
 let xi = 0.20;
-let x = 0.20;    // current position
-let v = 0;        // current velocity
+let x = 0.20;
+let v = 0;
 let running = false;
 let paused = false;
-let t = 0;        // simulation time
+let t = 0;
 let animId = null;
 let lastTimestamp = null;
 
@@ -152,20 +204,22 @@ function updateInfo() {
   const KE = 0.5 * mass * v * v;
   const speed = Math.abs(v);
 
-  infoX.textContent = x.toFixed(3) + ' m';
-  infoF.textContent = F.toFixed(2) + ' N';
-  infoW.textContent = Ws.toFixed(3) + ' J';
-  infoK.textContent = KE.toFixed(3) + ' J';
-  infoV.textContent = speed.toFixed(3) + ' m/s';
+  infoBox.innerHTML =
+    '위치: ' + kx('x = ') + '<span class="val">' + x.toFixed(3) + ' m</span><br>' +
+    '용수철 힘: ' + kx('F = -kx = ') + '<span class="val">' + F.toFixed(2) + ' N</span><br>' +
+    '용수철이 한 일: ' + kx('W_s = ') + '<span class="val">' + Ws.toFixed(3) + ' J</span><br>' +
+    '운동에너지: ' + kx('K = \\tfrac{1}{2}mv^2 = ') + '<span class="val">' + KE.toFixed(3) + ' J</span><br>' +
+    '속력: ' + kx('v = ') + '<span class="val">' + speed.toFixed(3) + ' m/s</span>';
 
   const diff = Math.abs(Ws - KE);
   if (diff < 0.01) {
-    infoCheck.innerHTML = 'W<sub>s</sub> = ΔK ✓ (일-에너지 정리)';
-    infoCheck.style.color = '#2e7d32';
+    infoCheckEl.innerHTML = kx('W_s = \\Delta K') + ' &#10003; (일-에너지 정리)';
+    infoCheckEl.style.color = '#2e7d32';
   } else {
-    infoCheck.innerHTML = 'W<sub>s</sub> ≈ ΔK (오차: ' + diff.toFixed(4) + ' J)';
-    infoCheck.style.color = '#d32f2f';
+    infoCheckEl.innerHTML = kx('W_s \\approx \\Delta K') + ' (오차: ' + diff.toFixed(4) + ' J)';
+    infoCheckEl.style.color = '#d32f2f';
   }
+  infoBox.appendChild(infoCheckEl);
 }
 
 function resetSim() {
@@ -187,7 +241,6 @@ function resetSim() {
 }
 
 function release() {
-  // Paused → resume
   if (paused) {
     paused = false;
     running = true;
@@ -196,7 +249,6 @@ function release() {
     animId = requestAnimationFrame(animate);
     return;
   }
-  // Running → pause
   if (running) {
     running = false;
     paused = true;
@@ -205,7 +257,6 @@ function release() {
     btnRelease.textContent = '▶ 계속';
     return;
   }
-  // Stopped → start
   getParams();
   x = xi;
   v = 0;
@@ -224,16 +275,11 @@ function animate(timestamp) {
   if (lastTimestamp === null) { lastTimestamp = timestamp; }
   const dtReal = (timestamp - lastTimestamp) / 1000;
   lastTimestamp = timestamp;
-
-  // Clamp dt to avoid large jumps
   const dt = Math.min(dtReal, 0.05);
-
-  // Analytical solution: x(t) = xi * cos(omega * t)
   const omega = Math.sqrt(k / mass);
   t += dt;
   x = xi * Math.cos(omega * t);
   v = -xi * omega * Math.sin(omega * t);
-
   updateInfo();
   draw();
   animId = requestAnimationFrame(animate);
@@ -243,45 +289,58 @@ function animate(timestamp) {
 
 function draw() {
   ctx.clearRect(0, 0, W, H);
-
   const sceneH = H * 0.5;
   const graphH = H * 0.5;
-
   drawScene(0, 0, W, sceneH);
   drawGraph(0, sceneH, W, graphH);
+}
+
+// Helper: draw text with white background padding
+function drawTextWithBg(text, tx, ty, font, color, align, baseline) {
+  ctx.font = font;
+  ctx.textAlign = align || 'center';
+  ctx.textBaseline = baseline || 'alphabetic';
+  const m = ctx.measureText(text);
+  const pad = 2;
+  const th = parseInt(font) || 11;
+  let bx = tx - pad;
+  if (align === 'center') bx = tx - m.width / 2 - pad;
+  else if (align === 'right') bx = tx - m.width - pad;
+  const by = ty - th + 1 - pad;
+  if (baseline === 'middle') {
+    // adjust
+  }
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillRect(bx, by, m.width + pad * 2, th + pad * 2);
+  ctx.fillStyle = color;
+  ctx.fillText(text, tx, ty);
 }
 
 function drawScene(ox, oy, w, h) {
   ctx.save();
   ctx.translate(ox, oy);
 
-  // Ground line
   const groundY = h * 0.62;
   const wallX = w * 0.08;
-  const eqX = w * 0.40; // equilibrium position in pixels
+  const eqX = w * 0.40;
   const blockW = 40;
   const blockH = 36;
-
-  // Pixels per meter
   const ppm = w * 0.7;
-
-  // Block center x in pixels
   const blockCenterX = eqX + x * ppm;
 
-  // Draw wall
+  // Wall
   ctx.fillStyle = '#d0d0d0';
   ctx.fillRect(wallX - 10, groundY - 80, 10, 100);
-  // Wall hatching
   ctx.strokeStyle = '#888';
   ctx.lineWidth = 1;
   for (let yy = groundY - 80; yy < groundY + 20; yy += 8) {
     ctx.beginPath();
     ctx.moveTo(wallX - 10, yy);
-    ctx.lineTo(wallX - 0, yy + 8);
+    ctx.lineTo(wallX, yy + 8);
     ctx.stroke();
   }
 
-  // Draw ground
+  // Ground
   ctx.strokeStyle = '#aaa';
   ctx.lineWidth = 1.5;
   ctx.beginPath();
@@ -289,7 +348,7 @@ function drawScene(ox, oy, w, h) {
   ctx.lineTo(w - 20, groundY + blockH / 2);
   ctx.stroke();
 
-  // Draw spring (zigzag)
+  // Spring (zigzag)
   const springStartX = wallX;
   const springEndX = blockCenterX - blockW / 2;
   const springY = groundY;
@@ -301,32 +360,28 @@ function drawScene(ox, oy, w, h) {
   ctx.beginPath();
   ctx.moveTo(springStartX, springY);
   const segLen = (springEndX - springStartX) / (coils * 2 + 2);
-  // Lead-in
   ctx.lineTo(springStartX + segLen, springY);
   for (let i = 0; i < coils; i++) {
     const sx = springStartX + segLen + (i * 2 + 1) * segLen;
-    const sy1 = springY - amplitude;
-    const sy2 = springY + amplitude;
-    ctx.lineTo(sx, sy1);
-    ctx.lineTo(sx + segLen, sy2);
+    ctx.lineTo(sx, springY - amplitude);
+    ctx.lineTo(sx + segLen, springY + amplitude);
   }
   ctx.lineTo(springEndX, springY);
   ctx.stroke();
 
-  // Draw block
+  // Block
   ctx.fillStyle = '#F3F4F6';
   ctx.strokeStyle = '#1a1a1a';
   ctx.lineWidth = 2;
   ctx.fillRect(blockCenterX - blockW / 2, groundY - blockH / 2, blockW, blockH);
   ctx.strokeRect(blockCenterX - blockW / 2, groundY - blockH / 2, blockW, blockH);
-  // Block label
   ctx.fillStyle = '#1a1a1a';
   ctx.font = '12px sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText('m', blockCenterX, groundY);
 
-  // Draw equilibrium marker
+  // Equilibrium marker
   ctx.strokeStyle = '#6B7280';
   ctx.lineWidth = 1;
   ctx.setLineDash([4, 3]);
@@ -338,28 +393,47 @@ function drawScene(ox, oy, w, h) {
   ctx.fillStyle = '#6B7280';
   ctx.font = '12px sans-serif';
   ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
   ctx.fillText('x = 0', eqX, groundY + blockH / 2 + 34);
 
-  // Draw x_i marker if not running or show it always
+  // x_i marker — hide if |xi| < 0.03 (would overlap with equilibrium)
   const xiPx = eqX + xi * ppm;
-  ctx.strokeStyle = '#2563EB';
-  ctx.lineWidth = 1;
-  ctx.setLineDash([3, 3]);
-  ctx.beginPath();
-  ctx.moveTo(xiPx, groundY - 50);
-  ctx.lineTo(xiPx, groundY + blockH / 2 + 10);
-  ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.fillStyle = '#2563EB';
-  ctx.font = '11px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('x_i', xiPx, groundY - 56);
+  const showXiMarker = Math.abs(xi) >= 0.03;
 
-  // Draw force arrow on block
+  if (showXiMarker) {
+    ctx.strokeStyle = '#2563EB';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.moveTo(xiPx, groundY - 50);
+    ctx.lineTo(xiPx, groundY + blockH / 2 + 10);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#2563EB';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+
+    // Check if x_i label would overlap with equilibrium label
+    const xiLabelX = xiPx;
+    const eqLabelX = eqX;
+    const xiLabelY = groundY - 56;
+    // If they're far enough, show normally; otherwise offset vertically
+    if (Math.abs(xiLabelX - eqLabelX) > 35) {
+      drawTextWithBg('xᵢ', xiLabelX, xiLabelY, '11px sans-serif', '#2563EB', 'center');
+    } else {
+      drawTextWithBg('xᵢ', xiLabelX, xiLabelY - 14, '11px sans-serif', '#2563EB', 'center');
+    }
+  }
+
+  // Force arrow on block
   const F = -k * x;
-  if (Math.abs(F) > 0.5) {
-    const arrowScale = ppm * 0.003; // scale force to pixels
-    const arrowLen = F * arrowScale;
+  const minForceForLabel = 2.0;
+  const minForceForArrow = 0.5;
+
+  if (Math.abs(F) > minForceForArrow) {
+    const arrowScale = ppm * 0.003;
+    let arrowLen = F * arrowScale;
     const arrowY = groundY;
     const arrowStartX = blockCenterX + (F > 0 ? blockW / 2 + 4 : -blockW / 2 - 4);
     const arrowEndX = arrowStartX + arrowLen;
@@ -382,10 +456,21 @@ function drawScene(ox, oy, w, h) {
     ctx.closePath();
     ctx.fill();
 
-    // Force label
-    ctx.font = 'bold 11px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('F', (arrowStartX + arrowEndX) / 2, arrowY - 12);
+    // Force label "F" — position further from block to avoid overlap
+    if (Math.abs(F) > minForceForLabel) {
+      // Place label near the arrow tip, offset from block
+      const labelX = arrowEndX - dir * 4;
+      const labelY = arrowY - 14;
+      // Use KaTeX overlay for this via positioned element
+      lblForce.innerHTML = kx('\\vec{F}');
+      lblForce.style.left = (ox + labelX - 10) + 'px';
+      lblForce.style.top = (oy + labelY - 8) + 'px';
+      lblForce.style.display = 'block';
+    } else {
+      lblForce.style.display = 'none';
+    }
+  } else {
+    lblForce.style.display = 'none';
   }
 
   // Position axis with arrow
@@ -396,7 +481,6 @@ function drawScene(ox, oy, w, h) {
   ctx.moveTo(eqX - 20, axisY);
   ctx.lineTo(w - 30, axisY);
   ctx.stroke();
-  // x-axis arrow
   ctx.beginPath();
   ctx.moveTo(w - 30, axisY);
   ctx.lineTo(w - 36, axisY - 3);
@@ -406,16 +490,34 @@ function drawScene(ox, oy, w, h) {
   ctx.fillStyle = '#1a1a1a';
   ctx.font = 'italic 13px sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('x', w - 22, axisY + 1);
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillText('x', w - 22, axisY + 4);
 
   // Current position indicator on axis
   ctx.fillStyle = '#8B0029';
   ctx.beginPath();
   ctx.arc(blockCenterX, axisY, 4, 0, Math.PI * 2);
   ctx.fill();
-  ctx.font = '10px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText(x.toFixed(2) + ' m', blockCenterX, axisY + 14);
+
+  // Current position label — check overlap with xi marker and equilibrium
+  const curLabelX = blockCenterX;
+  const curLabelY = axisY + 14;
+  const curLabelText = x.toFixed(2) + ' m';
+
+  // Check if it overlaps with equilibrium label area or xi marker
+  const distToEq = Math.abs(curLabelX - eqX);
+  const distToXi = Math.abs(curLabelX - xiPx);
+
+  // Show if not too close to equilibrium marker and not too close to xi marker
+  if (distToEq > 30 && (!showXiMarker || distToXi > 30)) {
+    drawTextWithBg(curLabelText, curLabelX, curLabelY, '10px sans-serif', '#8B0029', 'center');
+  } else if (distToEq <= 30) {
+    // Offset below
+    drawTextWithBg(curLabelText, curLabelX, curLabelY + 14, '10px sans-serif', '#8B0029', 'center');
+  } else {
+    // Close to xi — offset above
+    drawTextWithBg(curLabelText, curLabelX, curLabelY + 14, '10px sans-serif', '#8B0029', 'center');
+  }
 
   ctx.restore();
 }
@@ -439,57 +541,42 @@ function drawGraph(ox, oy, w, h) {
   const gx = margin.left;
   const gy = margin.top;
 
-  // Axis range
-  const xRange = 0.35; // -0.35 to 0.35 m
-  const fMax = k * xRange; // max force magnitude
+  const xRange = 0.35;
+  const fMax = k * xRange;
 
-  // Map physics to pixels
   function px(xVal) { return gx + (xVal / xRange + 1) * 0.5 * gw; }
   function py(fVal) { return gy + gh * 0.5 - (fVal / fMax) * gh * 0.45; }
 
-  // Title
-  ctx.fillStyle = '#8B0029';
-  ctx.font = 'bold 12px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('F(x) vs x — 면적 = 용수철이 한 일', gx + gw / 2, gy - 14);
+  // Title — KaTeX overlay
+  lblGraphTitle.innerHTML = kx('F(x)') + ' vs ' + kx('x') + ' — 면적 = 용수철이 한 일';
+  lblGraphTitle.style.left = (ox + gx + gw / 2) + 'px';
+  lblGraphTitle.style.top = (oy + gy - 20) + 'px';
+  lblGraphTitle.style.transform = 'translateX(-50%)';
+  lblGraphTitle.style.display = 'block';
 
-  // Grid and axes
+  // Grid
   ctx.strokeStyle = '#e0e0e0';
   ctx.lineWidth = 0.5;
-  // Vertical grid lines
   for (let xv = -0.3; xv <= 0.301; xv += 0.1) {
     const px_ = px(xv);
-    ctx.beginPath();
-    ctx.moveTo(px_, gy);
-    ctx.lineTo(px_, gy + gh);
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px_, gy); ctx.lineTo(px_, gy + gh); ctx.stroke();
   }
-  // Horizontal grid lines
   for (let fv = -fMax; fv <= fMax * 1.01; fv += fMax * 0.25) {
     const py_ = py(fv);
-    ctx.beginPath();
-    ctx.moveTo(gx, py_);
-    ctx.lineTo(gx + gw, py_);
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(gx, py_); ctx.lineTo(gx + gw, py_); ctx.stroke();
   }
 
-  // x-axis
+  // Axes
   ctx.strokeStyle = '#1a1a1a';
   ctx.lineWidth = 1.2;
-  ctx.beginPath();
-  ctx.moveTo(gx, py(0));
-  ctx.lineTo(gx + gw, py(0));
-  ctx.stroke();
-  // y-axis at x=0
-  ctx.beginPath();
-  ctx.moveTo(px(0), gy);
-  ctx.lineTo(px(0), gy + gh);
-  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(gx, py(0)); ctx.lineTo(gx + gw, py(0)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(px(0), gy); ctx.lineTo(px(0), gy + gh); ctx.stroke();
 
   // Axis labels
   ctx.fillStyle = '#1a1a1a';
   ctx.font = '11px sans-serif';
   ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
   ctx.fillText('x (m)', gx + gw / 2, gy + gh + 28);
   ctx.save();
   ctx.translate(gx - 40, gy + gh / 2);
@@ -503,8 +590,10 @@ function drawGraph(ox, oy, w, h) {
   ctx.textBaseline = 'top';
   for (let xv = -0.3; xv <= 0.301; xv += 0.1) {
     if (Math.abs(xv) < 0.001) continue;
+    ctx.fillStyle = '#1a1a1a';
     ctx.fillText(xv.toFixed(1), px(xv), py(0) + 4);
   }
+  ctx.fillStyle = '#1a1a1a';
   ctx.fillText('0', px(0) + 10, py(0) + 4);
 
   // Tick labels on F-axis
@@ -514,45 +603,26 @@ function drawGraph(ox, oy, w, h) {
   for (let fv = -fTick * 2; fv <= fTick * 2 + 0.1; fv += fTick) {
     if (Math.abs(fv) < 0.1) continue;
     if (Math.abs(fv) > fMax) continue;
+    ctx.fillStyle = '#1a1a1a';
     ctx.fillText(fv.toFixed(0), gx - 6, py(fv));
   }
 
-  // Shade area under F(x) from xi to current x (this is the NEGATIVE of work)
-  // W_s = integral from xi to xf of F dx = integral of (-kx) dx
-  // If x < xi (moving toward eq): positive work, shade blue
-  // If x > xi (moving away from eq): negative work, shade red
-  // Actually: shade the area between F(x) line, from xi to current x
+  // Shaded area under F(x) from xi to current x
   const xCur = x;
   const xStart = xi;
   const xEnd = xCur;
 
   if (Math.abs(xEnd - xStart) > 0.001) {
-    // We need to shade between the line F=-kx and F=0, from xStart to xEnd
-    // The work is the negative of this area (W = -integral of F dx ... no)
-    // Actually W = integral from xi to xf of (-kx) dx
-    // The area under F(x) curve from xi to xf, where F(x) = -kx
-    // Shade segments that may cross zero
-
     const steps = 100;
     const dx = (xEnd - xStart) / steps;
-
     for (let i = 0; i < steps; i++) {
       const xA = xStart + i * dx;
       const xB = xStart + (i + 1) * dx;
       const fA = -k * xA;
       const fB = -k * xB;
-
-      // Determine if this segment contributes positive or negative work
-      // dW = F dx; if F and dx have same sign → positive work
       const avgF = (fA + fB) / 2;
       const dW = avgF * (xB - xA);
-
-      if (dW > 0) {
-        ctx.fillStyle = 'rgba(37,99,235,0.3)'; // blue = positive work
-      } else {
-        ctx.fillStyle = 'rgba(139,0,41,0.3)'; // red = negative work
-      }
-
+      ctx.fillStyle = dW > 0 ? 'rgba(37,99,235,0.3)' : 'rgba(139,0,41,0.3)';
       ctx.beginPath();
       ctx.moveTo(px(xA), py(0));
       ctx.lineTo(px(xA), py(fA));
@@ -563,7 +633,7 @@ function drawGraph(ox, oy, w, h) {
     }
   }
 
-  // Draw F(x) = -kx line
+  // F(x) = -kx line
   ctx.strokeStyle = '#8B0029';
   ctx.lineWidth = 2;
   ctx.beginPath();
@@ -571,49 +641,77 @@ function drawGraph(ox, oy, w, h) {
   ctx.lineTo(px(xRange), py(-k * xRange));
   ctx.stroke();
 
-  // Label the line
-  ctx.fillStyle = '#8B0029';
-  ctx.font = 'italic 11px sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('F = −kx', px(xRange) - 50, py(-k * xRange) - 8);
+  // F = -kx line label — fixed position in top-left corner of graph to avoid overlap
+  const fLineLabelX = ox + gx + 6;
+  const fLineLabelY = oy + gy + 4;
+  lblGraphFLine.innerHTML = kx('F = -kx');
+  lblGraphFLine.style.left = fLineLabelX + 'px';
+  lblGraphFLine.style.top = fLineLabelY + 'px';
+  lblGraphFLine.style.display = 'block';
 
-  // Mark xi position
+  // Mark xi position on graph
+  const xiPxGraph = px(xi);
+  const xCurPxGraph = px(xCur);
+
   ctx.strokeStyle = '#2563EB';
   ctx.lineWidth = 1.5;
   ctx.setLineDash([4, 3]);
   ctx.beginPath();
-  ctx.moveTo(px(xi), py(0) - 3);
-  ctx.lineTo(px(xi), py(-k * xi) + (xi > 0 ? 3 : -3));
+  ctx.moveTo(xiPxGraph, py(0) - 3);
+  ctx.lineTo(xiPxGraph, py(-k * xi) + (xi > 0 ? 3 : -3));
   ctx.stroke();
   ctx.setLineDash([]);
-  ctx.fillStyle = '#2563EB';
-  ctx.font = '10px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('x_i', px(xi), gy + gh + 18);
 
-  // Mark current x position
+  // Graph bottom labels for x_i and x — handle overlap
+  const distXiXCur = Math.abs(xCurPxGraph - xiPxGraph);
+  const showBothGraphLabels = distXiXCur > 30;
+  const graphLabelY = gy + gh + 18;
+
+  // x_i label (only if |xi| > 0.03 to avoid overlap with origin)
+  const showGraphXi = Math.abs(xi) >= 0.03;
+  if (showGraphXi) {
+    ctx.fillStyle = '#2563EB';
+    if (!showBothGraphLabels && running) {
+      // Too close — only show x_i with combined label
+      drawTextWithBg('xᵢ / x', xiPxGraph, graphLabelY, '10px sans-serif', '#2563EB', 'center');
+    } else {
+      drawTextWithBg('xᵢ', xiPxGraph, graphLabelY, '10px sans-serif', '#2563EB', 'center');
+    }
+  }
+
+  // Current x marker on graph
   ctx.fillStyle = '#8B0029';
   ctx.beginPath();
-  ctx.arc(px(xCur), py(-k * xCur), 5, 0, Math.PI * 2);
+  ctx.arc(xCurPxGraph, py(-k * xCur), 5, 0, Math.PI * 2);
   ctx.fill();
 
-  // Current x label
-  ctx.font = '10px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('x', px(xCur), gy + gh + 18);
-
-  // Work value annotation near shaded area
-  const Ws = 0.5 * k * xi * xi - 0.5 * k * xCur * xCur;
-  if (running && Math.abs(xEnd - xStart) > 0.005) {
-    const midX = (xStart + xEnd) / 2;
-    const labelY = py(0) + (Ws >= 0 ? 18 : -12);
-    ctx.fillStyle = Ws >= 0 ? '#2563EB' : '#8B0029';
-    ctx.font = 'bold 11px sans-serif';
-    ctx.textAlign = 'center';
-    // Only show if there's enough room
-    if (Math.abs(px(xEnd) - px(xStart)) > 30) {
-      ctx.fillText('W = ' + Ws.toFixed(2) + ' J', px(midX), labelY);
+  // Current x label on graph — only if different enough from x_i
+  if (showBothGraphLabels || !showGraphXi) {
+    // Also check overlap with origin
+    const distToOrigin = Math.abs(xCurPxGraph - px(0));
+    if (distToOrigin > 20) {
+      drawTextWithBg('x', xCurPxGraph, graphLabelY, '10px sans-serif', '#8B0029', 'center');
+    } else {
+      drawTextWithBg('x', xCurPxGraph, graphLabelY + 12, '10px sans-serif', '#8B0029', 'center');
     }
+  }
+
+  // Work value annotation — KaTeX overlay
+  const Ws = 0.5 * k * xi * xi - 0.5 * k * xCur * xCur;
+  if (running && Math.abs(xEnd - xStart) > 0.005 && Math.abs(px(xEnd) - px(xStart)) > 30) {
+    const midX = (xStart + xEnd) / 2;
+    const midPx = px(midX);
+    // Position: above or below the x-axis depending on sign
+    const workLabelY = oy + py(0) + (Ws >= 0 ? 20 : -18);
+    const workColor = Ws >= 0 ? '#2563EB' : '#8B0029';
+    lblGraphWork.innerHTML = kx('W = ' + Ws.toFixed(2) + '\\text{ J}');
+    lblGraphWork.style.color = workColor;
+    lblGraphWork.style.left = (ox + midPx) + 'px';
+    lblGraphWork.style.top = workLabelY + 'px';
+    lblGraphWork.style.transform = 'translateX(-50%)';
+    lblGraphWork.style.display = 'block';
+  } else {
+    lblGraphWork.style.display = 'none';
   }
 
   ctx.restore();
@@ -622,23 +720,15 @@ function drawGraph(ox, oy, w, h) {
 // ---- Event handlers ----
 slK.addEventListener('input', () => {
   if (!running) {
-    getParams();
-    x = xi;
-    v = 0;
-    updateLabels();
-    updateInfo();
-    draw();
+    getParams(); x = xi; v = 0;
+    updateLabels(); updateInfo(); draw();
   }
 });
 
 slXi.addEventListener('input', () => {
   if (!running) {
-    getParams();
-    x = xi;
-    v = 0;
-    updateLabels();
-    updateInfo();
-    draw();
+    getParams(); x = xi; v = 0;
+    updateLabels(); updateInfo(); draw();
   }
 });
 
@@ -646,6 +736,7 @@ btnRelease.addEventListener('click', release);
 btnReset.addEventListener('click', resetSim);
 
 // Init
+initKaTeXContent();
 resetSim();
 </script>
 </body>

@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>일-운동에너지 정리 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
@@ -18,9 +20,11 @@ canvas { display: block; width: 100%; height: 100%; }
 .info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
 .info-box .label { color: #8B0029; font-weight: 700; }
 .info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
-.info-box .eq { color: #555; font-size: 11.5px; }
-.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.5; }
-.theorem-box .theorem-eq { font-size: 16px; }
+.info-box .eq { color: #555; font-size: 12px; }
+.info-box .eq .katex { font-size: 13px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .theorem-eq { font-size: 16px; display: block; margin-top: 4px; }
+.theorem-box .katex { color: #fff; }
 button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
 button.reset-btn:hover { background: #a3003a; }
 .play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
@@ -28,6 +32,20 @@ button.reset-btn:hover { background: #a3003a; }
 .play-btn.running { background: #b8860b; }
 .btn-row { display: flex; gap: 8px; }
 .btn-row button { flex: 1; }
+.verify-line { text-align: center; font-weight: 700; color: #8B0029; }
+.verify-line .katex { font-size: 13px; }
+
+/* Formula overlay on canvas */
+.formula-overlay { position: absolute; bottom: 0; left: 0; right: 0; pointer-events: none; padding: 10px 20px 12px; background: rgba(250,250,250,0.92); border-top: 1px solid #eee; }
+.formula-overlay .formula-line { font-size: 15px; line-height: 1.7; color: #333; }
+.formula-overlay .formula-line.highlight { color: #8B0029; font-weight: 700; }
+.formula-overlay .formula-line .katex { font-size: 16px; }
+.formula-overlay .formula-line.highlight .katex { font-size: 16px; }
+
+/* Canvas title overlay */
+.canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 20px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 20px; color: #8B0029; }
+
 @media (max-width: 700px) {
   .container { flex-direction: column; }
   .canvas-area { height: 50vh; }
@@ -39,11 +57,17 @@ button.reset-btn:hover { background: #a3003a; }
 <div class="container">
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+    <div class="formula-overlay" id="formulaOverlay">
+      <div class="formula-line" id="formulaW"></div>
+      <div class="formula-line" id="formulaK"></div>
+      <div class="formula-line highlight" id="formulaVerify"></div>
+    </div>
   </div>
   <div class="controls">
     <div class="theorem-box">
-      일-운동에너지 정리<br>
-      <span class="theorem-eq">&Delta;K = K<sub>f</sub> &minus; K<sub>i</sub> = W</span>
+      일-운동에너지 정리
+      <span class="theorem-eq" id="theoremEq"></span>
     </div>
 
     <div class="control-group">
@@ -52,7 +76,7 @@ button.reset-btn:hover { background: #a3003a; }
     </div>
 
     <div class="control-group">
-      <label>힘의 각도 &phi; = <span id="angleVal">30</span>&deg;</label>
+      <label>힘의 각도 <span id="angleLabelPhi"></span> = <span id="angleVal">30</span>&deg;</label>
       <input type="range" id="angleSlider" min="0" max="90" value="30" step="1">
     </div>
 
@@ -65,14 +89,14 @@ button.reset-btn:hover { background: #a3003a; }
       <div><span class="label">변위 d:</span> <span class="val" id="dispInfo">0.00 m</span></div>
       <div><span class="label">속력 v:</span> <span class="val" id="speedInfo">0.00 m/s</span></div>
       <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
-      <div><span class="eq">W = Fd cos&phi;</span></div>
+      <div class="eq" id="eqWork"></div>
       <div><span class="label">일 W =</span> <span class="val" id="workInfo">0.00 J</span></div>
       <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
-      <div><span class="eq">K = &frac12;mv&sup2;</span></div>
-      <div><span class="label">K<sub>f</sub> =</span> <span class="val" id="kfInfo">0.00 J</span></div>
-      <div><span class="label">&Delta;K =</span> <span class="val" id="dkInfo">0.00 J</span></div>
+      <div class="eq" id="eqKE"></div>
+      <div><span class="label" id="kfLabel"></span> <span class="val" id="kfInfo">0.00 J</span></div>
+      <div><span class="label" id="dkLabel"></span> <span class="val" id="dkInfo">0.00 J</span></div>
       <hr style="border:none;border-top:1px solid #e0c0c8;margin:4px 0">
-      <div style="text-align:center;font-weight:700;color:#8B0029" id="verifyLine">W = &Delta;K &check;</div>
+      <div class="verify-line" id="verifyLine"></div>
     </div>
 
     <div class="btn-row">
@@ -83,6 +107,22 @@ button.reset-btn:hover { background: #a3003a; }
 </div>
 
 <script>
+// KaTeX helper
+function tex(expr) {
+  return katex.renderToString(expr, { throwOnError: false });
+}
+
+// Render static KaTeX elements
+function renderStaticKaTeX() {
+  document.getElementById('theoremEq').innerHTML = tex('\\Delta K = K_f - K_i = W');
+  document.getElementById('canvasTitle').innerHTML = '일-운동에너지 정리: ' + tex('\\Delta K = W');
+  document.getElementById('angleLabelPhi').innerHTML = tex('\\varphi');
+  document.getElementById('eqWork').innerHTML = tex('W = Fd\\cos\\varphi');
+  document.getElementById('eqKE').innerHTML = tex('K = \\tfrac{1}{2}mv^2');
+  document.getElementById('kfLabel').innerHTML = tex('K_f') + ' =';
+  document.getElementById('dkLabel').innerHTML = tex('\\Delta K') + ' =';
+}
+
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
@@ -132,9 +172,6 @@ function getState() {
   const d = xNow;
   const work = F * d * Math.cos(phi);    // W = F d cos φ
   const Kf = 0.5 * m * vNow * vNow;     // K = ½mv²
-  // Analytically: W = F cos(φ) * d = F cos(φ) * ½ a t² = F cos(φ) * ½ * (F cos(φ)/m) * t²
-  // K = ½m(at)² = ½m * (F cos(φ)/m)² * t² = (F cos(φ))² t² / (2m)
-  // These are identical, so W = K = ΔK exactly.
   return { x: xNow, v: vNow, d, work, Kf, a };
 }
 
@@ -158,14 +195,32 @@ function updateLabels() {
 }
 
 function updateInfo() {
+  const { F, phi, phiDeg, m } = getParams();
   const { d, v, work, Kf } = getState();
   document.getElementById('dispInfo').textContent = d.toFixed(2) + ' m';
   document.getElementById('speedInfo').textContent = v.toFixed(2) + ' m/s';
   document.getElementById('workInfo').textContent = work.toFixed(2) + ' J';
   document.getElementById('kfInfo').textContent = Kf.toFixed(2) + ' J';
   document.getElementById('dkInfo').textContent = Kf.toFixed(2) + ' J';
-  const verify = document.getElementById('verifyLine');
-  verify.textContent = 'W = ' + work.toFixed(2) + ' J  =  \u0394K = ' + Kf.toFixed(2) + ' J  \u2713';
+
+  // Verify line with KaTeX
+  const verifyEl = document.getElementById('verifyLine');
+  verifyEl.innerHTML = tex(
+    'W = ' + work.toFixed(2) + '\\;\\text{J} = \\Delta K = ' + Kf.toFixed(2) + '\\;\\text{J}\\;\\checkmark'
+  );
+
+  // Formula overlay
+  document.getElementById('formulaW').innerHTML = tex(
+    'W = Fd\\cos\\varphi = ' + F.toFixed(0) + ' \\times ' + d.toFixed(2) +
+    ' \\times \\cos ' + phiDeg + '^\\circ = ' + work.toFixed(2) + '\\;\\text{J}'
+  );
+  document.getElementById('formulaK').innerHTML = tex(
+    'K = \\tfrac{1}{2}mv^2 = \\tfrac{1}{2} \\times ' + m.toFixed(0) +
+    ' \\times ' + v.toFixed(2) + '^2 = ' + Kf.toFixed(2) + '\\;\\text{J}'
+  );
+  document.getElementById('formulaVerify').innerHTML = tex(
+    'W = \\Delta K = ' + work.toFixed(2) + '\\;\\text{J}\\;\\checkmark'
+  );
 }
 
 function drawArrow(x1, y1, x2, y2, color, lineWidth) {
@@ -192,17 +247,11 @@ function draw() {
   const { F, phi, phiDeg, m } = getParams();
   const { x, v, d, work, Kf } = getState();
 
-  const groundY = H * 0.65;
+  const groundY = H * 0.58;
   const trackLeft = 70;
   const trackRight = W - 30;
   const trackLen = trackRight - trackLeft;
   const pxPerMeter = trackLen / maxDisp;
-
-  // Title
-  ctx.fillStyle = '#8B0029';
-  ctx.font = 'bold 20px sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('일-운동에너지 정리:  \u0394K = W', 20, 30);
 
   // Ground
   ctx.fillStyle = '#F3F4F6';
@@ -323,7 +372,7 @@ function draw() {
   const barAreaTop = 50;
   const barWidth = 44;
   const barGap = 20;
-  const maxBarH = Math.min(H * 0.28, 140);
+  const maxBarH = Math.min(H * 0.22, 120);
   const maxE = Math.max(work, Kf, 10);
   const eScale = maxBarH / maxE;
 
@@ -373,17 +422,6 @@ function draw() {
   ctx.fillText('\u0394K', kBarX + barWidth / 2, barBaseY + 18);
   ctx.font = '13px sans-serif';
   ctx.fillText(Kf.toFixed(1), kBarX + barWidth / 2, barBaseY - kBarH - 6);
-
-  // Real-time formula on canvas
-  ctx.fillStyle = '#333';
-  ctx.font = '16px sans-serif';
-  ctx.textAlign = 'left';
-  const formulaY = H * 0.65 + 72;
-  ctx.fillText('W = Fd cos\u03C6 = ' + F.toFixed(0) + ' \u00D7 ' + d.toFixed(2) + ' \u00D7 cos' + phiDeg + '\u00B0 = ' + work.toFixed(2) + ' J', 20, formulaY);
-  ctx.fillText('K = \u00BDmv\u00B2 = \u00BD \u00D7 ' + m.toFixed(0) + ' \u00D7 ' + v.toFixed(2) + '\u00B2 = ' + Kf.toFixed(2) + ' J', 20, formulaY + 24);
-  ctx.fillStyle = '#8B0029';
-  ctx.font = 'bold 16px sans-serif';
-  ctx.fillText('W = \u0394K = ' + work.toFixed(2) + ' J  \u2713', 20, formulaY + 52);
 }
 
 function step() {
@@ -443,6 +481,9 @@ resetBtn.addEventListener('click', reset);
 });
 
 window.addEventListener('resize', resize);
+
+// Initialize after KaTeX is loaded
+renderStaticKaTeX();
 updateLabels();
 reset();
 resize();
