@@ -369,21 +369,22 @@ function draw() {
 
   // Energy bar chart (top-right area)
   const barAreaRight = W - 20;
-  const barAreaTop = 50;
+  const barTitleY = 42;
+  const barAreaTop = barTitleY + 14; // bars start below title
   const barWidth = 44;
   const barGap = 20;
-  const maxBarH = Math.min(H * 0.22, 120);
+  const maxBarH = Math.min(H * 0.20, 110);
   const maxE = Math.max(work, Kf, 10);
   const eScale = maxBarH / maxE;
 
   const barBaseY = barAreaTop + maxBarH;
 
-  // Bar chart title
+  // Bar chart title — always above bars
   ctx.fillStyle = '#444';
   ctx.font = 'bold 14px sans-serif';
   ctx.textAlign = 'center';
   const chartCenterX = barAreaRight - barWidth - barGap / 2;
-  ctx.fillText('에너지 (J)', chartCenterX, barAreaTop - 10);
+  ctx.fillText('에너지 (J)', chartCenterX, barTitleY);
 
   // Baseline
   ctx.strokeStyle = '#999';
@@ -392,6 +393,22 @@ function draw() {
   ctx.moveTo(barAreaRight - 2 * barWidth - barGap - 12, barBaseY);
   ctx.lineTo(barAreaRight + 12, barBaseY);
   ctx.stroke();
+
+  // Helper: draw bar value label — inside bar if it would overlap title
+  function drawBarValue(val, cx, barH, color) {
+    ctx.fillStyle = color;
+    ctx.font = '13px sans-serif';
+    ctx.textAlign = 'center';
+    const topOfBar = barBaseY - barH;
+    const labelAbove = topOfBar - 6;
+    if (labelAbove < barAreaTop + 4) {
+      // Would overlap title — draw inside bar
+      ctx.fillStyle = '#fff';
+      ctx.fillText(val.toFixed(1), cx, topOfBar + 16);
+    } else {
+      ctx.fillText(val.toFixed(1), cx, labelAbove);
+    }
+  }
 
   // W bar (left)
   const wBarX = barAreaRight - 2 * barWidth - barGap;
@@ -405,8 +422,7 @@ function draw() {
   ctx.font = 'bold 14px sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('W', wBarX + barWidth / 2, barBaseY + 18);
-  ctx.font = '13px sans-serif';
-  ctx.fillText(work.toFixed(1), wBarX + barWidth / 2, barBaseY - wBarH - 6);
+  drawBarValue(work, wBarX + barWidth / 2, wBarH, '#8B0029');
 
   // K bar (right)
   const kBarX = barAreaRight - barWidth;
@@ -420,8 +436,7 @@ function draw() {
   ctx.font = 'bold 14px sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('\u0394K', kBarX + barWidth / 2, barBaseY + 18);
-  ctx.font = '13px sans-serif';
-  ctx.fillText(Kf.toFixed(1), kBarX + barWidth / 2, barBaseY - kBarH - 6);
+  drawBarValue(Kf, kBarX + barWidth / 2, kBarH, '#2563EB');
 }
 
 function step() {
