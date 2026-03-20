@@ -38,6 +38,34 @@ button.reset-btn:hover { background: #a3003a; }
 .verify-line { text-align: center; font-weight: 700; color: #8B0029; font-size: 12px; margin-top: 2px; }
 .verify-line .katex { font-size: 13px; }
 
+/* KaTeX overlay labels on canvas */
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute;
+  white-space: nowrap;
+  font-size: 11px;
+  line-height: 1;
+  pointer-events: none;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.92em; }
+.canvas-overlay .katex-label.with-bg {
+  background: rgba(255,255,255,0.85);
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+.canvas-overlay .graph-title {
+  position: absolute;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: bold;
+  color: #8B0029;
+  pointer-events: none;
+}
+.canvas-overlay .graph-title .katex { font-size: 0.9em; }
+
 @media (max-width: 700px) {
   .container { flex-direction: column; }
   .canvas-area { height: 50vh; }
@@ -49,6 +77,12 @@ button.reset-btn:hover { background: #a3003a; }
 <div class="container">
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-torque" style="color:#8B0029;font-weight:bold;font-size:13px;"></div>
+      <div class="katex-label with-bg" id="lbl-wbar" style="color:#8B0029;font-weight:bold;font-size:12px;"></div>
+      <div class="graph-title" id="lbl-omega-axis"></div>
+      <div class="katex-label with-bg" id="lbl-slope" style="color:#8B0029;font-size:11px;"></div>
+    </div>
     <div class="canvas-title" id="canvasTitle"></div>
   </div>
   <div class="controls">
@@ -109,6 +143,17 @@ button.reset-btn:hover { background: #a3003a; }
 function tex(expr) {
   return katex.renderToString(expr, { throwOnError: false });
 }
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+}
+
+const lblTorque = document.getElementById('lbl-torque');
+const lblWBar = document.getElementById('lbl-wbar');
+const lblOmegaAxis = document.getElementById('lbl-omega-axis');
+const lblSlope = document.getElementById('lbl-slope');
 
 function renderStaticKaTeX() {
   document.getElementById('theoremEq').innerHTML = tex('\\tau_{\\text{net}} = I\\alpha');
@@ -311,6 +356,10 @@ function draw() {
   const { shape, tau, M, R, I } = getParams();
   const { alpha, omega, theta, K, W } = getState();
 
+  // Hide all overlays by default; show them as needed
+  lblTorque.style.display = 'none';
+  lblSlope.style.display = 'none';
+
   const objCX = CW * 0.28;
   const objCY = CH * 0.45;
   const drawR = Math.min(CW * 0.17, CH * 0.28);
@@ -338,7 +387,9 @@ function draw() {
     ctx.lineTo(ax + 10 * Math.cos(tangent + 0.4), ay + 10 * Math.sin(tangent + 0.4));
     ctx.closePath();
     ctx.fill();
-    drawTextWithBg('τ = ' + tau.toFixed(1) + ' N·m', objCX + tauArcR + 8, objCY - tauArcR * 0.6, '#8B0029', 14);
+    posLabel(lblTorque, objCX + tauArcR + 8, objCY - tauArcR * 0.6 - 10,
+      tex('\\tau = ' + tau.toFixed(1) + '\\;\\text{N·m}'));
+    lblTorque.style.display = '';
   }
 
   // Info text on canvas
@@ -400,10 +451,10 @@ function draw() {
   ctx.strokeStyle = '#8B0029';
   ctx.lineWidth = 1.5;
   ctx.strokeRect(wBarX, barBaseY - wBarH, barW, Math.max(wBarH, 1));
-  ctx.fillStyle = '#8B0029';
-  ctx.font = 'bold 13px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('W=τθ', wBarX + barW / 2, barBaseY + 18);
+  // W=τθ label via KaTeX overlay
+  posLabel(lblWBar, wBarX + barW / 2, barBaseY + 6,
+    tex('W\\!=\\!\\tau\\theta'));
+  lblWBar.style.transform = 'translateX(-50%)';
   ctx.font = '12px sans-serif';
   const wLabelY = barBaseY - wBarH - 6;
   if (wLabelY < barAreaTop + 10) {
@@ -428,10 +479,9 @@ function draw() {
   ctx.fillRect(graphLeft, graphTop, graphW, graphH);
   ctx.strokeRect(graphLeft, graphTop, graphW, graphH);
 
-  ctx.fillStyle = '#8B0029';
-  ctx.font = 'bold 13px sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('ω (rad/s)', graphLeft + 5, graphTop + 16);
+  // ω (rad/s) axis label via KaTeX overlay
+  posLabel(lblOmegaAxis, graphLeft + 5, graphTop + 4,
+    tex('\\omega\\;(\\text{rad/s})'));
 
   ctx.fillStyle = '#888';
   ctx.font = '12px sans-serif';
@@ -482,8 +532,10 @@ function draw() {
     ctx.arc(cpx, cpy, 4, 0, 2 * Math.PI);
     ctx.fill();
 
-    // Label: α = τ/I
-    drawTextWithBg('기울기 = α = τ/I = ' + alpha.toFixed(2), graphLeft + 10, graphBottom - 20, '#8B0029', 12);
+    // Label: α = τ/I via KaTeX overlay
+    posLabel(lblSlope, graphLeft + 10, graphBottom - 28,
+      tex('\\text{기울기} = \\alpha = \\tau/I = ' + alpha.toFixed(2)));
+    lblSlope.style.display = '';
   }
 }
 

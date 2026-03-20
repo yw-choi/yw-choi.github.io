@@ -35,7 +35,7 @@
 
   <!-- Equation -->
   <text x="175" y="225" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">
-    F<tspan font-size="10" dy="3">AB</tspan><tspan dy="-3"> = &minus;F</tspan><tspan font-size="10" dy="3">BA</tspan>
+    F<tspan font-size="10" dy="3">AB</tspan><tspan dy="-3"> = −F</tspan><tspan font-size="10" dy="3">BA</tspan>
   </text>
 
   <!-- Example 2: Block on Earth -->
@@ -52,15 +52,13 @@
   <!-- Weight (Earth pulls block down) - red -->
   <line x1="510" y1="230" x2="510" y2="310" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aR)"/>
   <text x="478" y="310" font-size="13" fill="#8B0029" font-weight="bold">m<tspan font-style="italic">g</tspan></text>
-  <text x="478" y="326" font-size="11" fill="#8B0029">(지구 &rarr; 물체)</text>
+  <text x="478" y="326" font-size="11" fill="#8B0029">(지구 → 물체)</text>
 
   <!-- Block pulls Earth up - blue -->
-  <line x1="540" y1="230" x2="540" y2="310" stroke="#2563EB" stroke-width="2.5" marker-end="url(#aB)"/>
-  <!-- Actually this should point up from Earth. Let me fix: the reaction is block pulling Earth UP -->
   <!-- Arrow from Earth pointing up -->
   <line x1="550" y1="310" x2="550" y2="235" stroke="#2563EB" stroke-width="2.5" marker-end="url(#aB)"/>
   <text x="575" y="280" font-size="13" fill="#2563EB" font-weight="bold">m<tspan font-style="italic">g</tspan></text>
-  <text x="575" y="296" font-size="11" fill="#2563EB">(물체 &rarr; 지구)</text>
+  <text x="575" y="296" font-size="11" fill="#2563EB">(물체 → 지구)</text>
 
   <!-- Bottom note -->
   <rect x="80" y="340" width="540" height="40" rx="8" fill="#f8f0f2" stroke="#e0c0c8" stroke-width="1"/>

@@ -63,6 +63,8 @@ label { display: block; font-size: 0.8rem; color: #555; margin-bottom: 2px; }
       <div class="katex-label with-bg" id="lbl-b" style="color:#2563EB;font-weight:bold;"></div>
       <div class="katex-label with-bg" id="lbl-s" style="color:#7c3aed;font-weight:bold;"></div>
       <div class="katex-label with-bg" id="lbl-b-shifted" style="color:#2563EB;font-weight:bold;"></div>
+      <div class="katex-label" id="lbl-ax" style="color:rgba(139,0,41,0.7);"></div>
+      <div class="katex-label" id="lbl-bx" style="color:rgba(37,99,235,0.7);"></div>
     </div>
   </div>
   <div class="controls">
@@ -171,6 +173,8 @@ const lblA = document.getElementById('lbl-a');
 const lblB = document.getElementById('lbl-b');
 const lblS = document.getElementById('lbl-s');
 const lblBShifted = document.getElementById('lbl-b-shifted');
+const lblAx = document.getElementById('lbl-ax');
+const lblBx = document.getElementById('lbl-bx');
 
 function getParams() {
   return {
@@ -354,19 +358,18 @@ function draw() {
 
     // Component labels on axes
     if (Math.abs(ax) > 0.3) {
-      ctx.fillStyle = 'rgba(139,0,41,0.7)';
-      ctx.font = '11px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'top';
-      ctx.fillText('a_x=' + ax.toFixed(1), (originX + axEnd) / 2, originY + 4);
+      posLabel(lblAx, (originX + axEnd) / 2 - 20, originY + 2, kx('a_x = ' + ax.toFixed(1)));
+    } else {
+      lblAx.style.display = 'none';
     }
     if (Math.abs(bx) > 0.3) {
-      ctx.fillStyle = 'rgba(37,99,235,0.7)';
-      ctx.font = '11px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'top';
-      ctx.fillText('b_x=' + bx.toFixed(1), (originX + bxEnd) / 2, originY + 18);
+      posLabel(lblBx, (originX + bxEnd) / 2 - 20, originY + 16, kx('b_x = ' + bx.toFixed(1)));
+    } else {
+      lblBx.style.display = 'none';
     }
+  } else {
+    lblAx.style.display = 'none';
+    lblBx.style.display = 'none';
   }
 
   // Head-to-tail: draw b shifted to tip of a

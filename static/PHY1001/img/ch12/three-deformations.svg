@@ -28,7 +28,7 @@
 
     <!-- Dimension: Delta L -->
     <line x1="60" y1="50" x2="60" y2="35" stroke="#2563EB" stroke-width="1.5"/>
-    <text x="85" y="45" font-size="13" fill="#2563EB" font-style="italic">&Delta;L</text>
+    <text x="85" y="45" font-size="13" fill="#2563EB" font-style="italic">ΔL</text>
 
     <!-- Dimension: L -->
     <line x1="-60" y1="50" x2="-60" y2="230" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
@@ -59,7 +59,7 @@
 
     <!-- Delta x -->
     <line x1="-50" y1="40" x2="-30" y2="40" stroke="#2563EB" stroke-width="1.5"/>
-    <text x="-40" y="35" font-size="13" fill="#2563EB" font-style="italic" text-anchor="middle">&Delta;x</text>
+    <text x="-40" y="35" font-size="13" fill="#2563EB" font-style="italic" text-anchor="middle">Δx</text>
 
     <!-- L dimension -->
     <line x1="-70" y1="50" x2="-70" y2="230" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
@@ -95,6 +95,6 @@
     <text x="0" y="160" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">p</text>
 
     <!-- Delta V -->
-    <text x="0" y="290" text-anchor="middle" font-size="13" fill="#2563EB" font-style="italic">&Delta;V</text>
+    <text x="0" y="290" text-anchor="middle" font-size="13" fill="#2563EB" font-style="italic">ΔV</text>
   </g>
 </svg>

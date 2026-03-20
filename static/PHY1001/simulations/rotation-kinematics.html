@@ -34,6 +34,8 @@ button.reset-btn:hover { background: #a3003a; }
 .btn-row button { flex: 1; }
 .canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 20px; font-weight: 700; color: #8B0029; }
 .canvas-title .katex { font-size: 20px; color: #8B0029; }
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.canvas-overlay span { position: absolute; white-space: nowrap; font-size: 13px; font-weight: 700; background: rgba(255,255,255,0.85); padding: 1px 4px; border-radius: 3px; }
 
 @media (max-width: 700px) {
   .container { flex-direction: column; }
@@ -46,6 +48,11 @@ button.reset-btn:hover { background: #a3003a; }
 <div class="container">
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="canvasOverlay">
+      <span id="olOmegaDir"></span>
+      <span id="olThetaAxis"></span>
+      <span id="olOmegaAxis"></span>
+    </div>
     <div class="canvas-title" id="canvasTitle"></div>
   </div>
   <div class="controls">
@@ -105,6 +112,17 @@ function renderStaticKaTeX() {
   document.getElementById('atLabel').innerHTML = tex('a_t') + ' =';
   document.getElementById('arLabel').innerHTML = tex('a_r') + ' =';
 }
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = '';
+}
+
+const olOmegaDir = document.getElementById('olOmegaDir');
+const olThetaAxis = document.getElementById('olThetaAxis');
+const olOmegaAxis = document.getElementById('olOmegaAxis');
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
@@ -309,10 +327,13 @@ function draw() {
   ctx.arc(diskCX, diskCY, 3, 0, 2 * Math.PI);
   ctx.fill();
 
-  // Angular velocity direction
+  // Angular velocity direction (KaTeX overlay)
   if (Math.abs(omega) > 0.05) {
-    const omegaDir = omega > 0 ? 'CCW ↺' : 'CW ↻';
-    drawTextWithBg('ω: ' + omegaDir, diskCX - 25, diskCY + diskR + 25, '#8B0029', 14);
+    const omegaDir = omega > 0 ? '\\text{CCW} \\circlearrowleft' : '\\text{CW} \\circlearrowright';
+    posLabel(olOmegaDir, diskCX - 25, diskCY + diskR + 12,
+      '<span style="color:#8B0029">' + tex('\\omega:\\;' + omegaDir) + '</span>');
+  } else {
+    olOmegaDir.style.display = 'none';
   }
 
   // --- Graphs (right half) ---
@@ -324,28 +345,26 @@ function draw() {
   const g1Top = 55;
   const g1Bot = CH * 0.45;
   const g1H = g1Bot - g1Top;
-  drawGraph(graphLeft, g1Top, graphW, g1H, thetaHistory, 'θ (rad)', '#8B0029');
+  drawGraph(graphLeft, g1Top, graphW, g1H, thetaHistory, '#8B0029');
+  posLabel(olThetaAxis, graphLeft + 5, g1Top + 4,
+    '<span style="color:#8B0029">' + tex('\\theta\\;(\\text{rad})') + '</span>');
 
   // ω(t) graph
   const g2Top = CH * 0.52;
   const g2Bot = CH - 25;
   const g2H = g2Bot - g2Top;
-  drawGraph(graphLeft, g2Top, graphW, g2H, omegaHistory, 'ω (rad/s)', '#2563EB');
+  drawGraph(graphLeft, g2Top, graphW, g2H, omegaHistory, '#2563EB');
+  posLabel(olOmegaAxis, graphLeft + 5, g2Top + 4,
+    '<span style="color:#2563EB">' + tex('\\omega\\;(\\text{rad/s})') + '</span>');
 }
 
-function drawGraph(gx, gy, gw, gh, data, label, color) {
+function drawGraph(gx, gy, gw, gh, data, color) {
   // Background
   ctx.fillStyle = '#fefefe';
   ctx.strokeStyle = '#ddd';
   ctx.lineWidth = 1;
   ctx.fillRect(gx, gy, gw, gh);
   ctx.strokeRect(gx, gy, gw, gh);
-
-  // Label
-  ctx.fillStyle = color;
-  ctx.font = 'bold 13px sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText(label, gx + 5, gy + 16);
 
   // Time axis
   ctx.fillStyle = '#888';

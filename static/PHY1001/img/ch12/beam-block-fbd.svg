@@ -37,6 +37,7 @@
 
   <!-- L/2 to beam center -->
   <line x1="68" y1="280" x2="308" y2="280" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="68" y1="270" x2="68" y2="290" stroke="#6B7280" stroke-width="1"/>
   <line x1="308" y1="270" x2="308" y2="290" stroke="#6B7280" stroke-width="1"/>
   <text x="188" y="275" text-anchor="middle" font-size="13" fill="#6B7280" font-style="italic">L/2</text>
 
@@ -46,7 +47,6 @@
   <text x="322" y="240" font-size="14" fill="#8B0029" font-style="italic">mg</text>
 
   <!-- Weight of block (Mg) -->
-  <line x1="382" y1="126" x2="382" y2="80" stroke="#8B0029" stroke-width="2.5"/>
   <line x1="382" y1="170" x2="382" y2="245" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arR)"/>
   <text x="396" y="240" font-size="14" fill="#8B0029" font-style="italic">Mg</text>
 

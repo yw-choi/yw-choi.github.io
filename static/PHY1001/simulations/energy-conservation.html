@@ -39,6 +39,25 @@ button.reset-btn:hover { background: #a3003a; }
 .canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
 .canvas-title .katex { font-size: 18px; color: #8B0029; }
 
+/* KaTeX overlay labels on canvas */
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute;
+  white-space: nowrap;
+  line-height: 1;
+  font-size: 13px;
+  pointer-events: none;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.92em; }
+.canvas-overlay .katex-label.with-bg {
+  background: rgba(255,255,255,0.85);
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+
 @media (max-width: 700px) {
   .container { flex-direction: column; }
   .canvas-area { height: 55vh; }
@@ -50,6 +69,11 @@ button.reset-btn:hover { background: #a3003a; }
 <div class="container">
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-e0" style="color:#8B0029;"></div>
+      <div class="katex-label" id="lbl-eth-bar" style="color:#6B7280;"></div>
+      <div class="katex-label with-bg" id="lbl-friction" style="color:rgba(200,100,0,0.85);"></div>
+    </div>
     <div class="canvas-title" id="canvasTitle"></div>
   </div>
   <div class="controls">
@@ -98,6 +122,18 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 let dpr = window.devicePixelRatio || 1;
 let CW, CH;
+
+// Overlay label references
+const lblE0 = document.getElementById('lbl-e0');
+const lblEthBar = document.getElementById('lbl-eth-bar');
+const lblFriction = document.getElementById('lbl-friction');
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
+}
 
 const heightSlider = document.getElementById('heightSlider');
 const massSlider = document.getElementById('massSlider');
@@ -266,6 +302,10 @@ function drawArrow(x1, y1, x2, y2, color, lw) {
 
 function draw() {
   ctx.clearRect(0, 0, CW, CH);
+  // Hide all overlay labels (re-shown as needed below)
+  lblE0.style.display = 'none';
+  lblEthBar.style.display = 'none';
+  lblFriction.style.display = 'none';
   const { h, m, mu, slopeLen } = getParams();
   const slopeSurfLen = Math.sqrt(slopeLen * slopeLen + h * h);
   const flatLen = trackTotalLen - slopeLen;
@@ -401,7 +441,15 @@ function draw() {
 
   drawBar(0, K, '#2563EB', 'K');
   drawBar(1, U, '#8B0029', 'U');
-  if (mu > 0) drawBar(2, Eth, '#6B7280', 'E_th');
+  if (mu > 0) drawBar(2, Eth, '#6B7280', '');
+  // E_th bar label via KaTeX overlay
+  if (mu > 0) {
+    const ethBarX = barStartX + 2 * (barW + barGap) + barW / 2;
+    posLabel(lblEthBar, ethBarX, barBaseY + 6, tex('E_{\\text{th}}'));
+    lblEthBar.style.transform = 'translateX(-50%)';
+  } else {
+    lblEthBar.style.display = 'none';
+  }
 
   // Emec line
   const emecBarH = (K + U) * eScale;
@@ -411,13 +459,15 @@ function draw() {
   ctx.lineTo(barStartX + barTotalW + 8, barBaseY - Emec0 * eScale);
   ctx.stroke();
   ctx.setLineDash([]);
-  ctx.fillStyle = '#8B0029'; ctx.font = '11px sans-serif'; ctx.textAlign = 'right';
-  ctx.fillText('E₀ = ' + Emec0.toFixed(1), barStartX - 12, barBaseY - Emec0 * eScale + 4);
+  posLabel(lblE0, barStartX - 14, barBaseY - Emec0 * eScale - 6, tex('E_0 = ' + Emec0.toFixed(1)));
+  lblE0.style.transform = 'translateX(-100%)';
 
-  // Friction indicator
+  // Friction indicator via KaTeX overlay
   if (mu > 0 && v > 0.1 && s >= slopeSurfLen * 0.1) {
-    ctx.fillStyle = 'rgba(200,100,0,0.6)'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('마찰: μk = ' + mu.toFixed(2), ballPxX, ballPxY + ballR + 20);
+    posLabel(lblFriction, ballPxX, ballPxY + ballR + 12, '마찰: ' + tex('\\mu_k = ' + mu.toFixed(2)));
+    lblFriction.style.transform = 'translateX(-50%)';
+  } else {
+    lblFriction.style.display = 'none';
   }
 }
 

@@ -30,9 +30,9 @@
   <line x1="403" y1="134" x2="350" y2="55" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arr-blue)"/>
   <text x="350" y="48" font-size="15" fill="#2563EB" font-weight="bold">v = ωr</text>
 
-  <!-- Tangential acceleration at (same direction as v for speeding up) -->
-  <line x1="403" y1="134" x2="380" y2="87" stroke="#2563EB" stroke-width="2" marker-end="url(#arr-blue)" stroke-dasharray="6 3"/>
-  <text x="395" y="80" font-size="13" fill="#2563EB" font-style="italic">a_t = αr</text>
+  <!-- Tangential acceleration at (same direction as v, offset perpendicular) -->
+  <line x1="414" y1="145" x2="391" y2="98" stroke="#2563EB" stroke-width="2" marker-end="url(#arr-blue)" stroke-dasharray="6 3"/>
+  <text x="406" y="91" font-size="13" fill="#2563EB" font-style="italic">a_t = αr</text>
 
   <!-- Radial acceleration ar (pointing inward) -->
   <line x1="403" y1="134" x2="325" y2="178" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arr-red)"/>

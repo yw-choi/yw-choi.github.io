@@ -50,9 +50,12 @@
   <line x1="540" y1="195" x2="540" y2="225" stroke="#2563EB" stroke-width="2" marker-end="url(#ar-blue)"/>
   <!-- Point 5: landing -->
   <circle cx="680" cy="380" r="5" fill="#8B0029"/>
-  <line x1="680" y1="380" x2="680" y2="300" stroke="#2563EB" stroke-width="2" marker-end="url(#ar-blue)"/>
-  <line x1="680" y1="380" x2="610" y2="300" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar-red)"/>
-  <line x1="680" y1="380" x2="610" y2="380" stroke="#2563EB" stroke-width="2" marker-end="url(#ar-blue)"/>
+  <!-- vy at landing: points DOWNWARD (projectile descending), below ground line -->
+  <line x1="680" y1="380" x2="680" y2="460" stroke="#2563EB" stroke-width="2" marker-end="url(#ar-blue)"/>
+  <!-- net velocity at landing: rightward and downward -->
+  <line x1="680" y1="380" x2="750" y2="455" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar-red)"/>
+  <!-- vx at landing: points rightward -->
+  <line x1="680" y1="380" x2="750" y2="380" stroke="#2563EB" stroke-width="2" marker-end="url(#ar-blue)"/>
   <!-- Range label -->
   <line x1="80" y1="410" x2="680" y2="410" stroke="#6B7280" stroke-width="1.5" marker-end="url(#ar-gray)"/>
   <line x1="680" y1="410" x2="80" y2="410" stroke="#6B7280" stroke-width="1.5" marker-end="url(#ar-gray)"/>

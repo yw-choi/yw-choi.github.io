@@ -1,4 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 350" font-family="sans-serif">
+  <defs>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
+    </marker>
+  </defs>
+
   <!-- Stable Equilibrium -->
   <g transform="translate(125,50)">
     <text x="0" y="0" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">안정 평형</text>
@@ -58,13 +67,5 @@
     <text x="0" y="240" text-anchor="middle" font-size="13" fill="#6B7280">어디서나 평형</text>
   </g>
 
-  <!-- Arrow markers -->
-  <defs>
-    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
-    </marker>
-    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
-    </marker>
-  </defs>
+
 </svg>

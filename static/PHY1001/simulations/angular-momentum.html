@@ -38,6 +38,9 @@ button.reset-btn:hover { background: #a3003a; }
 .formula-overlay .formula-line { font-size: 15px; line-height: 1.7; color: #333; }
 .formula-overlay .formula-line.highlight { color: #8B0029; font-weight: 700; }
 .formula-overlay .katex { font-size: 16px; }
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px; }
 
 @media (max-width: 700px) {
   .container { flex-direction: column; }
@@ -50,6 +53,11 @@ button.reset-btn:hover { background: #a3003a; }
 <div class="container">
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="canvasOverlay">
+      <div class="katex-label with-bg" id="olOmega"></div>
+      <div class="katex-label with-bg" id="olBarTitle"></div>
+      <div class="katex-label" id="olL0"></div>
+    </div>
     <div class="canvas-title" id="canvasTitle"></div>
     <div class="formula-overlay" id="formulaOverlay">
       <div class="formula-line" id="formulaI"></div>
@@ -102,6 +110,11 @@ button.reset-btn:hover { background: #a3003a; }
 
 <script>
 function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+function posLabel(el, px, py, html) { el.innerHTML = html; el.style.left = px + 'px'; el.style.top = py + 'px'; }
+
+const olOmega = document.getElementById('olOmega');
+const olBarTitle = document.getElementById('olBarTitle');
+const olL0 = document.getElementById('olL0');
 
 function renderStaticKaTeX() {
   document.getElementById('theoremEq').innerHTML = tex('I_i\\omega_i = I_f\\omega_f');
@@ -281,10 +294,11 @@ function draw() {
   ctx.closePath();
   ctx.fill();
 
-  // omega label near arrow
-  ctx.fillStyle = '#8B0029'; ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'left';
-  ctx.textBaseline = 'alphabetic';
-  ctx.fillText('ω = ' + omega.toFixed(2) + ' rad/s', centerX + arrowR + 15, centerY - arrowR * 0.3);
+  // omega label near arrow (KaTeX overlay)
+  posLabel(olOmega, centerX + arrowR + 15, centerY - arrowR * 0.3 - 8,
+    tex('\\omega = ' + omega.toFixed(2) + '\\;\\text{rad/s}'));
+  olOmega.style.color = '#8B0029';
+  olOmega.style.fontSize = '14px';
 
   // Radius label
   ctx.strokeStyle = '#2563EB'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
@@ -310,8 +324,11 @@ function draw() {
   const barH = L * barScale;
   const baseY = barY + barMaxH;
 
-  ctx.fillStyle = '#444'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
-  ctx.fillText('L (kg·m²/s)', barX + barW / 2 + 15, barY - 5);
+  // Bar chart title (KaTeX overlay)
+  posLabel(olBarTitle, barX, barY - 20,
+    tex('L\\;(\\text{kg{\\cdot}m}^2\\text{/s})'));
+  olBarTitle.style.color = '#444';
+  olBarTitle.style.fontSize = '12px';
 
   ctx.fillStyle = 'rgba(139, 0, 41, 0.7)';
   ctx.fillRect(barX, baseY - barH, barW, barH);
@@ -326,8 +343,11 @@ function draw() {
   ctx.lineTo(barX + barW + 15, baseY - l0H);
   ctx.stroke();
   ctx.setLineDash([]);
-  ctx.fillStyle = '#6B7280'; ctx.font = '11px sans-serif'; ctx.textAlign = 'left';
-  ctx.fillText('L₀', barX + barW + 18, baseY - l0H + 4);
+  // L0 reference label (KaTeX overlay)
+  posLabel(olL0, barX + barW + 18, baseY - l0H - 5,
+    tex('L_0'));
+  olL0.style.color = '#6B7280';
+  olL0.style.fontSize = '11px';
 
   ctx.fillStyle = '#8B0029'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
   ctx.fillText(L.toFixed(2), barX + barW / 2, baseY - barH - 6);

@@ -1,4 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="sans-serif">
+  <defs>
+    <marker id="ar2-gray" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#6B7280"/>
+    </marker>
+  </defs>
+
   <!-- Title -->
   <text x="400" y="35" text-anchor="middle" font-size="18" fill="#8B0029" font-weight="bold">주요 물체의 관성모멘트</text>
 
@@ -71,9 +77,4 @@
   <text x="655" y="396" text-anchor="middle" font-size="14" fill="#1a1a1a" font-weight="bold">속이 빈 구</text>
   <text x="655" y="416" text-anchor="middle" font-size="15" fill="#8B0029" font-style="italic">I = (2/3)MR²</text>
 
-  <defs>
-    <marker id="ar2-gray" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#6B7280"/>
-    </marker>
-  </defs>
 </svg>

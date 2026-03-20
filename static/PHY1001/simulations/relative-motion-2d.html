@@ -382,7 +382,7 @@ function drawRiverView(ox, oy, w, h, st, mode) {
   ctx.fillStyle = titleColor;
   ctx.beginPath();
   const boatSize = 8;
-  const headingRad = headingDeg * Math.PI / 180;
+  const headingRad = getParams().headingDeg * Math.PI / 180;
   // Point in heading direction
   const boatDir = isRiver ? headingRad : Math.atan2(st.vby_g, st.vbx_g);
   ctx.moveTo(boatPx + boatSize * Math.cos(boatDir - Math.PI / 2),

@@ -27,6 +27,9 @@ canvas { display: block; width: 100%; height: 100%; }
 .theorem-box .katex { color: #fff; }
 .canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 20px; font-weight: 700; color: #8B0029; }
 .canvas-title .katex { font-size: 20px; color: #8B0029; }
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px; }
 .status-box { border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; }
 .status-safe { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
 .status-slip { background: #fbe9e7; color: #c62828; border: 1px solid #ef9a9a; }
@@ -46,6 +49,9 @@ canvas { display: block; width: 100%; height: 100%; }
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
     <div class="canvas-title" id="canvasTitle"></div>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-theta" style="color:#6B7280;font-weight:bold;"></div>
+    </div>
   </div>
   <div class="controls">
     <div class="theorem-box">
@@ -96,6 +102,15 @@ canvas { display: block; width: 100%; height: 100%; }
 function tex(expr) {
   return katex.renderToString(expr, { throwOnError: false });
 }
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
+}
+
+const lblTheta = document.getElementById('lbl-theta');
 
 function renderStaticKaTeX() {
   document.getElementById('theoremEq1').innerHTML = tex('\\sum \\vec{F} = 0');
@@ -354,10 +369,7 @@ function draw() {
   ctx.beginPath();
   ctx.arc(baseX, baseY, arcR, -Math.PI / 2 - (Math.PI / 2 - theta), 0, false);
   ctx.stroke();
-  ctx.fillStyle = '#6B7280';
-  ctx.font = '14px sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('\u03B8 = ' + thetaDeg + '\u00B0', baseX + arcR + 5, baseY - 10);
+  posLabel(lblTheta, baseX + arcR + 5, baseY - 22, tex('\\theta = ' + thetaDeg + '^\\circ'));
 
   // Torque visualization: curved arrow at base
   if (!slipping) {

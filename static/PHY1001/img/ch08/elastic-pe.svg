@@ -1,4 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" font-family="sans-serif">
+  <defs>
+    <marker id="arrowRestoreR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#2563EB"/>
+    </marker>
+    <marker id="arrowRestoreL" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#2563EB"/>
+    </marker>
+  </defs>
   <!-- Axes -->
   <line x1="100" y1="340" x2="620" y2="340" stroke="#1a1a1a" stroke-width="1.5"/>
   <polygon points="620,340 608,336 608,344" fill="#1a1a1a"/>
@@ -45,12 +53,4 @@
   <text x="260" y="280" text-anchor="middle" font-size="12" fill="#2563EB" font-weight="bold">F</text>
   <text x="440" y="280" text-anchor="middle" font-size="12" fill="#2563EB" font-weight="bold">F</text>
 
-  <defs>
-    <marker id="arrowRestoreR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0,0 8,3 0,6" fill="#2563EB"/>
-    </marker>
-    <marker id="arrowRestoreL" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0,0 8,3 0,6" fill="#2563EB"/>
-    </marker>
-  </defs>
 </svg>

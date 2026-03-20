@@ -36,6 +36,8 @@ button.reset-btn:hover { background: #a3003a; }
 .energy-grid { display: grid; grid-template-columns: auto 1fr 1fr 1fr; gap: 2px 8px; font-size: 11.5px; line-height: 1.6; }
 .energy-grid .hdr { font-weight: 700; color: #8B0029; border-bottom: 1px solid #e0c0c8; padding-bottom: 2px; margin-bottom: 2px; }
 
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.canvas-overlay > span { position: absolute; white-space: nowrap; font-size: 13px; color: #444; }
 .canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 20px; font-weight: 700; color: #8B0029; }
 .canvas-title .katex { font-size: 20px; color: #8B0029; }
 
@@ -50,6 +52,11 @@ button.reset-btn:hover { background: #a3003a; }
 <div class="container">
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="canvasOverlay">
+      <span id="olAngle"></span>
+      <span id="olKrot"></span>
+      <span id="olKtrans"></span>
+    </div>
     <div class="canvas-title" id="canvasTitle"></div>
   </div>
   <div class="controls">
@@ -95,6 +102,16 @@ button.reset-btn:hover { background: #a3003a; }
 
 <script>
 function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+const olAngle = document.getElementById('olAngle');
+const olKrot = document.getElementById('olKrot');
+const olKtrans = document.getElementById('olKtrans');
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+}
 
 // Objects: hoop (c=1), disk (c=0.5), sphere (c=2/5)
 const objects = [
@@ -216,9 +233,10 @@ function draw() {
   ctx.beginPath();
   ctx.arc(rampRight, rampBottom, 40, Math.PI, Math.PI + theta, true);
   ctx.stroke();
-  ctx.fillStyle = '#6B7280'; ctx.font = '14px sans-serif'; ctx.textAlign = 'center';
   const aLabelAngle = Math.PI + theta / 2;
-  ctx.fillText('θ=' + thetaDeg + '°', rampRight + 55 * Math.cos(aLabelAngle), rampBottom + 55 * Math.sin(aLabelAngle));
+  const angleLabelX = rampRight + 55 * Math.cos(aLabelAngle);
+  const angleLabelY = rampBottom + 55 * Math.sin(aLabelAngle);
+  posLabel(olAngle, angleLabelX - 20, angleLabelY - 10, tex('\\theta = ' + thetaDeg + '^\\circ'));
 
   // Draw objects on incline
   const objRadius = 18; // visual radius
@@ -327,11 +345,11 @@ function drawEnergyBars() {
 
   ctx.fillStyle = '#8B0029';
   ctx.fillRect(legX, legY, 10, 10);
-  ctx.fillStyle = '#444'; ctx.fillText('K_rot', legX + 14, legY + 9);
+  posLabel(olKrot, legX + 14, legY - 3, tex('K_{\\text{rot}}'));
 
   ctx.fillStyle = '#8B002960';
   ctx.fillRect(legX, legY + 18, 10, 10);
-  ctx.fillStyle = '#444'; ctx.fillText('K_trans', legX + 14, legY + 27);
+  posLabel(olKtrans, legX + 14, legY + 15, tex('K_{\\text{trans}}'));
 
   ctx.fillStyle = '#6B728080';
   ctx.fillRect(legX, legY + 36, 10, 10);

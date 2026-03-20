@@ -54,7 +54,7 @@
 
   <!-- Angle theta at base -->
   <path d="M200,430 A60,60 0 0,0 180,395" fill="none" stroke="#6B7280" stroke-width="1.5"/>
-  <text x="208" y="412" font-size="14" fill="#6B7280" font-style="italic">&theta;</text>
+  <text x="208" y="412" font-size="14" fill="#6B7280" font-style="italic">θ</text>
 
   <!-- Weight mg at center of ladder -->
   <circle cx="290" cy="265" r="3" fill="#8B0029"/>

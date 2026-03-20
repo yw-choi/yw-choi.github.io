@@ -46,6 +46,26 @@ button.reset-btn:hover { background: #a3003a; }
 .canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 20px; font-weight: 700; color: #8B0029; }
 .canvas-title .katex { font-size: 20px; color: #8B0029; }
 
+/* KaTeX overlay labels on canvas */
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: 1;
+  pointer-events: none;
+  display: none;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.95em; }
+.canvas-overlay .katex-label.with-bg {
+  background: rgba(255,255,255,0.85);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
 @media (max-width: 700px) {
   .container { flex-direction: column; }
   .canvas-area { height: 50vh; }
@@ -57,6 +77,10 @@ button.reset-btn:hover { background: #a3003a; }
 <div class="container">
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-angle" style="color:#8B0029;"></div>
+      <div class="katex-label" id="lbl-dk" style="color:#2563EB;font-weight:bold;"></div>
+    </div>
     <div class="canvas-title" id="canvasTitle"></div>
     <div class="formula-overlay" id="formulaOverlay">
       <div class="formula-line" id="formulaW"></div>
@@ -110,6 +134,18 @@ button.reset-btn:hover { background: #a3003a; }
 // KaTeX helper
 function tex(expr) {
   return katex.renderToString(expr, { throwOnError: false });
+}
+
+// Overlay label refs
+const lblAngle = document.getElementById('lbl-angle');
+const lblDK = document.getElementById('lbl-dk');
+
+// Position a KaTeX overlay label at (px, py) in CSS pixels relative to canvas
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
 }
 
 // Render static KaTeX elements
@@ -345,12 +381,14 @@ function draw() {
     ctx.beginPath();
     ctx.arc(forceStartX, forceStartY, arcR, 0, -phi, true);
     ctx.stroke();
-    // Angle label
+    // Angle label — KaTeX overlay
     const labelAngle = -phi / 2;
-    ctx.fillStyle = '#8B0029';
-    ctx.font = '16px sans-serif';
-    ctx.textAlign = 'left';
-    ctx.fillText('\u03C6 = ' + phiDeg + '\u00B0', forceStartX + arcR * Math.cos(labelAngle) + 6, forceStartY + arcR * Math.sin(labelAngle) + 5);
+    const angleLabelX = forceStartX + arcR * Math.cos(labelAngle) + 6;
+    const angleLabelY = forceStartY + arcR * Math.sin(labelAngle) - 6;
+    posLabel(lblAngle, angleLabelX, angleLabelY,
+      tex('\\varphi = ' + phiDeg + '^\\circ'));
+  } else {
+    lblAngle.style.display = 'none';
   }
 
   // Velocity arrow (blue, horizontal, above block)
@@ -432,10 +470,9 @@ function draw() {
   ctx.strokeStyle = '#2563EB';
   ctx.lineWidth = 1.5;
   ctx.strokeRect(kBarX, barBaseY - kBarH, barWidth, Math.max(kBarH, 1));
-  ctx.fillStyle = '#2563EB';
-  ctx.font = 'bold 14px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('\u0394K', kBarX + barWidth / 2, barBaseY + 18);
+  // ΔK bar label — KaTeX overlay
+  posLabel(lblDK, kBarX + barWidth / 2 - 10, barBaseY + 4,
+    tex('\\Delta K'));
   drawBarValue(Kf, kBarX + barWidth / 2, kBarH, '#2563EB');
 }
 

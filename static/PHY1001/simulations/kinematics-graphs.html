@@ -34,6 +34,9 @@ button.reset-btn:hover { background: #a3003a; }
 .btn-row button { flex: 1; }
 .canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
 .canvas-title .katex { font-size: 18px; color: #8B0029; }
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px; }
 
 @media (max-width: 700px) {
   .container { flex-direction: column; }
@@ -47,6 +50,9 @@ button.reset-btn:hover { background: #a3003a; }
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
     <div class="canvas-title" id="canvasTitle"></div>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label" id="lbl-a-yaxis" style="color:#6B7280;font-weight:bold;"></div>
+    </div>
   </div>
   <div class="controls">
     <div class="theorem-box">
@@ -92,6 +98,15 @@ button.reset-btn:hover { background: #a3003a; }
 function tex(expr) {
   return katex.renderToString(expr, { throwOnError: false });
 }
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
+}
+
+const lblAYAxis = document.getElementById('lbl-a-yaxis');
 
 function renderStaticKaTeX() {
   document.getElementById('theoremEq').innerHTML = tex('x = x_0 + v_0 t + \\tfrac{1}{2}at^2');
@@ -387,10 +402,15 @@ function draw() {
     drawTextWithBg(g.fn(t).toFixed(2), curPx + 10, curPy - 8, g.color, 12, 'left');
 
     // Y-axis label
-    ctx.fillStyle = g.color;
-    ctx.font = 'bold 13px sans-serif';
-    ctx.textAlign = 'right';
-    ctx.fillText(g.yLabel, graphLeft - 6, gMid + 5);
+    if (idx === 2) {
+      // Use KaTeX overlay for a (m/s²)
+      posLabel(lblAYAxis, graphLeft - 70, gMid - 8, tex('a\\;(\\text{m/s}^2)'));
+    } else {
+      ctx.fillStyle = g.color;
+      ctx.font = 'bold 13px sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(g.yLabel, graphLeft - 6, gMid + 5);
+    }
 
     // Graph label
     ctx.fillStyle = g.color;
