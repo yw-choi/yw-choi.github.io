@@ -175,7 +175,7 @@ c-16-25.333-24-45-24-59z"/></svg></span></span></span></span></span></span></spa
       btn.disabled = true;
       btn.textContent = '보내는 중...';
       try {
-        const res = await fetch('/PHY1001/api/feedback', {
+        const res = await fetch('https://vesper.sogang.ac.kr/PHY1001/api/feedback', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ lecture: topic || '(홈페이지)', content, name }),
