@@ -507,7 +507,7 @@ function drawMomentumBars() {
   const barX = W - 200;
   const barTopY = 30;
   const barW = 35;
-  const barGap = 10;
+  const barGap = 16;
   const maxBarH = H * 0.15;
   const maxP = Math.max(Math.abs(m1 * v1i) + Math.abs(m2 * v2i), Math.abs(pi_total), 1);
   const scale = maxBarH / maxP;
@@ -581,7 +581,7 @@ function drawEnergyBars() {
   const barX = W - 200;
   const barTopY = H * 0.30;
   const barW = 35;
-  const barGap = 10;
+  const barGap = 16;
   const maxBarH = H * 0.13;
   const maxK = Math.max(Ki, 1);
   const scale = maxBarH / maxK;
