@@ -436,6 +436,39 @@ function draw() {
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
   ctx.fillText('벡터 덧셈: ', 14, 12);
+
+  // --- Overlap resolution for overlay labels ---
+  resolveOverlaps();
+}
+
+function resolveOverlaps() {
+  const labelEls = [lblA, lblB, lblS, lblBShifted, lblAx, lblBx];
+  // Collect visible labels with their rects
+  const items = [];
+  for (const el of labelEls) {
+    if (el.style.display === 'none') continue;
+    const r = el.getBoundingClientRect();
+    if (r.width === 0 && r.height === 0) continue;
+    items.push({ el, rect: r });
+  }
+  // For each pair, check overlap and nudge the second one vertically
+  const MIN_GAP = 4; // px gap desired between labels
+  for (let i = 0; i < items.length; i++) {
+    for (let j = i + 1; j < items.length; j++) {
+      const a = items[i].el.getBoundingClientRect();
+      const b = items[j].el.getBoundingClientRect();
+      // Check if they overlap (rects intersect)
+      const overlapX = a.left < b.right && a.right > b.left;
+      const overlapY = a.top < b.bottom && a.bottom > b.top;
+      if (overlapX && overlapY) {
+        // Compute how much they overlap vertically
+        const overlapAmt = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) + MIN_GAP;
+        // Move the second label down by the overlap amount
+        const currentTop = parseFloat(items[j].el.style.top) || 0;
+        items[j].el.style.top = (currentTop + overlapAmt) + 'px';
+      }
+    }
+  }
 }
 
 function update() {

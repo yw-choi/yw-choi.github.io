@@ -35,6 +35,8 @@ button.reset-btn:hover { background: #a3003a; }
 .canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
 .canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
 .canvas-overlay .katex-label .katex { font-size: 0.92em; }
+.canvas-overlay .katex-label.bar-label { font-size: 9.5px; }
+.canvas-overlay .katex-label.bar-label .katex { font-size: 0.85em; }
 .canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px; }
 .canvas-overlay .chart-title { position: absolute; white-space: nowrap; font-size: 12px; font-weight: bold; color: #444; pointer-events: none; }
 .canvas-overlay .chart-title .katex { font-size: 0.9em; }
@@ -62,21 +64,21 @@ button.reset-btn:hover { background: #a3003a; }
       <div class="katex-label with-bg" id="lbl-v2" style="color:#2563EB;font-weight:bold;"></div>
       <!-- Momentum chart -->
       <div class="chart-title" id="lbl-mom-title"></div>
-      <div class="katex-label" id="lbl-p1" style="color:#8B0029;"></div>
-      <div class="katex-label" id="lbl-p2" style="color:#2563EB;"></div>
-      <div class="katex-label" id="lbl-pt" style="color:#444;font-weight:bold;"></div>
-      <div class="katex-label" id="lbl-p1v" style="color:#8B0029;"></div>
-      <div class="katex-label" id="lbl-p2v" style="color:#2563EB;"></div>
-      <div class="katex-label" id="lbl-ptv" style="color:#444;font-weight:bold;"></div>
+      <div class="katex-label bar-label" id="lbl-p1" style="color:#8B0029;"></div>
+      <div class="katex-label bar-label" id="lbl-p2" style="color:#2563EB;"></div>
+      <div class="katex-label bar-label" id="lbl-pt" style="color:#444;font-weight:bold;"></div>
+      <div class="katex-label bar-label" id="lbl-p1v" style="color:#8B0029;"></div>
+      <div class="katex-label bar-label" id="lbl-p2v" style="color:#2563EB;"></div>
+      <div class="katex-label bar-label" id="lbl-ptv" style="color:#444;font-weight:bold;"></div>
       <!-- Energy chart -->
       <div class="chart-title" id="lbl-eng-title"></div>
       <div class="katex-label" id="lbl-ki-ref" style="color:#aaa;"></div>
-      <div class="katex-label" id="lbl-k1" style="color:#8B0029;"></div>
-      <div class="katex-label" id="lbl-k2" style="color:#2563EB;"></div>
-      <div class="katex-label" id="lbl-kt" style="color:#444;font-weight:bold;"></div>
-      <div class="katex-label" id="lbl-k1v" style="color:#8B0029;"></div>
-      <div class="katex-label" id="lbl-k2v" style="color:#2563EB;"></div>
-      <div class="katex-label" id="lbl-ktv" style="color:#444;font-weight:bold;"></div>
+      <div class="katex-label bar-label" id="lbl-k1" style="color:#8B0029;"></div>
+      <div class="katex-label bar-label" id="lbl-k2" style="color:#2563EB;"></div>
+      <div class="katex-label bar-label" id="lbl-kt" style="color:#444;font-weight:bold;"></div>
+      <div class="katex-label bar-label" id="lbl-k1v" style="color:#8B0029;"></div>
+      <div class="katex-label bar-label" id="lbl-k2v" style="color:#2563EB;"></div>
+      <div class="katex-label bar-label" id="lbl-ktv" style="color:#444;font-weight:bold;"></div>
     </div>
     <div class="canvas-title" id="canvasTitle"></div>
     <div class="formula-overlay" id="formulaOverlay">
@@ -353,6 +355,25 @@ function mToPixel(xm) {
   return trackLeft + (xm - trackMin) / (trackMax - trackMin) * (trackRight - trackLeft);
 }
 
+function fixBarLabelOverlap(labels) {
+  // Check adjacent label pairs; if they overlap horizontally, nudge them apart vertically
+  for (let i = 0; i < labels.length - 1; i++) {
+    const a = labels[i];
+    const b = labels[i + 1];
+    if (a.style.display === 'none' || b.style.display === 'none') continue;
+    const ra = a.getBoundingClientRect();
+    const rb = b.getBoundingClientRect();
+    if (ra.width === 0 || rb.width === 0) continue;
+    const hOverlap = ra.right > rb.left - 2 && ra.left < rb.right + 2;
+    const vOverlap = Math.abs(ra.top - rb.top) < Math.max(ra.height, rb.height) + 2;
+    if (hOverlap && vOverlap) {
+      // Shift the second label down by the height of the first label + small gap
+      const curTop = parseFloat(b.style.top) || 0;
+      b.style.top = (curTop + ra.height + 4) + 'px';
+    }
+  }
+}
+
 function draw() {
   ctx.clearRect(0, 0, W, H);
   const { m1, m2, v1i, v2i, type } = getParams();
@@ -439,7 +460,13 @@ function draw() {
       const arrowX = bx2 + bw2 / 2;
       const arrowY = by2 - 15;
       drawArrow(arrowX, arrowY, arrowX + vLen * vDir, arrowY, '#2563EB', 2.5);
-      posLabel(lblV2, arrowX + vLen * vDir / 2, arrowY - 12,
+      let lbl2X = arrowX + vLen * vDir / 2;
+      let lbl2Y = arrowY - 12;
+      if (vLen < 40) {
+        lbl2X = arrowX + vLen * vDir + (vDir > 0 ? 20 : -20);
+        lbl2Y = arrowY - 14;
+      }
+      posLabel(lblV2, lbl2X, lbl2Y,
         tex('v_2 = ' + v2.toFixed(1) + '\\;\\text{m/s}'));
     } else {
       hideLabel(lblV2);
@@ -474,7 +501,15 @@ function draw() {
     const v1Tex = merged
       ? tex('v = ' + v1.toFixed(1) + '\\;\\text{m/s}')
       : tex('v_1 = ' + v1.toFixed(1) + '\\;\\text{m/s}');
-    posLabel(lblV1, arrowX + vLen * vDir / 2, arrowY - 12, v1Tex);
+    // If arrow is short, place label at arrow tip + offset to avoid overlap with mass label inside block
+    let lblX = arrowX + vLen * vDir / 2;
+    let lblY = arrowY - 12;
+    if (vLen < 40) {
+      // Place at the arrow tip, offset further from block
+      lblX = arrowX + vLen * vDir + (vDir > 0 ? 20 : -20);
+      lblY = arrowY - 14;
+    }
+    posLabel(lblV1, lblX, lblY, v1Tex);
   } else {
     hideLabel(lblV1);
   }
@@ -495,6 +530,13 @@ function draw() {
   drawMomentumBars();
   // Energy bars
   drawEnergyBars();
+
+  // Post-draw overlap fix for bar chart bottom labels
+  fixBarLabelOverlap([lblP1, lblP2, lblPt]);
+  fixBarLabelOverlap([lblK1, lblK2, lblKt]);
+  // Also fix value labels above bars
+  fixBarLabelOverlap([lblP1v, lblP2v, lblPtv]);
+  fixBarLabelOverlap([lblK1v, lblK2v, lblKtv]);
 }
 
 function drawMomentumBars() {

@@ -410,11 +410,17 @@ function drawScene(p, ox, oy, w, h) {
     ctx.arc(originX, originY, arcR, 0, -p.phi, p.phi > 0);
     ctx.stroke();
 
-    // Phi label (KaTeX overlay)
-    const phiMid = -p.phi / 2;
-    const phiLblX = ox + originX + arcR * Math.cos(phiMid) + 6;
-    const phiLblY = oy + originY + arcR * Math.sin(phiMid) - 8;
-    posLabel(lblPhiAngle, phiLblX, phiLblY, kx('\\phi = ' + p.phiDeg + '^\\circ'));
+    // Phi label (KaTeX overlay) — hide when vectors are too short
+    const minVecLen = Math.min(p.a, p.b) * scale;
+    if (minVecLen > 50) {
+      const phiMid = -p.phi / 2;
+      const phiR = arcR + 14;
+      const phiLblX = ox + originX + phiR * Math.cos(phiMid) + 6;
+      const phiLblY = oy + originY + phiR * Math.sin(phiMid) - 8;
+      posLabel(lblPhiAngle, phiLblX, phiLblY, kx('\\phi = ' + p.phiDeg + '^\\circ'));
+    } else {
+      lblPhiAngle.style.display = 'none';
+    }
   } else {
     lblPhiAngle.style.display = 'none';
   }
@@ -426,21 +432,46 @@ function drawScene(p, ox, oy, w, h) {
   // Vector labels with overlap prevention
   let lblAx = ox + aEndX + 6, lblAy = oy + aEndY - 16;
   let lblBx = ox + bEndX + 6, lblBy = oy + bEndY - 16;
-  const dist = Math.sqrt((lblAx - lblBx) ** 2 + (lblAy - lblBy) ** 2);
-  if (dist < 30) {
-    // Vectors nearly coincident — offset b label vertically
-    lblBy = lblAy - 24;
+
+  // Check a-b label overlap
+  const distAB = Math.sqrt((lblAx - lblBx) ** 2 + (lblAy - lblBy) ** 2);
+  if (distAB < 25) {
+    // Vectors nearly coincident — offset b label upward
+    lblBy = lblAy - 22;
+    // Also offset bx to avoid horizontal stacking
+    lblBx = lblBx + 4;
   }
+
   posLabel(lblA, lblAx, lblAy, kx('\\vec{a}'));
   posLabel(lblB, lblBx, lblBy, kx('\\vec{b}'));
+
+  // Post-positioning overlap check: phi label vs a label
+  if (lblPhiAngle.style.display !== 'none') {
+    const phiRect = { x: parseFloat(lblPhiAngle.style.left), y: parseFloat(lblPhiAngle.style.top), w: 70, h: 18 };
+    const aRect = { x: lblAx, y: lblAy, w: 30, h: 18 };
+    if (Math.abs(phiRect.x - aRect.x) < 50 && Math.abs(phiRect.y - aRect.y) < 25) {
+      // Move phi label further away from vector a
+      const curPhiY = parseFloat(lblPhiAngle.style.top);
+      lblPhiAngle.style.top = (curPhiY - 20) + 'px';
+    }
+  }
 
   // Dot product result display (top-right of scene for dot mode)
   if (mode === 'dot') {
     const dot = p.a * p.b * Math.cos(p.phi);
-    posLabel(lblResult, ox + w - 180, oy + 16,
+    let resultX = ox + w - 180, resultY = oy + 16;
+    posLabel(lblResult, resultX, resultY,
       kx('\\vec{a}\\cdot\\vec{b} = ' + dot.toFixed(2)));
     lblResult.style.color = dot >= 0 ? '#8B0029' : '#d32f2f';
     lblResult.style.fontSize = '15px';
+
+    // Check overlap between lbl-a and lbl-result
+    const distAR = Math.sqrt((lblAx - resultX) ** 2 + (lblAy - resultY) ** 2);
+    if (distAR < 50) {
+      // Move result label further up/right to avoid overlap
+      posLabel(lblResult, resultX, resultY - 20,
+        kx('\\vec{a}\\cdot\\vec{b} = ' + dot.toFixed(2)));
+    }
   }
 
   // Title
