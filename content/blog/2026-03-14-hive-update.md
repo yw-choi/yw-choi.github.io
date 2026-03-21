@@ -15,14 +15,14 @@ sogang-qmp/hive-cli      Go CLI — Claude Code가 사용하는 도구
 sogang-qmp/hive-mcp      TypeScript MCP 서버 — Claude.ai(웹)가 사용하는 도구
 ```
 
-접근 경로가 두 가지인 이유는 간단하다. Claude Code(터미널)와 Claude.ai(웹브라우저)는 외부 도구에 접근하는 방식이 다르기 때문이다.
+Claude Code(터미널)는 CLI를 직접 실행할 수 있지만, Claude.ai(웹)는 MCP를 통해야 한다. 그래서 도구가 두 개다.
 
 | 환경 | 도구 | 작동 방식 |
 |------|------|-----------|
-| **Claude Code** (터미널) | hive-cli | Claude Code가 `hive` 명령어를 직접 실행 |
-| **Claude.ai** (웹) | hive-mcp | MCP 프로토콜로 vesper 서버의 MCP 서버에 연결 |
+| **Claude Code** (터미널) | hive-cli | `hive` 명령어를 직접 실행 |
+| **Claude.ai** (웹) | hive-mcp | MCP 프로토콜로 vesper 서버에 연결 |
 
-두 경로 모두 최종적으로 GitHub API(`gh` CLI)를 통해 `sogang-qmp` org의 리포지토리들을 읽고 쓴다.
+두 경로 모두 최종적으로 `gh` CLI를 통해 `sogang-qmp` org의 리포지토리들을 읽고 쓴다.
 
 ## hive (명세와 문서)
 
@@ -67,11 +67,11 @@ hive schema <command>          명령어의 입출력 스키마 출력
 
 **2. 자기 기술적(self-describing) 스키마**
 
-`hive schema projects`를 실행하면 해당 명령어의 플래그, 타입, 기본값, 응답 구조가 JSON으로 출력된다. AI agent가 도구를 사용하기 전에 스키마를 먼저 확인할 수 있다. MCP의 tool schema와 같은 역할을 CLI에서 구현한 것이다.
+`hive schema projects`를 실행하면 해당 명령어의 플래그, 타입, 기본값, 응답 구조가 JSON으로 출력된다. MCP의 tool schema와 같은 역할을 CLI에서 구현한 것이다.
 
 **3. `--fields` 플래그로 컨텍스트 윈도우 절약**
 
-`hive projects --fields id,status,title`처럼 필요한 필드만 요청할 수 있다. 프로젝트 10개의 전체 정보를 모두 받을 필요 없이, AI agent가 현재 작업에 필요한 필드만 골라서 컨텍스트 윈도우를 아낀다.
+`hive projects --fields id,status,title`처럼 필요한 필드만 요청할 수 있다. AI agent가 컨텍스트 윈도우를 아끼면서 작업할 수 있다.
 
 **4. 구조화된 에러**
 
@@ -105,13 +105,9 @@ hive schema <command>          명령어의 입출력 스키마 출력
 
 [sogang-qmp/hive-mcp](https://github.com/sogang-qmp/hive-mcp)는 연구실 서버(vesper)에서 돌아가는 MCP 서버다. Claude.ai 웹에서 연구실 GitHub 리포에 접근할 수 있게 해준다.
 
-### 왜 필요한가
-
-Claude Code는 터미널이니까 `gh` CLI나 `hive` CLI를 직접 실행할 수 있다. 하지만 Claude.ai(웹)는 그럴 수 없다. MCP(Model Context Protocol)를 통해 외부 도구에 접근해야 한다. hive-mcp가 그 다리 역할을 한다.
-
 ### 인증
 
-GitHub OAuth를 통해 사용자별로 인증한다. Claude.ai에서 hive-mcp에 연결하면 GitHub 로그인 페이지로 리다이렉트되고, 인증이 완료되면 해당 사용자의 GitHub 토큰으로 모든 작업이 수행된다. 서비스 계정을 공유하지 않으므로 각 사용자의 권한 범위 내에서만 동작한다.
+GitHub OAuth로 사용자별로 인증한다. Claude.ai에서 hive-mcp에 연결하면 GitHub 로그인으로 리다이렉트되고, 이후 해당 사용자의 토큰으로 작업이 수행된다.
 
 ### 제공하는 도구 (16개)
 
@@ -156,6 +152,4 @@ GitHub OAuth를 통해 사용자별로 인증한다. Claude.ai에서 hive-mcp에
          ├── 002-bgw-eval
          └── ...
 ```
-
-`hive` 리포는 시스템의 명세와 규칙을 정의하고, `hive-cli`와 `hive-mcp`는 각각 다른 환경에서 그 규칙에 따라 GitHub 리포들을 조작하는 도구다.
 
