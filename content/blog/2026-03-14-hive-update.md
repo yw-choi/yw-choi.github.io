@@ -2,7 +2,7 @@
 title: "Hive 업데이트: AI-Native CLI와 MCP 서버"
 date: 2026-03-14
 tags: ["lab", "ai", "github", "hive", "mcp", "cli"]
-draft: false
+draft: true
 ---
 
 [이전 글](/blog/2026-03-11-hive/)에서 Hive의 기본 설계를 소개했다. 그 후 3일 동안 핵심 도구 두 가지를 만들었다: [hive-cli](https://github.com/sogang-qmp/hive-cli)와 [hive-mcp](https://github.com/sogang-qmp/hive-mcp). 이 글에서는 세 리포지토리의 역할과 설계를 정리한다.

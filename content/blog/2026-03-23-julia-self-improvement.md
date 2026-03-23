@@ -2,7 +2,7 @@
 title: "Julia의 자기 개선 루프"
 date: 2026-03-23
 tags: ["ai", "agent", "claude", "architecture", "personal-ai"]
-draft: false
+draft: true
 ---
 
 [Julia](/blog/2026-03-21-julia-design/)는 Slack과 Gmail로 지시를 받아 일하는 AI 에이전트다. 그런데 지시를 받아서만 일하면 시스템이 개선되지 않는다. 에러가 나도 사람이 발견할 때까지 방치되고, 더 나은 방법이 있어도 알아서 찾아보지 않는다. Julia에는 이 문제를 해결하는 세 가지 자동 피드백 루프가 있다.

@@ -2,7 +2,7 @@
 title: "Julia: Slack과 Gmail로 쓰는 개인 AI 에이전트"
 date: 2026-03-21
 tags: ["ai", "agent", "claude", "architecture", "personal-ai"]
-draft: false
+draft: true
 ---
 
 Anthropic의 [Claude Code Channels](https://docs.claude.ai/en/docs/claude-code-channels)나 [OpenClaw](https://github.com/anthropics/openclaw) 같은 제품들이 나오고 있다. 이와 비슷하게 터미널이 아닌 Slack이나 이메일로 AI 에이전트와 대화하고, 여러 작업을 독립적인 쓰레드로 동시에 맡기는 걸 구현했다. 연구실 서버(vesper)에서 Python daemon으로 돌아가며, Slack DM이나 Gmail로 지시를 내리면 Claude Code가 실행되어 작업하고 같은 채널로 결과를 돌려준다.

@@ -2,7 +2,7 @@
 title: "일반물리 강의 홈페이지를 직접 만들었다"
 date: 2026-03-22
 tags: ["education", "physics", "web", "astro", "ai", "claude"]
-draft: false
+draft: true
 ---
 
 일반물리 I (PHY1001) 강의 홈페이지를 Astro + Markdown으로 만들었다. 핵심 아이디어는 단순하다: **슬라이드, 시뮬레이션, 아이패드 판서를 웹 브라우저 하나에서 전부 처리한다.** → [yw-choi.github.io/PHY1001](https://yw-choi.github.io/PHY1001/)
