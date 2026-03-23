@@ -24,8 +24,7 @@ Python daemon은 얇다. Slack Socket Mode와 Gmail Pub/Sub에서 이벤트를 �
 
 핵심 기능은 여러 작업을 동시에 맡길 수 있다는 것이다. Slack 쓰레드 하나, Gmail 쓰레드 하나가 각각 독립적인 Claude Code 세션에 매핑된다. 연구 계산 결과를 분석시키면서 동시에 다른 쓰레드에서 이메일 초안을 작성시킬 수 있다.
 
-내부적으로 `dispatcher.py`가 이걸 관리한다. 각 쓰레드는 `slack:{thread_ts}` 또는 `email:{thread_id}` 형태의 키를 갖고, 세션 ID가 `state/sessions.json`에 매핑된다. 같은 쓰레드의 후속 메시지는 `claude --resume {session_id}`로 이전 컨텍스트를 이어받는다. 같은 쓰레드 내에서는 asyncio lock으로 직렬화하고, 다른 쓰레드끼리는 세마포어(최대 10개)로 병렬 실행한다. stdout은 pipe 대신 tempfile로 받아서 64KB 버퍼 데드락을 피한다.
-
+내부적으로 `dispatcher.py`가 이걸 관리한다. 각 쓰레드는 `slack:{thread_ts}` 또는 `email:{thread_id}` 형태의 키를 갖고, 세션 ID가 `state/sessions.json`에 매핑된다. 같은 쓰레드의 후속 메시지는 `claude --resume {session_id}`로 이전 컨텍스트를 이어받는다. 같은 쓰레드 내에서는 asyncio lock으로 직렬화하고, 다른 쓰레드끼리는 세마포어(최대 10개)로 병렬 실행한다.
 ## 채널
 
 **Slack**: Socket Mode로 연결한다. DM과 `#julia-assistant` 채널에서는 모든 메시지에 반응하고, 다른 채널에서는 @멘션에만 반응한다. 메시지를 받으면 즉시 :eyes: 이모지를 달고, 완료하면 :white_check_mark:으로 바꾼다. Claude Code가 응답할 때는 `bin/slack_send.py` CLI를 호출한다.
