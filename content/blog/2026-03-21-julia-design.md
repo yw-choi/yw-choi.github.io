@@ -27,7 +27,7 @@ Python daemon은 얇다. Slack Socket Mode와 Gmail Pub/Sub에서 이벤트를 �
 내부적으로 `dispatcher.py`가 이걸 관리한다. 각 쓰레드는 `slack:{thread_ts}` 또는 `email:{thread_id}` 형태의 키를 갖고, 세션 ID가 `state/sessions.json`에 매핑된다. 같은 쓰레드의 후속 메시지는 `claude --resume {session_id}`로 이전 컨텍스트를 이어받는다. 같은 쓰레드 내에서는 asyncio lock으로 직렬화하고, 다른 쓰레드끼리는 세마포어(최대 10개)로 병렬 실행한다.
 ## 채널
 
-**Slack**: Socket Mode로 연결한다. DM과 `#julia-assistant` 채널에서는 모든 메시지에 반응하고, 다른 채널에서는 @멘션에만 반응한다. 메시지를 받으면 즉시 :eyes: 이모지를 달고, 완료하면 :white_check_mark:으로 바꾼다. Claude Code가 응답할 때는 `bin/slack_send.py` CLI를 호출한다.
+**Slack**: Socket Mode로 연결한다. DM에서는 모든 메시지에 반응하고, 채널에서는 @멘션에만 반응한다. 메시지를 받으면 즉시 :eyes: 이모지를 달고, 완료하면 :white_check_mark:으로 바꾼다. Claude Code가 응답할 때는 `bin/slack_send.py` CLI를 호출한다.
 
 **Gmail**: GCP Pub/Sub pull로 새 메일 알림을 받는다. 전용 계정(`julia.agent10@gmail.com`)을 쓰고, 허용된 발신자 목록(`JULIA_ALLOWED_SENDERS`)의 메일만 처리한다. 스팸, 프로모션, 자기가 보낸 메일은 걸러낸다. watch는 만료 하루 전에 자동 갱신된다.
 
