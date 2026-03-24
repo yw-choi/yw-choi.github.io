@@ -11,49 +11,49 @@
     </marker>
   </defs>
   <!-- Frame A axes -->
-  <line x1="80" y1="320" x2="280" y2="320" stroke="#6B7280" stroke-width="1.5" marker-end="url(#m-gry)"/>
-  <line x1="80" y1="320" x2="80" y2="120" stroke="#6B7280" stroke-width="1.5" marker-end="url(#m-gry)"/>
+  <line x1="80" y1="320" x2="280" y2="320" stroke="#6B7280" stroke-width="2" marker-end="url(#m-gry)"/>
+  <line x1="80" y1="320" x2="80" y2="120" stroke="#6B7280" stroke-width="2" marker-end="url(#m-gry)"/>
   <text x="260" y="345" font-size="14" fill="#6B7280" font-style="italic">x_A</text>
   <text x="55" y="130" font-size="14" fill="#6B7280" font-style="italic">y_A</text>
-  <text x="65" y="345" font-size="15" fill="#6B7280" font-weight="bold">A</text>
+  <text x="65" y="345" font-size="14" fill="#6B7280" font-weight="bold">A</text>
   <!-- Frame B axes -->
-  <line x1="350" y1="280" x2="550" y2="280" stroke="#2563EB" stroke-width="1.5" marker-end="url(#m-blue)"/>
-  <line x1="350" y1="280" x2="350" y2="80" stroke="#2563EB" stroke-width="1.5" marker-end="url(#m-blue)"/>
+  <line x1="350" y1="280" x2="550" y2="280" stroke="#2563EB" stroke-width="2" marker-end="url(#m-blue)"/>
+  <line x1="350" y1="280" x2="350" y2="80" stroke="#2563EB" stroke-width="2" marker-end="url(#m-blue)"/>
   <text x="530" y="305" font-size="14" fill="#2563EB" font-style="italic">x_B</text>
   <text x="325" y="90" font-size="14" fill="#2563EB" font-style="italic">y_B</text>
-  <text x="335" y="305" font-size="15" fill="#2563EB" font-weight="bold">B</text>
+  <text x="335" y="305" font-size="14" fill="#2563EB" font-weight="bold">B</text>
   <!-- r_BA vector (A origin to B origin) -->
   <line x1="80" y1="320" x2="344" y2="283" stroke="#6B7280" stroke-width="2" marker-end="url(#m-gry)"/>
   <text x="180" y="315" font-size="14" fill="#6B7280" font-style="italic">r</text>
   <text x="190" y="320" font-size="10" fill="#6B7280">BA</text>
   <!-- Particle P -->
   <circle cx="520" cy="150" r="8" fill="#8B0029"/>
-  <text x="532" y="148" font-size="16" fill="#8B0029" font-weight="bold">P</text>
+  <text x="532" y="148" font-size="14" fill="#8B0029" font-weight="bold">P</text>
   <!-- r_PA: A to P -->
   <line x1="80" y1="320" x2="514" y2="154" stroke="#8B0029" stroke-width="2.5" marker-end="url(#m-red)"/>
-  <text x="270" y="210" font-size="16" fill="#8B0029" font-style="italic" font-weight="bold">r</text>
+  <text x="270" y="210" font-size="14" fill="#8B0029" font-style="italic" font-weight="bold">r</text>
   <text x="282" y="215" font-size="11" fill="#8B0029">PA</text>
   <!-- r_PB: B to P -->
   <line x1="350" y1="280" x2="514" y2="154" stroke="#2563EB" stroke-width="2.5" marker-end="url(#m-blue)"/>
-  <text x="450" y="235" font-size="16" fill="#2563EB" font-style="italic" font-weight="bold">r</text>
+  <text x="450" y="235" font-size="14" fill="#2563EB" font-style="italic" font-weight="bold">r</text>
   <text x="462" y="240" font-size="11" fill="#2563EB">PB</text>
   <!-- Formula box -->
   <rect x="400" y="320" width="320" height="60" rx="6" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
-  <text x="415" y="345" font-size="15" fill="#8B0029" font-weight="bold" font-style="italic">r</text>
+  <text x="415" y="345" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">r</text>
   <text x="427" y="350" font-size="11" fill="#8B0029">PA</text>
-  <text x="445" y="345" font-size="15" fill="#1a1a1a">=</text>
-  <text x="460" y="345" font-size="15" fill="#2563EB" font-weight="bold" font-style="italic">r</text>
+  <text x="445" y="345" font-size="14" fill="#1a1a1a">=</text>
+  <text x="460" y="345" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">r</text>
   <text x="472" y="350" font-size="11" fill="#2563EB">PB</text>
-  <text x="490" y="345" font-size="15" fill="#1a1a1a">+</text>
-  <text x="505" y="345" font-size="15" fill="#6B7280" font-style="italic">r</text>
+  <text x="490" y="345" font-size="14" fill="#1a1a1a">+</text>
+  <text x="505" y="345" font-size="14" fill="#6B7280" font-style="italic">r</text>
   <text x="515" y="350" font-size="10" fill="#6B7280">BA</text>
-  <text x="415" y="370" font-size="13" fill="#1a1a1a">미분하면:</text>
-  <text x="495" y="370" font-size="13" fill="#8B0029" font-weight="bold">v</text>
+  <text x="415" y="370" font-size="14" fill="#1a1a1a">미분하면:</text>
+  <text x="495" y="370" font-size="14" fill="#8B0029" font-weight="bold">v</text>
   <text x="505" y="374" font-size="10" fill="#8B0029">PA</text>
-  <text x="520" y="370" font-size="13" fill="#1a1a1a">=</text>
-  <text x="530" y="370" font-size="13" fill="#2563EB" font-weight="bold">v</text>
+  <text x="520" y="370" font-size="14" fill="#1a1a1a">=</text>
+  <text x="530" y="370" font-size="14" fill="#2563EB" font-weight="bold">v</text>
   <text x="540" y="374" font-size="10" fill="#2563EB">PB</text>
-  <text x="555" y="370" font-size="13" fill="#1a1a1a">+</text>
-  <text x="565" y="370" font-size="13" fill="#6B7280">v</text>
+  <text x="555" y="370" font-size="14" fill="#1a1a1a">+</text>
+  <text x="565" y="370" font-size="14" fill="#6B7280">v</text>
   <text x="575" y="374" font-size="10" fill="#6B7280">BA</text>
 </svg>

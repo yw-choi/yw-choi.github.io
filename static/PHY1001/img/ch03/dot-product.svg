@@ -17,7 +17,7 @@
   <line x1="100" y1="300" x2="420" y2="110" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ad-b)"/>
   <text x="240" y="180" font-size="18" fill="#2563EB" font-weight="bold" font-style="italic">b</text>
   <!-- Angle arc -->
-  <path d="M 180 300 A 80 80 0 0 0 157 260" fill="none" stroke="#6B7280" stroke-width="1.5"/>
+  <path d="M 180 300 A 80 80 0 0 0 157 260" fill="none" stroke="#6B7280" stroke-width="1"/>
   <text x="185" y="275" font-size="16" fill="#6B7280" font-style="italic">φ</text>
   <!-- Projection of b onto a -->
   <line x1="420" y1="110" x2="340" y2="300" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>

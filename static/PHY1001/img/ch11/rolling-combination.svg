@@ -23,24 +23,24 @@
 
   <!-- Pure Rotation -->
   <g transform="translate(130,175)">
-    <circle cx="0" cy="0" r="70" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
-    <circle cx="0" cy="0" r="4" fill="#1a1a1a"/>
+    <circle cx="0" cy="0" r="70" fill="#F3F4F6" stroke="#000000" stroke-width="2"/>
+    <circle cx="0" cy="0" r="4" fill="#000000"/>
     <!-- Rotation arrows at top, bottom, left, right -->
     <line x1="0" y1="-70" x2="30" y2="-70" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
     <text x="40" y="-60" font-size="14" font-style="italic" fill="#8B0029">+ωR</text>
     <line x1="0" y1="70" x2="-30" y2="70" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
     <text x="-55" y="85" font-size="14" font-style="italic" fill="#8B0029">−ωR</text>
     <!-- Center dot label -->
-    <text x="8" y="-5" font-size="13" fill="#6B7280">0</text>
+    <text x="8" y="-5" font-size="14" fill="#6B7280">0</text>
     <!-- Curved arrow for omega -->
-    <path d="M 25,-15 A 30,30 0 0,1 15,25" stroke="#8B0029" stroke-width="1.5" fill="none" marker-end="url(#arrowR)"/>
+    <path d="M 25,-15 A 30,30 0 0,1 15,25" stroke="#8B0029" stroke-width="1" fill="none" marker-end="url(#arrowR)"/>
     <text x="35" y="10" font-size="14" font-style="italic" fill="#8B0029">ω</text>
   </g>
 
   <!-- Pure Translation -->
   <g transform="translate(390,175)">
-    <circle cx="0" cy="0" r="70" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
-    <circle cx="0" cy="0" r="4" fill="#1a1a1a"/>
+    <circle cx="0" cy="0" r="70" fill="#F3F4F6" stroke="#000000" stroke-width="2"/>
+    <circle cx="0" cy="0" r="4" fill="#000000"/>
     <!-- All velocity arrows point right with same magnitude -->
     <line x1="0" y1="-70" x2="40" y2="-70" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrowB)"/>
     <text x="50" y="-60" font-size="14" font-style="italic" fill="#2563EB">v<tspan baseline-shift="sub" font-size="10">com</tspan></text>
@@ -52,8 +52,8 @@
 
   <!-- Rolling = combination -->
   <g transform="translate(650,175)">
-    <circle cx="0" cy="0" r="70" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
-    <circle cx="0" cy="0" r="4" fill="#1a1a1a"/>
+    <circle cx="0" cy="0" r="70" fill="#F3F4F6" stroke="#000000" stroke-width="2"/>
+    <circle cx="0" cy="0" r="4" fill="#000000"/>
     <!-- Top: vcom + ωR = 2vcom -->
     <line x1="0" y1="-70" x2="60" y2="-70" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
     <text x="68" y="-58" font-size="14" font-weight="bold" fill="#8B0029">2v<tspan baseline-shift="sub" font-size="10">com</tspan></text>
@@ -68,5 +68,5 @@
   </g>
 
   <!-- Bottom label -->
-  <text x="390" y="330" text-anchor="middle" font-size="15" fill="#6B7280">구름 조건: v<tspan font-style="italic" baseline-shift="sub" font-size="11">com</tspan> = ωR (접촉점 속도 = 0)</text>
+  <text x="390" y="330" text-anchor="middle" font-size="14" fill="#6B7280">구름 조건: v<tspan font-style="italic" baseline-shift="sub" font-size="11">com</tspan> = ωR (접촉점 속도 = 0)</text>
 </svg>

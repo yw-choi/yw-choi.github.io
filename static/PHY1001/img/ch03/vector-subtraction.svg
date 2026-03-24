@@ -16,7 +16,7 @@
   <line x1="60" y1="200" x2="200" y2="140" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-b)"/>
   <text x="140" y="155" font-size="16" fill="#2563EB" font-weight="bold" font-style="italic">b</text>
   <!-- -b vector (reversed) -->
-  <line x1="200" y1="240" x2="60" y2="300" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-b)" stroke-dasharray="6 3"/>
+  <line x1="200" y1="240" x2="60" y2="300" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-b)" stroke-dasharray="4 3"/>
   <text x="110" y="290" font-size="16" fill="#2563EB" font-weight="bold">-</text>
   <text x="120" y="290" font-size="16" fill="#2563EB" font-weight="bold" font-style="italic">b</text>
   <!-- Divider -->
@@ -27,7 +27,7 @@
   <line x1="380" y1="270" x2="530" y2="130" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar-r)"/>
   <text x="430" y="180" font-size="16" fill="#8B0029" font-weight="bold" font-style="italic">a</text>
   <!-- -b from head of a -->
-  <line x1="535" y1="127" x2="610" y2="240" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-b)" stroke-dasharray="6 3"/>
+  <line x1="535" y1="127" x2="610" y2="240" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-b)" stroke-dasharray="4 3"/>
   <text x="585" y="170" font-size="16" fill="#2563EB" font-weight="bold">-</text>
   <text x="595" y="170" font-size="16" fill="#2563EB" font-weight="bold" font-style="italic">b</text>
   <!-- d = a - b -->

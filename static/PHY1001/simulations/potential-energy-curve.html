@@ -241,7 +241,7 @@ function step(ts) {
 
   // Clamp to bounds
   if (xPos < xMin + 0.05 || xPos > xMax - 0.05) {
-    vx = -vx * 0.95;
+    vx = -vx;
     xPos = Math.max(xMin + 0.05, Math.min(xMax - 0.05, xPos));
   }
 
@@ -271,10 +271,12 @@ function updateInfo() {
 
   const box = document.getElementById('infoBox');
   let html = '';
+  const speed = Math.sqrt(2 * kNow);
   html += '<span class="label">위치:</span> <span class="val">x = ' + xPos.toFixed(2) + '</span><br>';
   html += tex('U(x)') + ' = <span class="val">' + uNow.toFixed(2) + ' J</span><br>';
   html += tex('K = E_{\\text{mec}} - U') + ' = <span class="val">' + kNow.toFixed(2) + ' J</span>';
   if (kNow <= 0.01) html += ' <span style="color:#8B0029;font-weight:700">(반환점!)</span>';
+  html += '<br>' + tex('v = \\sqrt{2K/m}') + ' = <span class="val">' + speed.toFixed(2) + '</span>';
   html += '<br>' + tex('F(x) = -dU/dx') + ' = <span class="val">' + fNow.toFixed(2) + ' N</span>';
   if (fNow > 0.05) html += ' <span style="color:#2563EB">(+x 방향)</span>';
   else if (fNow < -0.05) html += ' <span style="color:#8B0029">(−x 방향)</span>';
@@ -411,10 +413,27 @@ function drawUCurve(ox, oy, w, h) {
   }
 
   // Particle dot
+  const particleY = py(Math.min(uNow, Emec));
   ctx.fillStyle = '#2563EB';
-  ctx.beginPath(); ctx.arc(px(xPos), py(Math.min(uNow, Emec)), 8, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(px(xPos), particleY, 8, 0, Math.PI * 2); ctx.fill();
   ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.arc(px(xPos), py(Math.min(uNow, Emec)), 8, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.arc(px(xPos), particleY, 8, 0, Math.PI * 2); ctx.stroke();
+
+  // Velocity direction arrow on particle (during animation)
+  if (running && Math.abs(vx) > 0.1) {
+    const arrowLen = Math.min(Math.abs(vx) * 6, 50);
+    const dir = vx > 0 ? 1 : -1;
+    const ax1 = px(xPos) + dir * 12;
+    const ax2 = px(xPos) + dir * (12 + arrowLen);
+    ctx.strokeStyle = '#2563EB'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(ax1, particleY); ctx.lineTo(ax2, particleY); ctx.stroke();
+    ctx.fillStyle = '#2563EB';
+    ctx.beginPath();
+    ctx.moveTo(ax2, particleY);
+    ctx.lineTo(ax2 - dir * 7, particleY - 4);
+    ctx.lineTo(ax2 - dir * 7, particleY + 4);
+    ctx.closePath(); ctx.fill();
+  }
 
   // U(x) label
   ctx.fillStyle = '#8B0029'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'left';

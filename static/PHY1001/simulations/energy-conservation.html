@@ -73,6 +73,8 @@ button.reset-btn:hover { background: #a3003a; }
       <div class="katex-label with-bg" id="lbl-e0" style="color:#8B0029;"></div>
       <div class="katex-label" id="lbl-eth-bar" style="color:#6B7280;"></div>
       <div class="katex-label with-bg" id="lbl-friction" style="color:rgba(200,100,0,0.85);"></div>
+      <div class="katex-label with-bg" id="lbl-theta" style="color:#6B7280;"></div>
+      <div class="katex-label with-bg" id="lbl-predict" style="color:#2563EB;font-size:12px;"></div>
     </div>
     <div class="canvas-title" id="canvasTitle"></div>
   </div>
@@ -127,6 +129,8 @@ let CW, CH;
 const lblE0 = document.getElementById('lbl-e0');
 const lblEthBar = document.getElementById('lbl-eth-bar');
 const lblFriction = document.getElementById('lbl-friction');
+const lblTheta = document.getElementById('lbl-theta');
+const lblPredict = document.getElementById('lbl-predict');
 
 function posLabel(el, px, py, html) {
   el.innerHTML = html;
@@ -233,8 +237,14 @@ function step(ts) {
   // Acceleration depends on position
   let a;
   if (s < slopeSurfLen) {
-    // On slope
-    a = g * Math.sin(theta) - mu * g * Math.cos(theta);
+    // On slope: check if friction prevents motion (static case)
+    const aSlope = g * Math.sin(theta) - mu * g * Math.cos(theta);
+    if (aSlope <= 0 && v < 0.001) {
+      // Friction too strong, object can't move
+      v = 0;
+      updateInfo(); draw(); stop(); return;
+    }
+    a = aSlope;
   } else {
     // On flat
     a = -mu * g;
@@ -272,6 +282,8 @@ function updateInfo() {
 
   const infoBox = document.getElementById('infoBox');
   let html = '';
+  const thetaDegInfo = Math.atan2(h, slopeLen) * 180 / Math.PI;
+  html += '<span class="label">빗면 각도:</span> <span class="val">' + tex('\\theta = ' + thetaDegInfo.toFixed(1) + '^\\circ') + '</span><br>';
   html += '<span class="label">높이 y:</span> <span class="val">' + yNow.toFixed(2) + ' m</span><br>';
   html += '<span class="label">속력 v:</span> <span class="val">' + v.toFixed(2) + ' m/s</span><br>';
   html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
@@ -306,6 +318,8 @@ function draw() {
   lblE0.style.display = 'none';
   lblEthBar.style.display = 'none';
   lblFriction.style.display = 'none';
+  lblTheta.style.display = 'none';
+  lblPredict.style.display = 'none';
   const { h, m, mu, slopeLen } = getParams();
   const slopeSurfLen = Math.sqrt(slopeLen * slopeLen + h * h);
   const flatLen = trackTotalLen - slopeLen;
@@ -355,6 +369,33 @@ function draw() {
   ctx.setLineDash([]);
   ctx.fillStyle = '#6B7280'; ctx.font = '13px sans-serif'; ctx.textAlign = 'right';
   ctx.fillText('h = ' + h.toFixed(1) + ' m', slopeStartPx - 20, (slopeTopY + groundY) / 2 + 4);
+
+  // Angle arc at bottom of slope
+  const thetaDeg = Math.atan2(h, slopeLen) * 180 / Math.PI;
+  const arcR = 35;
+  const slopeAnglePx = Math.atan2(hPx, slopeEndPx - slopeStartPx);
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1.5; ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.arc(slopeEndPx, groundY, arcR, Math.PI, Math.PI - slopeAnglePx, true);
+  ctx.stroke();
+  // θ label via KaTeX overlay — position at midpoint of arc
+  const midAngle = Math.PI - slopeAnglePx / 2;
+  const thetaLabelX = slopeEndPx + (arcR + 12) * Math.cos(midAngle);
+  const thetaLabelY = groundY + (arcR + 12) * Math.sin(midAngle) - 8;
+  posLabel(lblTheta, thetaLabelX, thetaLabelY, tex('\\theta = ' + thetaDeg.toFixed(1) + '^\\circ'));
+  lblTheta.style.transform = 'translateX(-50%)';
+
+  // Predicted bottom speed (no friction)
+  const vPred = Math.sqrt(2 * g * h);
+  const vPredFriction = mu > 0 ? Math.sqrt(Math.max(2 * g * h - 2 * mu * g * Math.cos(Math.atan2(h, slopeLen)) * Math.sqrt(slopeLen * slopeLen + h * h), 0)) : vPred;
+  const predictX = slopeEndPx + 30;
+  const predictY = groundY + 40;
+  if (s < 0.01) {
+    const predLabel = mu > 0
+      ? tex('v_{\\text{pred}} = \\sqrt{2g(h - \\mu_k d\\cos\\theta)} = ' + vPredFriction.toFixed(2) + '\\text{ m/s}')
+      : tex('v_{\\text{bottom}} = \\sqrt{2gh} = ' + vPred.toFixed(2) + '\\text{ m/s}');
+    posLabel(lblPredict, predictX, predictY, predLabel);
+  }
 
   // Ball position
   const yNow = getTrackY(s);
