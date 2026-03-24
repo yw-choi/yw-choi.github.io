@@ -13,28 +13,28 @@
         fill="none" stroke="#8B0029" stroke-width="2.5"/>
 
   <!-- E_mec horizontal line -->
-  <line x1="100" y1="200" x2="680" y2="200" stroke="#2563EB" stroke-width="2" stroke-dasharray="6 3"/>
+  <line x1="100" y1="200" x2="680" y2="200" stroke="#2563EB" stroke-width="2" stroke-dasharray="4 3"/>
   <text x="690" y="205" font-size="14" font-weight="bold" fill="#2563EB" font-style="italic">E_mec</text>
 
   <!-- Turning points (where U = Emec) -->
   <!-- Left turning point ~x1 -->
   <circle cx="210" cy="200" r="6" fill="#8B0029"/>
   <text x="210" y="190" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">x₁</text>
-  <line x1="210" y1="206" x2="210" y2="400" stroke="#8B0029" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="210" y1="206" x2="210" y2="400" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3"/>
 
   <!-- Right turning point ~x4 -->
   <circle cx="560" cy="200" r="6" fill="#8B0029"/>
   <text x="560" y="190" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">x₄</text>
-  <line x1="560" y1="206" x2="560" y2="400" stroke="#8B0029" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="560" y1="206" x2="560" y2="400" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3"/>
 
   <!-- Inner turning points -->
   <circle cx="310" cy="200" r="6" fill="#8B0029"/>
   <text x="310" y="190" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">x₂</text>
-  <line x1="310" y1="206" x2="310" y2="400" stroke="#8B0029" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="310" y1="206" x2="310" y2="400" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3"/>
 
   <circle cx="430" cy="200" r="6" fill="#8B0029"/>
   <text x="430" y="190" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">x₃</text>
-  <line x1="430" y1="206" x2="430" y2="400" stroke="#8B0029" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="430" y1="206" x2="430" y2="400" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3"/>
 
   <!-- K = Emec - U annotation -->
   <line x1="260" y1="200" x2="260" y2="255" stroke="#2563EB" stroke-width="2"/>

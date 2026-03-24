@@ -12,7 +12,7 @@
   </defs>
 
   <!-- Separator line -->
-  <line x1="375" y1="30" x2="375" y2="420" stroke="#6B7280" stroke-width="1" stroke-dasharray="6 4"/>
+  <line x1="375" y1="30" x2="375" y2="420" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
 
   <!-- ===== LEFT: Going UP ===== -->
   <text x="185" y="40" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">&#xC62C;&#xB77C;&#xAC08; &#xB54C;</text>

@@ -27,7 +27,7 @@
   <text x="585" y="180" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">C</text>
 
   <!-- Arc (swing path) -->
-  <path d="M195,192 Q375,320 555,192" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="3 3"/>
+  <path d="M195,192 Q375,320 555,192" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
 
   <!-- Height h -->
   <line x1="160" y1="192" x2="160" y2="282" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>

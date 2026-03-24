@@ -38,13 +38,13 @@
   <text x="430" y="100" font-size="14" font-weight="bold" fill="#8B0029" font-style="italic">F</text>
 
   <!-- F cos phi component (horizontal, along d) -->
-  <line x1="170" y1="220" x2="420" y2="220" stroke="#2563EB" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#arrowB)"/>
+  <line x1="170" y1="220" x2="420" y2="220" stroke="#2563EB" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrowB)"/>
   <text x="310" y="210" text-anchor="middle" font-size="14" font-weight="bold" fill="#2563EB">
     <tspan font-style="italic">F</tspan> cos <tspan font-style="italic">φ</tspan>
   </text>
 
   <!-- F sin phi component (vertical) -->
-  <line x1="420" y1="220" x2="420" y2="102" stroke="#2563EB" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#arrowB)"/>
+  <line x1="420" y1="220" x2="420" y2="102" stroke="#2563EB" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrowB)"/>
   <text x="460" y="165" font-size="14" font-weight="bold" fill="#2563EB">
     <tspan font-style="italic">F</tspan> sin <tspan font-style="italic">φ</tspan>
   </text>

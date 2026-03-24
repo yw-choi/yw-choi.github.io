@@ -12,7 +12,7 @@
   </defs>
 
   <!-- Divider -->
-  <line x1="375" y1="30" x2="375" y2="390" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <line x1="375" y1="30" x2="375" y2="390" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
 
   <!-- === Before (left) === -->
   <text x="188" y="30" font-size="14" fill="#000000" text-anchor="middle" font-weight="bold">충돌 전</text>
