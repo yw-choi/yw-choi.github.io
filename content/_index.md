@@ -21,6 +21,7 @@ title: "Home"
 
 
 ### Recent News
+- **2026/03** Dongsin Kim received an award at the G-LAMP Undergraduate Research Presentation!
 - **2026/03** Sreang Sokly joined our group. Welcome!
 - **2026/01** Dr. Sanghyun Ji joined our group. Welcome!
 - **2025/12** We are organizing [the 1st International Nanomaterials Symposium](./2025_1st_INS) in Busan, Korea on December 9-10, 2025! 

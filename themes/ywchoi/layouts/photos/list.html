@@ -19,9 +19,19 @@
         {{ range $index, $it := $items }}
         <div class="col-md-4 gallery-item">
             <figure class="figure m-0">
+                {{ if $it.slides }}
+                {{/* Carousel item — thumbnail looks like a normal single image */}}
+                {{ $firstSrc := index $it.slides 0 }}
+                <a href="{{ $firstSrc }}" class="d-block" data-slides='{{ $it.slides | jsonify }}' style="cursor: pointer;">
+                    <div class="gallery-thumb-wrapper">
+                        <img loading="lazy" src="{{ $firstSrc }}" alt="{{ $it.caption }}" class="gallery-thumb-img w-100"
+                            style="display: block; aspect-ratio: 3/2; object-fit: cover;" />
+                    </div>
+                </a>
+                {{ else }}
+                {{/* Single image item */}}
                 <a href="{{ $it.src }}" class="d-block" data-full="{{ $it.src }}" style="cursor: pointer;">
                     <div class="gallery-thumb-wrapper">
-                        {{/* Attempt to locate the image as a Page Resource and generate a cropped thumbnail */}}
                         {{ $base := path.Base $it.src }}
                         {{ with $pageCtx.Resources.GetMatch (printf "images/%s" $base) }}
                         {{ $thumb := .Fill "600x400 center" }}
@@ -29,12 +39,12 @@
                             height="{{ $thumb.Height }}" alt="{{ $it.caption }}" class="gallery-thumb-img w-100"
                             style="display: block;" />
                         {{ else }}
-                        {{/* Fallback: use original path with CSS object-fit cropping */}}
                         <img loading="lazy" src="{{ $it.src }}" alt="{{ $it.caption }}" class="gallery-thumb-img w-100"
                             style="display: block; aspect-ratio: 3/2; object-fit: cover;" />
                         {{ end }}
                     </div>
                 </a>
+                {{ end }}
                 {{ with $it.caption }}<figcaption class="text-center small mt-2">{{ . | safeHTML }}</figcaption>{{ end
                 }}
             </figure>
@@ -54,6 +64,9 @@
         <button type="button"
             style="position: absolute; top: 10px; right: 10px; background: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 20px; line-height: 1;"
             id="lightbox-close" aria-label="Close">&times;</button>
+        <button type="button" class="lb-nav-btn lb-prev d-none" id="lb-prev" aria-label="Previous">&#8249;</button>
+        <button type="button" class="lb-nav-btn lb-next d-none" id="lb-next" aria-label="Next">&#8250;</button>
+        <div class="lb-dots d-none" id="lb-dots"></div>
     </div>
 </div>
 
@@ -65,8 +78,14 @@
         const imgEl = document.getElementById('lightbox-image');
         const closeBtn = document.getElementById('lightbox-close');
         const backdrop = lightbox.querySelector('.lightbox-backdrop');
+        const prevBtn = document.getElementById('lb-prev');
+        const nextBtn = document.getElementById('lb-next');
+        const dotsEl = document.getElementById('lb-dots');
 
-        function show(src, caption) {
+        let slides = [];
+        let current = 0;
+
+        function showLightbox(src, caption) {
             imgEl.src = src;
             imgEl.alt = caption || '';
             lightbox.classList.remove('d-none');
@@ -74,24 +93,65 @@
             document.body.style.overflow = 'hidden';
         }
 
-        function close() {
+        function closeLightbox() {
             lightbox.classList.add('d-none');
             lightbox.style.display = 'none';
             document.body.style.overflow = '';
+            slides = [];
+            prevBtn.classList.add('d-none');
+            nextBtn.classList.add('d-none');
+            dotsEl.classList.add('d-none');
+        }
+
+        function goTo(idx) {
+            current = (idx + slides.length) % slides.length;
+            imgEl.src = slides[current];
+            dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+        }
+
+        function buildDots(count) {
+            dotsEl.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const dot = document.createElement('span');
+                dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+                dotsEl.appendChild(dot);
+            }
         }
 
         gallery.addEventListener('click', e => {
-            const a = e.target.closest('a[data-full]');
+            const a = e.target.closest('a[data-slides], a[data-full]');
             if (!a) return;
             e.preventDefault();
-            const caption = a.parentElement.querySelector('figcaption')?.textContent.trim() || '';
-            show(a.getAttribute('data-full'), caption);
+            const caption = a.closest('figure')?.querySelector('figcaption')?.textContent.trim() || '';
+
+            if (a.dataset.slides) {
+                /* Multi-image: open lightbox with navigation */
+                slides = JSON.parse(a.dataset.slides);
+                current = 0;
+                buildDots(slides.length);
+                prevBtn.classList.remove('d-none');
+                nextBtn.classList.remove('d-none');
+                dotsEl.classList.remove('d-none');
+                showLightbox(slides[0], caption);
+            } else {
+                /* Single image */
+                slides = [];
+                showLightbox(a.getAttribute('data-full'), caption);
+            }
         });
 
-        [closeBtn, backdrop].forEach(el => el && el.addEventListener('click', close));
+        prevBtn.addEventListener('click', () => goTo(current - 1));
+        nextBtn.addEventListener('click', () => goTo(current + 1));
+
+        [closeBtn, backdrop].forEach(el => el && el.addEventListener('click', closeLightbox));
 
         document.addEventListener('keyup', e => {
-            if (!lightbox.classList.contains('d-none') && e.key === 'Escape') close();
+            if (lightbox.classList.contains('d-none')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (slides.length > 0) {
+                if (e.key === 'ArrowLeft') goTo(current - 1);
+                if (e.key === 'ArrowRight') goTo(current + 1);
+            }
         });
     })();
 </script>

@@ -5,6 +5,11 @@ layout: list
 # Define gallery items (order matters). You can also omit this list and the layout
 # will try to auto-discover image resources under photos/images/*.
 gallery:
+  - slides:
+      - "/photos/images/2026_glamp_presentation.webp"
+      - "/photos/images/2026_glamp_award.webp"
+      - "/photos/images/2026_glamp_group.webp"
+    caption: "2026/03 <br> Dongsin received an award at G-LAMP Research Presentation"
   - src: "/photos/images/2026_group_photo_1.webp"
     caption: "2026/01 <br> Our first group photo"
   - src: "/photos/images/2025_dongshin_icamd.webp"

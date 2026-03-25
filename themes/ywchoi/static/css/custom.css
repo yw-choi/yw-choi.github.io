@@ -210,6 +210,28 @@
     }
 }
 
+/* Lightbox dots */
+.lb-dots {
+    position: absolute;
+    bottom: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: .4rem;
+}
+
+.carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .4);
+    transition: background .2s ease;
+}
+
+.carousel-dot.active {
+    background: #fff;
+}
+
 .home-news {
     list-style: none;
     padding-left: 0;
