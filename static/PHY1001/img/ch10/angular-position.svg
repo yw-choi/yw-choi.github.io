@@ -20,7 +20,7 @@
 
   <!-- x-axis (reference line) -->
   <line x1="300" y1="225" x2="470" y2="225" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <text x="475" y="230" font-size="14" fill="#6B7280" font-style="italic">기준선</text>
+  <text x="475" y="230" font-size="14" fill="#6B7280">기준선</text>
 
   <!-- Radius to point P (at angle ~40 degrees) -->
   <line x1="300" y1="225" x2="422" y2="122" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrow-red)"/>
@@ -34,19 +34,19 @@
 
   <!-- Angle arc θ -->
   <path d="M 350 225 A 50 50 0 0 0 338 188" fill="none" stroke="#8B0029" stroke-width="2"/>
-  <text x="358" y="200" font-size="18" fill="#8B0029" font-style="italic" font-weight="bold">θ</text>
+  <text x="358" y="200" font-size="18" fill="#8B0029" font-style="italic" font-weight="bold">&#x3B8;</text>
 
   <!-- Arc length s -->
   <path d="M 460 225 A 160 160 0 0 0 422 122" fill="none" stroke="#2563EB" stroke-width="2.5"/>
   <text x="460" y="165" font-size="16" fill="#2563EB" font-weight="bold" font-style="italic">s</text>
 
   <!-- Formula box -->
-  <rect x="40" y="370" width="260" height="55" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
-  <text x="170" y="395" text-anchor="middle" font-size="16" fill="#8B0029" font-weight="bold">
-    θ = s / r  (rad)
+  <rect x="40" y="370" width="280" height="55" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
+  <text x="180" y="395" text-anchor="middle" font-size="16" fill="#8B0029" font-weight="bold">
+    <tspan font-style="italic">&#x3B8;</tspan> = <tspan font-style="italic">s</tspan> / <tspan font-style="italic">r</tspan>  (rad)
   </text>
-  <text x="170" y="415" text-anchor="middle" font-size="14" fill="#6B7280">
-    1 rev = 2π rad = 360°
+  <text x="180" y="415" text-anchor="middle" font-size="14" fill="#6B7280">
+    1 rev = 2&#x3C0; rad = 360°
   </text>
 
   <!-- Positive direction indicator -->

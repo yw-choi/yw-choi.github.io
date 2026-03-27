@@ -8,7 +8,6 @@
     </marker>
   </defs>
 
-  <!-- Title row -->
   <!-- (a) Tension / Compression -->
   <g transform="translate(130,30)">
     <text x="0" y="0" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">(a) 인장 / 압축</text>
@@ -20,17 +19,19 @@
     <!-- Stretched shape -->
     <rect x="-40" y="35" width="80" height="210" fill="#F3F4F6" stroke="#000000" stroke-width="2" rx="3"/>
 
-    <!-- Force arrows (pulling apart) -->
+    <!-- Force arrows -->
     <line x1="0" y1="35" x2="0" y2="-10" stroke="#8B0029" stroke-width="2.5" marker-end="url(#fR)"/>
     <text x="18" y="-5" font-size="14" fill="#8B0029" font-style="italic">F</text>
     <line x1="0" y1="245" x2="0" y2="295" stroke="#8B0029" stroke-width="2.5" marker-end="url(#fR)"/>
     <text x="18" y="290" font-size="14" fill="#8B0029" font-style="italic">F</text>
 
-    <!-- Dimension: Delta L -->
+    <!-- Delta L -->
     <line x1="60" y1="50" x2="60" y2="35" stroke="#2563EB" stroke-width="1"/>
-    <text x="85" y="45" font-size="14" fill="#2563EB" font-style="italic">ΔL</text>
+    <text x="85" y="45" font-size="14" fill="#2563EB">
+      <tspan font-style="italic">&#x394;L</tspan>
+    </text>
 
-    <!-- Dimension: L -->
+    <!-- L dimension -->
     <line x1="-60" y1="50" x2="-60" y2="230" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
     <line x1="-67" y1="50" x2="-53" y2="50" stroke="#6B7280" stroke-width="1"/>
     <line x1="-67" y1="230" x2="-53" y2="230" stroke="#6B7280" stroke-width="1"/>
@@ -48,7 +49,7 @@
     <!-- Original shape (dashed) -->
     <rect x="-50" y="50" width="100" height="180" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3" rx="3"/>
 
-    <!-- Sheared shape (parallelogram) -->
+    <!-- Sheared shape -->
     <path d="M-30,50 L70,50 L50,230 L-50,230 Z" fill="#F3F4F6" stroke="#000000" stroke-width="2"/>
 
     <!-- Force arrows -->
@@ -59,7 +60,9 @@
 
     <!-- Delta x -->
     <line x1="-50" y1="40" x2="-30" y2="40" stroke="#2563EB" stroke-width="1"/>
-    <text x="-40" y="35" font-size="14" fill="#2563EB" font-style="italic" text-anchor="middle">Δx</text>
+    <text x="-40" y="35" font-size="14" fill="#2563EB" text-anchor="middle">
+      <tspan font-style="italic">&#x394;x</tspan>
+    </text>
 
     <!-- L dimension -->
     <line x1="-70" y1="50" x2="-70" y2="230" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
@@ -95,6 +98,8 @@
     <text x="0" y="160" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">p</text>
 
     <!-- Delta V -->
-    <text x="0" y="290" text-anchor="middle" font-size="14" fill="#2563EB" font-style="italic">ΔV</text>
+    <text x="0" y="290" text-anchor="middle" font-size="14" fill="#2563EB">
+      <tspan font-style="italic">&#x394;V</tspan>
+    </text>
   </g>
 </svg>

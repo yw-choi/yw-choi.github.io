@@ -28,11 +28,15 @@
 
     <!-- Slow rotation arrow -->
     <path d="M -35,-100 A 50,50 0 0,1 35,-100" fill="none" stroke="#8B0029" stroke-width="2" marker-end="url(#acR)"/>
-    <text x="0" y="-108" text-anchor="middle" font-size="14" font-style="italic" fill="#8B0029">ω 작음</text>
+    <text x="0" y="-108" text-anchor="middle" font-size="14" fill="#8B0029">
+      <tspan font-style="italic">&#x3C9;</tspan> 작음
+    </text>
 
     <!-- Radius indicator -->
     <line x1="0" y1="-20" x2="-90" y2="-20" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-    <text x="-50" y="-28" text-anchor="middle" font-size="14" fill="#6B7280">큰 I</text>
+    <text x="-50" y="-28" text-anchor="middle" font-size="14" fill="#6B7280">
+      큰 <tspan font-style="italic">I</tspan>
+    </text>
   </g>
 
   <!-- Arrow between figures -->
@@ -60,13 +64,19 @@
     <!-- Fast rotation arrow (multiple turns shown) -->
     <path d="M -35,-100 A 50,50 0 0,1 35,-100" fill="none" stroke="#8B0029" stroke-width="2.5" marker-end="url(#acR)"/>
     <path d="M -30,-95 A 45,45 0 0,1 30,-95" fill="none" stroke="#8B0029" stroke-width="1"/>
-    <text x="0" y="-108" text-anchor="middle" font-size="14" font-weight="bold" font-style="italic" fill="#8B0029">ω 큼!</text>
+    <text x="0" y="-108" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">
+      <tspan font-style="italic">&#x3C9;</tspan> 큼!
+    </text>
 
     <!-- Radius indicator -->
-    <text x="0" y="145" text-anchor="middle" font-size="14" fill="#6B7280">작은 I</text>
+    <text x="0" y="145" text-anchor="middle" font-size="14" fill="#6B7280">
+      작은 <tspan font-style="italic">I</tspan>
+    </text>
   </g>
 
   <!-- Conservation equation -->
   <rect x="100" y="350" width="550" height="40" rx="8" fill="#8B0029"/>
-  <text x="375" y="376" text-anchor="middle" font-size="16" font-weight="bold" fill="#FFFFFF">L = Iω = 일정   →   I 감소하면 ω 증가!</text>
+  <text x="375" y="376" text-anchor="middle" font-size="16" font-weight="bold" fill="#FFFFFF">
+    <tspan font-style="italic">L</tspan> = <tspan font-style="italic">I&#x3C9;</tspan> = 일정   &#x2192;   <tspan font-style="italic">I</tspan> 감소하면 <tspan font-style="italic">&#x3C9;</tspan> 증가!
+  </text>
 </svg>

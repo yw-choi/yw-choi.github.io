@@ -27,7 +27,7 @@
     <line x1="260" y1="322" x2="250" y2="332"/>
   </g>
 
-  <!-- Gyroscope axle (tilted slightly) -->
+  <!-- Gyroscope axle -->
   <line x1="230" y1="258" x2="480" y2="180" stroke="#000000" stroke-width="2"/>
 
   <!-- Spinning wheel/disk at the end -->
@@ -35,13 +35,13 @@
   <!-- Spin arrow on disk -->
   <path d="M 468,155 A 16,35 0 0,1 468,205" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#apB)"/>
 
-  <!-- ω (spin) arrow along axle — starts at wheel end -->
+  <!-- ω (spin) arrow along axle -->
   <line x1="492" y1="178" x2="552" y2="158" stroke="#2563EB" stroke-width="2.5" marker-end="url(#apB)"/>
-  <text x="562" y="158" font-size="16" font-weight="bold" font-style="italic" fill="#2563EB">ω</text>
+  <text x="562" y="158" font-size="16" font-weight="bold" font-style="italic" fill="#2563EB">&#x3C9;</text>
 
-  <!-- L vector along axle — starts at mid-axle -->
+  <!-- L vector along axle -->
   <line x1="380" y1="214" x2="460" y2="187" stroke="#8B0029" stroke-width="2.5" marker-end="url(#apR)"/>
-  <text x="400" y="205" font-size="18" font-weight="bold" font-style="italic" fill="#8B0029">L</text>
+  <text x="395" y="205" font-size="18" font-weight="bold" font-style="italic" fill="#8B0029">L</text>
 
   <!-- r vector from support to CM -->
   <line x1="230" y1="258" x2="360" y2="218" stroke="#6B7280" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#apG)"/>
@@ -49,16 +49,15 @@
 
   <!-- Mg force (downward at CM of wheel) -->
   <line x1="480" y1="182" x2="480" y2="270" stroke="#8B0029" stroke-width="2.5" marker-end="url(#apR)"/>
-  <text x="492" y="265" font-size="14" font-weight="bold" fill="#8B0029">Mg</text>
-
-  <!-- Torque vector (τ) - into the page for this orientation, shown as perpendicular -->
-  <!-- τ = r × Mg, perpendicular to r and Mg -->
+  <text x="495" y="265" font-size="14" font-weight="bold" fill="#8B0029">
+    <tspan font-style="italic">Mg</tspan>
+  </text>
 
   <!-- Precession circle (top view - dashed ellipse) -->
   <ellipse cx="350" cy="110" rx="160" ry="40" fill="none" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3"/>
   <!-- Precession arrow -->
   <path d="M 200,125 A 160,40 0 0,1 240,98" fill="none" stroke="#8B0029" stroke-width="2.5" marker-end="url(#apR)"/>
-  <text x="180" y="90" font-size="16" font-weight="bold" font-style="italic" fill="#8B0029">Ω</text>
+  <text x="180" y="90" font-size="16" font-weight="bold" font-style="italic" fill="#8B0029">&#x3A9;</text>
   <text x="350" y="75" text-anchor="middle" font-size="14" fill="#6B7280">세차운동 경로 (위에서 본 모습)</text>
 
   <!-- dL vector -->
@@ -68,7 +67,11 @@
   </g>
 
   <!-- Formulas -->
-  <rect x="60" y="355" width="580" height="70" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
-  <text x="350" y="380" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">τ = dL/dt → L이 방향을 바꿈 (크기는 유지)</text>
-  <text x="350" y="405" text-anchor="middle" font-size="14" fill="#6B7280">세차 각속도: Ω = Mgr / (Iω)</text>
+  <rect x="60" y="355" width="580" height="75" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
+  <text x="350" y="380" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">
+    <tspan font-style="italic">&#x3C4;</tspan> = <tspan font-style="italic">dL</tspan>/<tspan font-style="italic">dt</tspan> &#x2192; <tspan font-style="italic">L</tspan> 이 방향을 바꿈 (크기는 유지)
+  </text>
+  <text x="350" y="410" text-anchor="middle" font-size="14" fill="#6B7280">
+    세차 각속도: <tspan font-style="italic">&#x3A9;</tspan> = <tspan font-style="italic">Mgr</tspan> / (<tspan font-style="italic">I&#x3C9;</tspan>)
+  </text>
 </svg>
