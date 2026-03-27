@@ -100,6 +100,8 @@ function tex(expr) {
   return katex.renderToString(expr, { throwOnError: false });
 }
 
+let thetaAxisHtml, omegaAxisHtml;
+
 function renderStaticKaTeX() {
   document.getElementById('theoremEq').innerHTML = tex('v = \\omega r,\\; a_t = \\alpha r');
   document.getElementById('canvasTitle').innerHTML = '회전 운동학: ' + tex('\\theta(t),\\; \\omega(t)');
@@ -111,6 +113,9 @@ function renderStaticKaTeX() {
   document.getElementById('omegaInfoLabel').innerHTML = tex('\\omega') + ' =';
   document.getElementById('atLabel').innerHTML = tex('a_t') + ' =';
   document.getElementById('arLabel').innerHTML = tex('a_r') + ' =';
+  // Pre-render graph axis labels
+  thetaAxisHtml = '<span style="color:#8B0029">' + tex('\\theta\\;\\text{(rad)}') + '</span>';
+  omegaAxisHtml = '<span style="color:#2563EB">' + tex('\\omega\\;\\text{(rad/s)}') + '</span>';
 }
 
 function posLabel(el, px, py, html) {
@@ -318,7 +323,7 @@ function draw() {
     const arx = px + arScale * Math.cos(theta + Math.PI);
     const ary = py - arScale * Math.sin(theta + Math.PI);
     drawArrow(px, py, arx, ary, '#8B0029', 2);
-    drawTextWithBg('ar', arx - 15, ary + 15, '#8B0029', 12);
+    drawTextWithBg('a\u1D63', arx - 15, ary + 15, '#8B0029', 12);
   }
 
   // Center
@@ -346,16 +351,14 @@ function draw() {
   const g1Bot = CH * 0.45;
   const g1H = g1Bot - g1Top;
   drawGraph(graphLeft, g1Top, graphW, g1H, thetaHistory, '#8B0029');
-  posLabel(olThetaAxis, graphLeft + 5, g1Top + 4,
-    '<span style="color:#8B0029">' + tex('\\theta\\;(\\text{rad})') + '</span>');
+  posLabel(olThetaAxis, graphLeft + 5, g1Top + 4, thetaAxisHtml);
 
   // ω(t) graph
   const g2Top = CH * 0.52;
   const g2Bot = CH - 25;
   const g2H = g2Bot - g2Top;
   drawGraph(graphLeft, g2Top, graphW, g2H, omegaHistory, '#2563EB');
-  posLabel(olOmegaAxis, graphLeft + 5, g2Top + 4,
-    '<span style="color:#2563EB">' + tex('\\omega\\;(\\text{rad/s})') + '</span>');
+  posLabel(olOmegaAxis, graphLeft + 5, g2Top + 4, omegaAxisHtml);
 }
 
 function drawGraph(gx, gy, gw, gh, data, color) {

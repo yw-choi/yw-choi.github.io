@@ -20,7 +20,7 @@
 
   <!-- Radius to P at ~35 degrees -->
   <line x1="280" y1="220" x2="403" y2="134" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <text x="345" y="190" font-size="16" fill="#6B7280" font-style="italic">r</text>
+  <text x="330" y="195" font-size="16" fill="#6B7280" font-style="italic">r</text>
 
   <!-- Point P -->
   <circle cx="403" cy="134" r="7" fill="#8B0029"/>
