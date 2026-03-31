@@ -96,6 +96,7 @@ button.reset-btn:hover { background: #a3003a; }
       <div><span class="label">인가 응력 </span><span id="sigmaLabel"></span><span class="val" id="sigmaInfo"></span></div>
       <div><span class="label">변형률 </span><span id="epsilonLabel"></span><span class="val" id="epsilonInfo"></span></div>
       <div><span class="label">변형량 </span><span id="deltaLLabel"></span><span class="val" id="deltaLInfo"></span></div>
+      <div><span class="label">인가 힘 </span><span id="forceLabel"></span><span class="val" id="forceInfo"></span></div>
     </div>
 
     <div class="region-label" id="regionLabel">탄성 영역</div>
@@ -129,6 +130,7 @@ function renderStaticKaTeX() {
   document.getElementById('sigmaLabel').innerHTML = tex('\\sigma') + ' = ';
   document.getElementById('epsilonLabel').innerHTML = tex('\\varepsilon') + ' = ';
   document.getElementById('deltaLLabel').innerHTML = tex('\\Delta L') + ' = ';
+  document.getElementById('forceLabel').innerHTML = tex('F') + ' = ';
   document.getElementById('syLabel').innerHTML = tex('S_y') + ' = ';
   document.getElementById('suLabel').innerHTML = tex('S_u') + ' = ';
 }
@@ -213,6 +215,7 @@ function updateInfo() {
     ? (currentStrain * 1e6).toFixed(0) + ' \u00B5\u03B5'
     : (currentStrain * 100).toFixed(3) + ' %';
   document.getElementById('deltaLInfo').textContent = (deltaL * 1000).toFixed(3) + ' mm';
+  document.getElementById('forceInfo').textContent = force < 1000 ? force.toFixed(1) + ' N' : (force / 1000).toFixed(2) + ' kN';
 
   // Region label
   const ey = mat.Sy / (mat.E * 1000);

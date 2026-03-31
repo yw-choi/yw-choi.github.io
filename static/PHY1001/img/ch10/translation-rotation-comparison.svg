@@ -82,10 +82,10 @@
   <text x="390" y="365" text-anchor="middle" font-size="14" fill="#000000">회전 운동에너지:</text>
   <text x="635" y="365" text-anchor="middle" font-size="14" fill="#6B7280">&#x2014;</text>
   <text x="145" y="401" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">
-    <tspan font-style="italic">K</tspan> = &#xBD;<tspan font-style="italic">mv</tspan>&#xB2;
+    <tspan font-style="italic">K</tspan> = &#xBD;<tspan font-style="italic">m</tspan><tspan font-style="italic">v</tspan>&#xB2;
   </text>
   <text x="390" y="401" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">
-    <tspan font-style="italic">K</tspan> = &#xBD;<tspan font-style="italic">I&#x3C9;</tspan>&#xB2;
+    <tspan font-style="italic">K</tspan> = &#xBD;<tspan font-style="italic">I</tspan><tspan font-style="italic">&#x3C9;</tspan>&#xB2;
   </text>
 
   <!-- Row 8: Work -->

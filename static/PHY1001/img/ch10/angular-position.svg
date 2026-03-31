@@ -27,18 +27,18 @@
 
   <!-- Point P -->
   <circle cx="422" cy="122" r="6" fill="#8B0029"/>
-  <text x="435" y="118" font-size="16" fill="#8B0029" font-weight="bold">P</text>
+  <text x="435" y="118" font-size="14" fill="#8B0029" font-weight="bold">P</text>
 
   <!-- Radius label r -->
-  <text x="370" y="165" font-size="16" fill="#8B0029" font-style="italic" font-weight="bold">r</text>
+  <text x="370" y="165" font-size="14" fill="#8B0029" font-style="italic" font-weight="bold">r</text>
 
-  <!-- Angle arc θ -->
-  <path d="M 350 225 A 50 50 0 0 0 338 188" fill="none" stroke="#8B0029" stroke-width="2"/>
-  <text x="358" y="200" font-size="18" fill="#8B0029" font-style="italic" font-weight="bold">&#x3B8;</text>
+  <!-- Angle arc θ (40.2° matching P position) -->
+  <path d="M 350 225 A 50 50 0 0 0 338 193" fill="none" stroke="#8B0029" stroke-width="2"/>
+  <text x="355" y="203" font-size="14" fill="#8B0029" font-style="italic" font-weight="bold">&#x3B8;</text>
 
   <!-- Arc length s -->
   <path d="M 460 225 A 160 160 0 0 0 422 122" fill="none" stroke="#2563EB" stroke-width="2.5"/>
-  <text x="460" y="165" font-size="16" fill="#2563EB" font-weight="bold" font-style="italic">s</text>
+  <text x="460" y="165" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">s</text>
 
   <!-- Formula box -->
   <rect x="40" y="370" width="280" height="55" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>

@@ -12,33 +12,33 @@
   <g transform="translate(125,50)">
     <text x="0" y="0" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">안정 평형</text>
     <text x="0" y="18" text-anchor="middle" font-size="14" fill="#6B7280">(Stable)</text>
-    <!-- Bowl shape -->
-    <path d="M-80,200 Q-80,120 0,120 Q80,120 80,200" fill="none" stroke="#6B7280" stroke-width="2"/>
-    <!-- Ball at bottom -->
-    <circle cx="0" cy="108" r="14" fill="#F3F4F6" stroke="#000000" stroke-width="2"/>
+    <!-- Bowl shape (concave up) -->
+    <path d="M-80,120 Q-80,200 0,200 Q80,200 80,120" fill="none" stroke="#6B7280" stroke-width="2"/>
+    <!-- Ball at bottom of bowl -->
+    <circle cx="0" cy="186" r="14" fill="#F3F4F6" stroke="#000000" stroke-width="2"/>
     <!-- Gravity arrow -->
-    <line x1="0" y1="122" x2="0" y2="155" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowRed)"/>
-    <text x="18" y="145" font-size="14" fill="#8B0029" font-style="italic">mg</text>
-    <!-- Displaced ball (ghost) -->
-    <circle cx="50" cy="130" r="14" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-    <!-- Restoring arrow -->
-    <path d="M38,118 Q20,105 5,108" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#arrowBlue)"/>
-    <text x="28" y="105" font-size="14" fill="#2563EB">복원력</text>
-    <text x="0" y="240" text-anchor="middle" font-size="14" fill="#6B7280">밀어도 되돌아옴</text>
+    <line x1="0" y1="200" x2="0" y2="230" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+    <text x="18" y="225" font-size="14" fill="#8B0029" font-style="italic">mg</text>
+    <!-- Displaced ball (ghost) on slope -->
+    <circle cx="50" cy="170" r="14" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+    <!-- Restoring arrow back toward center -->
+    <path d="M38,158 Q20,168 5,178" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#arrowBlue)"/>
+    <text x="28" y="148" font-size="14" fill="#2563EB">복원력</text>
+    <text x="0" y="255" text-anchor="middle" font-size="14" fill="#6B7280">밀어도 되돌아옴</text>
   </g>
 
   <!-- Unstable Equilibrium -->
   <g transform="translate(375,50)">
     <text x="0" y="0" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">불안정 평형</text>
     <text x="0" y="18" text-anchor="middle" font-size="14" fill="#6B7280">(Unstable)</text>
-    <!-- Hill shape -->
-    <path d="M-80,200 Q-80,130 0,130 Q80,130 80,200" fill="none" stroke="#6B7280" stroke-width="2" transform="scale(1,-1) translate(0,-330)"/>
-    <!-- Ball at top -->
+    <!-- Hill shape (convex up) -->
+    <path d="M-80,200 Q-80,130 0,130 Q80,130 80,200" fill="none" stroke="#6B7280" stroke-width="2"/>
+    <!-- Ball at top of hill -->
     <circle cx="0" cy="116" r="14" fill="#F3F4F6" stroke="#000000" stroke-width="2"/>
     <!-- Gravity arrow -->
     <line x1="0" y1="130" x2="0" y2="163" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowRed)"/>
     <text x="18" y="153" font-size="14" fill="#8B0029" font-style="italic">mg</text>
-    <!-- Displaced ball (ghost) -->
+    <!-- Displaced ball (ghost) rolling away -->
     <circle cx="50" cy="140" r="14" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
     <!-- Away arrow -->
     <path d="M38,155 Q55,170 65,180" fill="none" stroke="#8B0029" stroke-width="2" marker-end="url(#arrowRed)"/>

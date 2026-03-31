@@ -194,7 +194,7 @@ function updateInfo() {
   document.getElementById('timeInfo').textContent = t.toFixed(2) + ' s';
   document.getElementById('thetaInfo').textContent = theta.toFixed(2) + ' rad';
   document.getElementById('omegaInfo').textContent = omega.toFixed(2) + ' rad/s';
-  document.getElementById('vInfo').textContent = v.toFixed(2) + ' m/s';
+  document.getElementById('vInfo').textContent = Math.abs(v).toFixed(2) + ' m/s';
   document.getElementById('atInfo').textContent = at.toFixed(2) + ' m/s²';
   document.getElementById('arInfo').textContent = ar.toFixed(2) + ' m/s²';
 }
@@ -268,9 +268,11 @@ function draw() {
   ctx.lineTo(px, py);
   ctx.stroke();
 
-  // Trail
-  trail.push({ x: px, y: py });
-  if (trail.length > maxTrail) trail.shift();
+  // Trail (only push when running)
+  if (running) {
+    trail.push({ x: px, y: py });
+    if (trail.length > maxTrail) trail.shift();
+  }
   if (trail.length > 1) {
     ctx.strokeStyle = 'rgba(37,99,235,0.25)';
     ctx.lineWidth = 2;
@@ -323,7 +325,7 @@ function draw() {
     const arx = px + arScale * Math.cos(theta + Math.PI);
     const ary = py - arScale * Math.sin(theta + Math.PI);
     drawArrow(px, py, arx, ary, '#8B0029', 2);
-    drawTextWithBg('a\u1D63', arx - 15, ary + 15, '#8B0029', 12);
+    drawTextWithBg('aᵣ', arx - 15, ary + 15, '#8B0029', 12);
   }
 
   // Center
