@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -35 750 480" font-family="sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -35 750 490" font-family="sans-serif">
   <defs>
     <marker id="arrRedR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
       <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
@@ -6,10 +6,13 @@
     <marker id="arrBlueR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
       <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
     </marker>
+    <marker id="arrGrayR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/>
+    </marker>
   </defs>
 
   <!-- Divider -->
-  <line x1="375" y1="30" x2="375" y2="350" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="375" y1="30" x2="375" y2="360" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
 
   <!-- === Time t (left) === -->
   <text x="188" y="30" font-size="14" fill="#000000" text-anchor="middle" font-weight="bold">시각 <tspan font-style="italic">t</tspan></text>
@@ -30,7 +33,7 @@
   </text>
 
   <!-- Momentum label -->
-  <text x="170" y="300" font-size="14" fill="#6B7280" text-anchor="middle">
+  <text x="170" y="310" font-size="14" fill="#6B7280" text-anchor="middle">
     총 운동량: <tspan font-style="italic">Mv</tspan>
   </text>
 
@@ -58,18 +61,35 @@
   <path d="M 525,240 Q 535,268 540,260 Q 545,268 555,240" stroke="#8B0029" stroke-width="1" fill="#F3F4F6"/>
 
   <!-- Exhaust gas -->
-  <ellipse cx="540" cy="290" rx="25" ry="15" fill="#F3F4F6" stroke="#8B0029" stroke-width="1.5"/>
-  <text x="540" y="296" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">dM</text>
+  <ellipse cx="540" cy="295" rx="25" ry="15" fill="#F3F4F6" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="540" y="300" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">dM</text>
 
-  <!-- Exhaust velocity arrow (downward) -->
-  <line x1="540" y1="308" x2="540" y2="355" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRedR)"/>
-  <text x="560" y="338" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">U</text>
-  <text x="560" y="358" font-size="12" fill="#6B7280">(배기 속도)</text>
+  <!-- Exhaust ground-frame velocity arrow (downward) -->
+  <line x1="540" y1="313" x2="540" y2="360" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRedR)"/>
+  <text x="575" y="338" font-size="14" fill="#8B0029" font-weight="bold">
+    <tspan font-style="italic">v</tspan> &#x2212; <tspan font-style="italic">v</tspan><tspan font-size="10" baseline-shift="sub">rel</tspan>
+  </text>
+  <text x="575" y="358" font-size="11" fill="#6B7280">(지면 기준)</text>
 
-  <!-- Rocket equation box -->
-  <rect x="80" y="378" width="590" height="50" rx="8" fill="#F3F4F6" stroke="#8B0029" stroke-width="1"/>
-  <text x="375" y="398" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold">치올코프스키 로켓 방정식</text>
-  <text x="375" y="420" font-size="14" fill="#8B0029" text-anchor="middle">
+  <!-- v_rel brace annotation -->
+  <line x1="470" y1="165" x2="470" y2="295" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="460" y1="165" x2="470" y2="165" stroke="#6B7280" stroke-width="1"/>
+  <line x1="460" y1="295" x2="470" y2="295" stroke="#6B7280" stroke-width="1"/>
+  <!-- v_rel arrow between rocket and exhaust -->
+  <line x1="470" y1="180" x2="470" y2="280" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrGrayR)"/>
+  <text x="435" y="235" font-size="12" fill="#6B7280" text-anchor="middle">
+    <tspan font-style="italic">v</tspan><tspan font-size="9" baseline-shift="sub">rel</tspan>
+  </text>
+  <text x="435" y="250" font-size="10" fill="#6B7280" text-anchor="middle">(상대 속력)</text>
+
+  <!-- Notation box -->
+  <rect x="80" y="385" width="590" height="80" rx="8" fill="#F3F4F6" stroke="#8B0029" stroke-width="1"/>
+  <text x="375" y="405" font-size="13" fill="#000000" text-anchor="middle">
+    <tspan font-style="italic">dM</tspan> &gt; 0: 분출된 연료 질량 &#160;&#160;|&#160;&#160;
+    <tspan font-style="italic">v</tspan><tspan font-size="10" baseline-shift="sub">rel</tspan> &gt; 0: 로켓 대비 배기 속력
+  </text>
+  <text x="375" y="428" font-size="13" fill="#8B0029" text-anchor="middle" font-weight="bold">치올코프스키 로켓 방정식</text>
+  <text x="375" y="450" font-size="14" fill="#8B0029" text-anchor="middle">
     <tspan font-style="italic">v</tspan><tspan font-size="10" baseline-shift="sub">f</tspan>
     &#x2212; <tspan font-style="italic">v</tspan><tspan font-size="10" baseline-shift="sub">i</tspan>
     = <tspan font-style="italic">v</tspan><tspan font-size="10" baseline-shift="sub">rel</tspan>
