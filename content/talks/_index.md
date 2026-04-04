@@ -19,7 +19,7 @@ title: Talks
 <span class="talk-title">
 Excitons in 1D Single-Chains and Anisotropic 2D Heterostructures from GW-BSE
 </span><br>
-<span class="talk-type">Contributed talk</span><br>
+<span class="talk-type">Contributed talk of Byeongchan Lee</span><br>
 <span class="talk-venue">Workshop on CMS and HPC, MCB 101, University of Southern California, Los Angeles, Apr 2, 2026</span>
 </li>
 
