@@ -5,23 +5,18 @@ layout: list
 # Define gallery items (order matters). You can also omit this list and the layout
 # will try to auto-discover image resources under photos/images/*.
 gallery:
-  - src: "/photos/images/2026_04_usc_workshop_1.jpg"
+  - slides:
+      - "/photos/images/2026_04_usc_workshop_1.jpg"
+      - "/photos/images/2026_04_usc_workshop_2.jpg"
+      - "/photos/images/2026_04_usc_workshop_3.jpg"
+      - "/photos/images/2026_04_usc_workshop_4.jpg"
     caption: "2026/04 <br> Byeongchan gives a talk at USC workshop on CMS and HPC"
-  - src: "/photos/images/2026_04_usc_workshop_2.jpg"
-    caption: "2026/04 <br> Byeongchan gives a talk at USC workshop on CMS and HPC"
-  - src: "/photos/images/2026_04_usc_workshop_3.jpg"
-    caption: "2026/04 <br> Byeongchan gives a talk at USC workshop on CMS and HPC"
-  - src: "/photos/images/2026_04_usc_workshop_4.jpg"
-    caption: "2026/04 <br> Byeongchan gives a talk at USC workshop on CMS and HPC"
-  - src: "/photos/images/2026_04_usc_1.jpg"
-    caption: "2026/04 <br> Byeongchan at Prof. Zhenglu Li's group, USC"
-  - src: "/photos/images/2026_04_usc_2.jpg"
-    caption: "2026/04 <br> Byeongchan at Prof. Zhenglu Li's group, USC"
-  - src: "/photos/images/2026_04_usc_3.jpg"
-    caption: "2026/04 <br> Byeongchan at Prof. Zhenglu Li's group, USC"
-  - src: "/photos/images/2026_04_usc_4.jpg"
-    caption: "2026/04 <br> Byeongchan at Prof. Zhenglu Li's group, USC"
-  - src: "/photos/images/2026_04_usc_5.jpg"
+  - slides:
+      - "/photos/images/2026_04_usc_1.jpg"
+      - "/photos/images/2026_04_usc_2.jpg"
+      - "/photos/images/2026_04_usc_3.jpg"
+      - "/photos/images/2026_04_usc_4.jpg"
+      - "/photos/images/2026_04_usc_5.jpg"
     caption: "2026/04 <br> Byeongchan at Prof. Zhenglu Li's group, USC"
   - slides:
       - "/photos/images/2026_glamp_presentation.webp"
