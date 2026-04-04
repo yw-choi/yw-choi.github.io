@@ -5,6 +5,16 @@ layout: list
 # Define gallery items (order matters). You can also omit this list and the layout
 # will try to auto-discover image resources under photos/images/*.
 gallery:
+  - src: "/photos/images/2026_04_usc_1.jpg"
+    caption: "2026/04 <br> Byeongchan at Prof. Zhenglu Li's group, USC"
+  - src: "/photos/images/2026_04_usc_2.jpg"
+    caption: "2026/04 <br> Byeongchan at Prof. Zhenglu Li's group, USC"
+  - src: "/photos/images/2026_04_usc_3.jpg"
+    caption: "2026/04 <br> Byeongchan at Prof. Zhenglu Li's group, USC"
+  - src: "/photos/images/2026_04_usc_4.jpg"
+    caption: "2026/04 <br> Byeongchan at Prof. Zhenglu Li's group, USC"
+  - src: "/photos/images/2026_04_usc_5.jpg"
+    caption: "2026/04 <br> Byeongchan at Prof. Zhenglu Li's group, USC"
   - slides:
       - "/photos/images/2026_glamp_presentation.webp"
       - "/photos/images/2026_glamp_award.webp"
@@ -46,4 +56,3 @@ gallery:
     caption: "2025/05 <br> Our new office has been set up!"
 paginate: 12
 ---
-
