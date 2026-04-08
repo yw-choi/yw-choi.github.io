@@ -2,7 +2,7 @@
 title: "연구 iteration의 systematic tracking"
 date: 2026-04-08
 tags: ["research", "workflow", "iteration", "personal-knowledge", "lab-notebook"]
-draft: true
+draft: false
 ---
 
 연구 프로젝트를 한참 진행하다 보면 자꾸 같은 걸 반복한다. "이 sensitivity test 전에 한 번 해본 것 같은데"가 생기면 옛날 디렉토리를 뒤지기 시작한다. 보통은 못 찾고, 또 한다. 6개월 전의 내가 무슨 결론을 냈는지 기억이 안 나서 같은 결론에 또 도착한다. iteration 횟수가 늘수록 이 비용은 quadratic하게 커진다.
