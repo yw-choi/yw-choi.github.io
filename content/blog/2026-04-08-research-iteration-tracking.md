@@ -2,7 +2,7 @@
 title: "연구 iteration의 systematic tracking"
 date: 2026-04-08
 tags: ["research", "workflow", "iteration", "personal-knowledge", "lab-notebook"]
-draft: false
+draft: true
 ---
 
 ## 문제
