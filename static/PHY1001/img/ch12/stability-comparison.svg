@@ -1,88 +1,55 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 380" font-family="sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" font-family="sans-serif">
   <defs>
     <marker id="stR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
       <polygon points="0 0, 10 3.5, 0 7"/>
     </marker>
-    <marker id="stG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
-      <polygon points="0 0, 10 3.5, 0 7"/>
-    </marker>
   </defs>
 
-  <!-- Title -->
-  <text x="410" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">평형의 종류 (Stability of Equilibrium)</text>
-
   <!-- =========== Panel 1: Stable =========== -->
-  <g transform="translate(140, 90)">
-    <text x="0" y="0" text-anchor="middle" font-size="15" font-weight="bold" fill="#8B0029">안정 평형</text>
-    <text x="0" y="18" text-anchor="middle" font-size="12" fill="#6B7280">(Stable)</text>
-
-    <!-- Bowl shape (concave up) -->
-    <path d="M -90,140 Q -90,210 0,210 Q 90,210 90,140" fill="none" stroke="#6B7280" stroke-width="2"/>
-
-    <!-- Ball at equilibrium position (bottom of bowl) -->
-    <circle cx="0" cy="196" r="14" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
-    <line x1="0" y1="210" x2="0" y2="245" stroke="#8B0029" stroke-width="2.5" marker-end="url(#stR)"/>
-    <text x="14" y="240" font-size="13" font-style="italic" fill="#8B0029">mg</text>
-
+  <g transform="translate(135, 60)">
+    <text x="0" y="0" text-anchor="middle" font-size="20" font-weight="bold" fill="#8B0029">안정 평형</text>
+    <text x="0" y="22" text-anchor="middle" font-size="14" fill="#6B7280">(Stable)</text>
+    <!-- Bowl shape -->
+    <path d="M -100,140 Q -100,220 0,220 Q 100,220 100,140" fill="none" stroke="#6B7280" stroke-width="2.5"/>
+    <!-- Ball at equilibrium position -->
+    <circle cx="0" cy="204" r="16" fill="#F3F4F6" stroke="#6B7280" stroke-width="2.5"/>
+    <line x1="0" y1="220" x2="0" y2="265" stroke="#8B0029" stroke-width="3" marker-end="url(#stR)"/>
+    <text x="20" y="258" font-size="18" font-style="italic" fill="#8B0029" font-weight="bold">mg</text>
     <!-- Displaced ball (ghost) -->
-    <circle cx="55" cy="170" r="14" fill="none" stroke="#6B7280" stroke-width="1.2" stroke-dasharray="4 3"/>
-    <!-- Restoring tangential force component (back toward equilibrium) -->
-    <line x1="42" y1="180" x2="0" y2="200" stroke="#8B0029" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#stR)"/>
-    <text x="14" y="170" font-size="12" fill="#8B0029" font-weight="bold">복원력</text>
-
-    <!-- Caption -->
-    <text x="0" y="278" text-anchor="middle" font-size="13" fill="#1a1a1a">밀어도 되돌아옴</text>
+    <circle cx="62" cy="180" r="16" fill="none" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <!-- Restoring tangential force component -->
+    <line x1="48" y1="190" x2="0" y2="212" stroke="#8B0029" stroke-width="2.5" stroke-dasharray="6 3" marker-end="url(#stR)"/>
+    <text x="22" y="172" font-size="14" fill="#8B0029" font-weight="bold">복원력</text>
   </g>
 
   <!-- =========== Panel 2: Unstable =========== -->
-  <g transform="translate(410, 90)">
-    <text x="0" y="0" text-anchor="middle" font-size="15" font-weight="bold" fill="#8B0029">불안정 평형</text>
-    <text x="0" y="18" text-anchor="middle" font-size="12" fill="#6B7280">(Unstable)</text>
-
-    <!-- Hill shape (convex up) -->
-    <path d="M -90,210 Q -90,140 0,140 Q 90,140 90,210" fill="none" stroke="#6B7280" stroke-width="2"/>
-
+  <g transform="translate(400, 60)">
+    <text x="0" y="0" text-anchor="middle" font-size="20" font-weight="bold" fill="#8B0029">불안정 평형</text>
+    <text x="0" y="22" text-anchor="middle" font-size="14" fill="#6B7280">(Unstable)</text>
+    <!-- Hill shape -->
+    <path d="M -100,220 Q -100,140 0,140 Q 100,140 100,220" fill="none" stroke="#6B7280" stroke-width="2.5"/>
     <!-- Ball at equilibrium position (top of hill) -->
-    <circle cx="0" cy="126" r="14" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
-    <line x1="0" y1="140" x2="0" y2="175" stroke="#8B0029" stroke-width="2.5" marker-end="url(#stR)"/>
-    <text x="14" y="170" font-size="13" font-style="italic" fill="#8B0029">mg</text>
-
-    <!-- Displaced ball (ghost) on the slope -->
-    <circle cx="55" cy="153" r="14" fill="none" stroke="#6B7280" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <circle cx="0" cy="124" r="16" fill="#F3F4F6" stroke="#6B7280" stroke-width="2.5"/>
+    <line x1="0" y1="140" x2="0" y2="178" stroke="#8B0029" stroke-width="3" marker-end="url(#stR)"/>
+    <text x="20" y="172" font-size="18" font-style="italic" fill="#8B0029" font-weight="bold">mg</text>
+    <!-- Displaced ball (ghost) -->
+    <circle cx="62" cy="156" r="16" fill="none" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="4 3"/>
     <!-- Tangential force component (away from equilibrium) -->
-    <line x1="60" y1="167" x2="92" y2="187" stroke="#8B0029" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#stR)"/>
-    <text x="80" y="208" font-size="12" fill="#8B0029" font-weight="bold">이탈</text>
-
-    <!-- Caption -->
-    <text x="0" y="278" text-anchor="middle" font-size="13" fill="#1a1a1a">조금만 밀어도 떠남</text>
+    <line x1="68" y1="172" x2="105" y2="195" stroke="#8B0029" stroke-width="2.5" stroke-dasharray="6 3" marker-end="url(#stR)"/>
+    <text x="92" y="220" font-size="14" fill="#8B0029" font-weight="bold">이탈</text>
   </g>
 
   <!-- =========== Panel 3: Neutral =========== -->
-  <g transform="translate(680, 90)">
-    <text x="0" y="0" text-anchor="middle" font-size="15" font-weight="bold" fill="#8B0029">중립 평형</text>
-    <text x="0" y="18" text-anchor="middle" font-size="12" fill="#6B7280">(Neutral)</text>
-
+  <g transform="translate(665, 60)">
+    <text x="0" y="0" text-anchor="middle" font-size="20" font-weight="bold" fill="#8B0029">중립 평형</text>
+    <text x="0" y="22" text-anchor="middle" font-size="14" fill="#6B7280">(Neutral)</text>
     <!-- Flat surface -->
-    <line x1="-90" y1="200" x2="90" y2="200" stroke="#6B7280" stroke-width="2"/>
-
+    <line x1="-100" y1="210" x2="100" y2="210" stroke="#6B7280" stroke-width="2.5"/>
     <!-- Ball at original position -->
-    <circle cx="-30" cy="186" r="14" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
-    <line x1="-30" y1="200" x2="-30" y2="235" stroke="#8B0029" stroke-width="2.5" marker-end="url(#stR)"/>
-    <text x="-16" y="230" font-size="13" font-style="italic" fill="#8B0029">mg</text>
-
+    <circle cx="-35" cy="194" r="16" fill="#F3F4F6" stroke="#6B7280" stroke-width="2.5"/>
+    <line x1="-35" y1="210" x2="-35" y2="255" stroke="#8B0029" stroke-width="3" marker-end="url(#stR)"/>
+    <text x="-15" y="250" font-size="18" font-style="italic" fill="#8B0029" font-weight="bold">mg</text>
     <!-- Displaced ball (ghost) -->
-    <circle cx="40" cy="186" r="14" fill="none" stroke="#6B7280" stroke-width="1.2" stroke-dasharray="4 3"/>
-
-    <!-- Note: no horizontal force component -->
-    <text x="40" y="170" text-anchor="middle" font-size="11" fill="#6B7280">복원력 = 0</text>
-
-    <!-- Caption -->
-    <text x="0" y="278" text-anchor="middle" font-size="13" fill="#1a1a1a">어디서나 평형</text>
+    <circle cx="45" cy="194" r="16" fill="none" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="4 3"/>
   </g>
-
-  <!-- Summary footer -->
-  <rect x="60" y="335" width="700" height="32" rx="6" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
-  <text x="410" y="356" text-anchor="middle" font-size="13" fill="#1a1a1a">
-    살짝 밀었을 때, 무게(<tspan font-style="italic" fill="#8B0029">mg</tspan>) 의 <tspan fill="#8B0029" font-weight="bold">접선 성분</tspan> 이 평형 위치를 향하면 안정, 멀어지면 불안정, 0이면 중립
-  </text>
 </svg>

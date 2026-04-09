@@ -32,8 +32,6 @@ label { display: block; font-size: 0.78rem; color: #555; margin-bottom: 2px; }
 .canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
 .canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
 .canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.92); padding: 1px 5px; border-radius: 3px; }
-.canvas-overlay .canvas-title { position: absolute; top: 12px; left: 16px; font-size: 14px; font-weight: 700; color: #8B0029; background: rgba(255,255,255,0.95); padding: 4px 8px; border-radius: 4px; }
-.canvas-overlay .canvas-title .katex { font-size: 13px; color: #8B0029; }
 
 @media (max-width: 700px) {
   .container { flex-direction: column; }
@@ -47,7 +45,6 @@ label { display: block; font-size: 0.78rem; color: #555; margin-bottom: 2px; }
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
     <div class="canvas-overlay" id="overlay">
-      <div class="canvas-title" id="title"></div>
       <div class="katex-label with-bg" id="lblTheta" style="color:#6B7280;font-weight:bold;"></div>
       <div class="katex-label with-bg" id="lblMg"  style="color:#8B0029;font-weight:bold;"></div>
       <div class="katex-label with-bg" id="lblMgP" style="color:#8B0029;font-weight:bold;"></div>
@@ -132,7 +129,6 @@ const valMl   = document.getElementById('valMl');
 const valMp   = document.getElementById('valMp');
 const valMu   = document.getElementById('valMu');
 
-const lblTitle = document.getElementById('title');
 const lblTheta = document.getElementById('lblTheta');
 const lblMg = document.getElementById('lblMg');
 const lblMgP = document.getElementById('lblMgP');
@@ -247,7 +243,6 @@ function drawArrow(x1, y1, x2, y2, color, lw) {
 
 function draw() {
   ctx.clearRect(0, 0, W, H);
-  lblTitle.innerHTML = '사다리 평형: ' + kx('\\sum \\tau_O = 0');
 
   const s = solve();
 
@@ -313,29 +308,54 @@ function draw() {
     ctx.stroke();
   }
 
-  // Person on ladder (simple but better than lollipop)
+  // Person on ladder — simple stick figure with head, body, arms, legs.
+  // Anchor at the rung where person stands; figure is upright (vertical, NOT perpendicular to ladder).
   const personX = baseX + (topX - baseX) * s.frac;
   const personY = baseY + (topY - baseY) * s.frac;
-  // Person stands perpendicular to the ladder (head away from incline)
-  const standOffX = -Math.sin(s.theta) * 22;
-  const standOffY = -Math.cos(s.theta) * 22;
-  const headR = 9;
-  // Body: short line perpendicular to ladder
-  ctx.strokeStyle = '#444';
-  ctx.lineWidth = 3.5;
+  const personColor = '#444';
+  ctx.strokeStyle = personColor;
   ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = 2.5;
+
+  // Place feet on the rung. Person stands UPRIGHT (vertical), feet at (personX, personY).
+  // Body extends straight up from feet.
+  const feetX = personX;
+  const feetY = personY;
+  const bodyH = 38;          // body length (upright)
+  const headR = 7;
+  const hipY = feetY - bodyH * 0.55;       // hip
+  const shoulderY = feetY - bodyH;          // shoulder
+  const headCY = shoulderY - headR - 2;     // head center
+  const armLen = 16;
+  // Arms reach toward the ladder (forward = toward wall along surface direction)
+  // Forward direction (along ladder, toward top): (cosθ, -sinθ) since topY < baseY
+  const fwdX = Math.cos(s.theta);
+  const fwdY = -Math.sin(s.theta);
+
+  // Body (vertical)
   ctx.beginPath();
-  ctx.moveTo(personX, personY);
-  ctx.lineTo(personX + standOffX, personY + standOffY);
+  ctx.moveTo(feetX, feetY);
+  ctx.lineTo(feetX, shoulderY);
+  ctx.stroke();
+  // Legs (small offsets at feet)
+  ctx.beginPath();
+  ctx.moveTo(feetX, hipY); ctx.lineTo(feetX - 5, feetY);
+  ctx.moveTo(feetX, hipY); ctx.lineTo(feetX + 5, feetY);
+  ctx.stroke();
+  // Arms reaching forward to grip a higher rung along the ladder
+  const handX = feetX + fwdX * armLen;
+  const handY = shoulderY + fwdY * armLen;
+  ctx.beginPath();
+  ctx.moveTo(feetX, shoulderY); ctx.lineTo(handX, handY);
+  ctx.moveTo(feetX, shoulderY); ctx.lineTo(handX - 4, handY + 2);
   ctx.stroke();
   // Head
   ctx.beginPath();
-  ctx.arc(personX + standOffX + (-Math.sin(s.theta)) * headR,
-          personY + standOffY + (-Math.cos(s.theta)) * headR,
-          headR, 0, Math.PI * 2);
+  ctx.arc(feetX, headCY, headR, 0, Math.PI * 2);
   ctx.fillStyle = '#F3F4F6';
   ctx.fill();
-  ctx.strokeStyle = '#444';
+  ctx.strokeStyle = personColor;
   ctx.lineWidth = 2;
   ctx.stroke();
 
@@ -410,11 +430,12 @@ function draw() {
   posLabel(lblN, baseX - 65, baseY - NLen - 8,
     kx('N = ' + s.N.toFixed(0) + '\\text{ N}'));
 
-  // f friction at base (horizontal, toward wall = rightward, since wall pushes ladder away from itself)
+  // f friction at base — drawn slightly above the ground line to avoid the hatching
   const fLen = s.f * forceScale;
   const fColor = s.slipping ? '#c62828' : '#8B0029';
-  drawArrow(baseX, baseY, baseX + fLen, baseY, fColor, arrLw);
-  posLabel(lblF, baseX + fLen + 6, baseY + 6,
+  const fY = baseY - 6;
+  drawArrow(baseX, fY, baseX + fLen, fY, fColor, arrLw);
+  posLabel(lblF, baseX + fLen + 6, fY - 16,
     kx('f = ' + s.f.toFixed(0) + '\\text{ N}'));
 
   // Angle arc at base

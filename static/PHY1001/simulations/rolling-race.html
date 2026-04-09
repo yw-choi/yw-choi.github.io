@@ -42,8 +42,6 @@ button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.8
 .canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
 .canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
 .canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.92); padding: 2px 5px; border-radius: 3px; }
-.canvas-overlay .canvas-title { position: absolute; top: 10px; left: 16px; font-size: 14px; font-weight: 700; color: #8B0029; background: rgba(255,255,255,0.95); padding: 4px 8px; border-radius: 4px; }
-.canvas-overlay .canvas-title .katex { font-size: 13px; color: #8B0029; }
 
 @media (max-width: 700px) {
   .container { flex-direction: column; }
@@ -57,7 +55,6 @@ button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.8
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
     <div class="canvas-overlay" id="overlay">
-      <div class="canvas-title" id="title"></div>
       <div class="katex-label with-bg" id="lblAngle"></div>
       <div class="katex-label with-bg" id="lblLength"></div>
       <div class="katex-label with-bg" id="lblBarTitle" style="font-weight:bold;color:#444;"></div>
@@ -152,7 +149,6 @@ const valAngle = document.getElementById('valAngle');
 const valLength = document.getElementById('valLength');
 const btnPlay = document.getElementById('btnPlay');
 const btnReset = document.getElementById('btnReset');
-const lblTitle = document.getElementById('title');
 const lblAngle = document.getElementById('lblAngle');
 const lblLength = document.getElementById('lblLength');
 const lblBarTitle = document.getElementById('lblBarTitle');
@@ -225,9 +221,6 @@ function updateResults() {
 
 function draw() {
   ctx.clearRect(0, 0, W, H);
-
-  // ----- Title -----
-  lblTitle.innerHTML = '구름 운동 경주: ' + kx('a_{\\text{com}} = \\dfrac{g\\sin\\theta}{1+c}');
 
   // ----- Incline geometry -----
   // Bottom-right corner of incline at (rampRight, rampBottom). Top-left at (rampLeft, rampTop).

@@ -36,8 +36,6 @@ button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.7
 .canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
 .canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
 .canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.92); padding: 1px 5px; border-radius: 3px; }
-.canvas-overlay .canvas-title { position: absolute; top: 12px; left: 16px; font-size: 14px; font-weight: 700; color: #8B0029; background: rgba(255,255,255,0.95); padding: 4px 8px; border-radius: 4px; }
-.canvas-overlay .canvas-title .katex { font-size: 13px; color: #8B0029; }
 
 @media (max-width: 700px) {
   .container { flex-direction: column; }
@@ -51,7 +49,6 @@ button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.7
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
     <div class="canvas-overlay" id="overlay">
-      <div class="canvas-title" id="title"></div>
       <div class="katex-label with-bg" id="lblOmega" style="color:#8B0029;font-weight:bold;"></div>
       <div class="katex-label with-bg" id="lblR" style="color:#2563EB;font-weight:bold;"></div>
       <div class="katex-label with-bg" id="lblBarTitle" style="color:#444;font-weight:bold;"></div>
@@ -134,7 +131,6 @@ const valRp = document.getElementById('valRp');
 const btnPlay = document.getElementById('btnPlay');
 const btnReset = document.getElementById('btnReset');
 
-const lblTitle = document.getElementById('title');
 const lblOmega = document.getElementById('lblOmega');
 const lblR = document.getElementById('lblR');
 const lblBarTitle = document.getElementById('lblBarTitle');
@@ -220,7 +216,6 @@ function updateValueLabels() {
 
 function draw() {
   ctx.clearRect(0, 0, W, H);
-  lblTitle.innerHTML = '각운동량 보존: ' + kx('L = I\\omega = \\text{const}');
 
   const cx = W * 0.55;
   const cy = H * 0.5;
