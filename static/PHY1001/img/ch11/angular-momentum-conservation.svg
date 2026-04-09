@@ -1,82 +1,87 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 420" font-family="sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 440" font-family="sans-serif">
   <defs>
-    <marker id="acR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+    <marker id="amR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="amG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
       <polygon points="0 0, 10 3.5, 0 7"/>
     </marker>
   </defs>
 
   <!-- Title -->
-  <text x="375" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">각운동량 보존: 피겨 스케이팅</text>
+  <text x="380" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">각운동량 보존 (피겨 스케이터의 스핀)</text>
+  <text x="380" y="52" text-anchor="middle" font-size="12" fill="#6B7280">위에서 본 모습 — Top View</text>
 
-  <!-- Left: Arms out (large I, small omega) -->
-  <g transform="translate(190, 210)">
-    <!-- Body (torso) -->
-    <ellipse cx="0" cy="0" rx="20" ry="55" fill="#F3F4F6" stroke="#000000" stroke-width="2"/>
-    <!-- Head -->
-    <circle cx="0" cy="-70" r="16" fill="#F3F4F6" stroke="#000000" stroke-width="2"/>
-    <!-- Left arm extended -->
-    <line x1="-20" y1="-30" x2="-90" y2="-20" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
-    <!-- Right arm extended -->
-    <line x1="20" y1="-30" x2="90" y2="-20" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
-    <!-- Left leg -->
-    <line x1="-8" y1="55" x2="-15" y2="110" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
-    <!-- Right leg -->
-    <line x1="8" y1="55" x2="15" y2="110" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
-    <!-- Skate blade -->
-    <line x1="-25" y1="112" x2="-5" y2="112" stroke="#6B7280" stroke-width="2"/>
-    <line x1="5" y1="112" x2="25" y2="112" stroke="#6B7280" stroke-width="2"/>
+  <!-- =========== State 1: arms extended =========== -->
+  <g transform="translate(180, 220)">
+    <!-- Body (center) -->
+    <circle cx="0" cy="0" r="22" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+    <!-- Arms (rods) extended -->
+    <line x1="-22" y1="0" x2="-95" y2="0" stroke="#6B7280" stroke-width="3" stroke-linecap="round"/>
+    <line x1="22" y1="0" x2="95" y2="0" stroke="#6B7280" stroke-width="3" stroke-linecap="round"/>
+    <!-- Dumbbell masses at ends -->
+    <circle cx="-105" cy="0" r="12" fill="#8B0029" stroke="#6a0020" stroke-width="1.5"/>
+    <circle cx="105" cy="0" r="12" fill="#8B0029" stroke="#6a0020" stroke-width="1.5"/>
+    <text x="-105" y="4" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF">m</text>
+    <text x="105" y="4" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF">m</text>
 
-    <!-- Slow rotation arrow -->
-    <path d="M -35,-100 A 50,50 0 0,1 35,-100" fill="none" stroke="#8B0029" stroke-width="2" marker-end="url(#acR)"/>
-    <text x="0" y="-108" text-anchor="middle" font-size="14" fill="#8B0029">
-      <tspan font-style="italic">&#x3C9;</tspan> 작음
+    <!-- Slow rotation arrow (small arc) -->
+    <path d="M -50,-55 A 70,70 0 0,1 50,-55" fill="none" stroke="#8B0029" stroke-width="2" marker-end="url(#amR)"/>
+    <text x="0" y="-65" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">
+      <tspan font-style="italic">&#x3C9;</tspan><tspan font-size="10" baseline-shift="sub">i</tspan> 작음
     </text>
 
-    <!-- Radius indicator -->
-    <line x1="0" y1="-20" x2="-90" y2="-20" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-    <text x="-50" y="-28" text-anchor="middle" font-size="14" fill="#6B7280">
-      큰 <tspan font-style="italic">I</tspan>
-    </text>
+    <!-- Radius dimension -->
+    <line x1="0" y1="35" x2="105" y2="35" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+    <line x1="0" y1="29" x2="0" y2="41" stroke="#6B7280" stroke-width="1"/>
+    <line x1="105" y1="29" x2="105" y2="41" stroke="#6B7280" stroke-width="1"/>
+    <text x="52" y="55" text-anchor="middle" font-size="13" font-style="italic" fill="#6B7280">r<tspan font-size="10" baseline-shift="sub">i</tspan></text>
+
+    <!-- State label -->
+    <text x="0" y="125" text-anchor="middle" font-size="13" fill="#1a1a1a">큰 <tspan font-style="italic" font-weight="bold">I</tspan><tspan font-size="10" baseline-shift="sub">i</tspan> &#xA0;&#xA0; 작은 <tspan font-style="italic" font-weight="bold">&#x3C9;</tspan><tspan font-size="10" baseline-shift="sub">i</tspan></text>
   </g>
 
-  <!-- Arrow between figures -->
-  <line x1="320" y1="200" x2="400" y2="200" stroke="#8B0029" stroke-width="2.5" marker-end="url(#acR)"/>
-  <text x="360" y="185" text-anchor="middle" font-size="14" fill="#8B0029">팔 모음</text>
+  <!-- Transition arrow -->
+  <line x1="320" y1="220" x2="430" y2="220" stroke="#6B7280" stroke-width="2.5" marker-end="url(#amG)"/>
+  <text x="375" y="208" text-anchor="middle" font-size="13" fill="#6B7280">팔을 모음</text>
+  <text x="375" y="240" text-anchor="middle" font-size="11" fill="#6B7280">(외부 토크 = 0)</text>
 
-  <!-- Right: Arms in (small I, large omega) -->
-  <g transform="translate(520, 210)">
-    <!-- Body (torso, narrower) -->
-    <ellipse cx="0" cy="0" rx="15" ry="55" fill="#F3F4F6" stroke="#000000" stroke-width="2"/>
-    <!-- Head -->
-    <circle cx="0" cy="-70" r="16" fill="#F3F4F6" stroke="#000000" stroke-width="2"/>
-    <!-- Left arm close to body -->
-    <line x1="-15" y1="-30" x2="-22" y2="-5" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
-    <!-- Right arm close to body -->
-    <line x1="15" y1="-30" x2="22" y2="-5" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
-    <!-- Left leg -->
-    <line x1="-5" y1="55" x2="-8" y2="110" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
-    <!-- Right leg -->
-    <line x1="5" y1="55" x2="8" y2="110" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
-    <!-- Skate blade -->
-    <line x1="-18" y1="112" x2="2" y2="112" stroke="#6B7280" stroke-width="2"/>
-    <line x1="-2" y1="112" x2="18" y2="112" stroke="#6B7280" stroke-width="2"/>
+  <!-- =========== State 2: arms tucked in =========== -->
+  <g transform="translate(570, 220)">
+    <!-- Body (center) -->
+    <circle cx="0" cy="0" r="22" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+    <!-- Arms (rods) tucked -->
+    <line x1="-22" y1="0" x2="-30" y2="0" stroke="#6B7280" stroke-width="3" stroke-linecap="round"/>
+    <line x1="22" y1="0" x2="30" y2="0" stroke="#6B7280" stroke-width="3" stroke-linecap="round"/>
+    <!-- Dumbbell masses close -->
+    <circle cx="-38" cy="0" r="12" fill="#8B0029" stroke="#6a0020" stroke-width="1.5"/>
+    <circle cx="38" cy="0" r="12" fill="#8B0029" stroke="#6a0020" stroke-width="1.5"/>
+    <text x="-38" y="4" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF">m</text>
+    <text x="38" y="4" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF">m</text>
 
-    <!-- Fast rotation arrow (multiple turns shown) -->
-    <path d="M -35,-100 A 50,50 0 0,1 35,-100" fill="none" stroke="#8B0029" stroke-width="2.5" marker-end="url(#acR)"/>
-    <path d="M -30,-95 A 45,45 0 0,1 30,-95" fill="none" stroke="#8B0029" stroke-width="1"/>
-    <text x="0" y="-108" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">
-      <tspan font-style="italic">&#x3C9;</tspan> 큼!
+    <!-- Fast rotation arrow (larger, with motion lines) -->
+    <path d="M -55,-55 A 75,75 0 0,1 55,-55" fill="none" stroke="#8B0029" stroke-width="3" marker-end="url(#amR)"/>
+    <path d="M -45,-65 A 60,60 0 0,1 45,-65" fill="none" stroke="#8B0029" stroke-width="1.5"/>
+    <text x="0" y="-78" text-anchor="middle" font-size="15" font-weight="bold" fill="#8B0029">
+      <tspan font-style="italic">&#x3C9;</tspan><tspan font-size="11" baseline-shift="sub">f</tspan> 큼!
     </text>
 
-    <!-- Radius indicator -->
-    <text x="0" y="145" text-anchor="middle" font-size="14" fill="#6B7280">
-      작은 <tspan font-style="italic">I</tspan>
-    </text>
+    <!-- Radius dimension -->
+    <line x1="0" y1="35" x2="38" y2="35" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+    <line x1="0" y1="29" x2="0" y2="41" stroke="#6B7280" stroke-width="1"/>
+    <line x1="38" y1="29" x2="38" y2="41" stroke="#6B7280" stroke-width="1"/>
+    <text x="19" y="55" text-anchor="middle" font-size="13" font-style="italic" fill="#6B7280">r<tspan font-size="10" baseline-shift="sub">f</tspan></text>
+
+    <!-- State label -->
+    <text x="0" y="125" text-anchor="middle" font-size="13" fill="#1a1a1a">작은 <tspan font-style="italic" font-weight="bold">I</tspan><tspan font-size="10" baseline-shift="sub">f</tspan> &#xA0;&#xA0; 큰 <tspan font-style="italic" font-weight="bold">&#x3C9;</tspan><tspan font-size="10" baseline-shift="sub">f</tspan></text>
   </g>
 
-  <!-- Conservation equation -->
-  <rect x="100" y="350" width="550" height="40" rx="8" fill="#8B0029"/>
-  <text x="375" y="376" text-anchor="middle" font-size="16" font-weight="bold" fill="#FFFFFF">
-    <tspan font-style="italic">L</tspan> = <tspan font-style="italic">I&#x3C9;</tspan> = 일정   &#x2192;   <tspan font-style="italic">I</tspan> 감소하면 <tspan font-style="italic">&#x3C9;</tspan> 증가!
+  <!-- Conservation formula box (palette compliant) -->
+  <rect x="80" y="370" width="600" height="55" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
+  <text x="380" y="396" text-anchor="middle" font-size="15" font-weight="bold" fill="#8B0029">
+    <tspan font-style="italic">L</tspan> = <tspan font-style="italic">I</tspan><tspan font-style="italic">&#x3C9;</tspan> = 일정 &#xA0;&#x21D2;&#xA0; <tspan font-style="italic">I</tspan><tspan font-size="11" baseline-shift="sub">i</tspan> <tspan font-style="italic">&#x3C9;</tspan><tspan font-size="11" baseline-shift="sub">i</tspan> = <tspan font-style="italic">I</tspan><tspan font-size="11" baseline-shift="sub">f</tspan> <tspan font-style="italic">&#x3C9;</tspan><tspan font-size="11" baseline-shift="sub">f</tspan>
+  </text>
+  <text x="380" y="416" text-anchor="middle" font-size="13" fill="#6B7280">
+    관성 모멘트 <tspan font-style="italic">I</tspan> 가 줄면 각속도 <tspan font-style="italic">&#x3C9;</tspan> 는 그만큼 커진다
   </text>
 </svg>

@@ -8,39 +8,37 @@
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+body { font-family: -apple-system, sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
 .container { display: flex; height: 100vh; }
-.canvas-area { flex: 1; position: relative; background: #fafafa; }
-canvas { display: block; width: 100%; height: 100%; }
-.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
-.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
-.control-group { display: flex; flex-direction: column; gap: 4px; }
-.control-group label { font-size: 13px; font-weight: 600; color: #444; }
-.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
-.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
-.info-box .label { color: #8B0029; font-weight: 700; }
-.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
-.info-box .eq { color: #555; font-size: 12px; }
-.info-box .eq .katex { font-size: 13px; }
-.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
-.theorem-box .theorem-eq { font-size: 14px; display: block; margin-top: 4px; }
-.theorem-box .katex { color: #fff; }
-.canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 20px; font-weight: 700; color: #8B0029; }
-.canvas-title .katex { font-size: 20px; color: #8B0029; }
-.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
-.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
-.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px; }
-.status-box { border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; }
+.canvas-area { flex: 1; position: relative; }
+canvas { width: 100%; height: 100%; display: block; }
+.controls { width: 260px; padding: 16px; background: #faf5f6; border-left: 2px solid rgba(139,0,41,0.15); overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+h2 { color: #8B0029; font-size: 1.05rem; margin-bottom: 2px; }
+.subtitle { color: #888; font-size: 0.72rem; margin-bottom: 6px; }
+label { display: block; font-size: 0.78rem; color: #555; margin-bottom: 2px; }
+.slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.slider-row input[type="range"] { flex: 1; accent-color: #8B0029; }
+.slider-val { font-size: 0.78rem; font-weight: 600; color: #8B0029; min-width: 60px; text-align: right; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 9px 10px; font-size: 0.74rem; line-height: 1.7; color: #555; }
+.formula-box .katex { font-size: 0.92em; }
+.formula-box b { color: #8B0029; }
+.info-box { background: white; border: 1px solid rgba(139,0,41,0.15); border-radius: 8px; padding: 9px 10px; font-size: 0.74rem; line-height: 1.8; }
+.info-box .lbl { color: #555; }
+.info-box .val { color: #8B0029; font-weight: 700; font-family: ui-monospace, monospace; }
+.status-box { border-radius: 8px; padding: 8px; font-size: 12px; text-align: center; font-weight: 700; }
 .status-safe { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
 .status-slip { background: #fbe9e7; color: #c62828; border: 1px solid #ef9a9a; }
-.torque-box { background: #f0f4ff; border: 1px solid #c0d0f0; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
-.torque-box .label { color: #2563EB; font-weight: 700; }
-.torque-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.92); padding: 1px 5px; border-radius: 3px; }
+.canvas-overlay .canvas-title { position: absolute; top: 12px; left: 16px; font-size: 14px; font-weight: 700; color: #8B0029; background: rgba(255,255,255,0.95); padding: 4px 8px; border-radius: 4px; }
+.canvas-overlay .canvas-title .katex { font-size: 13px; color: #8B0029; }
 
 @media (max-width: 700px) {
   .container { flex-direction: column; }
-  .canvas-area { height: 50vh; }
-  .controls { width: 100%; height: 50vh; border-left: none; border-top: 2px solid #eee; }
+  .canvas-area { flex: none; height: 55vh; }
+  .controls { width: 100%; border-left: none; border-top: 2px solid rgba(139,0,41,0.15); height: 45vh; }
 }
 </style>
 </head>
@@ -48,363 +46,398 @@ canvas { display: block; width: 100%; height: 100%; }
 <div class="container">
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
-    <div class="canvas-title" id="canvasTitle"></div>
     <div class="canvas-overlay" id="overlay">
-      <div class="katex-label with-bg" id="lbl-theta" style="color:#6B7280;font-weight:bold;"></div>
+      <div class="canvas-title" id="title"></div>
+      <div class="katex-label with-bg" id="lblTheta" style="color:#6B7280;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lblMg"  style="color:#8B0029;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lblMgP" style="color:#8B0029;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lblFw"  style="color:#2563EB;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lblN"   style="color:#2563EB;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lblF"   style="color:#8B0029;font-weight:bold;"></div>
+      <div class="katex-label" id="lblArmM"  style="color:#6B7280;"></div>
+      <div class="katex-label" id="lblArmMP" style="color:#6B7280;"></div>
+      <div class="katex-label" id="lblArmFw" style="color:#6B7280;"></div>
     </div>
   </div>
   <div class="controls">
-    <div class="theorem-box">
-      정적 평형 조건
-      <span class="theorem-eq" id="theoremEq1"></span>
-      <span class="theorem-eq" id="theoremEq2"></span>
+    <div>
+      <h2>사다리 평형</h2>
+      <div class="subtitle">Ladder Equilibrium &mdash; Ch.12.6</div>
     </div>
 
-    <div class="control-group">
-      <label>사다리 각도 <span id="angleLabelTheta"></span> = <span id="angleVal">60</span>&deg;</label>
-      <input type="range" id="angleSlider" min="15" max="85" value="60" step="1">
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div>
+      <label>사다리 각도 <span id="thetaLabel"></span></label>
+      <div class="slider-row">
+        <input type="range" id="slTheta" min="15" max="85" step="1" value="60">
+        <span class="slider-val" id="valTheta">60°</span>
+      </div>
+    </div>
+    <div>
+      <label>사람 위치 (아래→위)</label>
+      <div class="slider-row">
+        <input type="range" id="slPos" min="0" max="100" step="1" value="50">
+        <span class="slider-val" id="valPos">50%</span>
+      </div>
+    </div>
+    <div>
+      <label>사다리 질량 <span id="mLabel"></span></label>
+      <div class="slider-row">
+        <input type="range" id="slMl" min="2" max="30" step="0.5" value="10">
+        <span class="slider-val" id="valMl">10 kg</span>
+      </div>
+    </div>
+    <div>
+      <label>사람 질량 <span id="MLabel"></span></label>
+      <div class="slider-row">
+        <input type="range" id="slMp" min="30" max="120" step="1" value="70">
+        <span class="slider-val" id="valMp">70 kg</span>
+      </div>
+    </div>
+    <div>
+      <label>정지 마찰 계수 <span id="muLabel"></span></label>
+      <div class="slider-row">
+        <input type="range" id="slMu" min="0.05" max="1.0" step="0.01" value="0.40">
+        <span class="slider-val" id="valMu">0.40</span>
+      </div>
     </div>
 
-    <div class="control-group">
-      <label>사다리 질량 m = <span id="massLVal">10.0</span> kg</label>
-      <input type="range" id="massLSlider" min="2" max="30" value="10" step="0.5">
-    </div>
-
-    <div class="control-group">
-      <label>사람 질량 M = <span id="massPVal">70.0</span> kg</label>
-      <input type="range" id="massPSlider" min="30" max="120" value="70" step="1">
-    </div>
-
-    <div class="control-group">
-      <label>사람 위치 = <span id="posVal">50</span>% (아래→위)</label>
-      <input type="range" id="posSlider" min="0" max="100" value="50" step="1">
-    </div>
-
-    <div class="control-group">
-      <label>정지마찰계수 <span id="muLabel"></span> = <span id="muVal">0.40</span></label>
-      <input type="range" id="muSlider" min="0.05" max="1.0" value="0.40" step="0.01">
-    </div>
-
-    <div class="torque-box" id="torqueBox">
-      <div class="eq" id="torqueEq"></div>
-      <div><span class="label">벽 수직항력 </span><span id="fwLabel"></span><span class="val" id="fwInfo"></span></div>
-      <div><span class="label">바닥 수직항력 N = </span><span class="val" id="fnInfo"></span></div>
-      <div><span class="label">마찰력 f = </span><span class="val" id="ffInfo"></span></div>
-      <hr style="border:none;border-top:1px solid #c0d0f0;margin:4px 0">
-      <div><span class="label">최대 정지마찰력 </span><span id="fmaxLabel"></span><span class="val" id="fmaxInfo"></span></div>
-    </div>
-
+    <div class="info-box" id="infoBox"></div>
     <div class="status-box" id="statusBox">평형 상태</div>
   </div>
 </div>
 
 <script>
-function tex(expr) {
-  return katex.renderToString(expr, { throwOnError: false });
-}
-
-function posLabel(el, px, py, html) {
-  el.innerHTML = html;
-  el.style.left = px + 'px';
-  el.style.top = py + 'px';
+function kx(tex) { return katex.renderToString(tex, { throwOnError: false }); }
+function posLabel(el, x, y, html) {
+  if (html !== undefined) el.innerHTML = html;
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
   el.style.display = 'block';
 }
-
-const lblTheta = document.getElementById('lbl-theta');
-
-function renderStaticKaTeX() {
-  document.getElementById('theoremEq1').innerHTML = tex('\\sum \\vec{F} = 0');
-  document.getElementById('theoremEq2').innerHTML = tex('\\sum \\vec{\\tau} = 0');
-  document.getElementById('canvasTitle').innerHTML = '사다리 평형: ' + tex('\\sum\\tau = 0');
-  document.getElementById('angleLabelTheta').innerHTML = tex('\\theta');
-  document.getElementById('muLabel').innerHTML = tex('\\mu_s');
-  document.getElementById('fwLabel').innerHTML = tex('F_w') + ' = ';
-  document.getElementById('fmaxLabel').innerHTML = tex('f_{\\max} = \\mu_s N') + ' = ';
-  document.getElementById('torqueEq').innerHTML = tex('\\sum\\tau_O = 0') + ' (바닥 피벗)';
-}
+function hideLabel(el) { el.style.display = 'none'; }
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-const angleSlider = document.getElementById('angleSlider');
-const massLSlider = document.getElementById('massLSlider');
-const massPSlider = document.getElementById('massPSlider');
-const posSlider = document.getElementById('posSlider');
-const muSlider = document.getElementById('muSlider');
+const slTheta = document.getElementById('slTheta');
+const slPos   = document.getElementById('slPos');
+const slMl    = document.getElementById('slMl');
+const slMp    = document.getElementById('slMp');
+const slMu    = document.getElementById('slMu');
+const valTheta= document.getElementById('valTheta');
+const valPos  = document.getElementById('valPos');
+const valMl   = document.getElementById('valMl');
+const valMp   = document.getElementById('valMp');
+const valMu   = document.getElementById('valMu');
+
+const lblTitle = document.getElementById('title');
+const lblTheta = document.getElementById('lblTheta');
+const lblMg = document.getElementById('lblMg');
+const lblMgP = document.getElementById('lblMgP');
+const lblFw = document.getElementById('lblFw');
+const lblN  = document.getElementById('lblN');
+const lblF  = document.getElementById('lblF');
+const lblArmM = document.getElementById('lblArmM');
+const lblArmMP = document.getElementById('lblArmMP');
+const lblArmFw = document.getElementById('lblArmFw');
 
 let dpr = window.devicePixelRatio || 1;
 let W, H;
 const g = 9.8;
 
 function getParams() {
-  const thetaDeg = parseFloat(angleSlider.value);
-  const theta = thetaDeg * Math.PI / 180;
-  const mL = parseFloat(massLSlider.value);
-  const mP = parseFloat(massPSlider.value);
-  const frac = parseFloat(posSlider.value) / 100;
-  const mu = parseFloat(muSlider.value);
-  return { thetaDeg, theta, mL, mP, frac, mu };
+  return {
+    thetaDeg: parseFloat(slTheta.value),
+    theta: parseFloat(slTheta.value) * Math.PI / 180,
+    frac: parseFloat(slPos.value) / 100,
+    mL: parseFloat(slMl.value),
+    mP: parseFloat(slMp.value),
+    mu: parseFloat(slMu.value)
+  };
 }
 
 function solve() {
-  const { theta, mL, mP, frac, mu } = getParams();
-  const L = 5; // ladder length in meters (arbitrary, cancels out)
-  // Torque about base (O):
-  // Fw * L*sin(theta) = mL*g*(L/2)*cos(theta) + mP*g*(frac*L)*cos(theta)
-  // Fw = [mL*g/2 + mP*g*frac] * cos(theta) / sin(theta)
-  const Fw = (mL * g / 2 + mP * g * frac) * Math.cos(theta) / Math.sin(theta);
-  const N = (mL + mP) * g;
-  const f = Fw; // horizontal equilibrium
-  const fMax = mu * N;
+  const p = getParams();
+  // Sum of torques about base (taking CCW positive in screen, but let's just use magnitudes):
+  // Wall force Fw (horizontal, pushing the ladder back from wall) creates a torque about base
+  // = Fw * (h) where h = L sin θ.
+  // Weight mg of ladder at midpoint creates torque = mg * (L/2) cos θ
+  // Weight Mg of person at fraction frac creates torque = Mg * (frac*L) cos θ
+  // Setting Σ τ = 0:
+  // Fw * L sin θ = mg * (L/2) cos θ + Mg * frac*L cos θ
+  // Fw = (mg/2 + Mg*frac) * cos θ / sin θ
+  const Fw = (p.mL * g / 2 + p.mP * g * p.frac) * Math.cos(p.theta) / Math.sin(p.theta);
+  const N = (p.mL + p.mP) * g;
+  const f = Fw;
+  const fMax = p.mu * N;
   const slipping = f > fMax;
-  return { Fw, N, f, fMax, slipping };
+  return { ...p, Fw, N, f, fMax, slipping };
 }
 
 function resize() {
   dpr = window.devicePixelRatio || 1;
-  const rect = canvas.parentElement.getBoundingClientRect();
-  W = rect.width;
-  H = rect.height;
-  canvas.width = W * dpr;
-  canvas.height = H * dpr;
-  canvas.style.width = W + 'px';
-  canvas.style.height = H + 'px';
+  const r = canvas.parentElement.getBoundingClientRect();
+  W = r.width; H = r.height;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   draw();
 }
 
-function updateLabels() {
-  document.getElementById('angleVal').textContent = angleSlider.value;
-  document.getElementById('massLVal').textContent = parseFloat(massLSlider.value).toFixed(1);
-  document.getElementById('massPVal').textContent = parseFloat(massPSlider.value).toFixed(0);
-  document.getElementById('posVal').textContent = posSlider.value;
-  document.getElementById('muVal').textContent = parseFloat(muSlider.value).toFixed(2);
+function initStaticContent() {
+  document.getElementById('formulaBox').innerHTML =
+    '<b>바닥 피벗 토크 합 = 0:</b><br>' +
+    kx('F_w \\cdot L\\sin\\theta = mg\\,(L/2)\\cos\\theta + Mg\\,(\\text{frac}\\cdot L)\\cos\\theta') +
+    '<br><b>미끄러짐 조건:</b> ' + kx('f > \\mu_s N');
+  document.getElementById('thetaLabel').innerHTML = kx('\\theta');
+  document.getElementById('mLabel').innerHTML = kx('m');
+  document.getElementById('MLabel').innerHTML = kx('M');
+  document.getElementById('muLabel').innerHTML = kx('\\mu_s');
+}
+
+function updateValues() {
+  valTheta.textContent = slTheta.value + '°';
+  valPos.textContent = slPos.value + '%';
+  valMl.textContent = parseFloat(slMl.value).toFixed(1) + ' kg';
+  valMp.textContent = parseFloat(slMp.value).toFixed(0) + ' kg';
+  valMu.textContent = parseFloat(slMu.value).toFixed(2);
 }
 
 function updateInfo() {
-  const { Fw, N, f, fMax, slipping } = solve();
-  document.getElementById('fwInfo').textContent = Fw.toFixed(1) + ' N';
-  document.getElementById('fnInfo').textContent = N.toFixed(1) + ' N';
-  document.getElementById('ffInfo').textContent = f.toFixed(1) + ' N';
-  document.getElementById('fmaxInfo').textContent = fMax.toFixed(1) + ' N';
+  const s = solve();
+  document.getElementById('infoBox').innerHTML =
+    '<div><span class="lbl">' + kx('F_w') + ' = </span><span class="val">' + s.Fw.toFixed(0) + '</span> N</div>' +
+    '<div><span class="lbl">' + kx('N') + ' = </span><span class="val">' + s.N.toFixed(0) + '</span> N</div>' +
+    '<div><span class="lbl">' + kx('f') + ' = </span><span class="val">' + s.f.toFixed(0) + '</span> N</div>' +
+    '<div><span class="lbl">' + kx('f_{\\max} = \\mu_s N') + ' = </span><span class="val">' + s.fMax.toFixed(0) + '</span> N</div>';
 
-  const statusBox = document.getElementById('statusBox');
-  if (slipping) {
-    statusBox.textContent = '미끄러짐! (f > μₛN)';
-    statusBox.className = 'status-box status-slip';
+  const sb = document.getElementById('statusBox');
+  if (s.slipping) {
+    sb.textContent = '미끄러짐!  f > μₛN';
+    sb.className = 'status-box status-slip';
   } else {
-    const ratio = (f / fMax * 100).toFixed(0);
-    statusBox.textContent = '평형 유지 (마찰력 여유: ' + (100 - ratio) + '%)';
-    statusBox.className = 'status-box status-safe';
+    const ratio = (s.f / s.fMax * 100).toFixed(0);
+    sb.textContent = '평형 유지 (마찰력 ' + ratio + '% 사용)';
+    sb.className = 'status-box status-safe';
   }
 }
 
 function drawArrow(x1, y1, x2, y2, color, lw) {
-  const headLen = 12;
-  const angle = Math.atan2(y2 - y1, x2 - x1);
+  const dx = x2 - x1, dy = y2 - y1;
+  const len = Math.sqrt(dx*dx + dy*dy);
+  if (len < 1) return;
+  const headLen = Math.min(12, len * 0.35);
+  const ang = Math.atan2(dy, dx);
   ctx.strokeStyle = color;
   ctx.lineWidth = lw;
   ctx.lineCap = 'round';
   ctx.beginPath();
-  ctx.moveTo(x1, y1);
-  ctx.lineTo(x2, y2);
+  ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
   ctx.stroke();
   ctx.fillStyle = color;
   ctx.beginPath();
   ctx.moveTo(x2, y2);
-  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
-  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(ang - 0.4), y2 - headLen * Math.sin(ang - 0.4));
+  ctx.lineTo(x2 - headLen * Math.cos(ang + 0.4), y2 - headLen * Math.sin(ang + 0.4));
   ctx.closePath();
   ctx.fill();
 }
 
-function drawTextWithBg(text, x, y, font, color, align) {
-  ctx.font = font;
-  ctx.textAlign = align || 'center';
-  const m = ctx.measureText(text);
-  const pad = 3;
-  const tx = align === 'left' ? x : align === 'right' ? x - m.width : x - m.width / 2;
-  ctx.fillStyle = 'rgba(250,250,250,0.85)';
-  ctx.fillRect(tx - pad, y - 14, m.width + 2 * pad, 18);
-  ctx.fillStyle = color;
-  ctx.fillText(text, x, y);
-}
-
 function draw() {
   ctx.clearRect(0, 0, W, H);
-  const { thetaDeg, theta, mL, mP, frac, mu } = getParams();
-  const { Fw, N, f, fMax, slipping } = solve();
+  lblTitle.innerHTML = '사다리 평형: ' + kx('\\sum \\tau_O = 0');
+
+  const s = solve();
 
   const groundY = H * 0.85;
-  const wallX = W * 0.75;
+  const wallX = W * 0.72;
 
   // Ground
   ctx.fillStyle = '#F3F4F6';
   ctx.fillRect(0, groundY, W, H - groundY);
-  ctx.strokeStyle = '#bbb';
+  ctx.strokeStyle = '#6B7280';
   ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(0, groundY);
-  ctx.lineTo(W, groundY);
-  ctx.stroke();
-  // Hatching
-  ctx.strokeStyle = '#ddd';
+  ctx.beginPath(); ctx.moveTo(0, groundY); ctx.lineTo(W, groundY); ctx.stroke();
+  ctx.strokeStyle = '#bbb';
   ctx.lineWidth = 1;
-  for (let hx = 0; hx < W; hx += 14) {
+  for (let hx = 0; hx < W; hx += 16) {
     ctx.beginPath();
-    ctx.moveTo(hx, groundY);
-    ctx.lineTo(hx - 10, groundY + 10);
+    ctx.moveTo(hx, groundY); ctx.lineTo(hx - 10, groundY + 12);
     ctx.stroke();
   }
 
   // Wall
   ctx.fillStyle = '#F3F4F6';
-  ctx.fillRect(wallX, 30, 20, groundY - 30);
-  ctx.strokeStyle = '#bbb';
+  ctx.fillRect(wallX, 30, 22, groundY - 30);
+  ctx.strokeStyle = '#6B7280';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(wallX, 30);
-  ctx.lineTo(wallX, groundY);
-  ctx.stroke();
-  // Wall hatching
-  ctx.strokeStyle = '#ddd';
+  ctx.moveTo(wallX, 30); ctx.lineTo(wallX, groundY); ctx.stroke();
+  ctx.strokeStyle = '#bbb';
   ctx.lineWidth = 1;
-  for (let hy = 40; hy < groundY; hy += 14) {
+  for (let hy = 40; hy < groundY; hy += 16) {
     ctx.beginPath();
-    ctx.moveTo(wallX, hy);
-    ctx.lineTo(wallX + 10, hy - 10);
+    ctx.moveTo(wallX, hy); ctx.lineTo(wallX + 12, hy - 10);
     ctx.stroke();
   }
 
   // Ladder geometry
-  const ladderLen = Math.min(H * 0.7, W * 0.5);
-  const baseX = wallX - ladderLen * Math.cos(theta);
+  const ladderLen = Math.min(H * 0.7, W * 0.55);
+  const baseX = wallX - ladderLen * Math.cos(s.theta);
   const baseY = groundY;
   const topX = wallX;
-  const topY = groundY - ladderLen * Math.sin(theta);
+  const topY = groundY - ladderLen * Math.sin(s.theta);
 
-  // Ladder
-  const ladderColor = slipping ? '#c62828' : '#1a1a1a';
+  // Ladder rails (two parallel lines)
+  const ladderColor = s.slipping ? '#c62828' : '#1a1a1a';
+  const railOff = 6;
+  const px = -Math.sin(s.theta) * railOff; // perpendicular offset
+  const py = -Math.cos(s.theta) * railOff;
   ctx.strokeStyle = ladderColor;
-  ctx.lineWidth = 6;
+  ctx.lineWidth = 4;
   ctx.lineCap = 'round';
   ctx.beginPath();
-  ctx.moveTo(baseX, baseY);
-  ctx.lineTo(topX, topY);
+  ctx.moveTo(baseX + px, baseY + py); ctx.lineTo(topX + px, topY + py);
+  ctx.moveTo(baseX - px, baseY - py); ctx.lineTo(topX - px, topY - py);
   ctx.stroke();
-
   // Rungs
-  const numRungs = 6;
-  ctx.strokeStyle = ladderColor;
   ctx.lineWidth = 2;
-  for (let i = 1; i < numRungs; i++) {
-    const t = i / numRungs;
+  for (let i = 1; i < 7; i++) {
+    const t = i / 7;
     const rx = baseX + (topX - baseX) * t;
     const ry = baseY + (topY - baseY) * t;
-    const perpX = Math.sin(theta) * 10;
-    const perpY = Math.cos(theta) * 10;
     ctx.beginPath();
-    ctx.moveTo(rx - perpX, ry + perpY);
-    ctx.lineTo(rx + perpX, ry - perpY);
+    ctx.moveTo(rx + px, ry + py); ctx.lineTo(rx - px, ry - py);
     ctx.stroke();
   }
 
-  // Person position
-  const personX = baseX + (topX - baseX) * frac;
-  const personY = baseY + (topY - baseY) * frac;
-
-  // Person (stick figure)
-  const headR = 10;
-  ctx.strokeStyle = '#8B0029';
-  ctx.lineWidth = 2.5;
-  ctx.fillStyle = '#F3F4F6';
+  // Person on ladder (simple but better than lollipop)
+  const personX = baseX + (topX - baseX) * s.frac;
+  const personY = baseY + (topY - baseY) * s.frac;
+  // Person stands perpendicular to the ladder (head away from incline)
+  const standOffX = -Math.sin(s.theta) * 22;
+  const standOffY = -Math.cos(s.theta) * 22;
+  const headR = 9;
+  // Body: short line perpendicular to ladder
+  ctx.strokeStyle = '#444';
+  ctx.lineWidth = 3.5;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(personX, personY);
+  ctx.lineTo(personX + standOffX, personY + standOffY);
+  ctx.stroke();
   // Head
-  const headOffX = -Math.sin(theta) * 25;
-  const headOffY = -Math.cos(theta) * 25;
   ctx.beginPath();
-  ctx.arc(personX + headOffX, personY - Math.abs(headOffY), headR, 0, Math.PI * 2);
+  ctx.arc(personX + standOffX + (-Math.sin(s.theta)) * headR,
+          personY + standOffY + (-Math.cos(s.theta)) * headR,
+          headR, 0, Math.PI * 2);
+  ctx.fillStyle = '#F3F4F6';
   ctx.fill();
-  ctx.stroke();
-  // Body
-  ctx.beginPath();
-  ctx.moveTo(personX + headOffX, personY - Math.abs(headOffY) + headR);
-  ctx.lineTo(personX + headOffX, personY - Math.abs(headOffY) + headR + 20);
+  ctx.strokeStyle = '#444';
+  ctx.lineWidth = 2;
   ctx.stroke();
 
-  // Center of ladder
+  // Center of ladder (for mg)
   const midX = (baseX + topX) / 2;
   const midY = (baseY + topY) / 2;
 
-  // Force scale
-  const maxForce = Math.max(N, Fw, f, fMax, 100);
-  const forceScale = Math.min(80 / maxForce * g, 0.15);
-
-  // Weight of ladder (mg) at center
-  const mgL = mL * g;
-  drawArrow(midX, midY, midX, midY + mgL * forceScale, '#8B0029', 2.5);
-  drawTextWithBg('mg = ' + mgL.toFixed(0) + ' N', midX + 5, midY + mgL * forceScale + 16, 'bold 13px sans-serif', '#8B0029', 'left');
-
-  // Weight of person (Mg)
-  const MgP = mP * g;
-  drawArrow(personX, personY, personX, personY + MgP * forceScale, '#8B0029', 2.5);
-  drawTextWithBg('Mg = ' + MgP.toFixed(0) + ' N', personX + 5, personY + MgP * forceScale + 16, 'bold 13px sans-serif', '#8B0029', 'left');
-
-  // Normal force at wall (Fw, horizontal, pointing left from wall)
-  drawArrow(topX, topY, topX - Fw * forceScale, topY, '#2563EB', 2.5);
-  drawTextWithBg('Fw = ' + Fw.toFixed(1) + ' N', topX - Fw * forceScale - 8, topY - 8, 'bold 13px sans-serif', '#2563EB', 'right');
-
-  // Normal force at ground (N, up)
-  drawArrow(baseX, baseY, baseX, baseY - N * forceScale, '#2563EB', 2.5);
-  drawTextWithBg('N = ' + N.toFixed(0) + ' N', baseX - 8, baseY - N * forceScale - 8, 'bold 13px sans-serif', '#2563EB', 'right');
-
-  // Friction at ground (f, horizontal, toward wall)
-  const fColor = slipping ? '#c62828' : '#8B0029';
-  drawArrow(baseX, baseY, baseX + f * forceScale, baseY, fColor, 2.5);
-  drawTextWithBg('f = ' + f.toFixed(1) + ' N', baseX + f * forceScale + 8, baseY - 8, 'bold 13px sans-serif', fColor, 'left');
-
-  // Angle arc
-  ctx.strokeStyle = '#6B7280';
-  ctx.lineWidth = 1.5;
-  const arcR = 40;
-  ctx.beginPath();
-  ctx.arc(baseX, baseY, arcR, -Math.PI / 2 - (Math.PI / 2 - theta), 0, false);
-  ctx.stroke();
-  posLabel(lblTheta, baseX + arcR + 5, baseY - 22, tex('\\theta = ' + thetaDeg + '^\\circ'));
-
-  // Torque visualization: curved arrow at base
-  if (!slipping) {
-    ctx.strokeStyle = 'rgba(37,99,235,0.3)';
-    ctx.lineWidth = 2;
-    ctx.setLineDash([6, 4]);
-    ctx.beginPath();
-    ctx.arc(baseX, baseY, 25, -Math.PI, -Math.PI / 2);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(37,99,235,0.5)';
-    ctx.font = '12px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('피벗 O', baseX, baseY + 28);
-  }
+  // ----- Force scale: pick scale so the largest force is ~120 px -----
+  const mgL = s.mL * g;
+  const MgP = s.mP * g;
+  const allForces = [mgL, MgP, s.Fw, s.N, s.f].filter(v => v > 0);
+  const maxF = Math.max(...allForces, 1);
+  const forceScale = 120 / maxF; // px per N
+  const arrLw = 2.5;
 
   // Pivot dot
   ctx.fillStyle = '#8B0029';
   ctx.beginPath();
   ctx.arc(baseX, baseY, 4, 0, Math.PI * 2);
   ctx.fill();
+
+  // ----- Moment arms (dashed gray) for the three torque-producing forces about base pivot -----
+  // mg moment arm: horizontal distance from baseX to midX (i.e., (L/2)cosθ)
+  ctx.strokeStyle = 'rgba(107,114,128,0.5)';
+  ctx.lineWidth = 1.2;
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(baseX, baseY); ctx.lineTo(midX, baseY); // horizontal
+  ctx.moveTo(midX, baseY); ctx.lineTo(midX, midY);   // vertical to mg point
+  ctx.stroke();
+  // Mg moment arm: horizontal from baseX to personX
+  ctx.beginPath();
+  ctx.moveTo(baseX, baseY + 8); ctx.lineTo(personX, baseY + 8);
+  ctx.moveTo(personX, baseY + 8); ctx.lineTo(personX, personY);
+  ctx.stroke();
+  // Fw moment arm: vertical from baseY to topY (height L sinθ), drawn along the wall
+  ctx.beginPath();
+  ctx.moveTo(wallX + 14, baseY); ctx.lineTo(wallX + 14, topY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Moment arm labels (KaTeX)
+  posLabel(lblArmM, (baseX + midX)/2 - 25, baseY - 14,
+    kx('(L/2)\\cos\\theta'));
+  posLabel(lblArmMP, (baseX + personX)/2 - 30, baseY + 14,
+    kx('(\\text{frac}\\cdot L)\\cos\\theta'));
+  posLabel(lblArmFw, wallX + 18, (baseY + topY)/2 - 6,
+    kx('L\\sin\\theta'));
+
+  // ----- Force arrows -----
+  // mg ladder weight
+  const mgLen = mgL * forceScale;
+  drawArrow(midX, midY, midX, midY + mgLen, '#8B0029', arrLw);
+  posLabel(lblMg, midX + 8, midY + mgLen + 2,
+    kx('mg = ' + mgL.toFixed(0) + '\\text{ N}'));
+
+  // Mg person weight
+  const MgLen = MgP * forceScale;
+  drawArrow(personX, personY, personX, personY + MgLen, '#8B0029', arrLw);
+  posLabel(lblMgP, personX + 8, personY + MgLen + 2,
+    kx('Mg = ' + MgP.toFixed(0) + '\\text{ N}'));
+
+  // Fw at top (horizontal, from wall toward base direction = leftward)
+  const FwLen = s.Fw * forceScale;
+  drawArrow(topX, topY, topX - FwLen, topY, '#2563EB', arrLw);
+  posLabel(lblFw, topX - FwLen - 60, topY - 16,
+    kx('F_w = ' + s.Fw.toFixed(0) + '\\text{ N}'));
+
+  // N at base (upward)
+  const NLen = s.N * forceScale;
+  drawArrow(baseX, baseY, baseX, baseY - NLen, '#2563EB', arrLw);
+  posLabel(lblN, baseX - 65, baseY - NLen - 8,
+    kx('N = ' + s.N.toFixed(0) + '\\text{ N}'));
+
+  // f friction at base (horizontal, toward wall = rightward, since wall pushes ladder away from itself)
+  const fLen = s.f * forceScale;
+  const fColor = s.slipping ? '#c62828' : '#8B0029';
+  drawArrow(baseX, baseY, baseX + fLen, baseY, fColor, arrLw);
+  posLabel(lblF, baseX + fLen + 6, baseY + 6,
+    kx('f = ' + s.f.toFixed(0) + '\\text{ N}'));
+
+  // Angle arc at base
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 1.2;
+  const arcR = 36;
+  ctx.beginPath();
+  ctx.arc(baseX, baseY, arcR, -s.theta, 0);
+  ctx.stroke();
+  posLabel(lblTheta, baseX + arcR + 4, baseY - 18,
+    kx('\\theta = ' + s.thetaDeg + '^\\circ'));
 }
 
-[angleSlider, massLSlider, massPSlider, posSlider, muSlider].forEach(s => {
-  s.addEventListener('input', () => {
-    updateLabels();
-    updateInfo();
-    draw();
-  });
-});
+[slTheta, slPos, slMl, slMp, slMu].forEach(el => el.addEventListener('input', () => {
+  updateValues();
+  updateInfo();
+  draw();
+}));
 
 window.addEventListener('resize', resize);
 
-renderStaticKaTeX();
-updateLabels();
+initStaticContent();
+updateValues();
 updateInfo();
 resize();
 </script>

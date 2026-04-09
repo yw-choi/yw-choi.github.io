@@ -8,43 +8,47 @@
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+body { font-family: -apple-system, sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
 .container { display: flex; height: 100vh; }
-.canvas-area { flex: 1; position: relative; background: #fafafa; }
-canvas { display: block; width: 100%; height: 100%; }
-.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
-.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
-.control-group { display: flex; flex-direction: column; gap: 4px; }
-.control-group label { font-size: 13px; font-weight: 600; color: #444; }
-.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
-.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12.5px; line-height: 1.8; }
-.info-box .label { color: #8B0029; font-weight: 700; }
-.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
-.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
-.theorem-box .theorem-eq { font-size: 15px; display: block; margin-top: 4px; }
-.theorem-box .katex { color: #fff; }
-button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
-button.reset-btn:hover { background: #a3003a; }
-.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 10px; font-size: 14px; cursor: pointer; }
-.play-btn:hover { background: #35a035; }
-.play-btn.running { background: #b8860b; }
+.canvas-area { flex: 1; position: relative; }
+canvas { width: 100%; height: 100%; display: block; }
+.controls { width: 260px; padding: 16px; background: #faf5f6; border-left: 2px solid rgba(139,0,41,0.15); overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+h2 { color: #8B0029; font-size: 1.05rem; margin-bottom: 2px; }
+.subtitle { color: #888; font-size: 0.72rem; margin-bottom: 8px; }
+label { display: block; font-size: 0.8rem; color: #555; margin-bottom: 2px; }
+.slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.slider-row input[type="range"] { flex: 1; accent-color: #8B0029; }
+.slider-val { font-size: 0.8rem; font-weight: 600; color: #8B0029; min-width: 60px; text-align: right; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 10px; font-size: 0.78rem; line-height: 1.9; color: #555; }
+.formula-box .katex { font-size: 0.92em; }
+.formula-box b { color: #8B0029; }
+.legend { display: flex; flex-direction: column; gap: 4px; font-size: 12px; padding: 4px 0; }
+.legend-item { display: flex; align-items: center; gap: 8px; }
+.legend-swatch { width: 16px; height: 16px; border-radius: 50%; flex: none; }
+.legend-item .name { font-weight: 600; min-width: 30px; }
+.legend-item .formula { color: #555; font-size: 11px; }
+.results { background: white; border: 1px solid rgba(139,0,41,0.15); border-radius: 8px; padding: 8px; font-size: 11px; }
+.results table { width: 100%; border-collapse: collapse; }
+.results th { color: #8B0029; font-weight: 600; padding: 2px 4px; text-align: left; border-bottom: 1px solid #eee; }
+.results td { padding: 2px 4px; font-family: ui-monospace, monospace; }
+.results .name { font-weight: 700; }
 .btn-row { display: flex; gap: 8px; }
-.btn-row button { flex: 1; }
-.legend { display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
-.legend-item { display: flex; align-items: center; gap: 6px; }
-.legend-dot { width: 12px; height: 12px; border-radius: 50%; }
-.energy-grid { display: grid; grid-template-columns: auto 1fr 1fr 1fr; gap: 2px 8px; font-size: 11.5px; line-height: 1.6; }
-.energy-grid .hdr { font-weight: 700; color: #8B0029; border-bottom: 1px solid #e0c0c8; padding-bottom: 2px; margin-bottom: 2px; }
+button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+.btn-primary { background: #8B0029; color: white; }
+.btn-primary:hover { background: #a3003a; }
+.btn-secondary { background: rgba(139,0,41,0.1); color: #8B0029; }
+.btn-secondary:hover { background: rgba(139,0,41,0.2); }
 
-.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-.canvas-overlay > span { position: absolute; white-space: nowrap; font-size: 13px; color: #444; }
-.canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 20px; font-weight: 700; color: #8B0029; }
-.canvas-title .katex { font-size: 20px; color: #8B0029; }
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.92); padding: 2px 5px; border-radius: 3px; }
+.canvas-overlay .canvas-title { position: absolute; top: 10px; left: 16px; font-size: 14px; font-weight: 700; color: #8B0029; background: rgba(255,255,255,0.95); padding: 4px 8px; border-radius: 4px; }
+.canvas-overlay .canvas-title .katex { font-size: 13px; color: #8B0029; }
 
 @media (max-width: 700px) {
   .container { flex-direction: column; }
-  .canvas-area { height: 50vh; }
-  .controls { width: 100%; height: 50vh; border-left: none; border-top: 2px solid #eee; }
+  .canvas-area { flex: none; height: 60vh; }
+  .controls { width: 100%; border-left: none; border-top: 2px solid rgba(139,0,41,0.15); height: 40vh; }
 }
 </style>
 </head>
@@ -52,111 +56,124 @@ button.reset-btn:hover { background: #a3003a; }
 <div class="container">
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
-    <div class="canvas-overlay" id="canvasOverlay">
-      <span id="olAngle"></span>
-      <span id="olKrot"></span>
-      <span id="olKtrans"></span>
+    <div class="canvas-overlay" id="overlay">
+      <div class="canvas-title" id="title"></div>
+      <div class="katex-label with-bg" id="lblAngle"></div>
+      <div class="katex-label with-bg" id="lblLength"></div>
+      <div class="katex-label with-bg" id="lblBarTitle" style="font-weight:bold;color:#444;"></div>
+      <div class="katex-label" id="lblHoop"   style="color:#8B0029;font-weight:bold;"></div>
+      <div class="katex-label" id="lblDisk"   style="color:#2563EB;font-weight:bold;"></div>
+      <div class="katex-label" id="lblSphere" style="color:#2a7d2a;font-weight:bold;"></div>
     </div>
-    <div class="canvas-title" id="canvasTitle"></div>
   </div>
   <div class="controls">
-    <div class="theorem-box">
-      구름 운동 에너지
-      <span class="theorem-eq" id="theoremEq"></span>
+    <div>
+      <h2>구름 운동 경주</h2>
+      <div class="subtitle">Rolling Race &mdash; Ch.11.2</div>
     </div>
+
+    <div class="formula-box" id="formulaBox"></div>
 
     <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#8B0029"></div><span>링 (Hoop): <span id="hoopEq"></span></span></div>
-      <div class="legend-item"><div class="legend-dot" style="background:#2563EB"></div><span>원판 (Disk): <span id="diskEq"></span></span></div>
-      <div class="legend-item"><div class="legend-dot" style="background:#2a7d2a"></div><span>구 (Sphere): <span id="sphereEq"></span></span></div>
-    </div>
-
-    <div class="control-group">
-      <label>빗면 각도 θ = <span id="angleVal">30</span>&deg;</label>
-      <input type="range" id="angleSlider" min="10" max="60" value="30" step="1">
-    </div>
-
-    <div class="control-group">
-      <label>빗면 길이 L = <span id="lengthVal">5.0</span> m</label>
-      <input type="range" id="lengthSlider" min="2" max="10" value="5" step="0.5">
-    </div>
-
-    <div class="info-box">
-      <div style="font-weight:700;color:#8B0029;margin-bottom:4px;" id="accelTitle"></div>
-      <div class="energy-grid" id="energyGrid">
-        <div class="hdr"></div>
-        <div class="hdr" style="color:#8B0029">링</div>
-        <div class="hdr" style="color:#2563EB">원판</div>
-        <div class="hdr" style="color:#2a7d2a">구</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#8B0029"></div>
+        <span class="name">링</span> <span class="formula" id="legHoop"></span>
       </div>
-      <hr style="border:none;border-top:1px solid #e0c0c8;margin:6px 0">
-      <div id="resultText" style="font-size:12px;color:#6B7280;"></div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#2563EB"></div>
+        <span class="name">원판</span> <span class="formula" id="legDisk"></span>
+      </div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#2a7d2a"></div>
+        <span class="name">구</span> <span class="formula" id="legSphere"></span>
+      </div>
     </div>
+
+    <div>
+      <label>빗면 각도 <span id="angLabel"></span></label>
+      <div class="slider-row">
+        <input type="range" id="slAngle" min="10" max="60" step="1" value="30">
+        <span class="slider-val" id="valAngle">30°</span>
+      </div>
+    </div>
+    <div>
+      <label>빗면 길이 <span id="lenLabel"></span></label>
+      <div class="slider-row">
+        <input type="range" id="slLength" min="2" max="10" step="0.5" value="5">
+        <span class="slider-val" id="valLength">5.0 m</span>
+      </div>
+    </div>
+
+    <div class="results" id="results"></div>
 
     <div class="btn-row">
-      <button class="play-btn" id="playBtn">&#9654; 시작</button>
-      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+      <button class="btn-primary" id="btnPlay">▶ 시작</button>
+      <button class="btn-secondary" id="btnReset">↻ 초기화</button>
+    </div>
+
+    <div style="font-size:0.68rem; color:#999; margin-top:auto;">
+      모든 물체: 같은 질량, 같은 반지름. 미끄러짐 없는 구름 운동.
     </div>
   </div>
 </div>
 
 <script>
-function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
-
-const olAngle = document.getElementById('olAngle');
-const olKrot = document.getElementById('olKrot');
-const olKtrans = document.getElementById('olKtrans');
-
-function posLabel(el, px, py, html) {
-  el.innerHTML = html;
-  el.style.left = px + 'px';
-  el.style.top = py + 'px';
+function kx(tex) { return katex.renderToString(tex, { throwOnError: false }); }
+function posLabel(el, x, y, html) {
+  if (html !== undefined) el.innerHTML = html;
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  el.style.display = 'block';
 }
+function hideLabel(el) { el.style.display = 'none'; }
 
-// Objects: hoop (c=1), disk (c=0.5), sphere (c=2/5)
+// Constants
+const g = 9.8;
+const M = 1.0;
+const R_phys = 0.20; // physical radius in meters
+
 const objects = [
-  { name: '링', c: 1, color: '#8B0029', Ilabel: 'MR^2' },
-  { name: '원판', c: 0.5, color: '#2563EB', Ilabel: '\\tfrac{1}{2}MR^2' },
-  { name: '구', c: 2/5, color: '#2a7d2a', Ilabel: '\\tfrac{2}{5}MR^2' },
+  { id: 'hoop',   name: '링',   c: 1.0,  color: '#8B0029', Itex: 'MR^2' },
+  { id: 'disk',   name: '원판', c: 0.5,  color: '#2563EB', Itex: '\\tfrac{1}{2}MR^2' },
+  { id: 'sphere', name: '구',   c: 0.4,  color: '#2a7d2a', Itex: '\\tfrac{2}{5}MR^2' },
 ];
 
-function renderStaticKaTeX() {
-  document.getElementById('theoremEq').innerHTML = tex('K = \\tfrac{1}{2}I_{com}\\omega^2 + \\tfrac{1}{2}Mv_{com}^2');
-  document.getElementById('canvasTitle').innerHTML = '구름 운동 경주: ' + tex('a_{com} = \\dfrac{g\\sin\\theta}{1 + I_{com}/MR^2}');
-  document.getElementById('hoopEq').innerHTML = tex('I = MR^2');
-  document.getElementById('diskEq').innerHTML = tex('I = \\tfrac{1}{2}MR^2');
-  document.getElementById('sphereEq').innerHTML = tex('I = \\tfrac{2}{5}MR^2');
-  document.getElementById('accelTitle').innerHTML = tex('a_{com} = \\dfrac{g\\sin\\theta}{1+c}') + ', ' + tex('c = I_{com}/MR^2');
-}
+// State
+let theta = 30 * Math.PI / 180;
+let L = 5.0;
+let t = 0;
+let running = false;
+let animId = null;
+let lastTs = null;
 
+// DOM
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const angleSlider = document.getElementById('angleSlider');
-const lengthSlider = document.getElementById('lengthSlider');
-const angleVal = document.getElementById('angleVal');
-const lengthVal = document.getElementById('lengthVal');
-const playBtn = document.getElementById('playBtn');
-const resetBtn = document.getElementById('resetBtn');
+const slAngle = document.getElementById('slAngle');
+const slLength = document.getElementById('slLength');
+const valAngle = document.getElementById('valAngle');
+const valLength = document.getElementById('valLength');
+const btnPlay = document.getElementById('btnPlay');
+const btnReset = document.getElementById('btnReset');
+const lblTitle = document.getElementById('title');
+const lblAngle = document.getElementById('lblAngle');
+const lblLength = document.getElementById('lblLength');
+const lblBarTitle = document.getElementById('lblBarTitle');
+const lblHoop = document.getElementById('lblHoop');
+const lblDisk = document.getElementById('lblDisk');
+const lblSphere = document.getElementById('lblSphere');
 
 let dpr = window.devicePixelRatio || 1;
-let CW, CH;
-let running = false, animId = null;
-let t = 0;
-const dt = 1/60;
-const g = 9.8;
-const M = 1; // normalized mass
-const R_phys = 0.25; // physical radius in meters
+let W, H;
 
-function getParams() {
-  const theta = parseFloat(angleSlider.value) * Math.PI / 180;
-  const L = parseFloat(lengthSlider.value);
-  return { theta, L, thetaDeg: parseFloat(angleSlider.value) };
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const r = canvas.parentElement.getBoundingClientRect();
+  W = r.width; H = r.height;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
 }
 
-// Each object: distance along incline s(t), velocity v(t)
-// a = g sin theta / (1 + c), s = 0.5*a*t^2, v = a*t
-function getObjState(c) {
-  const { theta, L } = getParams();
+function getState(c) {
   const a = g * Math.sin(theta) / (1 + c);
   let s = 0.5 * a * t * t;
   let v = a * t;
@@ -166,276 +183,340 @@ function getObjState(c) {
     v = Math.sqrt(2 * a * L);
     finished = true;
   }
-  const h = (L - s) * Math.sin(theta);
-  const U = M * g * h;
-  const Ktrans = 0.5 * M * v * v;
-  const omega = v / R_phys;
   const I = c * M * R_phys * R_phys;
+  const omega = v / R_phys;
   const Krot = 0.5 * I * omega * omega;
-  const Etotal = U + Ktrans + Krot;
-  return { s, v, a, finished, U, Ktrans, Krot, Etotal, omega };
+  const Ktrans = 0.5 * M * v * v;
+  const U = M * g * (L - s) * Math.sin(theta);
+  return { s, v, a, finished, I, omega, Krot, Ktrans, U };
 }
 
-function resize() {
-  dpr = window.devicePixelRatio || 1;
-  const rect = canvas.parentElement.getBoundingClientRect();
-  CW = rect.width; CH = rect.height;
-  canvas.width = CW * dpr; canvas.height = CH * dpr;
-  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  draw();
+function initStaticContent() {
+  document.getElementById('formulaBox').innerHTML =
+    '<b>구름 운동 가속도:</b><br>' +
+    kx('a_{\\text{com}} = \\dfrac{g\\sin\\theta}{1 + I_{\\text{com}}/MR^2} = \\dfrac{g\\sin\\theta}{1+c}') +
+    '<br><span style="font-size:11px;color:#888;">' + kx('c') + ' 가 작을수록 가속도가 큼</span>';
+
+  document.getElementById('legHoop').innerHTML   = kx('I = MR^2,\\; c=1');
+  document.getElementById('legDisk').innerHTML   = kx('I = \\tfrac{1}{2}MR^2,\\; c=\\tfrac{1}{2}');
+  document.getElementById('legSphere').innerHTML = kx('I = \\tfrac{2}{5}MR^2,\\; c=\\tfrac{2}{5}');
+
+  document.getElementById('angLabel').innerHTML = kx('\\theta');
+  document.getElementById('lenLabel').innerHTML = kx('L');
 }
 
-function drawArrow(x1, y1, x2, y2, color, lw) {
-  const headLen = 10;
-  const angle = Math.atan2(y2 - y1, x2 - x1);
-  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
-  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
-  ctx.fillStyle = color;
-  ctx.beginPath(); ctx.moveTo(x2, y2);
-  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
-  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
-  ctx.closePath(); ctx.fill();
+function updateResults() {
+  const rows = objects.map(o => {
+    const st = getState(o.c);
+    const status = st.finished ? '<span style="color:#2a7d2a">✓</span>' : '';
+    return `<tr>
+      <td class="name" style="color:${o.color}">${o.name}</td>
+      <td>${st.a.toFixed(2)}</td>
+      <td>${st.v.toFixed(2)}</td>
+      <td>${st.s.toFixed(2)} ${status}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('results').innerHTML = `
+    <table>
+      <thead><tr><th></th><th>a (m/s²)</th><th>v (m/s)</th><th>s (m)</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
 }
 
 function draw() {
-  ctx.clearRect(0, 0, CW, CH);
-  const { theta, L, thetaDeg } = getParams();
+  ctx.clearRect(0, 0, W, H);
 
-  // Incline geometry
-  const margin = 60;
-  const rampRight = CW - 30;
-  const rampBottom = CH - 50;
-  const rampLen = Math.min(CW - 100, CH - 120);
+  // ----- Title -----
+  lblTitle.innerHTML = '구름 운동 경주: ' + kx('a_{\\text{com}} = \\dfrac{g\\sin\\theta}{1+c}');
+
+  // ----- Incline geometry -----
+  // Bottom-right corner of incline at (rampRight, rampBottom). Top-left at (rampLeft, rampTop).
+  // Hypotenuse goes from (rampLeft, rampTop) [upper-left] to (rampRight, rampBottom) [lower-right].
+  // Bulk fills the lower-left wedge: vertices (rampLeft, rampTop), (rampLeft, rampBottom), (rampRight, rampBottom).
+  const rampRight = W - 30;
+  const rampBottom = H - 50;
+  const maxLen = Math.min(W - 200, H - 140);
+  const rampLen = maxLen;
   const rampLeft = rampRight - rampLen * Math.cos(theta);
   const rampTop = rampBottom - rampLen * Math.sin(theta);
 
-  // Draw incline surface
+  // Outward normal (away from bulk, i.e., toward upper-right): (sin θ, -cos θ)
+  const nx = Math.sin(theta);
+  const ny = -Math.cos(theta);
+  // Down-incline direction (along surface): (cos θ, sin θ)
+
+  // Wedge fill (correct triangle: 3 distinct vertices)
   ctx.fillStyle = '#F3F4F6';
   ctx.beginPath();
-  ctx.moveTo(rampRight, rampBottom);
-  ctx.lineTo(rampLeft, rampTop);
-  ctx.lineTo(rampRight, rampTop + (rampBottom - rampTop)); // should be rampRight, rampBottom
+  ctx.moveTo(rampLeft, rampTop);
+  ctx.lineTo(rampLeft, rampBottom);
+  ctx.lineTo(rampRight, rampBottom);
   ctx.closePath();
   ctx.fill();
-  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 2;
+
+  // Hypotenuse (the rolling surface)
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(rampLeft, rampTop);
   ctx.lineTo(rampRight, rampBottom);
   ctx.stroke();
 
-  // Ground
-  ctx.strokeStyle = '#bbb'; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(rampRight - 5, rampBottom); ctx.lineTo(CW, rampBottom); ctx.stroke();
-
-  // Angle arc
-  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1.5;
+  // Vertical and bottom legs of the wedge
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.arc(rampRight, rampBottom, 40, Math.PI, Math.PI + theta, true);
+  ctx.moveTo(rampLeft, rampTop); ctx.lineTo(rampLeft, rampBottom);
+  ctx.moveTo(rampLeft, rampBottom); ctx.lineTo(rampRight, rampBottom);
   ctx.stroke();
-  const aLabelAngle = Math.PI + theta / 2;
-  const angleLabelX = rampRight + 55 * Math.cos(aLabelAngle);
-  const angleLabelY = rampBottom + 55 * Math.sin(aLabelAngle);
-  posLabel(olAngle, angleLabelX - 20, angleLabelY - 10, tex('\\theta = ' + thetaDeg + '^\\circ'));
 
-  // Draw objects on incline
-  const objRadius = 18; // visual radius
-  const laneSpacing = objRadius * 2.5;
+  // Ground hatching below ramp bottom
+  ctx.strokeStyle = '#aaa';
+  ctx.lineWidth = 1;
+  for (let xx = rampLeft; xx <= rampRight; xx += 22) {
+    ctx.beginPath();
+    ctx.moveTo(xx, rampBottom);
+    ctx.lineTo(xx - 10, rampBottom + 12);
+    ctx.stroke();
+  }
+
+  // Angle arc at bottom-right corner
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.arc(rampRight, rampBottom, 50, Math.PI, Math.PI + theta, false);
+  ctx.stroke();
+  // theta label via overlay
+  const angLabelMid = Math.PI + theta * 0.5;
+  posLabel(lblAngle,
+    rampRight + 65 * Math.cos(angLabelMid) - 12,
+    rampBottom + 65 * Math.sin(angLabelMid) - 8,
+    kx('\\theta = ' + Math.round(theta * 180 / Math.PI) + '^\\circ'));
+
+  // Length label below the bottom edge
+  posLabel(lblLength,
+    (rampLeft + rampRight) / 2 - 24,
+    rampBottom + 26,
+    kx('L = ' + L.toFixed(1) + '\\text{ m}'));
+
+  // ----- Three lanes for the rolling objects -----
+  const objR = Math.max(12, Math.min(20, rampLen * 0.04));
+  const laneSep = objR * 2.4; // perpendicular spacing between lane centers
+  // lane index 0 = innermost (closest to surface), 2 = outermost
+  // We want the BOTTOM of each ball to touch a "lane line" parallel to the incline.
+  // Lane offset (perpendicular distance from surface to ball center): objR + i*laneSep
 
   for (let i = 0; i < objects.length; i++) {
-    const obj = objects[i];
-    const state = getObjState(obj.c);
-    const frac = state.s / L; // fraction of incline traveled
-    // Position along incline
+    const o = objects[i];
+    const st = getState(o.c);
+    const frac = st.s / L;
+
     const px = rampLeft + frac * (rampRight - rampLeft);
     const py = rampTop + frac * (rampBottom - rampTop);
-    // Offset perpendicular to incline for each lane
-    const perpX = Math.sin(theta);
-    const perpY = -Math.cos(theta);
-    const laneOffset = (i - 1) * laneSpacing;
-    const cx = px + perpX * (objRadius + 3) + perpX * laneOffset * 0.3;
-    const cy = py + perpY * (objRadius + 3) + perpY * laneOffset * 0.3;
+    const off = objR + i * laneSep;
+    const cx = px + nx * off;
+    const cy = py + ny * off;
 
-    // Draw the object
-    ctx.beginPath();
-    ctx.arc(cx, cy, objRadius, 0, 2 * Math.PI);
-    if (obj.c === 1) {
-      // Hoop: just outline
-      ctx.strokeStyle = obj.color; ctx.lineWidth = 3; ctx.stroke();
-    } else if (obj.c === 0.5) {
-      // Disk: filled
-      ctx.fillStyle = obj.color + '30'; ctx.fill();
-      ctx.strokeStyle = obj.color; ctx.lineWidth = 2; ctx.stroke();
-    } else {
-      // Sphere: filled darker
-      ctx.fillStyle = obj.color + '40'; ctx.fill();
-      ctx.strokeStyle = obj.color; ctx.lineWidth = 2; ctx.stroke();
+    // Lane line (faint, parallel to incline)
+    if (i === 0) {
+      ctx.strokeStyle = 'rgba(0,0,0,0.04)';
+      ctx.lineWidth = 1;
+      for (let li = 0; li < 3; li++) {
+        const lo = objR + li * laneSep + objR; // lane TOP edge
+        ctx.beginPath();
+        ctx.moveTo(rampLeft + nx * lo, rampTop + ny * lo);
+        ctx.lineTo(rampRight + nx * lo, rampBottom + ny * lo);
+        ctx.stroke();
+      }
     }
-    // Rotation indicator line
-    const rotAngle = (state.s / R_phys); // total angle rotated
-    ctx.strokeStyle = obj.color; ctx.lineWidth = 1.5;
+
+    // Ball outline
+    ctx.beginPath();
+    ctx.arc(cx, cy, objR, 0, 2 * Math.PI);
+    if (o.id === 'hoop') {
+      // Hoop: ring only
+      ctx.strokeStyle = o.color; ctx.lineWidth = 4; ctx.stroke();
+    } else {
+      // Disk / sphere: filled
+      ctx.fillStyle = o.color + '30';
+      ctx.fill();
+      ctx.strokeStyle = o.color; ctx.lineWidth = 2; ctx.stroke();
+    }
+
+    // Rotation indicator: a radial line that rotates as the object rolls
+    const phi = st.s / R_phys + i * Math.PI / 3; // initial offsets so lines aren't all aligned
+    ctx.strokeStyle = o.color;
+    ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(cx, cy);
-    ctx.lineTo(cx + objRadius * 0.8 * Math.cos(rotAngle), cy + objRadius * 0.8 * Math.sin(rotAngle));
+    ctx.lineTo(cx + objR * 0.85 * Math.cos(phi), cy + objR * 0.85 * Math.sin(phi));
     ctx.stroke();
 
     // Center dot
-    ctx.beginPath(); ctx.arc(cx, cy, 2, 0, 2 * Math.PI);
-    ctx.fillStyle = obj.color; ctx.fill();
+    ctx.fillStyle = o.color;
+    ctx.beginPath(); ctx.arc(cx, cy, 2, 0, 2 * Math.PI); ctx.fill();
 
-    // Label
-    ctx.fillStyle = obj.color; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText(obj.name, cx, cy - objRadius - 6);
-  }
-
-  // Energy bar chart area (top-left)
-  drawEnergyBars();
-}
-
-function drawEnergyBars() {
-  const { theta, L } = getParams();
-  const Etotal = M * g * L * Math.sin(theta);
-  const barAreaX = 20;
-  const barAreaY = 50;
-  const barH = 120;
-  const barW = 28;
-  const groupW = barW * 3 + 8;
-  const groupGap = 20;
-
-  ctx.fillStyle = '#444'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
-
-  const labels = ['링', '원판', '구'];
-  const colors = ['#8B0029', '#2563EB', '#2a7d2a'];
-
-  for (let i = 0; i < 3; i++) {
-    const state = getObjState(objects[i].c);
-    const gx = barAreaX + i * (groupW + groupGap);
-    const baseY = barAreaY + barH;
-    const scale = barH / Math.max(Etotal, 0.01);
-
-    // U bar
-    const uH = state.U * scale;
-    ctx.fillStyle = '#6B7280'; ctx.globalAlpha = 0.5;
-    ctx.fillRect(gx, baseY - uH, barW - 2, uH);
-    ctx.globalAlpha = 1;
-
-    // Ktrans bar (on top of U)
-    const ktH = state.Ktrans * scale;
-    ctx.fillStyle = colors[i] + '80';
-    ctx.fillRect(gx, baseY - uH - ktH, barW - 2, ktH);
-
-    // Krot bar (on top of Ktrans)
-    const krH = state.Krot * scale;
-    ctx.fillStyle = colors[i];
-    ctx.fillRect(gx, baseY - uH - ktH - krH, barW - 2, krH);
-
-    // Baseline
-    ctx.strokeStyle = '#999'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(gx - 2, baseY); ctx.lineTo(gx + barW, baseY); ctx.stroke();
-
-    // Label
-    ctx.fillStyle = colors[i]; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText(labels[i], gx + (barW - 2) / 2, baseY + 14);
-  }
-
-  // Legend for bar segments
-  const legX = barAreaX + 3 * (groupW + groupGap) + 5;
-  const legY = barAreaY + 10;
-  ctx.font = '11px sans-serif'; ctx.textAlign = 'left';
-
-  ctx.fillStyle = '#8B0029';
-  ctx.fillRect(legX, legY, 10, 10);
-  posLabel(olKrot, legX + 14, legY - 3, tex('K_{\\text{rot}}'));
-
-  ctx.fillStyle = '#8B002960';
-  ctx.fillRect(legX, legY + 18, 10, 10);
-  posLabel(olKtrans, legX + 14, legY + 15, tex('K_{\\text{trans}}'));
-
-  ctx.fillStyle = '#6B728080';
-  ctx.fillRect(legX, legY + 36, 10, 10);
-  ctx.fillStyle = '#444'; ctx.fillText('U (위치)', legX + 14, legY + 45);
-}
-
-function updateInfo() {
-  const { theta, L, thetaDeg } = getParams();
-  const grid = document.getElementById('energyGrid');
-  // Clear previous rows (keep headers)
-  while (grid.children.length > 4) grid.removeChild(grid.lastChild);
-
-  const rowLabels = ['a (m/s²)', 'v (m/s)', 's (m)'];
-  for (let r = 0; r < 3; r++) {
-    const rl = document.createElement('div');
-    rl.style.fontWeight = '600'; rl.style.color = '#444';
-    rl.textContent = rowLabels[r];
-    grid.appendChild(rl);
-    for (let i = 0; i < 3; i++) {
-      const state = getObjState(objects[i].c);
-      const val = document.createElement('div');
-      val.style.fontFamily = 'monospace'; val.style.fontWeight = '600';
-      val.style.color = objects[i].color;
-      if (r === 0) val.textContent = state.a.toFixed(2);
-      else if (r === 1) val.textContent = state.v.toFixed(2);
-      else val.textContent = state.s.toFixed(2);
-      grid.appendChild(val);
+    // Finish flag
+    if (st.finished) {
+      ctx.fillStyle = o.color;
+      ctx.font = 'bold 13px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('✓', cx + objR * 1.3, cy - objR * 1.0);
     }
   }
 
-  // Result text
-  const allFinished = objects.every((o) => getObjState(o.c).finished);
-  const resultEl = document.getElementById('resultText');
-  if (allFinished) {
-    resultEl.innerHTML = '<b style="color:#8B0029">관성 모멘트가 작을수록 빨리 도착!</b><br>' +
-      tex('c') + ' 가 작을수록 → ' + tex('a_{com}') + ' 가 큼';
-  } else if (t > 0) {
-    resultEl.textContent = '경주 진행 중...';
-  } else {
-    resultEl.innerHTML = '같은 질량·반지름이라도 ' + tex('I_{com}/MR^2') + ' 에 따라 가속도가 다릅니다.';
+  // ----- Energy bar chart (top-left of canvas) -----
+  drawEnergyBars(20, 50);
+
+  // ----- Stopwatch -----
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = 'bold 14px ui-monospace, monospace';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'top';
+  ctx.fillText('t = ' + t.toFixed(2) + ' s', W - 14, 14);
+}
+
+function drawEnergyBars(x0, y0) {
+  const barW = 22;
+  const groupSpacing = 28;
+  const barAreaH = 110;
+  const groupCount = 3;
+  const totalW = groupCount * (barW + groupSpacing);
+
+  // Background card
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.strokeStyle = 'rgba(139,0,41,0.15)';
+  ctx.lineWidth = 1;
+  const cardW = totalW + 80;
+  const cardH = barAreaH + 60;
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(x0 - 6, y0 - 6, cardW, cardH, 6);
+  else ctx.rect(x0 - 6, y0 - 6, cardW, cardH);
+  ctx.fill();
+  ctx.stroke();
+
+  // Title via overlay
+  posLabel(lblBarTitle, x0 + 4, y0 - 4, kx('K_{\\text{rot}} + K_{\\text{trans}} + U \\;\\text{(J)}'));
+
+  const Etotal = M * g * L * Math.sin(theta);
+  const baseY = y0 + barAreaH + 14;
+  const scale = barAreaH / Math.max(Etotal, 0.01);
+
+  for (let i = 0; i < objects.length; i++) {
+    const o = objects[i];
+    const st = getState(o.c);
+    const gx = x0 + 10 + i * (barW + groupSpacing);
+
+    // Stack U + Ktrans + Krot from bottom to top
+    const uH = st.U * scale;
+    const ktH = st.Ktrans * scale;
+    const krH = st.Krot * scale;
+
+    // U (gray)
+    ctx.fillStyle = '#9CA3AF';
+    ctx.fillRect(gx, baseY - uH, barW, uH);
+    // K_trans (medium color)
+    ctx.fillStyle = o.color + '80';
+    ctx.fillRect(gx, baseY - uH - ktH, barW, ktH);
+    // K_rot (full color)
+    ctx.fillStyle = o.color;
+    ctx.fillRect(gx, baseY - uH - ktH - krH, barW, krH);
+
+    // Border
+    ctx.strokeStyle = '#666';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(gx, baseY - barAreaH, barW, barAreaH);
+
+    // Object label below
+    ctx.fillStyle = o.color;
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(o.name, gx + barW / 2, baseY + 4);
   }
+
+  // Legend on the right side of the bar chart
+  const legX = x0 + 10 + groupCount * (barW + groupSpacing) + 8;
+  const legY = y0 + 8;
+  ctx.font = '10px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#8B0029'; ctx.fillRect(legX, legY, 10, 10);
+  ctx.fillStyle = '#444'; ctx.fillText('K_rot', legX + 14, legY + 5);
+  ctx.fillStyle = '#8B002980'; ctx.fillRect(legX, legY + 16, 10, 10);
+  ctx.fillStyle = '#444'; ctx.fillText('K_trans', legX + 14, legY + 21);
+  ctx.fillStyle = '#9CA3AF'; ctx.fillRect(legX, legY + 32, 10, 10);
+  ctx.fillStyle = '#444'; ctx.fillText('U', legX + 14, legY + 37);
 }
 
-function step() {
-  t += dt;
-  const allFinished = objects.every((o) => getObjState(o.c).finished);
-  updateInfo();
+function refreshParams() {
+  theta = parseFloat(slAngle.value) * Math.PI / 180;
+  L = parseFloat(slLength.value);
+  valAngle.textContent = slAngle.value + '°';
+  valLength.textContent = parseFloat(slLength.value).toFixed(1) + ' m';
+}
+
+function updateAll() {
   draw();
-  if (allFinished) { stop(); return; }
-  if (running) animId = requestAnimationFrame(step);
-}
-
-function start() {
-  if (running) return;
-  running = true;
-  playBtn.textContent = '\u23F8 일시정지';
-  playBtn.classList.add('running');
-  animId = requestAnimationFrame(step);
-}
-
-function stop() {
-  running = false;
-  playBtn.textContent = '\u25B6 시작';
-  playBtn.classList.remove('running');
-  if (animId) cancelAnimationFrame(animId);
+  updateResults();
 }
 
 function reset() {
-  stop(); t = 0; updateInfo(); draw();
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  running = false;
+  lastTs = null;
+  t = 0;
+  btnPlay.textContent = '▶ 시작';
+  refreshParams();
+  updateAll();
 }
 
-playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
-resetBtn.addEventListener('click', reset);
+function animate(ts) {
+  if (!running) return;
+  if (lastTs === null) { lastTs = ts; }
+  const dt = Math.min((ts - lastTs) / 1000, 0.05);
+  lastTs = ts;
+  t += dt;
+  // Stop when all objects finished
+  const allDone = objects.every(o => getState(o.c).finished);
+  updateAll();
+  if (allDone) { running = false; btnPlay.textContent = '▶ 다시 시작'; return; }
+  animId = requestAnimationFrame(animate);
+}
 
-[angleSlider, lengthSlider].forEach(s => {
-  s.addEventListener('input', () => {
-    angleVal.textContent = angleSlider.value;
-    lengthVal.textContent = parseFloat(lengthSlider.value).toFixed(1);
-    reset();
-  });
+btnPlay.addEventListener('click', () => {
+  if (running) {
+    running = false;
+    btnPlay.textContent = '▶ 계속';
+    if (animId) cancelAnimationFrame(animId);
+    animId = null;
+    lastTs = null;
+    return;
+  }
+  // If finished, restart
+  const allDone = objects.every(o => getState(o.c).finished);
+  if (allDone) t = 0;
+  running = true;
+  btnPlay.textContent = '⏸ 일시정지';
+  lastTs = null;
+  animId = requestAnimationFrame(animate);
 });
+btnReset.addEventListener('click', reset);
 
-window.addEventListener('resize', resize);
-renderStaticKaTeX();
-reset();
+[slAngle, slLength].forEach(s => s.addEventListener('input', () => {
+  refreshParams();
+  if (!running) { t = 0; updateAll(); }
+  else updateAll();
+}));
+
+window.addEventListener('resize', () => { resize(); });
+
+initStaticContent();
+refreshParams();
 resize();
+updateAll();
 </script>
 </body>
 </html>

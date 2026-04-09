@@ -55,10 +55,10 @@
   <path d="M200,430 A60,60 0 0,0 180,395" fill="none" stroke="#6B7280" stroke-width="1"/>
   <text x="208" y="412" font-size="14" fill="#6B7280" font-style="italic">&#x3B8;</text>
 
-  <!-- Weight mg at center of ladder -->
-  <circle cx="290" cy="265" r="3" fill="#8B0029"/>
-  <line x1="290" y1="265" x2="290" y2="345" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar1)"/>
-  <text x="306" y="340" font-size="14" fill="#8B0029" font-style="italic">mg</text>
+  <!-- Weight mg at center of ladder (dot offset from ladder line for visibility) -->
+  <circle cx="298" cy="270" r="3.5" fill="#8B0029"/>
+  <line x1="298" y1="270" x2="298" y2="350" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar1)"/>
+  <text x="312" y="345" font-size="14" font-weight="bold" fill="#8B0029" font-style="italic">mg</text>
 
   <!-- Normal force at wall (Fw, horizontal, pointing left) -->
   <line x1="440" y1="100" x2="370" y2="100" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar2)"/>
@@ -70,9 +70,9 @@
   <line x1="140" y1="430" x2="140" y2="360" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar2)"/>
   <text x="120" y="375" font-size="14" fill="#2563EB" font-style="italic">N</text>
 
-  <!-- Friction at ground (f, horizontal, pointing right) -->
-  <line x1="140" y1="430" x2="210" y2="430" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar1)"/>
-  <text x="185" y="455" font-size="14" fill="#8B0029" font-style="italic">f</text>
+  <!-- Friction at ground (f, horizontal, pointing right) — offset above ground line -->
+  <line x1="145" y1="424" x2="215" y2="424" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar1)"/>
+  <text x="180" y="416" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029" font-style="italic">f</text>
 
   <!-- Dimension: h -->
   <line x1="500" y1="100" x2="500" y2="430" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
