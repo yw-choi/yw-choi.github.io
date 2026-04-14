@@ -10,15 +10,15 @@
     <text x="0" y="0" text-anchor="middle" font-size="20" font-weight="bold" fill="#8B0029">안정 평형</text>
     <text x="0" y="22" text-anchor="middle" font-size="14" fill="#6B7280">(Stable)</text>
     <!-- Bowl shape -->
-    <path d="M -100,140 Q -100,220 0,220 Q 100,220 100,140" fill="none" stroke="#6B7280" stroke-width="2.5"/>
+    <path d="M -100,140 Q -100,220 0,220 Q 100,220 100,140" fill="none" stroke="#6B7280" stroke-width="2"/>
     <!-- Ball at equilibrium position -->
-    <circle cx="0" cy="204" r="16" fill="#F3F4F6" stroke="#6B7280" stroke-width="2.5"/>
-    <line x1="0" y1="220" x2="0" y2="265" stroke="#8B0029" stroke-width="3" marker-end="url(#stR)"/>
+    <circle cx="0" cy="204" r="16" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+    <line x1="0" y1="220" x2="0" y2="265" stroke="#8B0029" stroke-width="2.5" marker-end="url(#stR)"/>
     <text x="20" y="258" font-size="18" font-style="italic" fill="#8B0029" font-weight="bold">mg</text>
     <!-- Displaced ball (ghost) -->
-    <circle cx="62" cy="180" r="16" fill="none" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <circle cx="62" cy="180" r="16" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
     <!-- Restoring tangential force component -->
-    <line x1="48" y1="190" x2="0" y2="212" stroke="#8B0029" stroke-width="2.5" stroke-dasharray="6 3" marker-end="url(#stR)"/>
+    <line x1="48" y1="190" x2="0" y2="212" stroke="#8B0029" stroke-width="2.5" stroke-dasharray="4 3" marker-end="url(#stR)"/>
     <text x="22" y="172" font-size="14" fill="#8B0029" font-weight="bold">복원력</text>
   </g>
 
@@ -27,15 +27,15 @@
     <text x="0" y="0" text-anchor="middle" font-size="20" font-weight="bold" fill="#8B0029">불안정 평형</text>
     <text x="0" y="22" text-anchor="middle" font-size="14" fill="#6B7280">(Unstable)</text>
     <!-- Hill shape -->
-    <path d="M -100,220 Q -100,140 0,140 Q 100,140 100,220" fill="none" stroke="#6B7280" stroke-width="2.5"/>
+    <path d="M -100,220 Q -100,140 0,140 Q 100,140 100,220" fill="none" stroke="#6B7280" stroke-width="2"/>
     <!-- Ball at equilibrium position (top of hill) -->
-    <circle cx="0" cy="124" r="16" fill="#F3F4F6" stroke="#6B7280" stroke-width="2.5"/>
-    <line x1="0" y1="140" x2="0" y2="178" stroke="#8B0029" stroke-width="3" marker-end="url(#stR)"/>
+    <circle cx="0" cy="124" r="16" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+    <line x1="0" y1="140" x2="0" y2="178" stroke="#8B0029" stroke-width="2.5" marker-end="url(#stR)"/>
     <text x="20" y="172" font-size="18" font-style="italic" fill="#8B0029" font-weight="bold">mg</text>
     <!-- Displaced ball (ghost) -->
-    <circle cx="62" cy="156" r="16" fill="none" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <circle cx="62" cy="156" r="16" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
     <!-- Tangential force component (away from equilibrium) -->
-    <line x1="68" y1="172" x2="105" y2="195" stroke="#8B0029" stroke-width="2.5" stroke-dasharray="6 3" marker-end="url(#stR)"/>
+    <line x1="68" y1="172" x2="105" y2="195" stroke="#8B0029" stroke-width="2.5" stroke-dasharray="4 3" marker-end="url(#stR)"/>
     <text x="92" y="220" font-size="14" fill="#8B0029" font-weight="bold">이탈</text>
   </g>
 
@@ -44,12 +44,12 @@
     <text x="0" y="0" text-anchor="middle" font-size="20" font-weight="bold" fill="#8B0029">중립 평형</text>
     <text x="0" y="22" text-anchor="middle" font-size="14" fill="#6B7280">(Neutral)</text>
     <!-- Flat surface -->
-    <line x1="-100" y1="210" x2="100" y2="210" stroke="#6B7280" stroke-width="2.5"/>
+    <line x1="-100" y1="210" x2="100" y2="210" stroke="#6B7280" stroke-width="2"/>
     <!-- Ball at original position -->
-    <circle cx="-35" cy="194" r="16" fill="#F3F4F6" stroke="#6B7280" stroke-width="2.5"/>
-    <line x1="-35" y1="210" x2="-35" y2="255" stroke="#8B0029" stroke-width="3" marker-end="url(#stR)"/>
+    <circle cx="-35" cy="194" r="16" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+    <line x1="-35" y1="210" x2="-35" y2="255" stroke="#8B0029" stroke-width="2.5" marker-end="url(#stR)"/>
     <text x="-15" y="250" font-size="18" font-style="italic" fill="#8B0029" font-weight="bold">mg</text>
     <!-- Displaced ball (ghost) -->
-    <circle cx="45" cy="194" r="16" fill="none" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <circle cx="45" cy="194" r="16" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
   </g>
 </svg>

@@ -23,44 +23,44 @@
   </g>
 
   <!-- Boom (rod from wall pivot at (82,370) to tip (480,130)) -->
-  <line x1="82" y1="370" x2="480" y2="130" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round"/>
+  <line x1="82" y1="370" x2="480" y2="130" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
 
   <!-- Cable (horizontal from wall point to boom tip) -->
-  <line x1="82" y1="130" x2="480" y2="130" stroke="#6B7280" stroke-width="2.5"/>
+  <line x1="82" y1="130" x2="480" y2="130" stroke="#6B7280" stroke-width="2"/>
   <text x="220" y="118" font-size="16" fill="#6B7280">케이블</text>
 
   <!-- Angle θ at pivot -->
-  <path d="M 150,370 A 70,70 0 0,0 124,330" fill="none" stroke="#6B7280" stroke-width="1.5"/>
+  <path d="M 150,370 A 70,70 0 0,0 124,330" fill="none" stroke="#6B7280" stroke-width="1"/>
   <text x="160" y="345" font-size="22" font-style="italic" fill="#6B7280">&#x3B8;</text>
 
   <!-- Load cord and block hanging from tip -->
   <line x1="480" y1="130" x2="480" y2="160" stroke="#6B7280" stroke-width="2"/>
-  <rect x="455" y="160" width="50" height="50" fill="#6B7280" stroke="#1a1a1a" stroke-width="2.5" fill-opacity="0.18"/>
+  <rect x="455" y="160" width="50" height="50" fill="#6B7280" stroke="#1a1a1a" stroke-width="2" fill-opacity="0.18"/>
   <text x="480" y="192" text-anchor="middle" font-size="22" font-weight="bold" font-style="italic" fill="#1a1a1a">M</text>
 
   <!-- Mg force (load weight) -->
-  <line x1="510" y1="135" x2="510" y2="220" stroke="#8B0029" stroke-width="3" marker-end="url(#cbR)"/>
-  <text x="525" y="215" font-size="22" font-weight="bold" font-style="italic" fill="#8B0029">Mg</text>
+  <line x1="480" y1="210" x2="480" y2="295" stroke="#8B0029" stroke-width="2.5" marker-end="url(#cbR)"/>
+  <text x="496" y="290" font-size="22" font-weight="bold" font-style="italic" fill="#8B0029">Mg</text>
 
   <!-- mg (boom weight) at boom center -->
-  <line x1="280" y1="250" x2="280" y2="335" stroke="#8B0029" stroke-width="3" marker-end="url(#cbR)"/>
+  <line x1="280" y1="250" x2="280" y2="335" stroke="#8B0029" stroke-width="2.5" marker-end="url(#cbR)"/>
   <text x="294" y="328" font-size="22" font-weight="bold" font-style="italic" fill="#8B0029">mg</text>
 
   <!-- Tension T at the tip, leftward along cable -->
-  <line x1="475" y1="130" x2="395" y2="130" stroke="#2563EB" stroke-width="3" marker-end="url(#cbB)"/>
+  <line x1="475" y1="130" x2="395" y2="130" stroke="#2563EB" stroke-width="2.5" marker-end="url(#cbB)"/>
   <text x="430" y="148" text-anchor="middle" font-size="22" font-weight="bold" font-style="italic" fill="#2563EB">T</text>
 
   <!-- Pivot dot at wall -->
   <circle cx="82" cy="370" r="5" fill="#8B0029"/>
 
   <!-- F_v (vertical reaction at pivot, upward) -->
-  <line x1="82" y1="370" x2="82" y2="285" stroke="#2563EB" stroke-width="3" marker-end="url(#cbB)"/>
+  <line x1="82" y1="370" x2="82" y2="285" stroke="#2563EB" stroke-width="2.5" marker-end="url(#cbB)"/>
   <text x="60" y="305" text-anchor="end" font-size="22" font-weight="bold" fill="#2563EB">
     <tspan font-style="italic">F</tspan><tspan font-size="15" baseline-shift="sub">v</tspan>
   </text>
 
   <!-- F_h (horizontal reaction at pivot, rightward) -->
-  <line x1="82" y1="370" x2="170" y2="370" stroke="#2563EB" stroke-width="3" marker-end="url(#cbB)"/>
+  <line x1="82" y1="370" x2="170" y2="370" stroke="#2563EB" stroke-width="2.5" marker-end="url(#cbB)"/>
   <text x="135" y="392" font-size="22" font-weight="bold" fill="#2563EB">
     <tspan font-style="italic">F</tspan><tspan font-size="15" baseline-shift="sub">h</tspan>
   </text>

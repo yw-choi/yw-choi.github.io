@@ -6,11 +6,11 @@
   </defs>
 
   <!-- Axes -->
-  <line x1="100" y1="400" x2="675" y2="400" stroke="#6B7280" stroke-width="2.5" marker-end="url(#ssG)"/>
-  <line x1="100" y1="400" x2="100" y2="50" stroke="#6B7280" stroke-width="2.5" marker-end="url(#ssG)"/>
+  <line x1="100" y1="400" x2="675" y2="400" stroke="#6B7280" stroke-width="2" marker-end="url(#ssG)"/>
+  <line x1="100" y1="400" x2="100" y2="50" stroke="#6B7280" stroke-width="2" marker-end="url(#ssG)"/>
 
   <!-- Axis labels -->
-  <text x="690" y="408" font-size="20" fill="#1a1a1a">변형률 <tspan font-style="italic">&#x3B5;</tspan></text>
+  <text x="660" y="408" text-anchor="end" font-size="20" fill="#1a1a1a">변형률 <tspan font-style="italic">&#x3B5;</tspan></text>
   <text x="100" y="38" text-anchor="middle" font-size="20" fill="#1a1a1a">응력 <tspan font-style="italic">&#x3C3;</tspan></text>
 
   <!-- Dashed reference lines for S_y and S_u -->
@@ -42,9 +42,9 @@
   </text>
 
   <!-- Curve segments -->
-  <line x1="100" y1="400" x2="220" y2="220" stroke="#8B0029" stroke-width="3.5"/>
-  <path d="M 220,220 Q 290,140 430,100" fill="none" stroke="#8B0029" stroke-width="3.5"/>
-  <path d="M 430,100 Q 510,110 590,170" fill="none" stroke="#8B0029" stroke-width="3.5"/>
+  <line x1="100" y1="400" x2="220" y2="220" stroke="#8B0029" stroke-width="2.5"/>
+  <path d="M 220,220 Q 290,140 430,100" fill="none" stroke="#8B0029" stroke-width="2.5"/>
+  <path d="M 430,100 Q 510,110 590,170" fill="none" stroke="#8B0029" stroke-width="2.5"/>
 
   <!-- Yield point dot -->
   <circle cx="220" cy="220" r="6" fill="#8B0029"/>
@@ -55,8 +55,8 @@
   <text x="430" y="80" text-anchor="middle" font-size="18" font-weight="bold" fill="#8B0029">극한 강도</text>
 
   <!-- Fracture point with X marker -->
-  <line x1="582" y1="162" x2="598" y2="178" stroke="#8B0029" stroke-width="3"/>
-  <line x1="598" y1="162" x2="582" y2="178" stroke="#8B0029" stroke-width="3"/>
+  <line x1="582" y1="162" x2="598" y2="178" stroke="#8B0029" stroke-width="2"/>
+  <line x1="598" y1="162" x2="582" y2="178" stroke="#8B0029" stroke-width="2"/>
   <text x="615" y="172" font-size="18" font-weight="bold" fill="#8B0029">파단</text>
 
   <!-- E slope label inside the elastic region -->

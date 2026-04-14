@@ -125,8 +125,8 @@ const materials = {
   steel:    { name: '강철',     E: 200, Sy: 250, Su: 400, eFrac: 0.20, color: '#607D8B' },
   aluminum: { name: '알루미늄', E: 70,  Sy: 95,  Su: 110, eFrac: 0.15, color: '#90A4AE' },
   copper:   { name: '구리',     E: 120, Sy: 70,  Su: 220, eFrac: 0.30, color: '#C2410C' },
-  bone:     { name: '뼈',       E: 18,  Sy: 120, Su: 130, eFrac: 0.03, color: '#FFEB99' },
-  concrete: { name: '콘크리트', E: 30,  Sy: 20,  Su: 35,  eFrac: 0.003, color: '#9E9E9E' },
+  bone:     { name: '뼈',       E: 9,   Sy: 120, Su: 130, eFrac: 0.03, color: '#FFEB99' },
+  concrete: { name: '콘크리트', E: 30,  Sy: 2,   Su: 4,   eFrac: 0.0002, color: '#9E9E9E' },
 };
 
 function getMat() { return materials[document.getElementById('matSelect').value]; }
@@ -350,7 +350,6 @@ function drawGraph(ox, oy, w, h, mat) {
   ctx.beginPath();
   ctx.arc(ypx_y, ypy_y, 4, 0, Math.PI * 2);
   ctx.fill();
-  posLabel(lblYield, ox + ypx_y + 6, oy + ypy_y - 18, kx('S_y'));
 
   // Ultimate point marker
   const upx_u = px(_eu), upy_u = py(mat.Su);
@@ -358,7 +357,16 @@ function drawGraph(ox, oy, w, h, mat) {
   ctx.beginPath();
   ctx.arc(upx_u, upy_u, 4, 0, Math.PI * 2);
   ctx.fill();
-  posLabel(lblUlt, ox + upx_u + 6, oy + upy_u - 18, kx('S_u'));
+
+  // Place S_y and S_u labels with collision detection
+  let syLabelY = oy + ypy_y - 18;
+  let suLabelY = oy + upy_u - 18;
+  if (Math.abs(syLabelY - suLabelY) < 25) {
+    // Offset S_y downward to avoid overlap
+    syLabelY = suLabelY + 25;
+  }
+  posLabel(lblYield, ox + ypx_y + 6, syLabelY, kx('S_y'));
+  posLabel(lblUlt, ox + upx_u + 6, suLabelY, kx('S_u'));
 
   // Fracture marker
   const fpx_f = px(_ef);
