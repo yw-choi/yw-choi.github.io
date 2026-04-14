@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PV 다이어그램 — 열역학 과정</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.control-group select { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 14px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute; white-space: nowrap; line-height: 1; font-size: 13px; pointer-events: none;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.92em; }
+.canvas-overlay .katex-label.with-bg {
+  background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px;
+}
+.process-legend { display: flex; flex-wrap: wrap; gap: 4px; }
+.process-legend span { font-size: 11px; padding: 2px 6px; border-radius: 4px; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-state" style="color:#8B0029;"></div>
+      <div class="katex-label with-bg" id="lbl-work" style="color:#2563EB;"></div>
+    </div>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>PV 다이어그램</h2>
+      <div class="subtitle">Thermodynamic Processes (Ch.18)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>과정 유형</label>
+      <select id="processSelect">
+        <option value="isobaric">등압 과정 (Isobaric, P=const)</option>
+        <option value="isochoric">등적 과정 (Isochoric, V=const)</option>
+        <option value="isothermal">등온 과정 (Isothermal, T=const)</option>
+        <option value="adiabatic">단열 과정 (Adiabatic, Q=0)</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>초기 압력 P₀ = <span id="pVal">2.0</span> atm</label>
+      <input type="range" id="pSlider" min="0.5" max="5" value="2" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>초기 부피 V₀ = <span id="vVal">1.0</span> L</label>
+      <input type="range" id="vSlider" min="0.5" max="3" value="1" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>최종 부피 비 V_f/V₀ = <span id="ratioVal">2.0</span></label>
+      <input type="range" id="ratioSlider" min="0.3" max="3.0" value="2.0" step="0.1">
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const lblState = document.getElementById('lbl-state');
+const lblWork = document.getElementById('lbl-work');
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
+}
+
+const processSelect = document.getElementById('processSelect');
+const pSlider = document.getElementById('pSlider');
+const vSlider = document.getElementById('vSlider');
+const ratioSlider = document.getElementById('ratioSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+// State
+let progress = 0; // 0 to 1 animation progress
+let running = false, animId = null, lastTs = null;
+const gamma = 5/3; // monatomic ideal gas
+const nMoles = 1; // mol
+const R = 8.314; // J/(mol·K)
+
+function getParams() {
+  const P0_atm = parseFloat(pSlider.value);
+  const V0_L = parseFloat(vSlider.value);
+  const ratio = parseFloat(ratioSlider.value);
+  const process = processSelect.value;
+  // Convert to SI
+  const P0 = P0_atm * 101325; // Pa
+  const V0 = V0_L * 1e-3; // m^3
+  const T0 = P0 * V0 / (nMoles * R); // K from ideal gas law
+  const Vf = V0 * ratio;
+  return { P0, V0, T0, Vf, process, P0_atm, V0_L, ratio };
+}
+
+function computeState(t) {
+  // t goes from 0 to 1
+  const { P0, V0, T0, Vf, process } = getParams();
+  const V = V0 + (Vf - V0) * t;
+
+  let P, T;
+  switch (process) {
+    case 'isobaric':
+      P = P0;
+      T = P * V / (nMoles * R);
+      break;
+    case 'isochoric':
+      // Volume doesn't change; pressure changes
+      // We reinterpret ratio as Pf/P0
+      const Pf_iso = P0 * getParams().ratio;
+      P = P0 + (Pf_iso - P0) * t;
+      T = P * V0 / (nMoles * R);
+      return { P, V: V0, T };
+    case 'isothermal':
+      P = P0 * V0 / V;
+      T = T0;
+      break;
+    case 'adiabatic':
+      P = P0 * Math.pow(V0 / V, gamma);
+      T = P * V / (nMoles * R);
+      break;
+  }
+  return { P, V, T };
+}
+
+function computeWork() {
+  const { P0, V0, T0, Vf, process } = getParams();
+  const currentState = computeState(progress);
+
+  switch (process) {
+    case 'isobaric':
+      return P0 * (currentState.V - V0);
+    case 'isochoric':
+      return 0;
+    case 'isothermal':
+      if (currentState.V / V0 <= 0) return 0;
+      return nMoles * R * T0 * Math.log(currentState.V / V0);
+    case 'adiabatic':
+      // W = (P0V0 - PfVf)/(gamma-1)
+      return (P0 * V0 - currentState.P * currentState.V) / (gamma - 1);
+  }
+  return 0;
+}
+
+function computeQ() {
+  const { process } = getParams();
+  const W = computeWork();
+  const state_i = computeState(0);
+  const state_f = computeState(progress);
+  // dEint = nCvdT = (f/2)nRdT, for monatomic f=3
+  const Cv = 1.5 * nMoles * R;
+  const dEint = Cv * (state_f.T - state_i.T);
+
+  switch (process) {
+    case 'adiabatic': return 0;
+    case 'isochoric': return dEint;
+    default: return dEint + W;
+  }
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function reset() {
+  if (animId) cancelAnimationFrame(animId);
+  running = false; animId = null; lastTs = null;
+  progress = 0;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  updateInfo(); draw();
+}
+
+function start() {
+  if (running) return;
+  if (progress >= 1) progress = 0;
+  running = true; lastTs = null;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+}
+
+function step(ts) {
+  if (!running) return;
+  if (!lastTs) { lastTs = ts; animId = requestAnimationFrame(step); return; }
+  const dt = (ts - lastTs) / 1000;
+  lastTs = ts;
+  progress = Math.min(progress + dt * 0.4, 1);
+  if (progress >= 1) {
+    progress = 1;
+    stop();
+  }
+  updateInfo(); draw();
+  if (running) animId = requestAnimationFrame(step);
+}
+
+// Coordinate transforms for PV diagram
+function getPlotArea() {
+  const left = 70, right = CW - 30, top = 60, bottom = CH - 50;
+  return { left, right, top, bottom, w: right - left, h: bottom - top };
+}
+
+function getPVRange() {
+  const { P0, V0, Vf, process, ratio } = getParams();
+  let Pmax, Pmin, Vmin, Vmax;
+
+  Vmin = Math.min(V0, Vf) * 0.8;
+  Vmax = Math.max(V0, Vf) * 1.2;
+
+  if (process === 'isochoric') {
+    Vmin = V0 * 0.5;
+    Vmax = V0 * 2;
+    Pmin = Math.min(P0, P0 * ratio) * 0.8;
+    Pmax = Math.max(P0, P0 * ratio) * 1.2;
+  } else if (process === 'adiabatic') {
+    const Pf = P0 * Math.pow(V0 / Vf, gamma);
+    Pmin = Math.min(P0, Pf) * 0.5;
+    Pmax = Math.max(P0, Pf) * 1.2;
+  } else if (process === 'isothermal') {
+    const Pf = P0 * V0 / Vf;
+    Pmin = Math.min(P0, Pf) * 0.5;
+    Pmax = Math.max(P0, Pf) * 1.2;
+  } else {
+    Pmin = P0 * 0.5;
+    Pmax = P0 * 1.5;
+  }
+
+  if (Pmin < 0) Pmin = 0;
+  return { Pmin, Pmax, Vmin, Vmax };
+}
+
+function pvToCanvas(P, V) {
+  const pa = getPlotArea();
+  const r = getPVRange();
+  const x = pa.left + (V - r.Vmin) / (r.Vmax - r.Vmin) * pa.w;
+  const y = pa.bottom - (P - r.Pmin) / (r.Pmax - r.Pmin) * pa.h;
+  return { x, y };
+}
+
+function getProcessColor() {
+  switch (processSelect.value) {
+    case 'isobaric': return '#8B0029';
+    case 'isochoric': return '#2563EB';
+    case 'isothermal': return '#6B7280';
+    case 'adiabatic': return '#1a1a1a';
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  lblState.style.display = 'none';
+  lblWork.style.display = 'none';
+
+  const pa = getPlotArea();
+  const r = getPVRange();
+  const color = getProcessColor();
+
+  // Draw axes
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(pa.left, pa.top - 10);
+  ctx.lineTo(pa.left, pa.bottom);
+  ctx.lineTo(pa.right + 10, pa.bottom);
+  ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('V (L)', (pa.left + pa.right) / 2, pa.bottom + 38);
+  ctx.save();
+  ctx.translate(18, (pa.top + pa.bottom) / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('P (atm)', 0, 0);
+  ctx.restore();
+
+  // Grid lines and tick labels
+  ctx.font = '11px sans-serif'; ctx.fillStyle = '#999';
+  const nTicksV = 5, nTicksP = 5;
+  for (let i = 0; i <= nTicksV; i++) {
+    const V = r.Vmin + (r.Vmax - r.Vmin) * i / nTicksV;
+    const { x } = pvToCanvas(0, V);
+    ctx.strokeStyle = '#eee'; ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(x, pa.top); ctx.lineTo(x, pa.bottom); ctx.stroke();
+    ctx.fillStyle = '#999'; ctx.textAlign = 'center';
+    ctx.fillText((V * 1000).toFixed(1), x, pa.bottom + 16);
+  }
+  for (let i = 0; i <= nTicksP; i++) {
+    const P = r.Pmin + (r.Pmax - r.Pmin) * i / nTicksP;
+    const { y } = pvToCanvas(P, 0);
+    ctx.strokeStyle = '#eee'; ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(pa.left, y); ctx.lineTo(pa.right, y); ctx.stroke();
+    ctx.fillStyle = '#999'; ctx.textAlign = 'right';
+    ctx.fillText((P / 101325).toFixed(1), pa.left - 8, y + 4);
+  }
+
+  // Draw full process path (ghost)
+  const N = 100;
+  ctx.strokeStyle = color + '30'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]);
+  ctx.beginPath();
+  for (let i = 0; i <= N; i++) {
+    const t = i / N;
+    const st = computeState(t);
+    const { x, y } = pvToCanvas(st.P, st.V);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Draw shaded work area (up to current progress)
+  if (processSelect.value !== 'isochoric' && progress > 0) {
+    ctx.fillStyle = color + '18';
+    ctx.beginPath();
+    const s0 = computeState(0);
+    const c0 = pvToCanvas(s0.P, s0.V);
+    const bY = pvToCanvas(0, 0).y; // baseline won't work, use Pmin
+    const baseY = pvToCanvas(r.Pmin, 0).y;
+
+    // Start at bottom of first V
+    const startBottom = pvToCanvas(r.Pmin, s0.V);
+    ctx.moveTo(c0.x, pa.bottom);
+    ctx.lineTo(c0.x, c0.y);
+
+    const steps = Math.floor(progress * N);
+    for (let i = 1; i <= steps; i++) {
+      const t = i / N;
+      const st = computeState(t);
+      const c = pvToCanvas(st.P, st.V);
+      ctx.lineTo(c.x, c.y);
+    }
+    // Current point
+    const stCur = computeState(progress);
+    const cCur = pvToCanvas(stCur.P, stCur.V);
+    ctx.lineTo(cCur.x, cCur.y);
+    ctx.lineTo(cCur.x, pa.bottom);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // Draw animated process path
+  if (progress > 0) {
+    ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    const steps = Math.max(Math.floor(progress * N), 1);
+    for (let i = 0; i <= steps; i++) {
+      const t = Math.min(i / N, progress);
+      const st = computeState(t);
+      const { x, y } = pvToCanvas(st.P, st.V);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  // Draw initial state point
+  const si = computeState(0);
+  const ci = pvToCanvas(si.P, si.V);
+  ctx.fillStyle = color;
+  ctx.beginPath(); ctx.arc(ci.x, ci.y, 6, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('i', ci.x, ci.y);
+  ctx.textBaseline = 'alphabetic';
+
+  // Draw current state point
+  const sc = computeState(progress);
+  const cc = pvToCanvas(sc.P, sc.V);
+  ctx.fillStyle = '#fff'; ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(cc.x, cc.y, 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = color; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('f', cc.x, cc.y);
+  ctx.textBaseline = 'alphabetic';
+
+  // Work label in shaded area
+  if (progress > 0) {
+    const W = computeWork();
+    const midX = (ci.x + cc.x) / 2;
+    const midY = (pa.bottom + Math.min(ci.y, cc.y)) / 2;
+    if (processSelect.value !== 'isochoric') {
+      posLabel(lblWork, midX - 20, midY - 10,
+        '<span style="color:' + color + ';font-weight:bold">' +
+        tex('W = ' + (W).toFixed(1) + '\\text{ J}') + '</span>');
+    }
+  }
+
+  // State label near current point
+  posLabel(lblState, cc.x + 12, cc.y - 16,
+    '<span style="color:' + color + '">' +
+    tex('T = ' + sc.T.toFixed(0) + '\\text{ K}') + '</span>');
+}
+
+function updateInfo() {
+  const params = getParams();
+  const si = computeState(0);
+  const sc = computeState(progress);
+  const W = computeWork();
+  const Q = computeQ();
+  const dEint = Q - W;
+
+  const box = document.getElementById('infoBox');
+  let html = '';
+  html += '<span class="label">초기 상태:</span><br>';
+  html += tex('P_i = ' + (si.P / 101325).toFixed(2) + '\\text{ atm}') + ', ';
+  html += tex('V_i = ' + (si.V * 1000).toFixed(2) + '\\text{ L}') + '<br>';
+  html += tex('T_i = ' + si.T.toFixed(0) + '\\text{ K}') + '<br>';
+  html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
+  html += '<span class="label">현재 상태:</span><br>';
+  html += tex('P = ' + (sc.P / 101325).toFixed(2) + '\\text{ atm}') + ', ';
+  html += tex('V = ' + (sc.V * 1000).toFixed(2) + '\\text{ L}') + '<br>';
+  html += tex('T = ' + sc.T.toFixed(0) + '\\text{ K}') + '<br>';
+  html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
+  html += '<span class="label">에너지:</span><br>';
+  html += tex('W = \\int P\\,dV = ' + W.toFixed(1) + '\\text{ J}') + '<br>';
+  html += tex('Q = ' + Q.toFixed(1) + '\\text{ J}') + '<br>';
+  html += tex('\\Delta E_{\\text{int}} = Q - W = ' + dEint.toFixed(1) + '\\text{ J}') + '<br>';
+  html += '<span style="color:#2e7d32;font-weight:700">' + tex('\\Delta E_{\\text{int}} = Q - W \\;\\checkmark') + '</span>';
+  box.innerHTML = html;
+}
+
+function updateFormula() {
+  const process = processSelect.value;
+  const box = document.getElementById('formulaBox');
+  let html = '';
+  switch (process) {
+    case 'isobaric':
+      html += '<b>등압 과정 (P = const):</b><br>';
+      html += tex('W = P\\Delta V = P(V_f - V_i)') + '<br>';
+      html += tex('\\Delta E_{\\text{int}} = Q - W');
+      break;
+    case 'isochoric':
+      html += '<b>등적 과정 (V = const):</b><br>';
+      html += tex('W = 0') + '<br>';
+      html += tex('\\Delta E_{\\text{int}} = Q');
+      break;
+    case 'isothermal':
+      html += '<b>등온 과정 (T = const):</b><br>';
+      html += tex('W = nRT\\ln\\frac{V_f}{V_i}') + '<br>';
+      html += tex('\\Delta E_{\\text{int}} = 0,\\; Q = W');
+      break;
+    case 'adiabatic':
+      html += '<b>단열 과정 (Q = 0):</b><br>';
+      html += tex('PV^\\gamma = \\text{const}') + '<br>';
+      html += tex('\\Delta E_{\\text{int}} = -W');
+      break;
+  }
+  box.innerHTML = html;
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML = 'PV 다이어그램: ' + tex('\\Delta E_{\\text{int}} = Q - W');
+  document.getElementById('theoremBox').innerHTML =
+    '열역학 제1법칙<br>' +
+    tex('\\Delta E_{\\text{int}} = Q - W') + '<br>' +
+    tex('W = \\int_{V_i}^{V_f} P\\,dV');
+  updateFormula();
+}
+
+// Event listeners
+[pSlider, vSlider, ratioSlider].forEach(sl => {
+  sl.addEventListener('input', () => {
+    document.getElementById('pVal').textContent = parseFloat(pSlider.value).toFixed(1);
+    document.getElementById('vVal').textContent = parseFloat(vSlider.value).toFixed(1);
+    document.getElementById('ratioVal').textContent = parseFloat(ratioSlider.value).toFixed(1);
+    reset();
+  });
+});
+
+processSelect.addEventListener('change', () => {
+  updateFormula();
+  reset();
+});
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+window.addEventListener('resize', resize);
+
+renderStatic();
+document.getElementById('pVal').textContent = parseFloat(pSlider.value).toFixed(1);
+document.getElementById('vVal').textContent = parseFloat(vSlider.value).toFixed(1);
+document.getElementById('ratioVal').textContent = parseFloat(ratioSlider.value).toFixed(1);
+reset();
+resize();
+</script>
+</body>
+</html>

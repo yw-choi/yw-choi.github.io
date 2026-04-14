@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" font-family="sans-serif">
+  <defs>
+    <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#8B0029"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#2563EB"/>
+    </marker>
+    <marker id="arrowGray" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="200" cy="200" r="140" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- Axes -->
+  <line x1="30" y1="200" x2="370" y2="200" stroke="#6B7280" stroke-width="1"/>
+  <line x1="200" y1="30" x2="200" y2="370" stroke="#6B7280" stroke-width="1"/>
+  <text x="375" y="204" font-size="14" fill="#6B7280">x</text>
+  <text x="204" y="28" font-size="14" fill="#6B7280">y</text>
+  <text x="193" y="218" font-size="13" fill="#6B7280">O</text>
+
+  <!-- Angle arc -->
+  <path d="M 240,200 A 40,40 0 0,0 228,168" fill="none" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="245" y="180" font-size="13" fill="#8B0029" font-style="italic">ωt + ϕ</text>
+
+  <!-- Radius to P' -->
+  <line x1="200" y1="200" x2="299" y2="101" stroke="#8B0029" stroke-width="2"/>
+
+  <!-- P' point on circle -->
+  <circle cx="299" cy="101" r="6" fill="#8B0029"/>
+  <text x="310" y="96" font-size="14" fill="#8B0029" font-weight="bold">P'</text>
+
+  <!-- x_m label on radius -->
+  <text x="240" y="140" font-size="13" fill="#8B0029" font-style="italic">x<tspan baseline-shift="sub" font-size="10">m</tspan></text>
+
+  <!-- Dashed vertical projection line -->
+  <line x1="299" y1="101" x2="299" y2="200" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- P point on x-axis -->
+  <circle cx="299" cy="200" r="5" fill="#2563EB"/>
+  <text x="305" y="220" font-size="14" fill="#2563EB" font-weight="bold">P</text>
+
+  <!-- x(t) dimension -->
+  <line x1="200" y1="210" x2="299" y2="210" stroke="#2563EB" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <text x="240" y="230" font-size="13" fill="#2563EB" font-style="italic">x(t)</text>
+
+  <!-- Velocity vector at P' (tangent) -->
+  <line x1="299" y1="101" x2="230" y2="50" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <text x="220" y="45" font-size="13" fill="#2563EB" font-weight="bold">v⃗</text>
+
+  <!-- Angular velocity arrow -->
+  <path d="M 230,75 A 30,30 0 0,1 260,60" fill="none" stroke="#8B0029" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+  <text x="250" y="55" font-size="13" fill="#8B0029" font-style="italic">ω</text>
+
+  <!-- Right side: explanation -->
+  <rect x="420" y="40" width="250" height="130" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
+  <text x="440" y="65" font-size="14" fill="#1a1a1a" font-weight="bold">기준원 (Reference Circle)</text>
+  <text x="440" y="90" font-size="12" fill="#1a1a1a">P'는 반지름 x<tspan baseline-shift="sub" font-size="9">m</tspan>인 원 위를</text>
+  <text x="440" y="108" font-size="12" fill="#1a1a1a">각속도 ω로 등속 원운동한다.</text>
+  <text x="440" y="132" font-size="12" fill="#2563EB">P는 P'의 x축 위 정사영이며,</text>
+  <text x="440" y="150" font-size="12" fill="#2563EB">단순조화운동을 한다.</text>
+
+  <rect x="420" y="200" width="250" height="100" rx="8" fill="#F3F4F6" stroke="#8B0029" stroke-width="1"/>
+  <text x="440" y="225" font-size="13" fill="#8B0029" font-weight="bold">SHM = 등속 원운동의 정사영</text>
+  <text x="440" y="250" font-size="12" fill="#1a1a1a" font-style="italic">x(t) = x<tspan baseline-shift="sub" font-size="9">m</tspan> cos(ωt + ϕ)</text>
+  <text x="440" y="275" font-size="12" fill="#1a1a1a" font-style="italic">v(t) = −ωx<tspan baseline-shift="sub" font-size="9">m</tspan> sin(ωt + ϕ)</text>
+</svg>

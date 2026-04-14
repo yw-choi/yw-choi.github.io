@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>중력장 시각화</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 14px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+.toggle-row { display: flex; gap: 6px; align-items: center; }
+.toggle-row label { font-size: 12px; }
+.toggle-row input[type="checkbox"] { accent-color: #8B0029; }
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>중력장 시각화</h2>
+      <div class="subtitle">Gravitational Field (Ch.13)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>질량 1: M&#x2081; = <span id="m1Val">3.0</span></label>
+      <input type="range" id="m1Slider" min="0" max="5" value="3" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>질량 2: M&#x2082; = <span id="m2Val">1.0</span></label>
+      <input type="range" id="m2Slider" min="0" max="5" value="1" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>질량 간 거리 d = <span id="dVal">3.0</span></label>
+      <input type="range" id="dSlider" min="1" max="6" value="3" step="0.1">
+    </div>
+
+    <div class="toggle-row">
+      <input type="checkbox" id="showVectors" checked>
+      <label for="showVectors">중력장 벡터</label>
+    </div>
+    <div class="toggle-row">
+      <input type="checkbox" id="showPotential" checked>
+      <label for="showPotential">등퍼텐셜선</label>
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <button class="reset-btn" id="resetBtn">&#8635; 기본값 복원</button>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const m1Slider = document.getElementById('m1Slider');
+const m2Slider = document.getElementById('m2Slider');
+const dSlider = document.getElementById('dSlider');
+const showVecCB = document.getElementById('showVectors');
+const showPotCB = document.getElementById('showPotential');
+const resetBtn = document.getElementById('resetBtn');
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function getMasses() {
+  const m1 = parseFloat(m1Slider.value);
+  const m2 = parseFloat(m2Slider.value);
+  const d = parseFloat(dSlider.value);
+  const masses = [];
+  if (m1 > 0.01) masses.push({ x: -d / 2, y: 0, m: m1 });
+  if (m2 > 0.01) masses.push({ x: d / 2, y: 0, m: m2 });
+  return masses;
+}
+
+function gravField(px, py, masses) {
+  let gx = 0, gy = 0;
+  for (const mass of masses) {
+    const dx = px - mass.x;
+    const dy = py - mass.y;
+    const r2 = dx * dx + dy * dy;
+    const r = Math.sqrt(r2);
+    if (r < 0.15) continue;
+    const g = mass.m / r2;
+    gx -= g * dx / r;
+    gy -= g * dy / r;
+  }
+  return { gx, gy };
+}
+
+function potential(px, py, masses) {
+  let U = 0;
+  for (const mass of masses) {
+    const dx = px - mass.x;
+    const dy = py - mass.y;
+    const r = Math.sqrt(dx * dx + dy * dy);
+    if (r < 0.1) return -1e10;
+    U -= mass.m / r;
+  }
+  return U;
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 6;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.4), y2 - headLen * Math.sin(angle - 0.4));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.4), y2 - headLen * Math.sin(angle + 0.4));
+  ctx.closePath(); ctx.fill();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  const masses = getMasses();
+  if (masses.length === 0) return;
+
+  // Coordinate transform
+  const d = parseFloat(dSlider.value);
+  const viewRange = Math.max(d * 1.8, 4);
+  const cx = CW * 0.5;
+  const cy = CH * 0.5;
+  const scale = Math.min(CW, CH) * 0.4 / viewRange;
+
+  function toScreen(sx, sy) { return [cx + sx * scale, cy - sy * scale]; }
+  function toSim(px, py) { return [(px - cx) / scale, (cy - py) / scale]; }
+
+  // Draw equipotential lines
+  if (showPotCB.checked) {
+    const gridRes = 2; // pixel steps
+    const potGrid = [];
+    const cols = Math.ceil(CW / gridRes);
+    const rows = Math.ceil(CH / gridRes);
+
+    for (let j = 0; j < rows; j++) {
+      potGrid[j] = [];
+      for (let i = 0; i < cols; i++) {
+        const [sx, sy] = toSim(i * gridRes, j * gridRes);
+        potGrid[j][i] = potential(sx, sy, masses);
+      }
+    }
+
+    // Contour levels
+    const maxMass = Math.max(...masses.map(m => m.m));
+    const levels = [];
+    for (let k = -20; k <= -1; k++) {
+      levels.push(k * maxMass * 0.3);
+    }
+
+    ctx.strokeStyle = 'rgba(139,0,41,0.18)';
+    ctx.lineWidth = 1;
+
+    for (const level of levels) {
+      // Simple marching squares contour
+      ctx.beginPath();
+      let hasPath = false;
+      for (let j = 0; j < rows - 1; j++) {
+        for (let i = 0; i < cols - 1; i++) {
+          const v00 = potGrid[j][i];
+          const v10 = potGrid[j][i + 1];
+          const v01 = potGrid[j + 1][i];
+          const v11 = potGrid[j + 1][i + 1];
+
+          const b00 = v00 > level ? 1 : 0;
+          const b10 = v10 > level ? 1 : 0;
+          const b01 = v01 > level ? 1 : 0;
+          const b11 = v11 > level ? 1 : 0;
+          const idx = b00 | (b10 << 1) | (b01 << 2) | (b11 << 3);
+          if (idx === 0 || idx === 15) continue;
+
+          const px = i * gridRes;
+          const py = j * gridRes;
+
+          function lerp(va, vb) {
+            if (Math.abs(vb - va) < 1e-12) return 0.5;
+            return (level - va) / (vb - va);
+          }
+
+          const top = lerp(v00, v10);
+          const bottom = lerp(v01, v11);
+          const left = lerp(v00, v01);
+          const right = lerp(v10, v11);
+
+          const pts = [];
+          if ((b00 ^ b10)) pts.push([px + top * gridRes, py]);
+          if ((b10 ^ b11)) pts.push([px + gridRes, py + right * gridRes]);
+          if ((b01 ^ b11)) pts.push([px + bottom * gridRes, py + gridRes]);
+          if ((b00 ^ b01)) pts.push([px, py + left * gridRes]);
+
+          if (pts.length >= 2) {
+            ctx.moveTo(pts[0][0], pts[0][1]);
+            ctx.lineTo(pts[1][0], pts[1][1]);
+            hasPath = true;
+          }
+        }
+      }
+      if (hasPath) ctx.stroke();
+    }
+  }
+
+  // Draw field vectors
+  if (showVecCB.checked) {
+    const spacing = 35;
+    const maxLen = spacing * 0.6;
+    for (let py = spacing / 2; py < CH; py += spacing) {
+      for (let px = spacing / 2; px < CW; px += spacing) {
+        const [sx, sy] = toSim(px, py);
+        const { gx, gy } = gravField(sx, sy, masses);
+        const gMag = Math.sqrt(gx * gx + gy * gy);
+        if (gMag < 1e-6) continue;
+
+        // Check if too close to any mass
+        let tooClose = false;
+        for (const mass of masses) {
+          const ddx = sx - mass.x, ddy = sy - mass.y;
+          if (ddx * ddx + ddy * ddy < 0.3 * 0.3) { tooClose = true; break; }
+        }
+        if (tooClose) continue;
+
+        const len = Math.min(Math.log(1 + gMag * 3) * maxLen * 0.6, maxLen);
+        const endX = px + len * gx / gMag;
+        const endY = py - len * gy / gMag;
+
+        const alpha = Math.min(0.15 + gMag * 0.3, 0.7);
+        drawArrow(px, py, endX, endY, 'rgba(37,99,235,' + alpha + ')', 1.2);
+      }
+    }
+  }
+
+  // Draw masses
+  for (const mass of masses) {
+    const [mx, my] = toScreen(mass.x, mass.y);
+    const r = 10 + mass.m * 4;
+    ctx.fillStyle = '#FFD700'; ctx.strokeStyle = '#FF8C00'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(mx, my, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('M', mx, my);
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = '#6B7280'; ctx.font = '11px sans-serif';
+    ctx.fillText(mass.m.toFixed(1), mx, my + r + 14);
+  }
+
+  updateInfo();
+}
+
+function updateInfo() {
+  const masses = getMasses();
+  const box = document.getElementById('infoBox');
+  let totalM = 0;
+  for (const m of masses) totalM += m.m;
+
+  let html = '<span class="label">총 질량:</span> ' + totalM.toFixed(1) + '<br>';
+  html += '<span class="label">질량 수:</span> ' + masses.length + '<br>';
+  html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
+  html += tex('\\vec{g} = -\\sum_i \\frac{GM_i}{r_i^2}\\hat{r}_i');
+  box.innerHTML = html;
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML = '중력장: ' + tex('\\vec{g}(\\vec{r}) = -\\sum \\frac{GM_i}{r_i^2}\\hat{r}_i');
+  document.getElementById('theoremBox').innerHTML =
+    '중력장과 퍼텐셜<br>' +
+    tex('\\vec{g} = -\\nabla U/m') + '<br>' +
+    tex('U = -\\sum \\frac{GM_i m}{r_i}');
+
+  const box = document.getElementById('formulaBox');
+  box.innerHTML =
+    '<b>파랑 화살표:</b> 중력장 벡터 ' + tex('\\vec{g}') + '<br>' +
+    '<b>빨강 등고선:</b> 등퍼텐셜선 ' + tex('U = \\text{const}') + '<br>' +
+    tex('\\vec{g} \\perp') + ' 등퍼텐셜선 (항상 수직)';
+}
+
+[m1Slider, m2Slider, dSlider].forEach(sl => {
+  sl.addEventListener('input', () => {
+    document.getElementById('m1Val').textContent = parseFloat(m1Slider.value).toFixed(1);
+    document.getElementById('m2Val').textContent = parseFloat(m2Slider.value).toFixed(1);
+    document.getElementById('dVal').textContent = parseFloat(dSlider.value).toFixed(1);
+    draw();
+  });
+});
+
+showVecCB.addEventListener('change', draw);
+showPotCB.addEventListener('change', draw);
+
+resetBtn.addEventListener('click', () => {
+  m1Slider.value = 3; m2Slider.value = 1; dSlider.value = 3;
+  document.getElementById('m1Val').textContent = '3.0';
+  document.getElementById('m2Val').textContent = '1.0';
+  document.getElementById('dVal').textContent = '3.0';
+  showVecCB.checked = true;
+  showPotCB.checked = true;
+  draw();
+});
+
+window.addEventListener('resize', resize);
+
+renderStatic();
+document.getElementById('m1Val').textContent = parseFloat(m1Slider.value).toFixed(1);
+document.getElementById('m2Val').textContent = parseFloat(m2Slider.value).toFixed(1);
+document.getElementById('dVal').textContent = parseFloat(dSlider.value).toFixed(1);
+resize();
+</script>
+</body>
+</html>

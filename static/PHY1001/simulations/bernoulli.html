@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>베르누이 방정식</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 14px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+button.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.play-btn:hover { background: #35a035; }
+button.play-btn.running { background: #b8860b; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; line-height: 1; font-size: 13px; pointer-events: none; }
+.canvas-overlay .katex-label .katex { font-size: 0.92em; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-p1" style="color:#8B0029;"></div>
+      <div class="katex-label with-bg" id="lbl-p2" style="color:#8B0029;"></div>
+      <div class="katex-label with-bg" id="lbl-v1" style="color:#2563EB;"></div>
+      <div class="katex-label with-bg" id="lbl-v2" style="color:#2563EB;"></div>
+    </div>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>베르누이 방정식</h2>
+      <div class="subtitle">Bernoulli's Equation (Ch.14)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>입력 단면적 A₁ = <span id="a1Val">10.0</span> cm²</label>
+      <input type="range" id="a1Slider" min="2" max="20" value="10" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>출력 단면적 A₂ = <span id="a2Val">4.0</span> cm²</label>
+      <input type="range" id="a2Slider" min="1" max="15" value="4" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>높이차 Δy = <span id="dyVal">2.0</span> m</label>
+      <input type="range" id="dySlider" min="-3" max="5" value="2" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>입력 속도 v₁ = <span id="v1Val">2.0</span> m/s</label>
+      <input type="range" id="v1Slider" min="0.5" max="8" value="2" step="0.1">
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(e) { return katex.renderToString(e, { throwOnError: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const lblP1 = document.getElementById('lbl-p1');
+const lblP2 = document.getElementById('lbl-p2');
+const lblV1 = document.getElementById('lbl-v1');
+const lblV2 = document.getElementById('lbl-v2');
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
+}
+
+const a1Slider = document.getElementById('a1Slider');
+const a2Slider = document.getElementById('a2Slider');
+const dySlider = document.getElementById('dySlider');
+const v1Slider = document.getElementById('v1Slider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+const rho = 1000; // water
+const g = 9.8;
+const p1_base = 101325; // 1 atm
+
+let particles = [];
+let running = false, animId = null, lastTs = null;
+
+function getParams() {
+  const A1 = parseFloat(a1Slider.value) * 1e-4; // m²
+  const A2 = parseFloat(a2Slider.value) * 1e-4;
+  const dy = parseFloat(dySlider.value); // y2 - y1
+  const v1 = parseFloat(v1Slider.value);
+  const v2 = v1 * A1 / A2; // continuity
+  // Bernoulli: p1 + 0.5*rho*v1² + rho*g*y1 = p2 + 0.5*rho*v2² + rho*g*y2
+  // p2 = p1 + 0.5*rho*(v1²-v2²) + rho*g*(y1-y2)
+  // p2 = p1 + 0.5*rho*(v1²-v2²) - rho*g*dy
+  const dp = 0.5 * rho * (v1 * v1 - v2 * v2) - rho * g * dy;
+  const p2 = p1_base + dp;
+  return { A1, A2, dy, v1, v2, p1: p1_base, p2 };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function initParticles() {
+  particles = [];
+  for (let i = 0; i < 30; i++) {
+    particles.push({ t: Math.random() });
+  }
+}
+
+function reset() {
+  if (animId) cancelAnimationFrame(animId);
+  running = false; animId = null; lastTs = null;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  initParticles();
+  updateInfo(); draw();
+}
+
+function start() {
+  if (running) return;
+  running = true; lastTs = null;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+}
+
+function step(ts) {
+  if (!running) return;
+  if (!lastTs) { lastTs = ts; animId = requestAnimationFrame(step); return; }
+  const dt = Math.min((ts - lastTs) / 1000, 0.04);
+  lastTs = ts;
+
+  const { v1, v2 } = getParams();
+  // Move particles along pipe parameterized by t in [0,1]
+  // Speed varies: first half uses v1, second half uses v2
+  for (let p of particles) {
+    // Speed in t-space: normalize so total traversal ~ few seconds
+    const speed = p.t < 0.5 ? v1 * 0.08 : v2 * 0.08;
+    p.t += speed * dt;
+    if (p.t > 1) p.t -= 1;
+  }
+
+  draw();
+  animId = requestAnimationFrame(step);
+}
+
+// Pipe shape: parameterized by t in [0,1]
+function getPipePoint(t, params) {
+  const { A1, A2, dy } = params;
+  const margin = 40;
+  const pipeLen = CW - 2 * margin;
+  const x = margin + t * pipeLen;
+
+  // Height: left at y1=0, right at y2=dy
+  // Transition happens in middle
+  let yCenter, halfH;
+  if (t < 0.35) {
+    yCenter = 0;
+    halfH = Math.sqrt(A1) * 1000; // scale for display
+  } else if (t > 0.65) {
+    yCenter = dy;
+    halfH = Math.sqrt(A2) * 1000;
+  } else {
+    const s = (t - 0.35) / 0.3; // 0 to 1 in transition
+    const smooth = s * s * (3 - 2 * s); // smoothstep
+    yCenter = dy * smooth;
+    halfH = (Math.sqrt(A1) + (Math.sqrt(A2) - Math.sqrt(A1)) * smooth) * 1000;
+  }
+
+  // Scale to pixels
+  const baseY = CH * 0.55;
+  const yScale = 25; // px per meter
+  const hScale = 2.5; // scale half-height
+
+  return {
+    x: x,
+    yCenter: baseY - yCenter * yScale,
+    halfH: halfH * hScale
+  };
+}
+
+function updateInfo() {
+  const { A1, A2, dy, v1, v2, p1, p2 } = getParams();
+  const RV = A1 * v1;
+
+  const box = document.getElementById('infoBox');
+  let html = '';
+  html += '<span class="label">연속 방정식:</span><br>';
+  html += tex('v_2 = v_1 \\frac{A_1}{A_2} = ' + v2.toFixed(2) + '\\text{ m/s}') + '<br>';
+  html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
+  html += '<span class="label">베르누이 방정식:</span><br>';
+  html += tex('p_1') + ' = <span class="val">' + (p1 / 1000).toFixed(1) + ' kPa</span><br>';
+  html += tex('p_2') + ' = <span class="val">' + (p2 / 1000).toFixed(1) + ' kPa</span><br>';
+  html += tex('\\Delta p') + ' = <span class="val">' + ((p2 - p1) / 1000).toFixed(1) + ' kPa</span><br>';
+  html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
+  html += tex('R_V = A_1 v_1') + ' = <span class="val">' + (RV * 1e6).toFixed(1) + ' cm³/s</span>';
+  box.innerHTML = html;
+
+  const fBox = document.getElementById('formulaBox');
+  fBox.innerHTML =
+    '<b>점 1:</b> ' + tex('p_1 + \\tfrac{1}{2}\\rho v_1^2 + \\rho g y_1') + '<br>' +
+    '<b>점 2:</b> ' + tex('p_2 + \\tfrac{1}{2}\\rho v_2^2 + \\rho g y_2') + '<br>' +
+    '<span style="color:#2e7d32;font-weight:700">' + tex('= ' + ((p1 + 0.5 * rho * v1 * v1) / 1000).toFixed(1) + '\\text{ kPa (일정)}') + '</span>';
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 8;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath(); ctx.fill();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  lblP1.style.display = 'none'; lblP2.style.display = 'none';
+  lblV1.style.display = 'none'; lblV2.style.display = 'none';
+
+  const params = getParams();
+  const { A1, A2, dy, v1, v2, p1, p2 } = params;
+
+  // Draw pipe
+  const steps = 100;
+  // Top edge
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const pt = getPipePoint(t, params);
+    if (i === 0) ctx.moveTo(pt.x, pt.yCenter - pt.halfH);
+    else ctx.lineTo(pt.x, pt.yCenter - pt.halfH);
+  }
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 2; ctx.stroke();
+
+  // Bottom edge
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const pt = getPipePoint(t, params);
+    if (i === 0) ctx.moveTo(pt.x, pt.yCenter + pt.halfH);
+    else ctx.lineTo(pt.x, pt.yCenter + pt.halfH);
+  }
+  ctx.stroke();
+
+  // Fill pipe
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const pt = getPipePoint(t, params);
+    if (i === 0) ctx.moveTo(pt.x, pt.yCenter - pt.halfH);
+    else ctx.lineTo(pt.x, pt.yCenter - pt.halfH);
+  }
+  for (let i = steps; i >= 0; i--) {
+    const t = i / steps;
+    const pt = getPipePoint(t, params);
+    ctx.lineTo(pt.x, pt.yCenter + pt.halfH);
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(147, 197, 253, 0.2)';
+  ctx.fill();
+
+  // Draw particles
+  for (let p of particles) {
+    const pt = getPipePoint(p.t, params);
+    // Vertical offset within pipe
+    const yOff = (Math.sin(p.t * 17 + particles.indexOf(p)) * 0.6) * pt.halfH;
+    ctx.fillStyle = '#2563EB';
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.yCenter + yOff, 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Streamlines (3 lines)
+  for (let lane = -1; lane <= 1; lane++) {
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(37, 99, 235, 0.2)'; ctx.lineWidth = 1;
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const pt = getPipePoint(t, params);
+      const yOff = lane * pt.halfH * 0.5;
+      if (i === 0) ctx.moveTo(pt.x, pt.yCenter + yOff);
+      else ctx.lineTo(pt.x, pt.yCenter + yOff);
+    }
+    ctx.stroke();
+  }
+
+  // Cross-section indicators at point 1 and point 2
+  const pt1 = getPipePoint(0.15, params);
+  const pt2 = getPipePoint(0.85, params);
+
+  // A1 section
+  ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(pt1.x, pt1.yCenter - pt1.halfH);
+  ctx.lineTo(pt1.x, pt1.yCenter + pt1.halfH);
+  ctx.stroke();
+
+  // A2 section
+  ctx.beginPath();
+  ctx.moveTo(pt2.x, pt2.yCenter - pt2.halfH);
+  ctx.lineTo(pt2.x, pt2.yCenter + pt2.halfH);
+  ctx.stroke();
+
+  // Labels
+  ctx.fillStyle = '#8B0029'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('A₁', pt1.x, pt1.yCenter + pt1.halfH + 18);
+  ctx.fillText('A₂', pt2.x, pt2.yCenter + pt2.halfH + 18);
+
+  // Point dots
+  ctx.fillStyle = '#8B0029';
+  ctx.beginPath(); ctx.arc(pt1.x, pt1.yCenter, 4, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(pt2.x, pt2.yCenter, 4, 0, Math.PI * 2); ctx.fill();
+
+  ctx.font = 'bold 12px sans-serif';
+  ctx.fillText('점 1', pt1.x, pt1.yCenter - pt1.halfH - 8);
+  ctx.fillText('점 2', pt2.x, pt2.yCenter - pt2.halfH - 8);
+
+  // Velocity arrows
+  const vScale = 8;
+  drawArrow(pt1.x + 10, pt1.yCenter, pt1.x + 10 + v1 * vScale, pt1.yCenter, '#2563EB', 2.5);
+  drawArrow(pt2.x - v2 * vScale - 10, pt2.yCenter, pt2.x - 10, pt2.yCenter, '#2563EB', 2.5);
+
+  posLabel(lblV1, pt1.x + 15, pt1.yCenter - 20,
+    '<span style="color:#2563EB;font-weight:bold">' + tex('v_1 = ' + v1.toFixed(1)) + '</span>');
+  posLabel(lblV2, pt2.x - 60, pt2.yCenter - 20,
+    '<span style="color:#2563EB;font-weight:bold">' + tex('v_2 = ' + v2.toFixed(1)) + '</span>');
+
+  // Pressure labels (using bar width proportional to pressure)
+  posLabel(lblP1, pt1.x - 50, pt1.yCenter + pt1.halfH + 25,
+    '<span style="color:#8B0029">' + tex('p_1 = ' + (p1 / 1000).toFixed(0) + '\\text{ kPa}') + '</span>');
+  posLabel(lblP2, pt2.x - 50, pt2.yCenter + pt2.halfH + 25,
+    '<span style="color:#8B0029">' + tex('p_2 = ' + (p2 / 1000).toFixed(0) + '\\text{ kPa}') + '</span>');
+
+  // Height reference
+  if (Math.abs(dy) > 0.1) {
+    const refY = Math.max(pt1.yCenter, pt2.yCenter) + 60;
+    ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(pt1.x, pt1.yCenter);
+    ctx.lineTo(pt1.x, refY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(pt2.x, pt2.yCenter);
+    ctx.lineTo(pt2.x, refY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = '#6B7280'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('Δy = ' + dy.toFixed(1) + ' m', (pt1.x + pt2.x) / 2, refY + 15);
+  }
+
+  // Pressure bar chart at bottom
+  const barBaseY = CH - 20;
+  const barMaxH = 80;
+  const barW = 30;
+  const barX1 = CW * 0.3;
+  const barX2 = CW * 0.5;
+  const maxP = Math.max(p1, p2, 1);
+  const pScale = barMaxH / maxP;
+
+  ctx.fillStyle = '#444'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('압력 비교', (barX1 + barX2 + barW) / 2, barBaseY - barMaxH - 10);
+
+  function drawPBar(bx, val, label, color) {
+    const bh = Math.max(val * pScale, 1);
+    ctx.fillStyle = color + '66';
+    ctx.fillRect(bx, barBaseY - bh, barW, bh);
+    ctx.strokeStyle = color; ctx.lineWidth = 1;
+    ctx.strokeRect(bx, barBaseY - bh, barW, bh);
+    ctx.fillStyle = color; ctx.font = '10px sans-serif';
+    ctx.fillText(label, bx + barW / 2, barBaseY + 12);
+  }
+
+  drawPBar(barX1, p1, 'p₁', '#8B0029');
+  drawPBar(barX2, p2, 'p₂', '#2563EB');
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML = '베르누이 방정식: ' + tex('p + \\tfrac{1}{2}\\rho v^2 + \\rho g y = \\text{const}');
+  document.getElementById('theoremBox').innerHTML =
+    '베르누이 방정식<br>' +
+    tex('p_1 + \\tfrac{1}{2}\\rho v_1^2 + \\rho g y_1') + '<br>' +
+    tex('= p_2 + \\tfrac{1}{2}\\rho v_2^2 + \\rho g y_2');
+}
+
+[a1Slider, a2Slider, dySlider, v1Slider].forEach(sl => {
+  sl.addEventListener('input', () => {
+    document.getElementById('a1Val').textContent = parseFloat(a1Slider.value).toFixed(1);
+    document.getElementById('a2Val').textContent = parseFloat(a2Slider.value).toFixed(1);
+    document.getElementById('dyVal').textContent = parseFloat(dySlider.value).toFixed(1);
+    document.getElementById('v1Val').textContent = parseFloat(v1Slider.value).toFixed(1);
+    updateInfo(); draw();
+  });
+});
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+window.addEventListener('resize', resize);
+
+renderStatic();
+document.getElementById('a1Val').textContent = parseFloat(a1Slider.value).toFixed(1);
+document.getElementById('a2Val').textContent = parseFloat(a2Slider.value).toFixed(1);
+document.getElementById('dyVal').textContent = parseFloat(dySlider.value).toFixed(1);
+document.getElementById('v1Val').textContent = parseFloat(v1Slider.value).toFixed(1);
+initParticles();
+updateInfo();
+resize();
+</script>
+</body>
+</html>

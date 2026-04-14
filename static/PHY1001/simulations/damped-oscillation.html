@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>감쇠진동 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 13px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+.legend { display: flex; flex-direction: column; gap: 4px; font-size: 11px; }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-swatch { width: 24px; height: 3px; border-radius: 1px; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>감쇠진동</h2>
+      <div class="subtitle">Damped Oscillation (Ch.15)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>질량 m = <span id="massVal">1.0</span> kg</label>
+      <input type="range" id="massSlider" min="0.2" max="5" value="1" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>용수철 상수 k = <span id="kVal">10.0</span> N/m</label>
+      <input type="range" id="kSlider" min="1" max="50" value="10" step="1">
+    </div>
+
+    <div class="control-group">
+      <label>감쇠 상수 b = <span id="bVal">1.0</span> kg/s</label>
+      <input type="range" id="bSlider" min="0" max="20" value="1" step="0.1">
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="legend" id="legendBox">
+      <div class="legend-item"><div class="legend-swatch" style="background:#2563EB"></div>감쇠 진동 x(t)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#8B0029;height:2px;border-top:1px dashed #8B0029"></div>포락선 ±x<sub>m</sub>e<sup>−bt/2m</sup></div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#6B7280"></div>비감쇠 (b = 0) 참고</div>
+    </div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const massSlider = document.getElementById('massSlider');
+const kSlider = document.getElementById('kSlider');
+const bSlider = document.getElementById('bSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+const x0 = 1.0; // normalized amplitude
+let tSim = 0;
+let running = false, animId = null, lastTs = null;
+
+function getParams() {
+  return {
+    m: parseFloat(massSlider.value),
+    k: parseFloat(kSlider.value),
+    b: parseFloat(bSlider.value)
+  };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function reset() {
+  if (animId) cancelAnimationFrame(animId);
+  running = false; animId = null; lastTs = null;
+  tSim = 0;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  updateInfo(); draw();
+}
+
+function start() {
+  if (running) return;
+  running = true; lastTs = null;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+}
+
+function step(ts) {
+  if (!running) return;
+  if (!lastTs) { lastTs = ts; animId = requestAnimationFrame(step); return; }
+  const dtReal = Math.min((ts - lastTs) / 1000, 0.04);
+  lastTs = ts;
+  tSim += dtReal;
+  updateInfo(); draw();
+  animId = requestAnimationFrame(step);
+}
+
+function dampedX(t, m, k, b) {
+  const omega0sq = k / m;
+  const gamma = b / (2 * m);
+  const disc = omega0sq - gamma * gamma;
+
+  if (disc > 0) {
+    // Underdamped
+    const wd = Math.sqrt(disc);
+    return x0 * Math.exp(-gamma * t) * Math.cos(wd * t);
+  } else if (disc < -0.001) {
+    // Overdamped
+    const r1 = -gamma + Math.sqrt(-disc);
+    const r2 = -gamma - Math.sqrt(-disc);
+    // IC: x(0) = x0, v(0) = 0
+    const A = x0 * r2 / (r2 - r1);
+    const B = -x0 * r1 / (r2 - r1);
+    return A * Math.exp(r1 * t) + B * Math.exp(r2 * t);
+  } else {
+    // Critically damped
+    return x0 * (1 + gamma * t) * Math.exp(-gamma * t);
+  }
+}
+
+function updateInfo() {
+  const { m, k, b } = getParams();
+  const omega0 = Math.sqrt(k / m);
+  const gamma = b / (2 * m);
+  const bcrit = 2 * Math.sqrt(k * m);
+  const disc = k / m - gamma * gamma;
+
+  const xNow = dampedX(tSim, m, k, b);
+
+  const box = document.getElementById('infoBox');
+  let html = '';
+  html += '<span class="label">시간:</span> <span class="val">t = ' + tSim.toFixed(2) + ' s</span><br>';
+  html += '<span class="label">변위:</span> <span class="val">x/x<sub>m</sub> = ' + xNow.toFixed(4) + '</span><br>';
+  html += '<span class="label">포락선:</span> <span class="val">' + Math.exp(-gamma * tSim).toFixed(4) + '</span><br>';
+
+  let regime;
+  if (b < bcrit - 0.15) regime = '<span style="color:#2563EB;font-weight:700">미감쇠 (underdamped)</span>';
+  else if (b > bcrit + 0.15) regime = '<span style="color:#6B7280;font-weight:700">과감쇠 (overdamped)</span>';
+  else regime = '<span style="color:#8B0029;font-weight:700">임계감쇠 (critically damped)</span>';
+  html += '<span class="label">상태:</span> ' + regime;
+  box.innerHTML = html;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+
+  const { m, k, b } = getParams();
+  const omega0 = Math.sqrt(k / m);
+  const T0 = 2 * Math.PI / omega0;
+  const gamma = b / (2 * m);
+  const bcrit = 2 * Math.sqrt(k * m);
+  const tMax = Math.max(8 * T0, 15);
+
+  // Graph area
+  const gx = 40;
+  const gy = CH * 0.50;
+  const gw = CW - 80;
+  const gh = CH * 0.38;
+
+  // Axes
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx + gw, gy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(gx, gy - gh); ctx.lineTo(gx, gy + gh); ctx.stroke();
+  ctx.fillStyle = '#6B7280'; ctx.font = '13px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('t (s)', gx + gw + 4, gy + 4);
+  ctx.fillText('x / x_m', gx + 4, gy - gh - 6);
+
+  // Amplitude lines
+  ctx.strokeStyle = '#ddd'; ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.moveTo(gx, gy - gh * 0.95); ctx.lineTo(gx + gw, gy - gh * 0.95); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(gx, gy + gh * 0.95); ctx.lineTo(gx + gw, gy + gh * 0.95); ctx.stroke();
+  ctx.fillStyle = '#999'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+  ctx.fillText('+1', gx - 4, gy - gh * 0.95 + 4);
+  ctx.fillText('−1', gx - 4, gy + gh * 0.95 + 4);
+  ctx.fillText('0', gx - 4, gy + 4);
+
+  // Time ticks
+  const tStep = tMax > 20 ? 5 : (tMax > 10 ? 2 : 1);
+  for (let tt = tStep; tt < tMax; tt += tStep) {
+    const tx = gx + (tt / tMax) * gw;
+    ctx.strokeStyle = '#eee'; ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(tx, gy - gh); ctx.lineTo(tx, gy + gh); ctx.stroke();
+    ctx.fillStyle = '#999'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(tt.toFixed(0), tx, gy + gh + 14);
+  }
+
+  const N = 800;
+  const dt = tMax / N;
+
+  // Undamped reference (gray)
+  ctx.beginPath();
+  for (let i = 0; i <= N; i++) {
+    const tt = i * dt;
+    if (tt > tSim && tSim > 0) break;
+    const xVal = x0 * Math.cos(omega0 * tt);
+    const px = gx + (tt / tMax) * gw;
+    const py = gy - xVal * gh * 0.95;
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.strokeStyle = 'rgba(107,114,128,0.25)'; ctx.lineWidth = 1; ctx.stroke();
+
+  // Envelope (dashed red)
+  const drawEnvelope = gamma > 0.001;
+  if (drawEnvelope) {
+    ctx.setLineDash([6, 3]);
+    // Upper envelope
+    ctx.beginPath();
+    for (let i = 0; i <= N; i++) {
+      const tt = i * dt;
+      if (tt > tSim && tSim > 0) break;
+      const env = x0 * Math.exp(-gamma * tt);
+      const px = gx + (tt / tMax) * gw;
+      const py = gy - env * gh * 0.95;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 1.5; ctx.stroke();
+
+    // Lower envelope
+    ctx.beginPath();
+    for (let i = 0; i <= N; i++) {
+      const tt = i * dt;
+      if (tt > tSim && tSim > 0) break;
+      const env = -x0 * Math.exp(-gamma * tt);
+      const px = gx + (tt / tMax) * gw;
+      const py = gy - env * gh * 0.95;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Damped curve (blue)
+  ctx.beginPath();
+  for (let i = 0; i <= N; i++) {
+    const tt = i * dt;
+    if (tt > tSim && tSim > 0) break;
+    const xVal = dampedX(tt, m, k, b);
+    const px = gx + (tt / tMax) * gw;
+    const py = gy - xVal * gh * 0.95;
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.strokeStyle = '#2563EB'; ctx.lineWidth = 2.5; ctx.stroke();
+
+  // Current position marker
+  if (tSim > 0 && tSim < tMax) {
+    const xNow = dampedX(tSim, m, k, b);
+    const cpx = gx + (tSim / tMax) * gw;
+    const cpy = gy - xNow * gh * 0.95;
+    ctx.fillStyle = '#2563EB';
+    ctx.beginPath(); ctx.arc(cpx, cpy, 5, 0, Math.PI * 2); ctx.fill();
+
+    // Vertical time line
+    ctx.strokeStyle = 'rgba(37,99,235,0.3)'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(cpx, gy - gh); ctx.lineTo(cpx, gy + gh); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Regime indicator
+  let regimeText, regimeColor;
+  if (b < bcrit - 0.15) { regimeText = '미감쇠 (Underdamped)'; regimeColor = '#2563EB'; }
+  else if (b > bcrit + 0.15) { regimeText = '과감쇠 (Overdamped)'; regimeColor = '#6B7280'; }
+  else { regimeText = '임계감쇠 (Critically Damped)'; regimeColor = '#8B0029'; }
+
+  ctx.fillStyle = regimeColor; ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'right';
+  ctx.fillText(regimeText, gx + gw, gy - gh - 10);
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML = '감쇠진동: ' + tex('x(t) = x_m e^{-bt/2m}\\cos(\\omega\' t + \\phi)');
+  document.getElementById('theoremBox').innerHTML =
+    tex('m\\ddot{x} + b\\dot{x} + kx = 0') + '<br>' +
+    tex('\\omega\' = \\sqrt{\\frac{k}{m} - \\frac{b^2}{4m^2}}');
+  updateFormula();
+}
+
+function updateFormula() {
+  const { m, k, b } = getParams();
+  const omega0 = Math.sqrt(k / m);
+  const gamma = b / (2 * m);
+  const bcrit = 2 * Math.sqrt(k * m);
+  const disc = k / m - gamma * gamma;
+
+  const box = document.getElementById('formulaBox');
+  let html = '<b>매개변수:</b><br>';
+  html += tex('\\omega_0 = \\sqrt{k/m} = ' + omega0.toFixed(2) + '\\text{ rad/s}') + '<br>';
+  html += tex('\\gamma = b/2m = ' + gamma.toFixed(3) + '\\text{ s}^{-1}') + '<br>';
+  html += tex('b_{\\text{crit}} = 2\\sqrt{km} = ' + bcrit.toFixed(2) + '\\text{ kg/s}') + '<br>';
+  if (disc > 0) {
+    html += tex('\\omega\' = ' + Math.sqrt(disc).toFixed(3) + '\\text{ rad/s}');
+  } else if (disc < -0.001) {
+    html += '<span style="color:#6B7280">진동 없음 (ω\' 허수)</span>';
+  } else {
+    html += '<span style="color:#8B0029">임계: ω\' = 0</span>';
+  }
+  box.innerHTML = html;
+}
+
+[massSlider, kSlider, bSlider].forEach(sl => {
+  sl.addEventListener('input', () => {
+    document.getElementById('massVal').textContent = parseFloat(massSlider.value).toFixed(1);
+    document.getElementById('kVal').textContent = parseFloat(kSlider.value).toFixed(1);
+    document.getElementById('bVal').textContent = parseFloat(bSlider.value).toFixed(1);
+    updateFormula(); reset();
+  });
+});
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+window.addEventListener('resize', resize);
+
+renderStatic();
+document.getElementById('massVal').textContent = parseFloat(massSlider.value).toFixed(1);
+document.getElementById('kVal').textContent = parseFloat(kSlider.value).toFixed(1);
+document.getElementById('bVal').textContent = parseFloat(bSlider.value).toFixed(1);
+reset();
+resize();
+</script>
+</body>
+</html>

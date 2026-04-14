@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 480" font-family="sans-serif">
+  <defs>
+    <marker id="cpArrG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 8 3, 0 6"/>
+    </marker>
+    <marker id="cpArrR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="cpArrB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+  </defs>
+
+  <!-- Axes -->
+  <line x1="80" y1="400" x2="650" y2="400" stroke="#6B7280" stroke-width="2" marker-end="url(#cpArrG)"/>
+  <line x1="80" y1="400" x2="80" y2="30" stroke="#6B7280" stroke-width="2" marker-end="url(#cpArrG)"/>
+  <text x="650" y="425" text-anchor="middle" font-size="15" fill="#6B7280" font-style="italic">V</text>
+  <text x="55" y="40" text-anchor="middle" font-size="15" fill="#6B7280" font-style="italic">p</text>
+  <text x="80" y="425" text-anchor="middle" font-size="13" fill="#6B7280">0</text>
+
+  <!-- Isothermal expansion a->b (T_H) — RED -->
+  <path d="M 160,80 C 220,88 320,115 400,140" fill="none" stroke="#8B0029" stroke-width="2.5"/>
+  <line x1="270" y1="98" x2="290" y2="105" stroke="#8B0029" stroke-width="2.5" marker-end="url(#cpArrR)"/>
+
+  <!-- Adiabatic expansion b->c — GRAY dashed -->
+  <path d="M 400,140 C 440,180 500,250 530,300" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="4 3"/>
+  <line x1="460" y1="210" x2="475" y2="230" stroke="#6B7280" stroke-width="2" marker-end="url(#cpArrG)"/>
+
+  <!-- Isothermal compression c->d (T_L) — BLUE -->
+  <path d="M 530,300 C 440,310 340,312 250,310" fill="none" stroke="#2563EB" stroke-width="2.5"/>
+  <line x1="400" y1="310" x2="380" y2="310" stroke="#2563EB" stroke-width="2.5" marker-end="url(#cpArrB)"/>
+
+  <!-- Adiabatic compression d->a — GRAY dashed -->
+  <path d="M 250,310 C 220,260 185,180 160,80" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="4 3"/>
+  <line x1="207" y1="210" x2="198" y2="185" stroke="#6B7280" stroke-width="2" marker-end="url(#cpArrG)"/>
+
+  <!-- Shaded work area -->
+  <path d="M 160,80 C 220,88 320,115 400,140 C 440,180 500,250 530,300 C 440,310 340,312 250,310 C 220,260 185,180 160,80 Z" fill="#8B0029" fill-opacity="0.08"/>
+
+  <!-- State point labels -->
+  <circle cx="160" cy="80" r="5" fill="#8B0029"/>
+  <text x="145" y="68" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029" font-style="italic">a</text>
+
+  <circle cx="400" cy="140" r="5" fill="#8B0029"/>
+  <text x="415" y="128" text-anchor="start" font-size="16" font-weight="bold" fill="#8B0029" font-style="italic">b</text>
+
+  <circle cx="530" cy="300" r="5" fill="#2563EB"/>
+  <text x="545" y="300" text-anchor="start" font-size="16" font-weight="bold" fill="#2563EB" font-style="italic">c</text>
+
+  <circle cx="250" cy="310" r="5" fill="#2563EB"/>
+  <text x="235" y="330" text-anchor="end" font-size="16" font-weight="bold" fill="#2563EB" font-style="italic">d</text>
+
+  <!-- Temperature labels -->
+  <text x="320" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">등온팽창</text>
+  <text x="320" y="92" text-anchor="middle" font-size="13" fill="#8B0029" font-style="italic">T<tspan baseline-shift="sub" font-size="10">H</tspan></text>
+
+  <text x="380" y="345" text-anchor="middle" font-size="14" font-weight="bold" fill="#2563EB">등온압축</text>
+  <text x="380" y="362" text-anchor="middle" font-size="13" fill="#2563EB" font-style="italic">T<tspan baseline-shift="sub" font-size="10">L</tspan></text>
+
+  <text x="540" y="210" text-anchor="start" font-size="13" fill="#6B7280">단열팽창</text>
+  <text x="540" y="226" text-anchor="start" font-size="12" fill="#6B7280" font-style="italic">Q = 0</text>
+
+  <text x="120" y="210" text-anchor="end" font-size="13" fill="#6B7280">단열압축</text>
+  <text x="120" y="226" text-anchor="end" font-size="12" fill="#6B7280" font-style="italic">Q = 0</text>
+
+  <!-- Work label -->
+  <text x="340" y="230" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029" font-style="italic">W</text>
+  <text x="340" y="248" text-anchor="middle" font-size="12" fill="#6B7280">(알짜 일)</text>
+
+  <!-- Q_H arrow -->
+  <line x1="280" y1="55" x2="280" y2="42" stroke="#8B0029" stroke-width="2" marker-end="url(#cpArrR)"/>
+  <text x="280" y="38" text-anchor="middle" font-size="13" fill="#8B0029" font-style="italic">|Q<tspan baseline-shift="sub" font-size="10">H</tspan>| 흡수</text>
+
+  <!-- Q_L arrow -->
+  <line x1="390" y1="380" x2="390" y2="393" stroke="#2563EB" stroke-width="2" marker-end="url(#cpArrB)"/>
+  <text x="390" y="410" text-anchor="middle" font-size="13" fill="#2563EB" font-style="italic">|Q<tspan baseline-shift="sub" font-size="10">L</tspan>| 방출</text>
+
+  <!-- Efficiency formula -->
+  <text x="375" y="460" text-anchor="middle" font-size="15" font-weight="bold" fill="#8B0029">ε = W/|Q<tspan baseline-shift="sub" font-size="11">H</tspan>| = 1 − T<tspan baseline-shift="sub" font-size="11">L</tspan>/T<tspan baseline-shift="sub" font-size="11">H</tspan></text>
+</svg>

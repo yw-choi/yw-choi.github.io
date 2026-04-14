@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 415" font-family="sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#8B0029"/>
+    </marker>
+  </defs>
+
+  <!-- Left: initial state -->
+  <rect x="40" y="80" width="200" height="260" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <line x1="140" y1="80" x2="140" y2="340" stroke="#6B7280" stroke-width="2" stroke-dasharray="4 3"/>
+  <text x="140" y="60" text-anchor="middle" font-size="15" font-weight="bold" fill="#6B7280">초기 상태 (initial state i)</text>
+
+  <!-- Gas molecules on left side only -->
+  <circle cx="80" cy="140" r="8" fill="#8B0029" opacity="0.7"/>
+  <circle cx="100" cy="180" r="8" fill="#8B0029" opacity="0.7"/>
+  <circle cx="120" cy="220" r="8" fill="#8B0029" opacity="0.7"/>
+  <circle cx="70" cy="260" r="8" fill="#8B0029" opacity="0.7"/>
+  <circle cx="110" cy="300" r="8" fill="#8B0029" opacity="0.7"/>
+  <circle cx="90" cy="120" r="8" fill="#8B0029" opacity="0.7"/>
+  <circle cx="130" cy="160" r="8" fill="#8B0029" opacity="0.7"/>
+  <circle cx="60" cy="200" r="8" fill="#8B0029" opacity="0.7"/>
+
+  <!-- Stopcock closed -->
+  <rect x="132" y="195" width="16" height="30" fill="#6B7280" rx="2"/>
+  <text x="140" y="370" text-anchor="middle" font-size="12" fill="#6B7280">마개 닫힘</text>
+
+  <!-- Right side: vacuum -->
+  <text x="200" y="210" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">진공</text>
+  <text x="200" y="228" text-anchor="middle" font-size="12" fill="#6B7280">(vacuum)</text>
+
+  <!-- Arrow -->
+  <line x1="280" y1="210" x2="380" y2="210" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arr)"/>
+  <text x="330" y="195" text-anchor="middle" font-size="13" font-weight="bold" fill="#8B0029">비가역 과정</text>
+  <text x="330" y="235" text-anchor="middle" font-size="12" fill="#8B0029">(irreversible)</text>
+
+  <!-- Right: final state -->
+  <rect x="420" y="80" width="200" height="260" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <text x="520" y="60" text-anchor="middle" font-size="15" font-weight="bold" fill="#6B7280">최종 상태 (final state f)</text>
+
+  <!-- Gas molecules spread out -->
+  <circle cx="450" cy="140" r="8" fill="#8B0029" opacity="0.7"/>
+  <circle cx="530" cy="180" r="8" fill="#8B0029" opacity="0.7"/>
+  <circle cx="480" cy="250" r="8" fill="#8B0029" opacity="0.7"/>
+  <circle cx="560" cy="300" r="8" fill="#8B0029" opacity="0.7"/>
+  <circle cx="440" cy="280" r="8" fill="#8B0029" opacity="0.7"/>
+  <circle cx="590" cy="150" r="8" fill="#8B0029" opacity="0.7"/>
+  <circle cx="510" cy="120" r="8" fill="#8B0029" opacity="0.7"/>
+  <circle cx="570" cy="230" r="8" fill="#8B0029" opacity="0.7"/>
+
+  <!-- Stopcock open -->
+  <text x="520" y="370" text-anchor="middle" font-size="12" fill="#6B7280">마개 열림 - 기체가 전체로 퍼짐</text>
+
+  <!-- Entropy label -->
+  <text x="350" y="390" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">ΔS > 0 (엔트로피 증가)</text>
+</svg>

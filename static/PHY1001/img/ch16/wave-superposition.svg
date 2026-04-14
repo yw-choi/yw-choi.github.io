@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 530" font-family="sans-serif">
+  <defs>
+    <marker id="wsArrG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+  </defs>
+
+  <!-- === Constructive Interference (Top) === -->
+  <text x="200" y="25" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">보강 간섭 (&#x3D5; = 0)</text>
+
+  <g transform="translate(30, 35)">
+    <!-- Axis -->
+    <line x1="20" y1="80" x2="360" y2="80" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+    <!-- Wave 1 (dashed) -->
+    <path d="M 20,80 C 40,80 50,35 70,35 C 90,35 100,80 120,80 C 140,80 150,125 170,125 C 190,125 200,80 220,80 C 240,80 250,35 270,35 C 290,35 300,80 320,80 C 340,80 345,65 350,60" fill="none" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="6 3"/>
+
+    <!-- Wave 2 (dashed, same phase) -->
+    <path d="M 20,80 C 40,80 50,35 70,35 C 90,35 100,80 120,80 C 140,80 150,125 170,125 C 190,125 200,80 220,80 C 240,80 250,35 270,35 C 290,35 300,80 320,80 C 340,80 345,65 350,60" fill="none" stroke="#8B0029" stroke-width="1.5" stroke-dasharray="6 3"/>
+
+    <!-- Labels -->
+    <text x="355" y="50" font-size="12" fill="#2563EB" font-style="italic">y&#x2081;</text>
+    <text x="355" y="70" font-size="12" fill="#8B0029" font-style="italic">y&#x2082;</text>
+
+    <!-- Plus sign -->
+    <text x="375" y="85" font-size="24" font-weight="bold" fill="#6B7280">=</text>
+  </g>
+
+  <!-- Resultant constructive -->
+  <g transform="translate(420, 35)">
+    <line x1="20" y1="80" x2="360" y2="80" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+    <!-- Resultant (double amplitude) -->
+    <path d="M 20,80 C 40,80 50,-10 70,-10 C 90,-10 100,80 120,80 C 140,80 150,170 170,170 C 190,170 200,80 220,80 C 240,80 250,-10 270,-10 C 290,-10 300,80 320,80 C 340,80 345,50 350,35" fill="none" stroke="#8B0029" stroke-width="2.5"/>
+
+    <text x="280" y="18" font-size="13" fill="#8B0029" font-weight="bold">2y&#x2098;</text>
+    <text x="190" y="170" text-anchor="middle" font-size="12" fill="#6B7280">진폭 = 2y&#x2098;</text>
+  </g>
+
+  <!-- === Destructive Interference (Middle) === -->
+  <text x="200" y="220" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">상쇄 간섭 (&#x3D5; = &#x3C0;)</text>
+
+  <g transform="translate(30, 230)">
+    <line x1="20" y1="80" x2="360" y2="80" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+    <!-- Wave 1 -->
+    <path d="M 20,80 C 40,80 50,35 70,35 C 90,35 100,80 120,80 C 140,80 150,125 170,125 C 190,125 200,80 220,80 C 240,80 250,35 270,35 C 290,35 300,80 320,80" fill="none" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="6 3"/>
+
+    <!-- Wave 2 (opposite phase) -->
+    <path d="M 20,80 C 40,80 50,125 70,125 C 90,125 100,80 120,80 C 140,80 150,35 170,35 C 190,35 200,80 220,80 C 240,80 250,125 270,125 C 290,125 300,80 320,80" fill="none" stroke="#8B0029" stroke-width="1.5" stroke-dasharray="6 3"/>
+
+    <text x="330" y="35" font-size="12" fill="#2563EB" font-style="italic">y&#x2081;</text>
+    <text x="330" y="130" font-size="12" fill="#8B0029" font-style="italic">y&#x2082;</text>
+
+    <text x="375" y="85" font-size="24" font-weight="bold" fill="#6B7280">=</text>
+  </g>
+
+  <!-- Resultant destructive -->
+  <g transform="translate(420, 230)">
+    <line x1="20" y1="80" x2="360" y2="80" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+    <!-- Flat line = zero -->
+    <line x1="20" y1="80" x2="320" y2="80" stroke="#8B0029" stroke-width="2.5"/>
+
+    <text x="170" y="106" text-anchor="middle" font-size="12" fill="#6B7280">진폭 = 0 (완전 상쇄)</text>
+  </g>
+
+  <!-- === Intermediate (Bottom) === -->
+  <text x="200" y="415" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">중간 간섭 (0 &lt; &#x3D5; &lt; &#x3C0;)</text>
+
+  <g transform="translate(30, 425)">
+    <line x1="20" y1="50" x2="360" y2="50" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+    <!-- Wave 1 -->
+    <path d="M 20,50 C 35,50 45,20 60,20 C 75,20 85,50 100,50 C 115,50 125,80 140,80 C 155,80 165,50 180,50 C 195,50 205,20 220,20 C 235,20 245,50 260,50 C 275,50 285,80 300,80 C 315,80 325,50 340,50" fill="none" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="6 3"/>
+
+    <!-- Wave 2 (shifted by ~120 deg) -->
+    <path d="M 20,55 C 30,40 35,20 55,28 C 75,36 82,55 100,55 C 118,55 128,75 145,72 C 162,68 168,48 185,48 C 202,48 210,32 225,28 C 240,24 250,50 265,53 C 280,56 290,72 310,68 C 325,65 335,50 340,48" fill="none" stroke="#8B0029" stroke-width="1.5" stroke-dasharray="6 3"/>
+
+    <text x="375" y="55" font-size="24" font-weight="bold" fill="#6B7280">=</text>
+  </g>
+
+  <!-- Resultant intermediate -->
+  <g transform="translate(420, 425)">
+    <line x1="20" y1="50" x2="360" y2="50" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+    <!-- Resultant with intermediate amplitude -->
+    <path d="M 20,50 C 35,40 45,15 65,18 C 85,20 95,55 115,58 C 135,60 145,85 160,82 C 175,78 185,48 200,44 C 215,40 225,15 245,18 C 265,20 275,55 295,58 C 315,60 330,50 340,48" fill="none" stroke="#8B0029" stroke-width="2.5"/>
+
+    <text x="180" y="0" text-anchor="middle" font-size="12" fill="#6B7280">0 &lt; 진폭 &lt; 2y&#x2098;</text>
+  </g>
+</svg>

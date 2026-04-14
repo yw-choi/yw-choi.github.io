@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 380" font-family="sans-serif">
+  <defs>
+    <marker id="arrow-gray" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#6B7280"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#8B0029"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="375" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a1a">선팽창과 체적팽창</text>
+
+  <!-- LINEAR EXPANSION (left side) -->
+  <text x="190" y="60" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">선팽창 (Linear Expansion)</text>
+
+  <!-- Original bar -->
+  <rect x="60" y="100" width="200" height="30" rx="3" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <text x="160" y="120" text-anchor="middle" font-size="13" fill="#1a1a1a" font-weight="bold" font-style="italic">T</text>
+
+  <!-- Expanded bar -->
+  <rect x="60" y="170" width="230" height="30" rx="3" fill="#F3F4F6" stroke="#8B0029" stroke-width="2" stroke-dasharray="0"/>
+  <!-- Original outline ghost -->
+  <rect x="60" y="170" width="200" height="30" rx="3" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="175" y="190" text-anchor="middle" font-size="13" fill="#8B0029" font-weight="bold" font-style="italic">T + ΔT</text>
+
+  <!-- L dimension -->
+  <line x1="60" y1="145" x2="260" y2="145" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="60" y1="140" x2="60" y2="150" stroke="#6B7280" stroke-width="1"/>
+  <line x1="260" y1="140" x2="260" y2="150" stroke="#6B7280" stroke-width="1"/>
+  <text x="160" y="142" text-anchor="middle" font-size="13" fill="#6B7280" font-style="italic">L</text>
+
+  <!-- Delta L dimension -->
+  <line x1="260" y1="215" x2="290" y2="215" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrow-red)"/>
+  <line x1="260" y1="210" x2="260" y2="220" stroke="#8B0029" stroke-width="1"/>
+  <text x="275" y="235" text-anchor="middle" font-size="13" fill="#8B0029" font-style="italic">ΔL</text>
+
+  <!-- Formula -->
+  <text x="190" y="280" text-anchor="middle" font-size="14" fill="#1a1a1a" font-style="italic">ΔL = Lα ΔT</text>
+
+  <!-- Divider -->
+  <line x1="375" y1="50" x2="375" y2="350" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- VOLUME EXPANSION (right side) -->
+  <text x="560" y="60" text-anchor="middle" font-size="14" font-weight="bold" fill="#2563EB">체적팽창 (Volume Expansion)</text>
+
+  <!-- Original cube -->
+  <rect x="490" y="90" width="80" height="80" rx="3" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <!-- 3D effect -->
+  <polygon points="490,90 520,70 600,70 570,90" fill="rgba(107,114,128,0.12)" stroke="#6B7280" stroke-width="2"/>
+  <polygon points="570,90 600,70 600,150 570,170" fill="rgba(107,114,128,0.18)" stroke="#6B7280" stroke-width="2"/>
+  <text x="530" y="140" text-anchor="middle" font-size="12" fill="#1a1a1a" font-weight="bold" font-style="italic">V, T</text>
+
+  <!-- Expanded cube -->
+  <rect x="480" y="195" width="100" height="100" rx="3" fill="none" stroke="#2563EB" stroke-width="2"/>
+  <!-- Ghost original -->
+  <rect x="490" y="205" width="80" height="80" rx="3" fill="#F3F4F6" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <!-- 3D effect expanded -->
+  <polygon points="480,195 515,172 615,172 580,195" fill="none" stroke="#2563EB" stroke-width="2"/>
+  <polygon points="580,195 615,172 615,272 580,295" fill="none" stroke="#2563EB" stroke-width="2"/>
+  <text x="530" y="260" text-anchor="middle" font-size="12" fill="#2563EB" font-weight="bold" font-style="italic">V+ΔV, T+ΔT</text>
+
+  <!-- Formula -->
+  <text x="560" y="330" text-anchor="middle" font-size="14" fill="#1a1a1a" font-style="italic">ΔV = Vβ ΔT</text>
+  <text x="560" y="355" text-anchor="middle" font-size="13" fill="#6B7280" font-style="italic">β = 3α</text>
+</svg>

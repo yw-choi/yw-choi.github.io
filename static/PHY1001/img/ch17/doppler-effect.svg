@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 415" font-family="sans-serif">
+  <defs>
+    <marker id="dArr" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="dArrB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="375" y="28" text-anchor="middle" font-size="17" font-weight="bold" fill="#8B0029">도플러 효과(Doppler Effect)</text>
+
+  <!-- Moving source (car icon simplified) -->
+  <rect x="250" y="180" width="60" height="30" rx="8" fill="#8B0029"/>
+  <rect x="260" y="172" width="30" height="12" rx="3" fill="#a3003a"/>
+  <circle cx="265" cy="215" r="7" fill="#1a1a1a"/>
+  <circle cx="300" cy="215" r="7" fill="#1a1a1a"/>
+  <text x="280" y="200" text-anchor="middle" font-size="11" fill="white" font-weight="bold">S</text>
+
+  <!-- Velocity arrow -->
+  <line x1="315" y1="195" x2="365" y2="195" stroke="#8B0029" stroke-width="2.5" marker-end="url(#dArr)"/>
+  <text x="340" y="188" text-anchor="middle" font-size="14" fill="#8B0029" font-style="italic" font-weight="bold">v<tspan font-size="10" baseline-shift="sub">S</tspan></text>
+
+  <!-- Wavefronts: older = larger radius, center further left (past positions)
+       Source at ~280. v_S·dt = 20, v·dt = 35, Mach ≈ 0.57 (subsonic) -->
+  <circle cx="270" cy="195" r="35" fill="none" stroke="#8B0029" stroke-width="1.5" opacity="0.6"/>
+  <circle cx="250" cy="195" r="70" fill="none" stroke="#8B0029" stroke-width="1.3" opacity="0.45"/>
+  <circle cx="230" cy="195" r="105" fill="none" stroke="#8B0029" stroke-width="1.1" opacity="0.35"/>
+  <circle cx="210" cy="195" r="140" fill="none" stroke="#8B0029" stroke-width="0.9" opacity="0.25"/>
+  <circle cx="190" cy="195" r="175" fill="none" stroke="#8B0029" stroke-width="0.7" opacity="0.18"/>
+
+  <!-- Observer on the right (approaching) -->
+  <circle cx="620" cy="195" r="12" fill="#F3F4F6" stroke="#2563EB" stroke-width="2"/>
+  <text x="620" y="199" text-anchor="middle" font-size="12" fill="#2563EB" font-weight="bold">O</text>
+  <text x="620" y="175" text-anchor="middle" font-size="12" fill="#2563EB" font-weight="bold">높은 진동수</text>
+  <text x="620" y="160" text-anchor="middle" font-size="11" fill="#2563EB">f' &gt; f</text>
+
+  <!-- Observer on the left (receding) -->
+  <circle cx="75" cy="195" r="12" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <text x="75" y="199" text-anchor="middle" font-size="12" fill="#6B7280" font-weight="bold">O</text>
+  <text x="75" y="175" text-anchor="middle" font-size="12" fill="#6B7280" font-weight="bold">낮은 진동수</text>
+  <text x="75" y="160" text-anchor="middle" font-size="11" fill="#6B7280">f' &lt; f</text>
+
+  <!-- Annotations: compressed / expanded -->
+  <text x="500" y="310" text-anchor="middle" font-size="13" fill="#8B0029" font-weight="bold">파장 압축 (λ' &lt; λ)</text>
+  <text x="145" y="310" text-anchor="middle" font-size="13" fill="#6B7280" font-weight="bold">파장 확장 (λ' &gt; λ)</text>
+
+  <!-- Formula box -->
+  <rect x="175" y="335" width="400" height="55" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
+  <text x="375" y="358" text-anchor="middle" font-size="15" fill="#1a1a1a">
+    <tspan font-style="italic">f</tspan>' = <tspan font-style="italic">f</tspan> × (<tspan font-style="italic">v</tspan> ± <tspan font-style="italic">v<tspan font-size="11" baseline-shift="sub">O</tspan></tspan>) / (<tspan font-style="italic">v</tspan> ∓ <tspan font-style="italic">v<tspan font-size="11" baseline-shift="sub">S</tspan></tspan>)
+  </text>
+  <text x="375" y="380" text-anchor="middle" font-size="11" fill="#6B7280">접근 → 높은 진동수 &nbsp;|&nbsp; 멀어짐 → 낮은 진동수</text>
+</svg>

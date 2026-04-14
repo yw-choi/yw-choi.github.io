@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>맥놀이와 간섭</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 14px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 16px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 16px; color: #8B0029; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>맥놀이와 간섭</h2>
+      <div class="subtitle">Beats &amp; Interference (Ch.17)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>진동수 f<sub>1</sub> = <span id="f1Val">440</span> Hz</label>
+      <input type="range" id="f1Slider" min="400" max="500" value="440" step="1">
+    </div>
+
+    <div class="control-group">
+      <label>진동수 f<sub>2</sub> = <span id="f2Val">444</span> Hz</label>
+      <input type="range" id="f2Slider" min="400" max="500" value="444" step="1">
+    </div>
+
+    <div class="control-group">
+      <label>시간 스케일: <span id="speedVal">1.0</span>x</label>
+      <input type="range" id="speedSlider" min="0.2" max="3" value="1" step="0.1">
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const f1Slider = document.getElementById('f1Slider');
+const f2Slider = document.getElementById('f2Slider');
+const speedSlider = document.getElementById('speedSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let time = 0;
+let running = false, animId = null, lastTs = null;
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function getParams() {
+  return {
+    f1: parseFloat(f1Slider.value),
+    f2: parseFloat(f2Slider.value),
+    speed: parseFloat(speedSlider.value)
+  };
+}
+
+function reset() {
+  if (animId) cancelAnimationFrame(animId);
+  running = false; animId = null; lastTs = null;
+  time = 0;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  updateInfo(); draw();
+}
+
+function start() {
+  if (running) return;
+  running = true; lastTs = null;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+}
+
+function step(ts) {
+  if (!running) return;
+  if (!lastTs) { lastTs = ts; animId = requestAnimationFrame(step); return; }
+  const dt = Math.min((ts - lastTs) / 1000, 0.04);
+  lastTs = ts;
+  const { speed } = getParams();
+  time += dt * speed;
+  updateInfo(); draw();
+  animId = requestAnimationFrame(step);
+}
+
+function updateInfo() {
+  const { f1, f2 } = getParams();
+  const fBeat = Math.abs(f1 - f2);
+  const fAvg = (f1 + f2) / 2;
+
+  const box = document.getElementById('infoBox');
+  let html = '';
+  html += '<span class="label">f<sub>1</sub>:</span> <span class="val">' + f1.toFixed(0) + ' Hz</span><br>';
+  html += '<span class="label">f<sub>2</sub>:</span> <span class="val">' + f2.toFixed(0) + ' Hz</span><br>';
+  html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
+  html += tex('f_{\\text{beat}} = |f_1 - f_2|') + ' = <span class="val" style="color:#8B0029;font-size:14px">' + fBeat.toFixed(0) + ' Hz</span><br>';
+  html += tex('f_{\\text{avg}} = \\tfrac{f_1+f_2}{2}') + ' = <span class="val">' + fAvg.toFixed(1) + ' Hz</span>';
+  if (fBeat > 0) {
+    html += '<br>' + tex('T_{\\text{beat}} = 1/f_{\\text{beat}}') + ' = <span class="val">' + (1/fBeat).toFixed(4) + ' s</span>';
+  }
+  box.innerHTML = html;
+}
+
+function updateFormula() {
+  const { f1, f2 } = getParams();
+  const box = document.getElementById('formulaBox');
+  box.innerHTML =
+    '<b>개별 파동:</b><br>' +
+    tex('s_1 = s_m \\cos(2\\pi f_1 t)') + '<br>' +
+    tex('s_2 = s_m \\cos(2\\pi f_2 t)') + '<br>' +
+    '<b>중첩 (합성파):</b><br>' +
+    tex('s = 2s_m \\cos(\\pi \\Delta f\\, t)\\cos(\\pi (f_1+f_2)t)');
+}
+
+function drawWave(yCenter, amplitude, f, color, label, phase) {
+  const margin = 40;
+  const w = CW - margin * 2;
+  const tWindow = 0.15; // show 0.15 seconds of data
+
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.8;
+  ctx.beginPath();
+  for (let px = 0; px <= w; px++) {
+    const t = time - tWindow + (px / w) * tWindow;
+    const y = yCenter - amplitude * Math.cos(2 * Math.PI * f * t + (phase || 0));
+    if (px === 0) ctx.moveTo(margin + px, y);
+    else ctx.lineTo(margin + px, y);
+  }
+  ctx.stroke();
+
+  // Zero line
+  ctx.strokeStyle = '#ddd';
+  ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  ctx.moveTo(margin, yCenter);
+  ctx.lineTo(margin + w, yCenter);
+  ctx.stroke();
+
+  // Label
+  ctx.fillStyle = color;
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText(label, margin + 4, yCenter - amplitude - 6);
+}
+
+function drawBeatWave(yCenter, amplitude, f1, f2) {
+  const margin = 40;
+  const w = CW - margin * 2;
+  const tWindow = 0.15;
+
+  // Envelope
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 3]);
+  ctx.beginPath();
+  for (let px = 0; px <= w; px++) {
+    const t = time - tWindow + (px / w) * tWindow;
+    const env = 2 * amplitude * Math.abs(Math.cos(Math.PI * (f1 - f2) * t));
+    const y = yCenter - env;
+    if (px === 0) ctx.moveTo(margin + px, y);
+    else ctx.lineTo(margin + px, y);
+  }
+  ctx.stroke();
+  ctx.beginPath();
+  for (let px = 0; px <= w; px++) {
+    const t = time - tWindow + (px / w) * tWindow;
+    const env = 2 * amplitude * Math.abs(Math.cos(Math.PI * (f1 - f2) * t));
+    const y = yCenter + env;
+    if (px === 0) ctx.moveTo(margin + px, y);
+    else ctx.lineTo(margin + px, y);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Superposition
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let px = 0; px <= w; px++) {
+    const t = time - tWindow + (px / w) * tWindow;
+    const s1 = amplitude * Math.cos(2 * Math.PI * f1 * t);
+    const s2 = amplitude * Math.cos(2 * Math.PI * f2 * t);
+    const y = yCenter - (s1 + s2);
+    if (px === 0) ctx.moveTo(margin + px, y);
+    else ctx.lineTo(margin + px, y);
+  }
+  ctx.stroke();
+
+  // Zero line
+  ctx.strokeStyle = '#ddd'; ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.moveTo(margin, yCenter); ctx.lineTo(margin + w, yCenter); ctx.stroke();
+
+  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('s\u2081 + s\u2082 (superposition)', margin + 4, yCenter - amplitude * 2 - 8);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  const { f1, f2 } = getParams();
+
+  const amp = Math.min(CH * 0.09, 35);
+  const section = CH / 3;
+
+  // Wave 1
+  drawWave(section * 0.5, amp, f1, '#8B0029', 's\u2081 (f\u2081 = ' + f1 + ' Hz)');
+
+  // Wave 2
+  drawWave(section * 1.1, amp, f2, '#2563EB', 's\u2082 (f\u2082 = ' + f2 + ' Hz)');
+
+  // Beat wave (superposition)
+  drawBeatWave(section * 2.1, amp, f1, f2);
+
+  // Time axis label
+  ctx.fillStyle = '#6B7280'; ctx.font = '12px sans-serif'; ctx.textAlign = 'right';
+  ctx.fillText('t (s)', CW - 20, CH - 10);
+
+  // Beat frequency display on canvas
+  const fBeat = Math.abs(f1 - f2);
+  ctx.fillStyle = '#8B0029'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'right';
+  ctx.fillText('f_beat = ' + fBeat + ' Hz', CW - 50, section * 2.1 - amp * 2 - 8);
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML = '맥놀이: ' + tex('f_{\\text{beat}} = |f_1 - f_2|');
+  document.getElementById('theoremBox').innerHTML =
+    '맥놀이 (Beats)<br>' +
+    tex('s = 2s_m\\cos(\\pi\\Delta f\\,t)\\cos(\\pi(f_1{+}f_2)t)') + '<br>' +
+    tex('f_{\\text{beat}} = |f_1 - f_2|');
+  updateFormula();
+}
+
+[f1Slider, f2Slider, speedSlider].forEach(sl => {
+  sl.addEventListener('input', () => {
+    document.getElementById('f1Val').textContent = parseFloat(f1Slider.value).toFixed(0);
+    document.getElementById('f2Val').textContent = parseFloat(f2Slider.value).toFixed(0);
+    document.getElementById('speedVal').textContent = parseFloat(speedSlider.value).toFixed(1);
+    updateFormula(); updateInfo(); draw();
+  });
+});
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+window.addEventListener('resize', resize);
+
+renderStatic();
+document.getElementById('f1Val').textContent = f1Slider.value;
+document.getElementById('f2Val').textContent = f2Slider.value;
+document.getElementById('speedVal').textContent = parseFloat(speedSlider.value).toFixed(1);
+reset();
+resize();
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 490" font-family="sans-serif">
+  <defs>
+    <marker id="btArrB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="btArrR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="btArrG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+  </defs>
+
+  <!-- Ground reference line -->
+  <line x1="30" y1="420" x2="750" y2="420" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="760" y="424" font-size="12" fill="#6B7280" font-style="italic">y = 0</text>
+
+  <!-- Pipe: from low-left wide to high-right narrow -->
+  <!-- Top boundary -->
+  <path d="M 60,280 L 200,280 C 280,280 320,200 380,170 C 440,140 460,120 520,100 L 700,100" fill="none" stroke="#6B7280" stroke-width="2"/>
+  <!-- Bottom boundary -->
+  <path d="M 60,370 L 200,370 C 280,370 320,280 380,250 C 440,220 460,180 520,160 L 700,160" fill="none" stroke="#6B7280" stroke-width="2"/>
+
+  <!-- Fill -->
+  <path d="M 60,280 L 200,280 C 280,280 320,200 380,170 C 440,140 460,120 520,100 L 700,100 L 700,160 L 520,160 C 460,180 440,220 380,250 C 320,280 280,370 200,370 L 60,370 Z" fill="#2563EB" fill-opacity="0.15"/>
+
+  <!-- Point 1 (left, low) -->
+  <circle cx="130" cy="325" r="6" fill="#8B0029"/>
+  <text x="130" y="310" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">1</text>
+
+  <!-- Point 2 (right, high) -->
+  <circle cx="630" cy="130" r="6" fill="#2563EB"/>
+  <text x="630" y="90" text-anchor="middle" font-size="14" font-weight="bold" fill="#2563EB">2</text>
+
+  <!-- Height y1 -->
+  <line x1="130" y1="325" x2="130" y2="420" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="125" y1="420" x2="135" y2="420" stroke="#6B7280" stroke-width="1"/>
+  <line x1="125" y1="325" x2="135" y2="325" stroke="#6B7280" stroke-width="1"/>
+  <text x="115" y="380" text-anchor="end" font-size="14" font-style="italic" fill="#6B7280">y<tspan font-size="10" dy="3">1</tspan></text>
+
+  <!-- Height y2 -->
+  <line x1="630" y1="130" x2="630" y2="420" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="625" y1="420" x2="635" y2="420" stroke="#6B7280" stroke-width="1"/>
+  <line x1="625" y1="130" x2="635" y2="130" stroke="#6B7280" stroke-width="1"/>
+  <text x="645" y="280" font-size="14" font-style="italic" fill="#6B7280">y<tspan font-size="10" dy="3">2</tspan></text>
+
+  <!-- Velocity arrows -->
+  <!-- v1 (short, slow) -->
+  <line x1="90" y1="325" x2="120" y2="325" stroke="#8B0029" stroke-width="2.5" marker-end="url(#btArrR)"/>
+  <text x="75" y="322" text-anchor="end" font-size="14" font-style="italic" fill="#8B0029">v<tspan font-size="10" dy="3">1</tspan></text>
+
+  <!-- v2 (long, fast) -->
+  <line x1="650" y1="130" x2="710" y2="130" stroke="#2563EB" stroke-width="2.5" marker-end="url(#btArrB)"/>
+  <text x="720" y="128" font-size="14" font-style="italic" fill="#2563EB">v<tspan font-size="10" dy="3">2</tspan></text>
+
+  <!-- Pressure indicators -->
+  <!-- p1 large (wide section, high pressure) -->
+  <text x="160" y="345" font-size="14" fill="#8B0029" font-weight="bold">p<tspan font-size="10" dy="3">1</tspan><tspan dy="-3"> (&#xB192;&#xC74C;)</tspan></text>
+
+  <!-- p2 small (narrow section, low pressure) -->
+  <text x="550" y="155" font-size="14" fill="#2563EB" font-weight="bold">p<tspan font-size="10" dy="3">2</tspan><tspan dy="-3"> (&#xB0AE;&#xC74C;)</tspan></text>
+
+  <!-- Cross-section labels -->
+  <!-- A1 (wide) -->
+  <line x1="55" y1="280" x2="55" y2="370" stroke="#8B0029" stroke-width="1"/>
+  <line x1="50" y1="280" x2="60" y2="280" stroke="#8B0029" stroke-width="1"/>
+  <line x1="50" y1="370" x2="60" y2="370" stroke="#8B0029" stroke-width="1"/>
+  <text x="42" y="330" text-anchor="end" font-size="14" font-weight="bold" fill="#8B0029" font-style="italic">A<tspan font-size="10" dy="3">1</tspan></text>
+
+  <!-- A2 (narrow) -->
+  <line x1="715" y1="100" x2="715" y2="160" stroke="#2563EB" stroke-width="1"/>
+  <line x1="710" y1="100" x2="720" y2="100" stroke="#2563EB" stroke-width="1"/>
+  <line x1="710" y1="160" x2="720" y2="160" stroke="#2563EB" stroke-width="1"/>
+  <text x="730" y="135" font-size="14" font-weight="bold" fill="#2563EB" font-style="italic">A<tspan font-size="10" dy="3">2</tspan></text>
+
+  <!-- Streamlines -->
+  <path d="M 80,300 C 250,300 350,200 450,170 C 550,140 600,115 700,115" fill="none" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3" opacity="0.4"/>
+  <path d="M 80,350 C 250,350 350,270 450,230 C 550,195 600,175 700,145" fill="none" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3" opacity="0.4"/>
+
+  <!-- Equation box -->
+  <rect x="80" y="435" width="620" height="35" rx="6" fill="#F3F4F6" stroke="#8B0029" stroke-width="1"/>
+  <text x="390" y="458" text-anchor="middle" font-size="15" fill="#8B0029" font-weight="bold">
+    p&#x2081; + &#xBD;&#x3C1;v&#x2081;&#xB2; + &#x3C1;gy&#x2081; = p&#x2082; + &#xBD;&#x3C1;v&#x2082;&#xB2; + &#x3C1;gy&#x2082;
+  </text>
+
+  <!-- Title -->
+  <text x="390" y="35" text-anchor="middle" font-size="18" font-weight="bold" fill="#8B0029">&#xBCA0;&#xB974;&#xB204;&#xC774; &#xBC29;&#xC815;&#xC2DD;</text>
+</svg>

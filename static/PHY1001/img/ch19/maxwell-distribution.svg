@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 420" font-family="sans-serif">
+  <defs>
+    <marker id="axArrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#1a1a1a"/>
+    </marker>
+  </defs>
+
+  <!-- Axes -->
+  <line x1="80" y1="350" x2="700" y2="350" stroke="#1a1a1a" stroke-width="2" marker-end="url(#axArrow)"/>
+  <line x1="80" y1="350" x2="80" y2="40" stroke="#1a1a1a" stroke-width="2" marker-end="url(#axArrow)"/>
+
+  <!-- Axis labels -->
+  <text x="710" y="355" font-size="14" fill="#1a1a1a">v (m/s)</text>
+  <text x="60" y="35" font-size="14" fill="#1a1a1a" text-anchor="end">P(v)</text>
+
+  <!-- Speed tick marks -->
+  <text x="80" y="370" font-size="11" fill="#6B7280" text-anchor="middle">0</text>
+  <text x="200" y="370" font-size="11" fill="#6B7280" text-anchor="middle">200</text>
+  <text x="320" y="370" font-size="11" fill="#6B7280" text-anchor="middle">400</text>
+  <text x="440" y="370" font-size="11" fill="#6B7280" text-anchor="middle">600</text>
+  <text x="560" y="370" font-size="11" fill="#6B7280" text-anchor="middle">800</text>
+  <text x="680" y="370" font-size="11" fill="#6B7280" text-anchor="middle">1000</text>
+
+  <!-- T = 300 K curve (O2, M=0.032) - main curve in Sogang red -->
+  <!-- vp=395 -> x=317, peak y=205 (height=145) -->
+  <path d="M80,350 Q110,349 150,342 Q190,325 230,295 Q270,255 295,225 Q310,212 317,205 Q325,208 340,218 Q370,240 410,270 Q460,305 520,330 Q580,343 640,348 Q670,350 700,350" fill="none" stroke="#8B0029" stroke-width="2.5"/>
+
+  <!-- T = 80 K curve - taller, narrower, in blue -->
+  <!-- vp=204 -> x=202, peak y=70 (height=280, ratio 280/145=1.93) -->
+  <path d="M80,350 Q100,348 120,340 Q140,310 160,245 Q175,155 188,100 Q196,78 202,70 Q208,73 218,90 Q235,130 255,195 Q275,255 300,305 Q320,330 345,345 Q370,350 400,350" fill="none" stroke="#2563EB" stroke-width="2.5"/>
+
+  <!-- T = 600 K curve - flatter, wider, in gray -->
+  <!-- vp=558 -> x=415, peak y=248 (height=102, ratio 102/145=0.70) -->
+  <path d="M80,350 Q130,349 180,344 Q240,330 300,305 Q350,280 385,260 Q405,252 415,248 Q425,250 445,258 Q490,278 540,305 Q590,328 640,342 Q670,348 700,350" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="6 3"/>
+
+  <!-- Labels for curves -->
+  <text x="400" y="195" font-size="14" font-weight="bold" fill="#8B0029">T = 300 K</text>
+  <text x="235" y="58" font-size="14" font-weight="bold" fill="#2563EB">T = 80 K</text>
+  <text x="490" y="238" font-size="14" font-weight="bold" fill="#6B7280">T = 600 K</text>
+
+  <!-- Characteristic speeds for T=300K -->
+  <!-- vp ~ 395 -> x=317 -->
+  <line x1="317" y1="205" x2="317" y2="350" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="317" y="395" font-size="12" fill="#8B0029" text-anchor="middle" font-style="italic">v</text>
+  <text x="326" y="400" font-size="9" fill="#8B0029">p</text>
+
+  <!-- vavg ~ 445 -> x=347 -->
+  <line x1="347" y1="222" x2="347" y2="350" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="347" y="395" font-size="12" fill="#2563EB" text-anchor="middle" font-style="italic">v</text>
+  <text x="361" y="400" font-size="9" fill="#2563EB">avg</text>
+
+  <!-- vrms ~ 483 -> x=370 -->
+  <line x1="370" y1="243" x2="370" y2="350" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="370" y="395" font-size="12" fill="#6B7280" text-anchor="middle" font-style="italic">v</text>
+  <text x="385" y="400" font-size="9" fill="#6B7280">rms</text>
+
+  <!-- Title -->
+  <text x="400" y="35" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a1a">Maxwell 속력 분포 (산소 O&#8322;)</text>
+</svg>

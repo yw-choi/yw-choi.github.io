@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 410" font-family="sans-serif">
+  <!-- Title -->
+  <text x="375" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">미시 상태와 배치(Configuration)</text>
+
+  <!-- Box with divider: Configuration I (6,0) -->
+  <rect x="30" y="60" width="100" height="80" rx="4" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <line x1="80" y1="60" x2="80" y2="140" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <circle cx="50" cy="80" r="5" fill="#8B0029"/>
+  <circle cx="65" cy="85" r="5" fill="#8B0029"/>
+  <circle cx="55" cy="100" r="5" fill="#8B0029"/>
+  <circle cx="70" cy="105" r="5" fill="#8B0029"/>
+  <circle cx="48" cy="118" r="5" fill="#8B0029"/>
+  <circle cx="68" cy="122" r="5" fill="#8B0029"/>
+  <text x="80" y="160" text-anchor="middle" font-size="11" fill="#6B7280">(6, 0)</text>
+  <text x="80" y="175" text-anchor="middle" font-size="11" fill="#6B7280">W = 1</text>
+
+  <!-- Configuration III (4,2) -->
+  <rect x="160" y="60" width="100" height="80" rx="4" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <line x1="210" y1="60" x2="210" y2="140" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <circle cx="180" cy="80" r="5" fill="#8B0029"/>
+  <circle cx="195" cy="88" r="5" fill="#8B0029"/>
+  <circle cx="175" cy="105" r="5" fill="#8B0029"/>
+  <circle cx="200" cy="112" r="5" fill="#8B0029"/>
+  <circle cx="225" cy="85" r="5" fill="#8B0029"/>
+  <circle cx="240" cy="110" r="5" fill="#8B0029"/>
+  <text x="210" y="160" text-anchor="middle" font-size="11" fill="#6B7280">(4, 2)</text>
+  <text x="210" y="175" text-anchor="middle" font-size="11" fill="#6B7280">W = 15</text>
+
+  <!-- Configuration IV (3,3) - most probable -->
+  <rect x="290" y="60" width="100" height="80" rx="4" fill="#8B0029" fill-opacity="0.05" stroke="#8B0029" stroke-width="2"/>
+  <line x1="340" y1="60" x2="340" y2="140" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <circle cx="310" cy="82" r="5" fill="#8B0029"/>
+  <circle cx="325" cy="100" r="5" fill="#8B0029"/>
+  <circle cx="308" cy="118" r="5" fill="#8B0029"/>
+  <circle cx="355" cy="85" r="5" fill="#8B0029"/>
+  <circle cx="370" cy="105" r="5" fill="#8B0029"/>
+  <circle cx="358" cy="122" r="5" fill="#8B0029"/>
+  <text x="340" y="160" text-anchor="middle" font-size="11" fill="#8B0029" font-weight="bold">(3, 3)</text>
+  <text x="340" y="175" text-anchor="middle" font-size="11" fill="#8B0029" font-weight="bold">W = 20 (최대)</text>
+
+  <!-- Configuration VII (0,6) -->
+  <rect x="420" y="60" width="100" height="80" rx="4" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <line x1="470" y1="60" x2="470" y2="140" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <circle cx="490" cy="80" r="5" fill="#8B0029"/>
+  <circle cx="505" cy="88" r="5" fill="#8B0029"/>
+  <circle cx="485" cy="100" r="5" fill="#8B0029"/>
+  <circle cx="500" cy="110" r="5" fill="#8B0029"/>
+  <circle cx="492" cy="125" r="5" fill="#8B0029"/>
+  <circle cx="510" cy="120" r="5" fill="#8B0029"/>
+  <text x="470" y="160" text-anchor="middle" font-size="11" fill="#6B7280">(0, 6)</text>
+  <text x="470" y="175" text-anchor="middle" font-size="11" fill="#6B7280">W = 1</text>
+
+  <!-- Bar chart below -->
+  <text x="375" y="215" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">배치별 미시 상태 수 W</text>
+
+  <!-- Bar chart axes -->
+  <line x1="80" y1="370" x2="650" y2="370" stroke="#6B7280" stroke-width="2"/>
+  <line x1="80" y1="370" x2="80" y2="230" stroke="#6B7280" stroke-width="2"/>
+
+  <!-- Bars: I(1), II(6), III(15), IV(20), V(15), VI(6), VII(1) -->
+  <!-- Scale: 20 -> 130px height -->
+  <rect x="110" y="363.5" width="50" height="6.5" fill="#6B7280" opacity="0.6"/>
+  <text x="135" y="388" text-anchor="middle" font-size="10" fill="#6B7280">I</text>
+  <text x="135" y="360" text-anchor="middle" font-size="10" fill="#6B7280">1</text>
+
+  <rect x="180" y="331" width="50" height="39" fill="#6B7280" opacity="0.6"/>
+  <text x="205" y="388" text-anchor="middle" font-size="10" fill="#6B7280">II</text>
+  <text x="205" y="327" text-anchor="middle" font-size="10" fill="#6B7280">6</text>
+
+  <rect x="250" y="272.5" width="50" height="97.5" fill="#8B0029" opacity="0.5"/>
+  <text x="275" y="388" text-anchor="middle" font-size="10" fill="#6B7280">III</text>
+  <text x="275" y="268" text-anchor="middle" font-size="10" fill="#8B0029">15</text>
+
+  <rect x="320" y="240" width="50" height="130" fill="#8B0029" opacity="0.7"/>
+  <text x="345" y="388" text-anchor="middle" font-size="10" fill="#8B0029" font-weight="bold">IV</text>
+  <text x="345" y="236" text-anchor="middle" font-size="10" fill="#8B0029" font-weight="bold">20</text>
+
+  <rect x="390" y="272.5" width="50" height="97.5" fill="#8B0029" opacity="0.5"/>
+  <text x="415" y="388" text-anchor="middle" font-size="10" fill="#6B7280">V</text>
+  <text x="415" y="268" text-anchor="middle" font-size="10" fill="#8B0029">15</text>
+
+  <rect x="460" y="331" width="50" height="39" fill="#6B7280" opacity="0.6"/>
+  <text x="485" y="388" text-anchor="middle" font-size="10" fill="#6B7280">VI</text>
+  <text x="485" y="327" text-anchor="middle" font-size="10" fill="#6B7280">6</text>
+
+  <rect x="530" y="363.5" width="50" height="6.5" fill="#6B7280" opacity="0.6"/>
+  <text x="555" y="388" text-anchor="middle" font-size="10" fill="#6B7280">VII</text>
+  <text x="555" y="360" text-anchor="middle" font-size="10" fill="#6B7280">1</text>
+
+  <!-- Boltzmann equation -->
+  <text x="650" y="310" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">S = k ln W</text>
+  <text x="650" y="335" text-anchor="middle" font-size="11" fill="#6B7280">볼츠만 엔트로피</text>
+</svg>

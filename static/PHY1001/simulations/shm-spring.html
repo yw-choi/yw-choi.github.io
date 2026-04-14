@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>용수철-질량 SHM 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 14px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute; white-space: nowrap; line-height: 1; font-size: 13px; pointer-events: none;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.92em; }
+.canvas-overlay .katex-label.with-bg {
+  background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px;
+}
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-pos" style="color:#8B0029;"></div>
+      <div class="katex-label with-bg" id="lbl-vel" style="color:#2563EB;"></div>
+    </div>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>용수철-질량 SHM</h2>
+      <div class="subtitle">Spring-Mass Simple Harmonic Motion (Ch.15)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>질량 m = <span id="massVal">1.0</span> kg</label>
+      <input type="range" id="massSlider" min="0.2" max="5" value="1" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>용수철 상수 k = <span id="kVal">10.0</span> N/m</label>
+      <input type="range" id="kSlider" min="1" max="50" value="10" step="1">
+    </div>
+
+    <div class="control-group">
+      <label>초기 변위 x₀ = <span id="x0Val">0.20</span> m</label>
+      <input type="range" id="x0Slider" min="0.02" max="0.40" value="0.20" step="0.01">
+    </div>
+
+    <div class="control-group">
+      <label>감쇠 b = <span id="bVal">0.0</span> kg/s</label>
+      <input type="range" id="bSlider" min="0" max="10" value="0" step="0.1">
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const lblPos = document.getElementById('lbl-pos');
+const lblVel = document.getElementById('lbl-vel');
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
+}
+
+const massSlider = document.getElementById('massSlider');
+const kSlider = document.getElementById('kSlider');
+const x0Slider = document.getElementById('x0Slider');
+const bSlider = document.getElementById('bSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let x = 0.2, v = 0, t = 0;
+let running = false, animId = null, lastTs = null;
+let trail = [];
+const MAX_TRAIL = 600;
+
+function getParams() {
+  return {
+    m: parseFloat(massSlider.value),
+    k: parseFloat(kSlider.value),
+    x0: parseFloat(x0Slider.value),
+    b: parseFloat(bSlider.value)
+  };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function reset() {
+  if (animId) cancelAnimationFrame(animId);
+  running = false; animId = null; lastTs = null;
+  const { x0 } = getParams();
+  x = x0; v = 0; t = 0;
+  trail = [];
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  updateInfo(); draw();
+}
+
+function start() {
+  if (running) return;
+  running = true; lastTs = null;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+}
+
+function step(ts) {
+  if (!running) return;
+  if (!lastTs) { lastTs = ts; animId = requestAnimationFrame(step); return; }
+  const dtReal = Math.min((ts - lastTs) / 1000, 0.04);
+  lastTs = ts;
+
+  const { m, k, b } = getParams();
+  const substeps = 8;
+  const dt = dtReal / substeps;
+
+  for (let i = 0; i < substeps; i++) {
+    const a1 = (-k * x - b * v) / m;
+    const v_half = v + 0.5 * a1 * dt;
+    const x_new = x + v_half * dt;
+    const a2 = (-k * x_new - b * v_half) / m;
+    v = v_half + 0.5 * a2 * dt;
+    x = x_new;
+    t += dt;
+  }
+
+  trail.push({ x: x, v: v });
+  if (trail.length > MAX_TRAIL) trail.shift();
+
+  updateInfo(); draw();
+  animId = requestAnimationFrame(step);
+}
+
+function updateInfo() {
+  const { m, k, b, x0 } = getParams();
+  const omega = Math.sqrt(k / m);
+  const a = (-k * x - b * v) / m;
+  const K = 0.5 * m * v * v;
+  const U = 0.5 * k * x * x;
+  const E = K + U;
+
+  const box = document.getElementById('infoBox');
+  let html = '';
+  html += '<span class="label">시간:</span> <span class="val">t = ' + t.toFixed(2) + ' s</span><br>';
+  html += '<span class="label">변위:</span> <span class="val">x = ' + (x * 100).toFixed(1) + ' cm</span><br>';
+  html += '<span class="label">속도:</span> <span class="val">v = ' + v.toFixed(3) + ' m/s</span><br>';
+  html += '<span class="label">가속도:</span> <span class="val">a = ' + a.toFixed(3) + ' m/s²</span><br>';
+  html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
+  html += tex('K = \\tfrac{1}{2}mv^2') + ' = <span class="val">' + K.toFixed(4) + ' J</span><br>';
+  html += tex('U = \\tfrac{1}{2}kx^2') + ' = <span class="val">' + U.toFixed(4) + ' J</span><br>';
+  html += tex('E = K + U') + ' = <span class="val">' + E.toFixed(4) + ' J</span>';
+  box.innerHTML = html;
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 10;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath(); ctx.fill();
+}
+
+function drawTextWithBg(text, px, py, color, fontSize) {
+  ctx.font = (fontSize || 12) + 'px sans-serif';
+  const w = ctx.measureText(text).width;
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillRect(px - 2, py - (fontSize || 12) + 2, w + 4, (fontSize || 12) + 2);
+  ctx.fillStyle = color;
+  ctx.fillText(text, px, py);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  lblPos.style.display = 'none';
+  lblVel.style.display = 'none';
+
+  const { m, k, b, x0 } = getParams();
+  const omega = Math.sqrt(k / m);
+  const T = 2 * Math.PI / omega;
+  const a_cur = (-k * x - b * v) / m;
+  const K = 0.5 * m * v * v;
+  const U = 0.5 * k * x * x;
+  const E0 = 0.5 * k * x0 * x0;
+  const E = K + U;
+
+  // Layout
+  const springY = CH * 0.22;
+  const eqX = CW * 0.38;
+  const ppm = Math.min(CW * 0.25, 250) / x0;
+
+  // === Spring-mass system ===
+  // Wall
+  ctx.fillStyle = '#6B7280';
+  ctx.fillRect(20, springY - 40, 12, 80);
+  for (let i = 0; i < 5; i++) {
+    ctx.beginPath();
+    ctx.moveTo(32, springY - 35 + i * 18);
+    ctx.lineTo(20, springY - 25 + i * 18);
+    ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1; ctx.stroke();
+  }
+
+  // Block position
+  const blockX = eqX + x * ppm;
+  const blockW = 40, blockH = 40;
+
+  // Spring zigzag
+  const springStartX = 32;
+  const springEndX = blockX - blockW / 2;
+  const nCoils = 10;
+  const segLen = (springEndX - springStartX) / (nCoils * 2);
+  ctx.beginPath();
+  ctx.moveTo(springStartX, springY);
+  for (let i = 0; i < nCoils * 2; i++) {
+    const sx = springStartX + segLen * (i + 1);
+    const sy = springY + (i % 2 === 0 ? -15 : 15);
+    ctx.lineTo(sx, sy);
+  }
+  ctx.lineTo(springEndX, springY);
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 2; ctx.stroke();
+
+  // Block
+  ctx.fillStyle = '#F3F4F6';
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 2;
+  ctx.fillRect(blockX - blockW / 2, springY - blockH / 2, blockW, blockH);
+  ctx.strokeRect(blockX - blockW / 2, springY - blockH / 2, blockW, blockH);
+  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('m', blockX, springY);
+  ctx.textBaseline = 'alphabetic';
+
+  // Surface
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(20, springY + blockH / 2); ctx.lineTo(CW * 0.65, springY + blockH / 2); ctx.stroke();
+
+  // Equilibrium marker
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+  ctx.beginPath(); ctx.moveTo(eqX, springY + blockH / 2); ctx.lineTo(eqX, springY + blockH / 2 + 25); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#6B7280'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('x = 0', eqX, springY + blockH / 2 + 38);
+
+  // Force arrow F = -kx
+  if (Math.abs(x) > 0.005) {
+    const fLen = Math.min(Math.abs(k * x) * ppm * 0.3, 80);
+    const fDir = x > 0 ? -1 : 1;
+    drawArrow(blockX, springY - blockH / 2 - 12, blockX + fDir * fLen, springY - blockH / 2 - 12, '#8B0029', 2.5);
+    drawTextWithBg('F = −kx', blockX + fDir * fLen / 2 - 20, springY - blockH / 2 - 20, '#8B0029', 11);
+  }
+
+  // Velocity arrow
+  if (Math.abs(v) > 0.01) {
+    const vLen = Math.min(Math.abs(v) * ppm * 0.5, 70);
+    const vDir = v > 0 ? 1 : -1;
+    drawArrow(blockX, springY + blockH / 2 + 12, blockX + vDir * vLen, springY + blockH / 2 + 12, '#2563EB', 2.5);
+    drawTextWithBg('v', blockX + vDir * vLen / 2 - 3, springY + blockH / 2 + 8, '#2563EB', 11);
+  }
+
+  // === Phase space plot (x vs v) ===
+  const phaseX = CW * 0.15;
+  const phaseY = CH * 0.60;
+  const phaseR = Math.min(CW * 0.12, CH * 0.15, 100);
+
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1;
+  // Axes
+  ctx.beginPath(); ctx.moveTo(phaseX - phaseR - 10, phaseY); ctx.lineTo(phaseX + phaseR + 10, phaseY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(phaseX, phaseY - phaseR - 10); ctx.lineTo(phaseX, phaseY + phaseR + 10); ctx.stroke();
+  ctx.fillStyle = '#6B7280'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('x', phaseX + phaseR + 18, phaseY + 4);
+  ctx.fillText('v', phaseX + 4, phaseY - phaseR - 14);
+  ctx.fillText('위상 공간', phaseX, phaseY + phaseR + 28);
+
+  // Trail
+  if (trail.length > 1) {
+    const vmax = omega * x0;
+    const scaleX = phaseR / x0;
+    const scaleV = phaseR / (vmax || 1);
+    ctx.beginPath();
+    ctx.moveTo(phaseX + trail[0].x * scaleX, phaseY - trail[0].v * scaleV);
+    for (let i = 1; i < trail.length; i++) {
+      ctx.lineTo(phaseX + trail[i].x * scaleX, phaseY - trail[i].v * scaleV);
+    }
+    ctx.strokeStyle = 'rgba(37,99,235,0.4)'; ctx.lineWidth = 1.5; ctx.stroke();
+
+    // Current point
+    const last = trail[trail.length - 1];
+    ctx.fillStyle = '#2563EB';
+    ctx.beginPath(); ctx.arc(phaseX + last.x * scaleX, phaseY - last.v * scaleV, 4, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // === Energy bar chart ===
+  const barAreaX = CW * 0.50;
+  const barBaseY = CH * 0.85;
+  const maxBarH = Math.min(CH * 0.28, 160);
+  const eScale = E0 > 0 ? maxBarH / E0 : 1;
+  const barW = 36, barGap = 10;
+
+  ctx.fillStyle = '#444'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('에너지 (J)', barAreaX + barW + barGap / 2, barBaseY - maxBarH - 14);
+
+  ctx.strokeStyle = '#999'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(barAreaX - 8, barBaseY);
+  ctx.lineTo(barAreaX + 2 * barW + barGap + 8, barBaseY);
+  ctx.stroke();
+
+  function drawBar(idx, val, color, label) {
+    const bx = barAreaX + idx * (barW + barGap);
+    const bh = Math.max(val * eScale, 0);
+    ctx.fillStyle = color + '88';
+    ctx.fillRect(bx, barBaseY - bh, barW, bh);
+    ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+    ctx.strokeRect(bx, barBaseY - bh, barW, Math.max(bh, 1));
+    ctx.fillStyle = color; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(label, bx + barW / 2, barBaseY + 14);
+    const topOfBar = barBaseY - bh;
+    const titleTopY = barBaseY - maxBarH - 6;
+    if (topOfBar - 6 < titleTopY) {
+      ctx.fillStyle = '#fff'; ctx.font = '10px sans-serif';
+      ctx.fillText(val.toFixed(3), bx + barW / 2, topOfBar + 12);
+    } else {
+      ctx.fillStyle = color; ctx.font = '10px sans-serif';
+      ctx.fillText(val.toFixed(3), bx + barW / 2, topOfBar - 4);
+    }
+  }
+
+  drawBar(0, K, '#2563EB', 'K');
+  drawBar(1, U, '#8B0029', 'U');
+
+  // E dashed line
+  ctx.strokeStyle = '#2e7d32'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 3]);
+  ctx.beginPath();
+  ctx.moveTo(barAreaX - 8, barBaseY - E0 * eScale);
+  ctx.lineTo(barAreaX + 2 * barW + barGap + 8, barBaseY - E0 * eScale);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#2e7d32'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('E₀ = ' + E0.toFixed(3), barAreaX + 2 * barW + barGap + 12, barBaseY - E0 * eScale + 4);
+
+  // === x(t) time graph ===
+  const graphX = CW * 0.68;
+  const graphY = CH * 0.50;
+  const graphW = CW * 0.28;
+  const graphH = CH * 0.22;
+
+  // axes
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(graphX, graphY); ctx.lineTo(graphX + graphW, graphY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(graphX, graphY - graphH); ctx.lineTo(graphX, graphY + graphH); ctx.stroke();
+  ctx.fillStyle = '#6B7280'; ctx.font = '10px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('t', graphX + graphW + 4, graphY + 4);
+  ctx.fillText('x(t)', graphX + 4, graphY - graphH - 4);
+
+  // amplitude dashed lines
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 0.5; ctx.setLineDash([3, 3]);
+  ctx.beginPath(); ctx.moveTo(graphX, graphY - graphH * 0.9); ctx.lineTo(graphX + graphW, graphY - graphH * 0.9); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(graphX, graphY + graphH * 0.9); ctx.lineTo(graphX + graphW, graphY + graphH * 0.9); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Plot trail as time graph
+  if (trail.length > 1) {
+    const timeWindow = Math.max(3 * T, 5);
+    const startIdx = Math.max(0, trail.length - Math.floor(MAX_TRAIL * 0.8));
+    ctx.beginPath();
+    let first = true;
+    for (let i = startIdx; i < trail.length; i++) {
+      const frac = (i - startIdx) / (trail.length - startIdx);
+      const gx = graphX + frac * graphW;
+      const gy = graphY - (trail[i].x / x0) * graphH * 0.9;
+      if (first) { ctx.moveTo(gx, gy); first = false; }
+      else ctx.lineTo(gx, gy);
+    }
+    ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 1.5; ctx.stroke();
+  }
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML = '용수철-질량 SHM: ' + tex('a = -\\omega^2 x');
+  document.getElementById('theoremBox').innerHTML =
+    '단순조화운동<br>' +
+    tex('x(t) = x_m\\cos(\\omega t + \\phi)') + '<br>' +
+    tex('\\omega = \\sqrt{k/m}');
+  updateFormula();
+}
+
+function updateFormula() {
+  const { m, k, x0, b } = getParams();
+  const omega = Math.sqrt(k / m);
+  const T = 2 * Math.PI / omega;
+  const E = 0.5 * k * x0 * x0;
+  const box = document.getElementById('formulaBox');
+  let html = '<b>매개변수:</b><br>';
+  html += tex('\\omega = \\sqrt{k/m} = ' + omega.toFixed(2) + '\\text{ rad/s}') + '<br>';
+  html += tex('T = 2\\pi/\\omega = ' + T.toFixed(3) + '\\text{ s}') + '<br>';
+  html += tex('f = 1/T = ' + (1 / T).toFixed(2) + '\\text{ Hz}') + '<br>';
+  html += tex('E = \\tfrac{1}{2}kx_m^2 = ' + E.toFixed(4) + '\\text{ J}');
+  if (b > 0) {
+    const bcrit = 2 * Math.sqrt(k * m);
+    html += '<br><b>감쇠:</b> ';
+    if (b < bcrit) html += '<span style="color:#2563EB">미감쇠</span>';
+    else if (Math.abs(b - bcrit) < 0.15) html += '<span style="color:#8B0029">임계감쇠</span>';
+    else html += '<span style="color:#6B7280">과감쇠</span>';
+    html += '<br>' + tex('b_{\\text{crit}} = 2\\sqrt{km} = ' + bcrit.toFixed(2));
+  }
+  box.innerHTML = html;
+}
+
+[massSlider, kSlider, x0Slider, bSlider].forEach(sl => {
+  sl.addEventListener('input', () => {
+    document.getElementById('massVal').textContent = parseFloat(massSlider.value).toFixed(1);
+    document.getElementById('kVal').textContent = parseFloat(kSlider.value).toFixed(1);
+    document.getElementById('x0Val').textContent = parseFloat(x0Slider.value).toFixed(2);
+    document.getElementById('bVal').textContent = parseFloat(bSlider.value).toFixed(1);
+    updateFormula(); reset();
+  });
+});
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+window.addEventListener('resize', resize);
+
+renderStatic();
+document.getElementById('massVal').textContent = parseFloat(massSlider.value).toFixed(1);
+document.getElementById('kVal').textContent = parseFloat(kSlider.value).toFixed(1);
+document.getElementById('x0Val').textContent = parseFloat(x0Slider.value).toFixed(2);
+document.getElementById('bVal').textContent = parseFloat(bSlider.value).toFixed(1);
+reset();
+resize();
+</script>
+</body>
+</html>

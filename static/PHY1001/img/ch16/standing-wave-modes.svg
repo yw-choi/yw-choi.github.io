@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 495" font-family="sans-serif">
+  <!-- Title -->
+  <text x="375" y="25" text-anchor="middle" font-size="17" font-weight="bold" fill="#8B0029">고정-고정 줄의 정상파 모드</text>
+
+  <!-- Wall marks (left and right) -->
+  <g stroke="#6B7280" stroke-width="1.5">
+    <!-- Left wall -->
+    <line x1="80" y1="40" x2="80" y2="470"/>
+    <line x1="80" y1="60" x2="68" y2="72"/>
+    <line x1="80" y1="80" x2="68" y2="92"/>
+    <line x1="80" y1="100" x2="68" y2="112"/>
+    <line x1="80" y1="160" x2="68" y2="172"/>
+    <line x1="80" y1="180" x2="68" y2="192"/>
+    <line x1="80" y1="200" x2="68" y2="212"/>
+    <line x1="80" y1="260" x2="68" y2="272"/>
+    <line x1="80" y1="280" x2="68" y2="292"/>
+    <line x1="80" y1="300" x2="68" y2="312"/>
+    <line x1="80" y1="360" x2="68" y2="372"/>
+    <line x1="80" y1="380" x2="68" y2="392"/>
+    <line x1="80" y1="400" x2="68" y2="412"/>
+    <!-- Right wall -->
+    <line x1="620" y1="40" x2="620" y2="470"/>
+    <line x1="620" y1="60" x2="632" y2="72"/>
+    <line x1="620" y1="80" x2="632" y2="92"/>
+    <line x1="620" y1="100" x2="632" y2="112"/>
+    <line x1="620" y1="160" x2="632" y2="172"/>
+    <line x1="620" y1="180" x2="632" y2="192"/>
+    <line x1="620" y1="200" x2="632" y2="212"/>
+    <line x1="620" y1="260" x2="632" y2="272"/>
+    <line x1="620" y1="280" x2="632" y2="292"/>
+    <line x1="620" y1="300" x2="632" y2="312"/>
+    <line x1="620" y1="360" x2="632" y2="372"/>
+    <line x1="620" y1="380" x2="632" y2="392"/>
+    <line x1="620" y1="400" x2="632" y2="412"/>
+  </g>
+
+  <!-- n=1: Fundamental (1st harmonic) -->
+  <text x="40" y="90" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">n=1</text>
+  <line x1="80" y1="85" x2="620" y2="85" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <!-- Half sine wave -->
+  <path d="M 80,85 C 170,85 200,40 350,40 C 500,40 530,85 620,85" fill="none" stroke="#8B0029" stroke-width="2.5"/>
+  <path d="M 80,85 C 170,85 200,130 350,130 C 500,130 530,85 620,85" fill="none" stroke="#8B0029" stroke-width="2.5" stroke-dasharray="6 4" opacity="0.4"/>
+  <!-- Node labels -->
+  <text x="80" y="75" text-anchor="middle" font-size="10" fill="#2563EB" font-weight="bold">N</text>
+  <text x="620" y="75" text-anchor="middle" font-size="10" fill="#2563EB" font-weight="bold">N</text>
+  <text x="350" y="35" text-anchor="middle" font-size="10" fill="#8B0029" font-weight="bold">A</text>
+  <!-- L = lambda/2 -->
+  <text x="680" y="90" font-size="13" fill="#6B7280" font-style="italic">L = &#x3BB;&#x2081;/2</text>
+
+  <!-- n=2: 2nd harmonic -->
+  <text x="40" y="195" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">n=2</text>
+  <line x1="80" y1="190" x2="620" y2="190" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <!-- Full sine wave -->
+  <path d="M 80,190 C 125,190 155,150 215,150 C 275,150 305,190 350,190 C 395,190 425,230 485,230 C 545,230 575,190 620,190" fill="none" stroke="#8B0029" stroke-width="2.5"/>
+  <path d="M 80,190 C 125,190 155,230 215,230 C 275,230 305,190 350,190 C 395,190 425,150 485,150 C 545,150 575,190 620,190" fill="none" stroke="#8B0029" stroke-width="2.5" stroke-dasharray="6 4" opacity="0.4"/>
+  <text x="80" y="180" text-anchor="middle" font-size="10" fill="#2563EB" font-weight="bold">N</text>
+  <text x="350" y="180" text-anchor="middle" font-size="10" fill="#2563EB" font-weight="bold">N</text>
+  <text x="620" y="180" text-anchor="middle" font-size="10" fill="#2563EB" font-weight="bold">N</text>
+  <text x="215" y="145" text-anchor="middle" font-size="10" fill="#8B0029" font-weight="bold">A</text>
+  <text x="485" y="245" text-anchor="middle" font-size="10" fill="#8B0029" font-weight="bold">A</text>
+  <text x="680" y="195" font-size="13" fill="#6B7280" font-style="italic">L = &#x3BB;&#x2082;</text>
+
+  <!-- n=3: 3rd harmonic -->
+  <text x="40" y="300" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">n=3</text>
+  <line x1="80" y1="295" x2="620" y2="295" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <path d="M 80,295 C 110,295 130,265 170,265 C 210,265 230,295 260,295 C 290,295 310,325 350,325 C 390,325 410,295 440,295 C 470,295 490,265 530,265 C 570,265 590,295 620,295" fill="none" stroke="#8B0029" stroke-width="2.5"/>
+  <path d="M 80,295 C 110,295 130,325 170,325 C 210,325 230,295 260,295 C 290,295 310,265 350,265 C 390,265 410,295 440,295 C 470,295 490,325 530,325 C 570,325 590,295 620,295" fill="none" stroke="#8B0029" stroke-width="2.5" stroke-dasharray="6 4" opacity="0.4"/>
+  <text x="80" y="285" text-anchor="middle" font-size="10" fill="#2563EB" font-weight="bold">N</text>
+  <text x="260" y="285" text-anchor="middle" font-size="10" fill="#2563EB" font-weight="bold">N</text>
+  <text x="440" y="285" text-anchor="middle" font-size="10" fill="#2563EB" font-weight="bold">N</text>
+  <text x="620" y="285" text-anchor="middle" font-size="10" fill="#2563EB" font-weight="bold">N</text>
+  <text x="680" y="300" font-size="13" fill="#6B7280" font-style="italic">L = 3&#x3BB;&#x2083;/2</text>
+
+  <!-- n=4: 4th harmonic -->
+  <text x="40" y="405" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">n=4</text>
+  <line x1="80" y1="400" x2="620" y2="400" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <path d="M 80,400 C 100,400 115,375 147,375 C 180,375 195,400 215,400 C 235,400 250,425 282,425 C 315,425 330,400 350,400 C 370,400 385,375 417,375 C 450,375 465,400 485,400 C 505,400 520,425 552,425 C 585,425 600,400 620,400" fill="none" stroke="#8B0029" stroke-width="2.5"/>
+  <path d="M 80,400 C 100,400 115,425 147,425 C 180,425 195,400 215,400 C 235,400 250,375 282,375 C 315,375 330,400 350,400 C 370,400 385,425 417,425 C 450,425 465,400 485,400 C 505,400 520,375 552,375 C 585,375 600,400 620,400" fill="none" stroke="#8B0029" stroke-width="2.5" stroke-dasharray="6 4" opacity="0.4"/>
+  <text x="680" y="405" font-size="13" fill="#6B7280" font-style="italic">L = 2&#x3BB;&#x2084;</text>
+
+  <!-- Legend -->
+  <text x="375" y="468" text-anchor="middle" font-size="13" fill="#2563EB" font-weight="bold">N</text>
+  <text x="395" y="468" font-size="13" fill="#6B7280"> = 마디(node), </text>
+  <text x="490" y="468" font-size="13" fill="#8B0029" font-weight="bold">A</text>
+  <text x="510" y="468" font-size="13" fill="#6B7280"> = 배(antinode)</text>
+</svg>

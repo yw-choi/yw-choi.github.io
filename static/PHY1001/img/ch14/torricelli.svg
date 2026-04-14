@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 430" font-family="sans-serif">
+  <defs>
+    <marker id="atv" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#2563EB"/>
+    </marker>
+    <marker id="atg" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- Tank -->
+  <rect x="120" y="60" width="250" height="300" fill="#2563EB" fill-opacity="0.05" stroke="#6B7280" stroke-width="2" rx="2"/>
+
+  <!-- Water fill -->
+  <rect x="122" y="100" width="246" height="258" fill="#2563EB" fill-opacity="0.15"/>
+  <!-- Water surface -->
+  <path d="M122,100 Q180,93 245,100 Q310,107 368,100" fill="none" stroke="#2563EB" stroke-width="1.2"/>
+
+  <!-- Hole at bottom-right -->
+  <rect x="368" y="310" width="15" height="20" fill="#2563EB" fill-opacity="0.15" stroke="none"/>
+  <line x1="370" y1="310" x2="370" y2="330" stroke="#6B7280" stroke-width="0" />
+
+  <!-- Water jet from hole -->
+  <path d="M383,320 Q430,320 480,340 Q520,360 560,390" fill="none" stroke="#2563EB" stroke-width="2"/>
+
+  <!-- v arrow at hole -->
+  <line x1="383" y1="320" x2="440" y2="320" stroke="#2563EB" stroke-width="2.5" marker-end="url(#atv)"/>
+  <text x="420" y="310" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">v</text>
+
+  <!-- p0 label at surface -->
+  <text x="245" y="88" text-anchor="middle" font-size="13" fill="#6B7280" font-style="italic">p₀</text>
+
+  <!-- p0 label at hole -->
+  <text x="410" y="345" font-size="12" fill="#6B7280" font-style="italic">p₀</text>
+
+  <!-- Height h -->
+  <line x1="400" y1="100" x2="400" y2="320" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="395" y1="100" x2="405" y2="100" stroke="#6B7280" stroke-width="1"/>
+  <line x1="395" y1="320" x2="405" y2="320" stroke="#6B7280" stroke-width="1"/>
+  <text x="420" y="215" font-size="14" fill="#6B7280" font-weight="bold" font-style="italic">h</text>
+
+  <!-- Point 1 (surface) -->
+  <circle cx="245" cy="100" r="4" fill="#8B0029"/>
+  <text x="265" y="115" font-size="12" fill="#8B0029" font-weight="bold">점 1</text>
+
+  <!-- Point 2 (hole) -->
+  <circle cx="383" cy="320" r="4" fill="#8B0029"/>
+  <text x="395" y="338" font-size="12" fill="#8B0029" font-weight="bold">점 2</text>
+
+  <!-- Torricelli's theorem -->
+  <rect x="80" y="380" width="440" height="30" rx="5" fill="#F3F4F6" stroke="#8B0029" stroke-width="1"/>
+  <text x="300" y="400" text-anchor="middle" font-size="15" fill="#8B0029" font-weight="bold">토리첼리 정리: v = √(2gh)</text>
+</svg>

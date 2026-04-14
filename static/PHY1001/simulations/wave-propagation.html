@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>파동 전파 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; }
+canvas { width: 100%; height: 100%; display: block; }
+.controls { width: 260px; padding: 16px; background: #faf5f6; border-left: 2px solid rgba(139,0,41,0.15); overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+h2 { color: #8B0029; font-size: 1.05rem; margin-bottom: 2px; }
+.subtitle { color: #888; font-size: 0.72rem; margin-bottom: 6px; }
+label { display: block; font-size: 0.78rem; color: #555; margin-bottom: 2px; }
+.slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.slider-row input[type="range"] { flex: 1; accent-color: #8B0029; }
+.slider-val { font-size: 0.78rem; font-weight: 600; color: #8B0029; min-width: 55px; text-align: right; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 9px 10px; font-size: 0.74rem; line-height: 1.7; color: #555; }
+.formula-box .katex { font-size: 0.92em; }
+.info-box { background: white; border: 1px solid rgba(139,0,41,0.15); border-radius: 8px; padding: 9px 10px; font-size: 0.74rem; line-height: 1.8; }
+.info-box .lbl { color: #555; }
+.info-box .val { color: #8B0029; font-weight: 700; font-family: ui-monospace, monospace; }
+.btn-row { display: flex; gap: 6px; }
+button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+.btn-primary { background: #8B0029; color: white; }
+.btn-primary:hover { background: #a3003a; }
+.btn-secondary { background: rgba(139,0,41,0.1); color: #8B0029; }
+.btn-secondary:hover { background: rgba(139,0,41,0.2); }
+.btn-active { background: #2563EB; color: white; }
+.mode-btns { display: flex; gap: 4px; margin-bottom: 4px; }
+.mode-btns button { font-size: 0.72rem; padding: 6px 4px; border-radius: 6px; }
+.section-title { font-size: 0.82rem; font-weight: 700; color: #8B0029; margin-top: 4px; border-bottom: 1px solid rgba(139,0,41,0.15); padding-bottom: 2px; }
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.92); padding: 1px 5px; border-radius: 3px; }
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { flex: none; height: 55vh; }
+  .controls { width: 100%; border-left: none; border-top: 2px solid rgba(139,0,41,0.15); height: 45vh; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lblEq" style="color:#8B0029;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lblParams" style="color:#555;"></div>
+      <div class="katex-label with-bg" id="lblMode" style="color:#2563EB;font-weight:bold;"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>파동 전파</h2>
+      <div class="subtitle">Wave Propagation &mdash; Ch.16</div>
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="section-title">모드</div>
+    <div class="mode-btns">
+      <button id="btnSingle" class="btn-active" onclick="setMode('single')">단일파</button>
+      <button id="btnSuper" class="btn-secondary" onclick="setMode('super')">중첩</button>
+      <button id="btnStanding" class="btn-secondary" onclick="setMode('standing')">정상파</button>
+    </div>
+
+    <div class="section-title">파동 1</div>
+    <div>
+      <label>진폭 A</label>
+      <div class="slider-row">
+        <input type="range" id="slA1" min="0.1" max="2.0" step="0.05" value="1.0">
+        <span class="slider-val" id="valA1">1.00</span>
+      </div>
+    </div>
+    <div>
+      <label>진동수 f (Hz)</label>
+      <div class="slider-row">
+        <input type="range" id="slF1" min="0.3" max="4.0" step="0.1" value="1.0">
+        <span class="slider-val" id="valF1">1.00</span>
+      </div>
+    </div>
+    <div>
+      <label>파장 &lambda; (m)</label>
+      <div class="slider-row">
+        <input type="range" id="slLam1" min="0.5" max="4.0" step="0.1" value="2.0">
+        <span class="slider-val" id="valLam1">2.00</span>
+      </div>
+    </div>
+
+    <div id="wave2Section" style="display:none;">
+      <div class="section-title">파동 2</div>
+      <div>
+        <label>진폭 A&#x2082;</label>
+        <div class="slider-row">
+          <input type="range" id="slA2" min="0.1" max="2.0" step="0.05" value="1.0">
+          <span class="slider-val" id="valA2">1.00</span>
+        </div>
+      </div>
+      <div>
+        <label>위상차 &phi; (&pi; rad)</label>
+        <div class="slider-row">
+          <input type="range" id="slPhi" min="0" max="2.0" step="0.05" value="0">
+          <span class="slider-val" id="valPhi">0.00</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="standingSection" style="display:none;">
+      <div class="section-title">정상파 모드</div>
+      <div>
+        <label>조화파 번호 n</label>
+        <div class="slider-row">
+          <input type="range" id="slN" min="1" max="8" step="1" value="1">
+          <span class="slider-val" id="valN">1</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="btn-primary" id="btnPlay" onclick="togglePlay()">&#x23F8; 일시정지</button>
+      <button class="btn-secondary" onclick="resetSim()">&#x21BA; 초기화</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn-secondary" id="btnParticles" onclick="toggleParticles()">&#x25CF; 입자 표시</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const overlay = document.getElementById('overlay');
+
+let W, H, dpr;
+function resize() {
+  const r = canvas.parentElement.getBoundingClientRect();
+  dpr = window.devicePixelRatio || 1;
+  W = r.width; H = r.height;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+resize();
+window.addEventListener('resize', resize);
+
+let playing = true, t = 0, mode = 'single', showParticles = false;
+const PX_PER_M = 100;
+const SCALE = 60;
+
+const sl = (id) => document.getElementById(id);
+const sliders = ['slA1','slF1','slLam1','slA2','slPhi','slN'];
+sliders.forEach(id => sl(id) && sl(id).addEventListener('input', updateUI));
+
+function getP() {
+  const A1 = +sl('slA1').value, f1 = +sl('slF1').value, lam1 = +sl('slLam1').value;
+  const k1 = 2*Math.PI/lam1, w1 = 2*Math.PI*f1, v1 = f1*lam1;
+  const A2 = +sl('slA2').value, phi = +sl('slPhi').value * Math.PI;
+  const n = +sl('slN').value;
+  return {A1,f1,lam1,k1,w1,v1,A2,phi,n};
+}
+
+function setMode(m) {
+  mode = m;
+  ['btnSingle','btnSuper','btnStanding'].forEach(id => sl(id).className = 'btn-secondary');
+  if (m==='single') sl('btnSingle').className = 'btn-active';
+  else if (m==='super') sl('btnSuper').className = 'btn-active';
+  else sl('btnStanding').className = 'btn-active';
+  sl('wave2Section').style.display = m==='super' ? '' : 'none';
+  sl('standingSection').style.display = m==='standing' ? '' : 'none';
+  updateUI();
+}
+
+function togglePlay() {
+  playing = !playing;
+  sl('btnPlay').innerHTML = playing ? '&#x23F8; 일시정지' : '&#x25B6; 재생';
+}
+function resetSim() { t = 0; playing = true; sl('btnPlay').innerHTML = '&#x23F8; 일시정지'; }
+function toggleParticles() {
+  showParticles = !showParticles;
+  sl('btnParticles').className = showParticles ? 'btn-active' : 'btn-secondary';
+}
+
+function updateUI() {
+  const p = getP();
+  sl('valA1').textContent = p.A1.toFixed(2);
+  sl('valF1').textContent = p.f1.toFixed(2);
+  sl('valLam1').textContent = p.lam1.toFixed(2);
+  sl('valA2').textContent = p.A2.toFixed(2);
+  sl('valPhi').textContent = (p.phi/Math.PI).toFixed(2);
+  sl('valN').textContent = p.n;
+
+  const fb = sl('formulaBox');
+  if (mode==='single') {
+    fb.innerHTML = katex.renderToString('y = y_m \\sin(kx - \\omega t)', {throwOnError:false}) +
+      '<br>' + katex.renderToString('v = \\lambda f = ' + p.v1.toFixed(2) + '\\;\\text{m/s}', {throwOnError:false});
+  } else if (mode==='super') {
+    fb.innerHTML = katex.renderToString("y' = y_1 + y_2", {throwOnError:false}) +
+      '<br>' + katex.renderToString("y'_m = |2y_m\\cos(\\phi/2)|", {throwOnError:false});
+  } else {
+    fb.innerHTML = katex.renderToString("y' = [2y_m \\sin kx]\\cos\\omega t", {throwOnError:false}) +
+      '<br>' + katex.renderToString('f_n = n\\frac{v}{2L},\\; n=' + p.n, {throwOnError:false});
+  }
+
+  const ib = sl('infoBox');
+  if (mode==='single') {
+    ib.innerHTML = '<span class="lbl">v</span> = <span class="val">' + p.v1.toFixed(2) + ' m/s</span><br>' +
+      '<span class="lbl">k</span> = <span class="val">' + p.k1.toFixed(2) + ' /m</span><br>' +
+      '<span class="lbl">&omega;</span> = <span class="val">' + p.w1.toFixed(2) + ' rad/s</span><br>' +
+      '<span class="lbl">T</span> = <span class="val">' + (1/p.f1).toFixed(3) + ' s</span>';
+  } else if (mode==='super') {
+    const ym = Math.abs(2*p.A1*Math.cos(p.phi/2));
+    const type = p.phi < 0.05 ? '완전 보강' : Math.abs(p.phi - Math.PI) < 0.05 ? '완전 상쇄' : '중간 간섭';
+    ib.innerHTML = '<span class="lbl">&phi;</span> = <span class="val">' + (p.phi/Math.PI).toFixed(2) + '&pi; rad</span><br>' +
+      '<span class="lbl">합성 진폭</span> = <span class="val">' + ym.toFixed(2) + '</span><br>' +
+      '<span class="lbl">간섭 종류</span>: <span class="val">' + type + '</span>';
+  } else {
+    const Lm = (W - 80) / PX_PER_M;
+    const fn = p.n * p.v1 / (2 * Lm);
+    ib.innerHTML = '<span class="lbl">n</span> = <span class="val">' + p.n + '</span><br>' +
+      '<span class="lbl">L</span> = <span class="val">' + Lm.toFixed(2) + ' m</span><br>' +
+      '<span class="lbl">&lambda;</span><sub>n</sub> = <span class="val">' + (2*Lm/p.n).toFixed(2) + ' m</span><br>' +
+      '<span class="lbl">f</span><sub>n</sub> = <span class="val">' + fn.toFixed(1) + ' Hz</span>';
+  }
+}
+
+function waveY(x_m, time, p) {
+  if (mode==='single') {
+    return p.A1 * Math.sin(p.k1 * x_m - p.w1 * time);
+  } else if (mode==='super') {
+    const y1 = p.A1 * Math.sin(p.k1 * x_m - p.w1 * time);
+    const y2 = p.A2 * Math.sin(p.k1 * x_m - p.w1 * time + p.phi);
+    return y1 + y2;
+  } else {
+    const Lm = (W - 80) / PX_PER_M;
+    const kn = p.n * Math.PI / Lm;
+    return 2 * p.A1 * Math.sin(kn * x_m) * Math.cos(p.w1 * time);
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  const p = getP();
+  const mx = 40, cy = H/2;
+  const xStart = mx, xEnd = W - mx;
+
+  // Background grid
+  ctx.strokeStyle = '#f0f0f0'; ctx.lineWidth = 1;
+  for (let a = -3; a <= 3; a++) {
+    if (a === 0) continue;
+    const yy = cy - a * SCALE;
+    if (yy > 10 && yy < H - 10) {
+      ctx.beginPath(); ctx.moveTo(xStart, yy); ctx.lineTo(xEnd, yy); ctx.stroke();
+    }
+  }
+
+  // Equilibrium line
+  ctx.strokeStyle = '#ccc'; ctx.lineWidth = 1;
+  ctx.setLineDash([5,4]); ctx.beginPath();
+  ctx.moveTo(xStart, cy); ctx.lineTo(xEnd, cy); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Axis labels
+  ctx.fillStyle = '#999'; ctx.font = '12px sans-serif';
+  ctx.textAlign = 'left'; ctx.fillText('x', xEnd + 5, cy + 4);
+  ctx.textAlign = 'right'; ctx.fillText('y', xStart - 5, 20);
+
+  // Walls for standing wave mode
+  if (mode === 'standing') {
+    ctx.fillStyle = '#e0e0e0';
+    ctx.fillRect(xStart - 8, cy - 120, 8, 240);
+    ctx.fillRect(xEnd, cy - 120, 8, 240);
+    ctx.strokeStyle = '#999'; ctx.lineWidth = 1;
+    for (let y = cy - 110; y < cy + 110; y += 15) {
+      ctx.beginPath(); ctx.moveTo(xStart-8, y); ctx.lineTo(xStart, y+8); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(xEnd, y); ctx.lineTo(xEnd+8, y+8); ctx.stroke();
+    }
+  }
+
+  // Draw individual waves in superposition mode (faded)
+  if (mode === 'super') {
+    ctx.strokeStyle = 'rgba(37,99,235,0.3)'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let px = xStart; px <= xEnd; px++) {
+      const xm = (px - xStart) / PX_PER_M;
+      const y1 = p.A1 * Math.sin(p.k1 * xm - p.w1 * t);
+      const sy = cy - y1 * SCALE;
+      px === xStart ? ctx.moveTo(px, sy) : ctx.lineTo(px, sy);
+    }
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(139,0,41,0.3)'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let px = xStart; px <= xEnd; px++) {
+      const xm = (px - xStart) / PX_PER_M;
+      const y2 = p.A2 * Math.sin(p.k1 * xm - p.w1 * t + p.phi);
+      const sy = cy - y2 * SCALE;
+      px === xStart ? ctx.moveTo(px, sy) : ctx.lineTo(px, sy);
+    }
+    ctx.stroke();
+  }
+
+  // Main wave
+  ctx.strokeStyle = mode==='standing' ? '#8B0029' : mode==='super' ? '#6B21A8' : '#8B0029';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  for (let px = xStart; px <= xEnd; px++) {
+    const xm = (px - xStart) / PX_PER_M;
+    const y = waveY(xm, t, p);
+    const sy = cy - y * SCALE;
+    px === xStart ? ctx.moveTo(px, sy) : ctx.lineTo(px, sy);
+  }
+  ctx.stroke();
+
+  // Envelope for standing wave
+  if (mode === 'standing') {
+    const Lm = (W - 80) / PX_PER_M;
+    const kn = p.n * Math.PI / Lm;
+    ctx.strokeStyle = 'rgba(37,99,235,0.3)'; ctx.lineWidth = 1;
+    ctx.setLineDash([4,3]);
+    ctx.beginPath();
+    for (let px = xStart; px <= xEnd; px++) {
+      const xm = (px - xStart) / PX_PER_M;
+      const env = 2 * p.A1 * Math.abs(Math.sin(kn * xm));
+      px === xStart ? ctx.moveTo(px, cy - env * SCALE) : ctx.lineTo(px, cy - env * SCALE);
+    }
+    ctx.stroke();
+    ctx.beginPath();
+    for (let px = xStart; px <= xEnd; px++) {
+      const xm = (px - xStart) / PX_PER_M;
+      const env = 2 * p.A1 * Math.abs(Math.sin(kn * xm));
+      px === xStart ? ctx.moveTo(px, cy + env * SCALE) : ctx.lineTo(px, cy + env * SCALE);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Node and antinode markers
+    for (let i = 0; i <= p.n; i++) {
+      const nx = xStart + (i / p.n) * (xEnd - xStart);
+      ctx.fillStyle = '#2563EB';
+      ctx.beginPath(); ctx.arc(nx, cy, 5, 0, 2*Math.PI); ctx.fill();
+      ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('N', nx, cy + 18);
+    }
+    for (let i = 0; i < p.n; i++) {
+      const ax = xStart + ((i + 0.5) / p.n) * (xEnd - xStart);
+      ctx.fillStyle = '#8B0029';
+      ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('A', ax, cy - 2*p.A1*SCALE - 8);
+    }
+  }
+
+  // Particles
+  if (showParticles) {
+    const spacing = mode === 'standing' ? Math.max(15, (xEnd-xStart)/(p.n*12)) : 20;
+    for (let px = xStart; px <= xEnd; px += spacing) {
+      const xm = (px - xStart) / PX_PER_M;
+      const y = waveY(xm, t, p);
+      const sy = cy - y * SCALE;
+
+      ctx.strokeStyle = 'rgba(255,152,0,0.3)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(px, cy); ctx.lineTo(px, sy); ctx.stroke();
+
+      ctx.beginPath(); ctx.arc(px, sy, 3.5, 0, 2*Math.PI);
+      ctx.fillStyle = '#ff9800'; ctx.fill();
+      ctx.strokeStyle = '#e65100'; ctx.lineWidth = 0.8; ctx.stroke();
+
+      // Transverse velocity arrow
+      const dt2 = 0.005;
+      const yNext = waveY(xm, t + dt2, p);
+      const vy = (yNext - y) / dt2;
+      if (Math.abs(vy) > 0.05) {
+        const arrowLen = Math.min(Math.abs(vy) * SCALE * 0.2, 20);
+        const dir = vy > 0 ? -1 : 1;
+        ctx.strokeStyle = '#4caf50'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(px, sy); ctx.lineTo(px, sy + dir * arrowLen); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(px, sy + dir * arrowLen);
+        ctx.lineTo(px - 2.5, sy + dir * (arrowLen - 4));
+        ctx.lineTo(px + 2.5, sy + dir * (arrowLen - 4));
+        ctx.closePath(); ctx.fillStyle = '#4caf50'; ctx.fill();
+      }
+    }
+  }
+
+  // Propagation arrow for single mode
+  if (mode === 'single') {
+    const ax = xEnd - 80, ay = H - 30;
+    ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax + 50, ay); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(ax+50, ay); ctx.lineTo(ax+43, ay-4); ctx.lineTo(ax+43, ay+4); ctx.closePath();
+    ctx.fillStyle = '#8B0029'; ctx.fill();
+    ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillStyle = '#8B0029'; ctx.fillText('v', ax + 25, ay - 8);
+  }
+
+  // Overlay labels
+  const lEq = document.getElementById('lblEq');
+  const lParams = document.getElementById('lblParams');
+  const lMode = document.getElementById('lblMode');
+
+  if (mode === 'single') {
+    lEq.innerHTML = katex.renderToString('y = y_m\\sin(kx - \\omega t)', {throwOnError:false});
+    lEq.style.left = '10px'; lEq.style.top = '10px';
+    lParams.innerHTML = katex.renderToString(
+      'y_m=' + p.A1.toFixed(1) + ',\\; k=' + p.k1.toFixed(2) + ',\\; \\omega=' + p.w1.toFixed(2) + ',\\; v=' + p.v1.toFixed(2) + '\\text{ m/s}', {throwOnError:false});
+    lParams.style.left = '10px'; lParams.style.top = '30px';
+    lMode.innerHTML = ''; lMode.style.display = 'none';
+  } else if (mode === 'super') {
+    const ym = Math.abs(2*p.A1*Math.cos(p.phi/2));
+    lEq.innerHTML = katex.renderToString("y'_m = |2y_m\\cos(\\phi/2)| = " + ym.toFixed(2), {throwOnError:false});
+    lEq.style.left = '10px'; lEq.style.top = '10px';
+    const type = p.phi < 0.05 ? '완전 보강' : Math.abs(p.phi - Math.PI) < 0.05 ? '완전 상쇄' : '중간 간섭';
+    lParams.innerHTML = katex.renderToString('\\phi = ' + (p.phi/Math.PI).toFixed(2) + '\\pi', {throwOnError:false});
+    lParams.style.left = '10px'; lParams.style.top = '30px';
+    lMode.innerHTML = type;
+    lMode.style.display = ''; lMode.style.left = '10px'; lMode.style.top = '50px';
+    lMode.style.color = type === '완전 보강' ? '#16a34a' : type === '완전 상쇄' ? '#dc2626' : '#2563EB';
+  } else {
+    const Lm = (W - 80) / PX_PER_M;
+    const fn = p.n * p.v1 / (2 * Lm);
+    lEq.innerHTML = katex.renderToString("y' = [2y_m\\sin k_n x]\\cos\\omega_n t", {throwOnError:false});
+    lEq.style.left = '10px'; lEq.style.top = '10px';
+    lParams.innerHTML = katex.renderToString('n=' + p.n + ',\\; f_' + p.n + '=' + fn.toFixed(1) + '\\text{ Hz}', {throwOnError:false});
+    lParams.style.left = '10px'; lParams.style.top = '30px';
+    lMode.innerHTML = p.n + '차 조화파';
+    lMode.style.display = ''; lMode.style.left = '10px'; lMode.style.top = '50px';
+    lMode.style.color = '#8B0029';
+  }
+}
+
+let lastTime = null;
+function animate(ts) {
+  if (!lastTime) lastTime = ts;
+  const dt = (ts - lastTime) / 1000;
+  lastTime = ts;
+  if (playing) t += dt;
+  updateUI();
+  draw();
+  requestAnimationFrame(animate);
+}
+
+updateUI();
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>

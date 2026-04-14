@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 440" font-family="sans-serif">
+  <defs>
+    <marker id="arrMc" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <path d="M0,0 L10,3.5 L0,7 Z" fill="#8B0029"/>
+    </marker>
+    <marker id="arrGc" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <rect width="750" height="440" fill="white"/>
+  <text x="375" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#8B0029">마하 원뿔과 충격파 (v&#x209B; > v)</text>
+
+  <!-- Past positions and wavefronts -->
+  <circle cx="130" cy="210" r="4" fill="#6B7280"/>
+  <text x="130" y="235" text-anchor="middle" font-size="10" fill="#6B7280">S&#x2081;</text>
+  <circle cx="130" cy="210" r="170" fill="none" stroke="#2563EB30" stroke-width="1.2"/>
+
+  <circle cx="210" cy="210" r="3" fill="#6B7280"/>
+  <circle cx="210" cy="210" r="136" fill="none" stroke="#2563EB40" stroke-width="1.2"/>
+
+  <circle cx="290" cy="210" r="3" fill="#6B7280"/>
+  <circle cx="290" cy="210" r="102" fill="none" stroke="#2563EB55" stroke-width="1.2"/>
+
+  <circle cx="370" cy="210" r="3" fill="#6B7280"/>
+  <circle cx="370" cy="210" r="68" fill="none" stroke="#2563EB77" stroke-width="1.2"/>
+
+  <circle cx="450" cy="210" r="3" fill="#6B7280"/>
+  <circle cx="450" cy="210" r="34" fill="none" stroke="#2563EB99" stroke-width="1.2"/>
+
+  <!-- Current source -->
+  <circle cx="530" cy="210" r="8" fill="#8B0029"/>
+  <text x="545" y="207" font-size="14" font-weight="bold" fill="#8B0029">S</text>
+
+  <!-- Velocity arrow -->
+  <line x1="540" y1="210" x2="600" y2="210" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrMc)"/>
+  <text x="580" y="198" font-size="13" fill="#8B0029" font-style="italic" font-weight="bold">v&#x209B;</text>
+
+  <!-- Mach cone lines (tangent to wavefronts) -->
+  <!-- Upper -->
+  <line x1="530" y1="210" x2="140" y2="30" stroke="#8B0029" stroke-width="2.5"/>
+  <!-- Lower -->
+  <line x1="530" y1="210" x2="140" y2="390" stroke="#8B0029" stroke-width="2.5"/>
+
+  <!-- Shock wave label -->
+  <text x="290" y="72" text-anchor="middle" font-size="12" fill="#8B0029" font-weight="bold" transform="rotate(-25,290,72)">충격파 면 (Mach cone)</text>
+
+  <!-- Angle theta arc -->
+  <path d="M490,210 A40,40 0 0,0 521,192" fill="none" stroke="#6B7280" stroke-width="1.5"/>
+  <text x="495" y="198" font-size="14" fill="#6B7280" font-style="italic" font-weight="bold">&#x03B8;</text>
+
+  <!-- vSt dimension -->
+  <line x1="130" y1="395" x2="530" y2="395" stroke="#6B7280" stroke-width="1"/>
+  <line x1="130" y1="388" x2="130" y2="402" stroke="#6B7280" stroke-width="1.5"/>
+  <line x1="530" y1="388" x2="530" y2="402" stroke="#6B7280" stroke-width="1.5"/>
+  <text x="330" y="412" text-anchor="middle" font-size="12" fill="#6B7280" font-style="italic">v&#x209B; t</text>
+
+  <!-- vt label (radius of oldest wavefront, r=170) -->
+  <line x1="130" y1="210" x2="130" y2="40" stroke="#6B7280" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <text x="108" y="130" text-anchor="middle" font-size="12" fill="#6B7280" font-style="italic">vt</text>
+
+  <!-- Formula box -->
+  <rect x="440" y="310" width="280" height="70" rx="8" fill="#f8f0f2" stroke="#e0c0c8" stroke-width="1"/>
+  <text x="580" y="335" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">sin &#x03B8; = v / v&#x209B;</text>
+  <text x="580" y="360" text-anchor="middle" font-size="13" fill="#6B7280">Ma = v&#x209B; / v  (Mach number)</text>
+</svg>

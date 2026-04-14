@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>도플러 효과</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 14px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 16px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 16px; color: #8B0029; }
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute; white-space: nowrap; line-height: 1; font-size: 13px; pointer-events: none;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.92em; }
+.canvas-overlay .katex-label.with-bg {
+  background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px;
+}
+.mach-indicator { font-size: 13px; font-weight: bold; padding: 4px 8px; border-radius: 4px; text-align: center; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-front" style="color:#8B0029;"></div>
+      <div class="katex-label with-bg" id="lbl-back" style="color:#2563EB;"></div>
+    </div>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>도플러 효과</h2>
+      <div class="subtitle">Doppler Effect (Ch.17)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>음원 속력 v<sub>S</sub> = <span id="vsVal">80</span> m/s</label>
+      <input type="range" id="vsSlider" min="0" max="500" value="80" step="5">
+    </div>
+
+    <div class="control-group">
+      <label>음속 v = <span id="vVal">343</span> m/s</label>
+      <input type="range" id="vSlider" min="200" max="600" value="343" step="1">
+    </div>
+
+    <div class="control-group">
+      <label>음원 진동수 f = <span id="fVal">2</span> Hz (시각화용)</label>
+      <input type="range" id="fSlider" min="0.5" max="5" value="2" step="0.1">
+    </div>
+
+    <div class="mach-indicator" id="machIndicator"></div>
+
+    <div class="formula-box" id="formulaBox"></div>
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const lblFront = document.getElementById('lbl-front');
+const lblBack = document.getElementById('lbl-back');
+
+const vsSlider = document.getElementById('vsSlider');
+const vSlider = document.getElementById('vSlider');
+const fSlider = document.getElementById('fSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let time = 0;
+let running = false, animId = null, lastTs = null;
+// Store emitted wavefronts: { x: source x at emission, t: emission time }
+let wavefronts = [];
+let sourceX = 0;
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function getParams() {
+  return {
+    vS: parseFloat(vsSlider.value),
+    v: parseFloat(vSlider.value),
+    f: parseFloat(fSlider.value)
+  };
+}
+
+function reset() {
+  if (animId) cancelAnimationFrame(animId);
+  running = false; animId = null; lastTs = null;
+  time = 0;
+  wavefronts = [];
+  sourceX = CW * 0.15;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  updateInfo(); draw();
+}
+
+function start() {
+  if (running) return;
+  running = true; lastTs = null;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+}
+
+function step(ts) {
+  if (!running) return;
+  if (!lastTs) { lastTs = ts; animId = requestAnimationFrame(step); return; }
+  const dt = Math.min((ts - lastTs) / 1000, 0.04);
+  lastTs = ts;
+
+  const { vS, v, f } = getParams();
+  const ppm = CW / 800; // pixels per meter-ish, scale factor
+
+  time += dt;
+
+  // Move source
+  sourceX += vS * ppm * dt;
+
+  // Emit wavefronts at frequency f
+  const period = 1 / f;
+  const lastEmit = wavefronts.length > 0 ? wavefronts[wavefronts.length - 1].t : -period;
+  if (time - lastEmit >= period) {
+    wavefronts.push({ x: sourceX, y: CH / 2, t: time });
+  }
+
+  // Remove wavefronts that are too large
+  wavefronts = wavefronts.filter(wf => {
+    const r = (time - wf.t) * v * ppm;
+    return r < CW * 1.5;
+  });
+
+  // Wrap source if it goes off screen
+  if (sourceX > CW + 50) {
+    sourceX = -50;
+    wavefronts = [];
+  }
+
+  updateInfo(); draw();
+  animId = requestAnimationFrame(step);
+}
+
+function updateInfo() {
+  const { vS, v, f } = getParams();
+  const mach = vS / v;
+  const isSonic = vS >= v;
+
+  // Mach indicator
+  const mi = document.getElementById('machIndicator');
+  if (isSonic) {
+    mi.style.background = '#8B0029';
+    mi.style.color = '#fff';
+    mi.textContent = 'Ma = ' + mach.toFixed(2) + ' (supersonic!)';
+  } else if (mach > 0.8) {
+    mi.style.background = '#b8860b';
+    mi.style.color = '#fff';
+    mi.textContent = 'Ma = ' + mach.toFixed(2) + ' (transonic)';
+  } else {
+    mi.style.background = '#e8f5e9';
+    mi.style.color = '#2a7d2a';
+    mi.textContent = 'Ma = ' + mach.toFixed(2) + ' (subsonic)';
+  }
+
+  const box = document.getElementById('infoBox');
+  let html = '';
+  html += '<span class="label">Mach:</span> <span class="val">' + mach.toFixed(2) + '</span><br>';
+
+  if (!isSonic) {
+    const fFront = f * v / (v - vS);
+    const fBack = f * v / (v + vS);
+    html += '<span class="label">전방 관측:</span> ' + tex("f' = " + fFront.toFixed(2)) + ' Hz<br>';
+    html += '<span class="label">후방 관측:</span> ' + tex("f' = " + fBack.toFixed(2)) + ' Hz<br>';
+  } else {
+    const theta = Math.asin(v / vS) * 180 / Math.PI;
+    html += '<span class="label">마하 각도:</span> ' + tex('\\theta = ' + theta.toFixed(1) + '^\\circ') + '<br>';
+    html += '<span class="label">충격파 형성!</span>';
+  }
+  box.innerHTML = html;
+}
+
+function updateFormula() {
+  const box = document.getElementById('formulaBox');
+  box.innerHTML =
+    '<b>관측 진동수:</b><br>' +
+    tex("f' = f\\frac{v}{v \\mp v_S}") + '<br>' +
+    '<b>마하 원뿔:</b><br>' +
+    tex('\\sin\\theta = v/v_S') + '<br>' +
+    tex('\\mathrm{Ma} = v_S / v');
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  const { vS, v } = getParams();
+  const ppm = CW / 800;
+  const cy = CH / 2;
+  const isSonic = vS >= v;
+
+  lblFront.style.display = 'none';
+  lblBack.style.display = 'none';
+
+  // Draw wavefronts
+  for (let i = 0; i < wavefronts.length; i++) {
+    const wf = wavefronts[i];
+    const r = (time - wf.t) * v * ppm;
+    if (r <= 0) continue;
+    const alpha = Math.max(0.08, 0.5 - r / (CW * 1.2));
+    ctx.strokeStyle = 'rgba(37,99,235,' + alpha.toFixed(2) + ')';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(wf.x, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  // Draw Mach cone if supersonic
+  if (isSonic && wavefronts.length > 3) {
+    const theta = Math.asin(v / vS);
+    ctx.strokeStyle = '#8B0029';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    const coneLen = CW;
+    // Upper line
+    ctx.beginPath();
+    ctx.moveTo(sourceX, cy);
+    ctx.lineTo(sourceX - coneLen * Math.cos(theta), cy - coneLen * Math.sin(theta));
+    ctx.stroke();
+    // Lower line
+    ctx.beginPath();
+    ctx.moveTo(sourceX, cy);
+    ctx.lineTo(sourceX - coneLen * Math.cos(theta), cy + coneLen * Math.sin(theta));
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Angle label
+    ctx.fillStyle = '#8B0029'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('\u03B8', sourceX - 60, cy - 15);
+  }
+
+  // Draw source
+  ctx.fillStyle = '#8B0029';
+  ctx.beginPath();
+  ctx.arc(sourceX, cy, 10, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('S', sourceX, cy);
+  ctx.textBaseline = 'alphabetic';
+
+  // Velocity arrow
+  if (vS > 0) {
+    const arrLen = Math.min(vS * ppm * 0.3, 60);
+    ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(sourceX + 14, cy); ctx.lineTo(sourceX + 14 + arrLen, cy); ctx.stroke();
+    // arrowhead
+    ctx.fillStyle = '#8B0029';
+    ctx.beginPath();
+    ctx.moveTo(sourceX + 14 + arrLen, cy);
+    ctx.lineTo(sourceX + 14 + arrLen - 8, cy - 5);
+    ctx.lineTo(sourceX + 14 + arrLen - 8, cy + 5);
+    ctx.closePath(); ctx.fill();
+    ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('v\u209B', sourceX + 14 + arrLen / 2, cy - 14);
+  }
+
+  // Front/back observed frequency labels (only if subsonic)
+  if (!isSonic && vS > 5) {
+    const fSrc = parseFloat(fSlider.value);
+    const fFront = fSrc * v / (v - vS);
+    const fBackVal = fSrc * v / (v + vS);
+
+    const frontX = Math.min(sourceX + 120, CW - 100);
+    lblFront.innerHTML = tex("f' = " + fFront.toFixed(1) + '\\text{ Hz}');
+    lblFront.style.left = frontX + 'px';
+    lblFront.style.top = (cy - 50) + 'px';
+    lblFront.style.display = 'block';
+
+    const backX = Math.max(sourceX - 180, 10);
+    lblBack.innerHTML = '<span style="color:#2563EB">' + tex("f' = " + fBackVal.toFixed(1) + '\\text{ Hz}') + '</span>';
+    lblBack.style.left = backX + 'px';
+    lblBack.style.top = (cy - 50) + 'px';
+    lblBack.style.display = 'block';
+  }
+
+  // Compression indicator
+  if (!isSonic && vS > 5) {
+    ctx.fillStyle = '#8B0029'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('\u2190 \u03BB\' < \u03BB (compressed)', Math.min(sourceX + 100, CW - 80), cy + 40);
+    ctx.fillStyle = '#2563EB';
+    ctx.fillText('\u03BB\' > \u03BB (expanded) \u2192', Math.max(sourceX - 100, 80), cy + 40);
+  }
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML = '도플러 효과: ' + tex("f' = f\\dfrac{v \\pm v_D}{v \\mp v_S}");
+  document.getElementById('theoremBox').innerHTML =
+    '도플러 효과 (Doppler Effect)<br>' +
+    tex("f' = f\\frac{v \\pm v_D}{v \\mp v_S}") + '<br>' +
+    '초음속: ' + tex('\\sin\\theta = v/v_S');
+  updateFormula();
+}
+
+[vsSlider, vSlider, fSlider].forEach(sl => {
+  sl.addEventListener('input', () => {
+    document.getElementById('vsVal').textContent = parseFloat(vsSlider.value).toFixed(0);
+    document.getElementById('vVal').textContent = parseFloat(vSlider.value).toFixed(0);
+    document.getElementById('fVal').textContent = parseFloat(fSlider.value).toFixed(1);
+    updateFormula(); updateInfo();
+    if (!running) draw();
+  });
+});
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+window.addEventListener('resize', resize);
+
+renderStatic();
+document.getElementById('vsVal').textContent = vsSlider.value;
+document.getElementById('vVal').textContent = vSlider.value;
+document.getElementById('fVal').textContent = parseFloat(fSlider.value).toFixed(1);
+reset();
+resize();
+</script>
+</body>
+</html>

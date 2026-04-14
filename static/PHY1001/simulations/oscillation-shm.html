@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>단순조화운동 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; }
+canvas { width: 100%; height: 100%; display: block; }
+.controls { width: 260px; padding: 14px; background: #faf5f6; border-left: 2px solid rgba(139,0,41,0.15); overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+h2 { color: #8B0029; font-size: 1.05rem; margin-bottom: 2px; }
+.subtitle { color: #888; font-size: 0.72rem; margin-bottom: 4px; }
+label { display: block; font-size: 0.78rem; color: #555; margin-bottom: 2px; }
+.slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+.slider-row input[type="range"] { flex: 1; accent-color: #8B0029; }
+.slider-val { font-size: 0.78rem; font-weight: 600; color: #8B0029; min-width: 60px; text-align: right; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 0.74rem; line-height: 1.7; color: #555; }
+.formula-box .katex { font-size: 0.92em; }
+.info-box { background: white; border: 1px solid rgba(139,0,41,0.15); border-radius: 8px; padding: 8px 10px; font-size: 0.74rem; line-height: 1.7; }
+.info-box .lbl { color: #555; }
+.info-box .val { color: #8B0029; font-weight: 700; font-family: ui-monospace, monospace; }
+.btn-row { display: flex; gap: 6px; }
+button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+.btn-primary { background: #8B0029; color: white; }
+.btn-primary:hover { background: #a3003a; }
+.btn-secondary { background: rgba(139,0,41,0.1); color: #8B0029; }
+.btn-secondary:hover { background: rgba(139,0,41,0.2); }
+.mode-btn { padding: 6px 10px; border: 2px solid #8B0029; border-radius: 8px; background: white; color: #8B0029; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.15s; }
+.mode-btn.active { background: #8B0029; color: white; }
+.mode-row { display: flex; gap: 6px; margin-bottom: 4px; }
+.energy-bars { font-size: 0.72rem; }
+.energy-bars h4 { font-size: 0.78rem; color: #444; margin-bottom: 3px; }
+.bar-row { display: flex; align-items: center; gap: 5px; margin-bottom: 2px; }
+.bar-label { min-width: 22px; color: #555; font-weight: 600; }
+.bar-track { flex: 1; height: 12px; background: #eee; border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.03s; }
+.bar-val { min-width: 48px; text-align: right; font-family: ui-monospace, monospace; font-weight: 600; font-size: 0.68rem; }
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.92); padding: 1px 5px; border-radius: 3px; }
+.check-row { display: flex; align-items: center; gap: 5px; font-size: 0.76rem; color: #555; }
+.check-row input { accent-color: #8B0029; }
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { flex: none; height: 55vh; }
+  .controls { width: 100%; border-left: none; border-top: 2px solid rgba(139,0,41,0.15); height: 45vh; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lblTitle" style="color:#8B0029;font-weight:bold;font-size:13px;"></div>
+      <div class="katex-label with-bg" id="lblEq" style="color:#2563EB;font-size:12px;"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>단순조화운동</h2>
+      <div class="subtitle">Simple Harmonic Motion &mdash; Ch.15</div>
+    </div>
+
+    <div class="mode-row">
+      <button class="mode-btn active" id="modeSpring" onclick="setMode('spring')">용수철</button>
+      <button class="mode-btn" id="modePend" onclick="setMode('pendulum')">단진자</button>
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div id="springParams">
+      <label>용수철 상수 k</label>
+      <div class="slider-row">
+        <input type="range" id="slK" min="5" max="100" step="1" value="20">
+        <span class="slider-val" id="valK">20 N/m</span>
+      </div>
+      <label>질량 m</label>
+      <div class="slider-row">
+        <input type="range" id="slM" min="0.1" max="3" step="0.1" value="1.0">
+        <span class="slider-val" id="valM">1.0 kg</span>
+      </div>
+      <label>진폭 A</label>
+      <div class="slider-row">
+        <input type="range" id="slA" min="0.05" max="0.40" step="0.01" value="0.20">
+        <span class="slider-val" id="valA">0.20 m</span>
+      </div>
+    </div>
+
+    <div id="pendParams" style="display:none;">
+      <label>줄 길이 L</label>
+      <div class="slider-row">
+        <input type="range" id="slL" min="0.3" max="3.0" step="0.1" value="1.5">
+        <span class="slider-val" id="valL">1.5 m</span>
+      </div>
+      <label>초기 각도 &theta;<sub>0</sub></label>
+      <div class="slider-row">
+        <input type="range" id="slTh" min="5" max="45" step="1" value="20">
+        <span class="slider-val" id="valTh">20&deg;</span>
+      </div>
+    </div>
+
+    <div class="check-row">
+      <input type="checkbox" id="chkDamp"> <label style="margin:0">감쇠 (damping)</label>
+    </div>
+    <div id="dampRow" style="display:none;">
+      <label>감쇠 상수 b</label>
+      <div class="slider-row">
+        <input type="range" id="slB" min="0.05" max="3.0" step="0.05" value="0.3">
+        <span class="slider-val" id="valB">0.30 kg/s</span>
+      </div>
+    </div>
+
+    <div class="check-row">
+      <input type="checkbox" id="chkPhase"> <label style="margin:0">위상 공간 (v vs x)</label>
+    </div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="energy-bars">
+      <h4>에너지 (J)</h4>
+      <div class="bar-row"><span class="bar-label">K</span><div class="bar-track"><div class="bar-fill" id="barK" style="background:#8B0029;width:0%"></div></div><span class="bar-val" id="valKE">0</span></div>
+      <div class="bar-row"><span class="bar-label">U</span><div class="bar-track"><div class="bar-fill" id="barU" style="background:#2563EB;width:0%"></div></div><span class="bar-val" id="valUE">0</span></div>
+      <div class="bar-row"><span class="bar-label">E</span><div class="bar-track"><div class="bar-fill" id="barE" style="background:#6B7280;width:0%"></div></div><span class="bar-val" id="valTE">0</span></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-primary" id="btnPlay" onclick="togglePlay()">&#9654; 시작</button>
+      <button class="btn-secondary" onclick="resetSim()">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const kx = (tex) => katex.renderToString(tex, { throwOnError: false });
+const $ = (id) => document.getElementById(id);
+
+const cvs = $('canvas');
+const ctx = cvs.getContext('2d');
+let W, H, dpr;
+
+function resize() {
+  const r = cvs.parentElement.getBoundingClientRect();
+  dpr = window.devicePixelRatio || 1;
+  W = r.width; H = r.height;
+  cvs.width = W * dpr; cvs.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', () => { resize(); draw(); });
+
+// State
+let mode = 'spring'; // 'spring' or 'pendulum'
+let running = false;
+let time = 0;
+let x = 0, v = 0; // spring: position, velocity; pendulum: theta, omega
+const dt = 1/240;
+const histMax = 8; // seconds
+let history = []; // {t, x, v}
+
+function getParams() {
+  if (mode === 'spring') {
+    const k = parseFloat($('slK').value);
+    const m = parseFloat($('slM').value);
+    const A = parseFloat($('slA').value);
+    const damp = $('chkDamp').checked;
+    const b = damp ? parseFloat($('slB').value) : 0;
+    return { k, m, A, b, damp };
+  } else {
+    const L = parseFloat($('slL').value);
+    const th0 = parseFloat($('slTh').value) * Math.PI / 180;
+    const damp = $('chkDamp').checked;
+    const b = damp ? parseFloat($('slB').value) : 0;
+    return { L, th0, b, damp };
+  }
+}
+
+function setMode(m) {
+  mode = m;
+  $('modeSpring').className = 'mode-btn' + (m === 'spring' ? ' active' : '');
+  $('modePend').className = 'mode-btn' + (m === 'pendulum' ? ' active' : '');
+  $('springParams').style.display = m === 'spring' ? 'block' : 'none';
+  $('pendParams').style.display = m === 'pendulum' ? 'block' : 'none';
+  resetSim();
+}
+
+function resetSim() {
+  running = false;
+  $('btnPlay').innerHTML = '&#9654; 시작';
+  time = 0;
+  history = [];
+  if (mode === 'spring') {
+    const p = getParams();
+    x = p.A; v = 0;
+  } else {
+    const p = getParams();
+    x = p.th0; v = 0;
+  }
+  updateUI();
+  draw();
+}
+
+function togglePlay() {
+  running = !running;
+  $('btnPlay').innerHTML = running ? '&#9646;&#9646; 정지' : '&#9654; 시작';
+  if (running) requestAnimationFrame(loop);
+}
+
+// Physics step (RK4)
+function step() {
+  const p = getParams();
+  let accelFn;
+  if (mode === 'spring') {
+    accelFn = (xx, vv) => -(p.k / p.m) * xx - (p.b / p.m) * vv;
+  } else {
+    const g = 9.80;
+    const L = p.L;
+    const m = 1.0; // mass cancels for pendulum period, set to 1 for energy calc
+    accelFn = (th, om) => -(g / L) * Math.sin(th) - (p.b / m) * om;
+  }
+  const k1v = accelFn(x, v) * dt;
+  const k1x = v * dt;
+  const k2v = accelFn(x + k1x/2, v + k1v/2) * dt;
+  const k2x = (v + k1v/2) * dt;
+  const k3v = accelFn(x + k2x/2, v + k2v/2) * dt;
+  const k3x = (v + k2v/2) * dt;
+  const k4v = accelFn(x + k3x, v + k3v) * dt;
+  const k4x = (v + k3v) * dt;
+  x += (k1x + 2*k2x + 2*k3x + k4x) / 6;
+  v += (k1v + 2*k2v + 2*k3v + k4v) / 6;
+  time += dt;
+  history.push({ t: time, x, v });
+  while (history.length > 0 && history[0].t < time - histMax) history.shift();
+}
+
+function getEnergy() {
+  const p = getParams();
+  if (mode === 'spring') {
+    const KE = 0.5 * p.m * v * v;
+    const PE = 0.5 * p.k * x * x;
+    const Emax = 0.5 * p.k * p.A * p.A || 0.001;
+    return { KE, PE, TE: KE + PE, Emax };
+  } else {
+    const g = 9.80;
+    const m = 1.0;
+    const KE = 0.5 * m * (p.L * v) * (p.L * v);
+    const PE = m * g * p.L * (1 - Math.cos(x));
+    const Emax = m * g * p.L * (1 - Math.cos(p.th0)) || 0.001;
+    return { KE, PE, TE: KE + PE, Emax };
+  }
+}
+
+function updateUI() {
+  const p = getParams();
+  // Slider displays
+  $('valK').textContent = parseFloat($('slK').value) + ' N/m';
+  $('valM').textContent = parseFloat($('slM').value).toFixed(1) + ' kg';
+  $('valA').textContent = parseFloat($('slA').value).toFixed(2) + ' m';
+  $('valL').textContent = parseFloat($('slL').value).toFixed(1) + ' m';
+  $('valTh').textContent = parseFloat($('slTh').value) + '\u00B0';
+  $('valB').textContent = parseFloat($('slB').value).toFixed(2) + ' kg/s';
+
+  $('dampRow').style.display = $('chkDamp').checked ? 'block' : 'none';
+
+  // Formula box
+  if (mode === 'spring') {
+    const omega = Math.sqrt(p.k / p.m);
+    const T = 2 * Math.PI / omega;
+    const f = 1 / T;
+    $('formulaBox').innerHTML =
+      kx('x(t) = A\\cos(\\omega t + \\phi)') + '<br>' +
+      kx('\\omega = \\sqrt{k/m}') + ' = ' + omega.toFixed(2) + ' rad/s<br>' +
+      kx('T = 2\\pi/\\omega') + ' = ' + T.toFixed(3) + ' s<br>' +
+      kx('f') + ' = ' + f.toFixed(2) + ' Hz';
+  } else {
+    const g = 9.80;
+    const omega = Math.sqrt(g / p.L);
+    const T = 2 * Math.PI / omega;
+    $('formulaBox').innerHTML =
+      kx('\\theta(t) \\approx \\theta_0\\cos(\\omega t)') + '<br>' +
+      kx('\\omega = \\sqrt{g/L}') + ' = ' + omega.toFixed(2) + ' rad/s<br>' +
+      kx('T = 2\\pi\\sqrt{L/g}') + ' = ' + T.toFixed(3) + ' s<br>' +
+      '<b style="color:#8B0029">주기는 질량에 무관!</b>';
+  }
+
+  // Info box
+  if (mode === 'spring') {
+    $('infoBox').innerHTML =
+      '<span class="lbl">x = </span><span class="val">' + x.toFixed(4) + ' m</span><br>' +
+      '<span class="lbl">v = </span><span class="val">' + v.toFixed(4) + ' m/s</span><br>' +
+      '<span class="lbl">t = </span><span class="val">' + time.toFixed(2) + ' s</span>';
+  } else {
+    $('infoBox').innerHTML =
+      '<span class="lbl">&theta; = </span><span class="val">' + (x * 180 / Math.PI).toFixed(2) + '&deg;</span><br>' +
+      '<span class="lbl">&omega; = </span><span class="val">' + v.toFixed(4) + ' rad/s</span><br>' +
+      '<span class="lbl">t = </span><span class="val">' + time.toFixed(2) + ' s</span>';
+  }
+
+  // Energy bars
+  const en = getEnergy();
+  const emax = Math.max(en.Emax, 0.001);
+  $('barK').style.width = Math.min(100, en.KE / emax * 100).toFixed(1) + '%';
+  $('barU').style.width = Math.min(100, en.PE / emax * 100).toFixed(1) + '%';
+  $('barE').style.width = Math.min(100, en.TE / emax * 100).toFixed(1) + '%';
+  $('valKE').textContent = en.KE.toFixed(4);
+  $('valUE').textContent = en.PE.toFixed(4);
+  $('valTE').textContent = en.TE.toFixed(4);
+
+  // Overlay labels
+  const cRect = cvs.parentElement.getBoundingClientRect();
+  if (mode === 'spring') {
+    $('lblTitle').innerHTML = kx('\\text{용수철-질량 SHM}');
+  } else {
+    $('lblTitle').innerHTML = kx('\\text{단진자}');
+  }
+  $('lblTitle').style.left = '10px';
+  $('lblTitle').style.top = '8px';
+
+  if (mode === 'spring') {
+    const omega = Math.sqrt(p.k / p.m);
+    $('lblEq').innerHTML = kx('x(t) = ' + p.A.toFixed(2) + '\\cos(' + omega.toFixed(2) + 't)');
+  } else {
+    const omega = Math.sqrt(9.80 / p.L);
+    $('lblEq').innerHTML = kx('\\theta(t) \\approx ' + (p.th0 * 180 / Math.PI).toFixed(0) + '^\\circ\\cos(' + omega.toFixed(2) + 't)');
+  }
+  $('lblEq').style.left = '10px';
+  $('lblEq').style.top = '28px';
+}
+
+// Drawing
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  const showPhase = $('chkPhase').checked;
+
+  // Layout: top half = animation, bottom left = x(t) graph, bottom right = phase or v(t)
+  const animH = H * 0.45;
+  const graphH = H * 0.50;
+  const graphY = animH + 10;
+  const graphW = showPhase ? W * 0.55 : W * 0.95;
+  const phaseX = W * 0.60;
+  const phaseW = W * 0.35;
+
+  if (mode === 'spring') drawSpringAnim(animH);
+  else drawPendulumAnim(animH);
+
+  drawXTGraph(20, graphY, graphW - 40, graphH - 30);
+  if (showPhase) drawPhaseSpace(phaseX, graphY, phaseW, graphH - 30);
+}
+
+function drawSpringAnim(H0) {
+  const p = getParams();
+  const eqX = W * 0.4;
+  const scale = W * 0.3 / 0.5;
+  const blockX = eqX + x * scale;
+  const blockW = 36, blockH = 36;
+  const cy = H0 * 0.5;
+
+  // Wall
+  ctx.fillStyle = '#6B7280';
+  ctx.fillRect(20, cy - 40, 10, 80);
+
+  // Spring coils
+  const nCoils = 14;
+  const sStart = 30;
+  const sEnd = blockX - blockW/2;
+  const coilLen = Math.max(2, (sEnd - sStart) / nCoils);
+  const coilAmp = 10;
+  ctx.beginPath();
+  ctx.moveTo(sStart, cy);
+  for (let i = 0; i < nCoils; i++) {
+    const sx = sStart + i * coilLen;
+    ctx.lineTo(sx + coilLen * 0.25, cy - coilAmp);
+    ctx.lineTo(sx + coilLen * 0.75, cy + coilAmp);
+    ctx.lineTo(sx + coilLen, cy);
+  }
+  ctx.strokeStyle = '#8B0029';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Block
+  ctx.fillStyle = '#2563EB';
+  ctx.beginPath();
+  ctx.roundRect(blockX - blockW/2, cy - blockH/2, blockW, blockH, 4);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('m', blockX, cy);
+
+  // Equilibrium line
+  ctx.setLineDash([4, 4]);
+  ctx.strokeStyle = '#aaa';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(eqX, cy - 50);
+  ctx.lineTo(eqX, cy + 50);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#aaa';
+  ctx.font = '11px sans-serif';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillText('x=0', eqX, cy + 65);
+
+  // Ground
+  ctx.strokeStyle = '#ddd';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(20, cy + blockH/2 + 2);
+  ctx.lineTo(W * 0.85, cy + blockH/2 + 2);
+  ctx.stroke();
+
+  // Force arrow
+  if (Math.abs(x) > 0.005) {
+    const fLen = Math.min(80, Math.abs(x) * scale * 0.6);
+    const dir = x > 0 ? -1 : 1;
+    const ay = cy;
+    ctx.beginPath();
+    ctx.moveTo(blockX + dir * 5, ay);
+    ctx.lineTo(blockX + dir * (5 + fLen), ay);
+    ctx.strokeStyle = '#8B0029';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+    // arrowhead
+    ctx.beginPath();
+    ctx.moveTo(blockX + dir * (5 + fLen), ay);
+    ctx.lineTo(blockX + dir * (5 + fLen - 8), ay - 4);
+    ctx.lineTo(blockX + dir * (5 + fLen - 8), ay + 4);
+    ctx.fillStyle = '#8B0029';
+    ctx.fill();
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText('F', blockX + dir * (5 + fLen/2), ay - 10);
+  }
+}
+
+function drawPendulumAnim(H0) {
+  const p = getParams();
+  const pivotX = W * 0.4, pivotY = 30;
+  const rodLen = Math.min(H0 - 60, 200);
+  const bobR = 16;
+
+  const bobX = pivotX + rodLen * Math.sin(x);
+  const bobY = pivotY + rodLen * Math.cos(x);
+
+  // Pivot
+  ctx.fillStyle = '#6B7280';
+  ctx.fillRect(pivotX - 30, pivotY - 5, 60, 5);
+  ctx.beginPath();
+  ctx.arc(pivotX, pivotY, 4, 0, 2 * Math.PI);
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fill();
+
+  // Vertical reference
+  ctx.setLineDash([4, 4]);
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pivotX, pivotY);
+  ctx.lineTo(pivotX, pivotY + rodLen + 30);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Rod
+  ctx.beginPath();
+  ctx.moveTo(pivotX, pivotY);
+  ctx.lineTo(bobX, bobY);
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Bob
+  ctx.beginPath();
+  ctx.arc(bobX, bobY, bobR, 0, 2 * Math.PI);
+  ctx.fillStyle = '#2563EB';
+  ctx.fill();
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('m', bobX, bobY);
+
+  // Angle arc
+  if (Math.abs(x) > 0.02) {
+    const arcR = 40;
+    ctx.beginPath();
+    if (x > 0) ctx.arc(pivotX, pivotY, arcR, Math.PI/2, Math.PI/2 - x, true);
+    else ctx.arc(pivotX, pivotY, arcR, Math.PI/2, Math.PI/2 - x);
+    ctx.strokeStyle = '#8B0029';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.fillStyle = '#8B0029';
+    ctx.font = 'italic 14px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('\u03B8', pivotX + arcR + 5, pivotY + arcR * 0.6);
+  }
+
+  // Gravity arrow
+  ctx.beginPath();
+  ctx.moveTo(bobX, bobY + bobR + 2);
+  ctx.lineTo(bobX, bobY + bobR + 40);
+  ctx.strokeStyle = '#8B0029';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(bobX, bobY + bobR + 40);
+  ctx.lineTo(bobX - 4, bobY + bobR + 32);
+  ctx.lineTo(bobX + 4, bobY + bobR + 32);
+  ctx.fillStyle = '#8B0029';
+  ctx.fill();
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('mg', bobX + 6, bobY + bobR + 30);
+}
+
+function drawXTGraph(gx, gy, gw, gh) {
+  // x(t) or theta(t) graph
+  ctx.save();
+  ctx.translate(gx, gy);
+
+  // Background
+  ctx.fillStyle = '#fafbfc';
+  ctx.fillRect(0, 0, gw, gh);
+  ctx.strokeStyle = '#e0e0e0';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(0, 0, gw, gh);
+
+  // Axes
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, gh/2);
+  ctx.lineTo(gw, gh/2);
+  ctx.stroke();
+
+  // Gridlines
+  ctx.strokeStyle = '#eee';
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(0, gh * 0.15); ctx.lineTo(gw, gh * 0.15);
+  ctx.moveTo(0, gh * 0.85); ctx.lineTo(gw, gh * 0.85);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Labels
+  ctx.fillStyle = '#6B7280';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  if (mode === 'spring') {
+    ctx.fillText('+A', -4, gh * 0.15);
+    ctx.fillText('-A', -4, gh * 0.85);
+    ctx.fillText('x(t)', -4, gh/2 - 10);
+  } else {
+    ctx.fillText('+\u03B8\u2080', -4, gh * 0.15);
+    ctx.fillText('-\u03B8\u2080', -4, gh * 0.85);
+    ctx.fillText('\u03B8(t)', -4, gh/2 - 10);
+  }
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText('t (s)', gw/2, gh + 2);
+
+  // Plot
+  if (history.length > 1) {
+    const p = getParams();
+    let amp;
+    if (mode === 'spring') amp = p.A;
+    else amp = p.th0;
+    if (amp < 0.001) amp = 0.001;
+
+    const tEnd = time;
+    const tStart = Math.max(0, tEnd - histMax);
+
+    ctx.beginPath();
+    let first = true;
+    for (const h of history) {
+      const px = ((h.t - tStart) / histMax) * gw;
+      const py = gh/2 - (h.x / amp) * (gh * 0.35);
+      if (first) { ctx.moveTo(px, py); first = false; }
+      else ctx.lineTo(px, py);
+    }
+    ctx.strokeStyle = '#2563EB';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Current point
+    const last = history[history.length - 1];
+    const cpx = ((last.t - tStart) / histMax) * gw;
+    const cpy = gh/2 - (last.x / amp) * (gh * 0.35);
+    ctx.beginPath();
+    ctx.arc(cpx, cpy, 4, 0, 2 * Math.PI);
+    ctx.fillStyle = '#8B0029';
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawPhaseSpace(px, py, pw, ph) {
+  ctx.save();
+  ctx.translate(px, py);
+
+  ctx.fillStyle = '#fafbfc';
+  ctx.fillRect(0, 0, pw, ph);
+  ctx.strokeStyle = '#e0e0e0';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(0, 0, pw, ph);
+
+  // Axes
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, ph/2); ctx.lineTo(pw, ph/2);
+  ctx.moveTo(pw/2, 0); ctx.lineTo(pw/2, ph);
+  ctx.stroke();
+
+  ctx.fillStyle = '#6B7280';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText(mode === 'spring' ? 'x' : '\u03B8', pw - 12, ph/2 + 3);
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(mode === 'spring' ? 'v' : '\u03C9', pw/2 + 4, 10);
+
+  if (history.length > 1) {
+    const p = getParams();
+    let xAmp, vAmp;
+    if (mode === 'spring') {
+      xAmp = p.A || 0.01;
+      vAmp = Math.sqrt(p.k / p.m) * p.A || 0.01;
+    } else {
+      xAmp = p.th0 || 0.01;
+      vAmp = Math.sqrt(9.80 / p.L) * p.th0 || 0.01;
+    }
+
+    ctx.beginPath();
+    let first = true;
+    for (const h of history) {
+      const hx = pw/2 + (h.x / xAmp) * (pw * 0.4);
+      const hy = ph/2 - (h.v / vAmp) * (ph * 0.4);
+      if (first) { ctx.moveTo(hx, hy); first = false; }
+      else ctx.lineTo(hx, hy);
+    }
+    ctx.strokeStyle = '#8B0029';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Current point
+    const last = history[history.length - 1];
+    const lx = pw/2 + (last.x / xAmp) * (pw * 0.4);
+    const ly = ph/2 - (last.v / vAmp) * (ph * 0.4);
+    ctx.beginPath();
+    ctx.arc(lx, ly, 4, 0, 2 * Math.PI);
+    ctx.fillStyle = '#8B0029';
+    ctx.fill();
+  }
+
+  // Title
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText('위상 공간', pw/2, 2);
+
+  ctx.restore();
+}
+
+let lastFrame = 0;
+function loop(ts) {
+  if (!running) return;
+  if (!lastFrame) lastFrame = ts;
+  const elapsed = (ts - lastFrame) / 1000;
+  lastFrame = ts;
+
+  const stepsPerFrame = Math.min(16, Math.round(elapsed / dt));
+  for (let i = 0; i < stepsPerFrame; i++) step();
+
+  updateUI();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+// Slider listeners
+['slK','slM','slA','slL','slTh','slB'].forEach(id => {
+  $(id).addEventListener('input', () => {
+    if (!running) resetSim();
+    else updateUI();
+  });
+});
+$('chkDamp').addEventListener('change', () => {
+  $('dampRow').style.display = $('chkDamp').checked ? 'block' : 'none';
+  if (!running) resetSim();
+});
+$('chkPhase').addEventListener('change', () => draw());
+
+// Init
+resize();
+resetSim();
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 400" font-family="sans-serif">
+  <defs>
+    <marker id="dArrow" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
+      <path d="M0,0 L6,2.5 L0,5 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- Axes -->
+  <line x1="60" y1="190" x2="700" y2="190" stroke="#6B7280" stroke-width="1.5" marker-end="url(#dArrow)"/>
+  <line x1="60" y1="350" x2="60" y2="30" stroke="#6B7280" stroke-width="1.5" marker-end="url(#dArrow)"/>
+  <text x="710" y="194" font-size="14" fill="#6B7280" font-style="italic">t</text>
+  <text x="45" y="28" font-size="14" fill="#6B7280" font-style="italic">x</text>
+  <text x="45" y="197" font-size="12" fill="#6B7280">0</text>
+
+  <!-- Amplitude labels -->
+  <text x="25" y="60" font-size="12" fill="#8B0029">+x<tspan baseline-shift="sub" font-size="9">m</tspan></text>
+  <text x="25" y="325" font-size="12" fill="#8B0029">−x<tspan baseline-shift="sub" font-size="9">m</tspan></text>
+
+  <!-- Upper envelope: x_m * e^(-bt/2m) -->
+  <path d="M60,55 Q150,65 250,95 Q350,125 450,150 Q550,165 680,180" fill="none" stroke="#8B0029" stroke-width="2" stroke-dasharray="6 3"/>
+
+  <!-- Lower envelope: -x_m * e^(-bt/2m) -->
+  <path d="M60,325 Q150,315 250,285 Q350,255 450,230 Q550,215 680,200" fill="none" stroke="#8B0029" stroke-width="2" stroke-dasharray="6 3"/>
+
+  <!-- Damped oscillation curve -->
+  <path d="M60,55 Q80,55 95,100 Q110,190 130,280 Q145,320 160,325 Q170,315 185,260 Q200,190 220,120 Q230,82 245,78 Q255,85 270,140 Q285,190 305,250 Q315,275 330,278 Q340,270 355,230 Q370,190 390,150 Q400,130 415,128 Q425,133 440,165 Q455,190 475,218 Q485,230 500,231 Q510,228 525,208 Q540,190 555,172 Q565,165 575,164 Q585,168 600,180 Q610,190 625,198 Q630,200 640,200 Q650,197 660,193 Q670,190 680,189" fill="none" stroke="#2563EB" stroke-width="2"/>
+
+  <!-- Labels -->
+  <text x="450" y="45" font-size="14" fill="#8B0029" font-style="italic">x<tspan baseline-shift="sub" font-size="10">m</tspan>e<tspan baseline-shift="super" font-size="10">−bt/2m</tspan></text>
+  <line x1="448" y1="48" x2="400" y2="105" stroke="#8B0029" stroke-width="1" stroke-dasharray="3 2"/>
+
+  <text x="450" y="355" font-size="14" fill="#8B0029" font-style="italic">−x<tspan baseline-shift="sub" font-size="10">m</tspan>e<tspan baseline-shift="super" font-size="10">−bt/2m</tspan></text>
+  <line x1="448" y1="348" x2="400" y2="270" stroke="#8B0029" stroke-width="1" stroke-dasharray="3 2"/>
+
+  <text x="350" y="375" font-size="13" fill="#2563EB" font-weight="bold">x(t) = x<tspan baseline-shift="sub" font-size="9">m</tspan>e<tspan baseline-shift="super" font-size="9">−bt/2m</tspan>cos(ω't + ϕ)</text>
+
+  <!-- Period markers -->
+  <line x1="60" y1="340" x2="60" y2="345" stroke="#6B7280" stroke-width="1"/>
+  <line x1="160" y1="340" x2="160" y2="345" stroke="#6B7280" stroke-width="1"/>
+  <line x1="245" y1="340" x2="245" y2="345" stroke="#6B7280" stroke-width="1"/>
+  <line x1="330" y1="340" x2="330" y2="345" stroke="#6B7280" stroke-width="1"/>
+</svg>

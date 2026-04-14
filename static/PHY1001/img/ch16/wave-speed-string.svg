@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" font-family="sans-serif">
+  <defs>
+    <marker id="arrR2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#8B0029"/>
+    </marker>
+    <marker id="arrB2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#2563EB"/>
+    </marker>
+    <marker id="arrG2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <text x="350" y="30" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a1a">줄 위의 펄스 (펄스와 함께 움직이는 기준틀)</text>
+
+  <!-- String with pulse -->
+  <!-- Straight part left -->
+  <line x1="40" y1="220" x2="220" y2="220" stroke="#1a1a1a" stroke-width="2.5"/>
+  <!-- Pulse arc -->
+  <path d="M220,220 Q280,120 340,120 Q400,120 460,220" fill="none" stroke="#1a1a1a" stroke-width="2.5"/>
+  <!-- Straight part right -->
+  <line x1="460" y1="220" x2="640" y2="220" stroke="#1a1a1a" stroke-width="2.5"/>
+
+  <!-- Arc element at top of pulse -->
+  <path d="M305,125 Q340,110 375,125" fill="none" stroke="#8B0029" stroke-width="3"/>
+  <text x="340" y="105" text-anchor="middle" font-size="13" fill="#8B0029" font-weight="bold">&#916;l</text>
+
+  <!-- Center of curvature and radius -->
+  <circle cx="340" cy="250" r="3" fill="#6B7280"/>
+  <text x="350" y="265" font-size="12" fill="#6B7280" font-style="italic">O</text>
+
+  <!-- Radius lines -->
+  <line x1="340" y1="250" x2="305" y2="125" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="340" y1="250" x2="375" y2="125" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="305" y="195" font-size="14" font-style="italic" fill="#6B7280">R</text>
+
+  <!-- Angle theta -->
+  <path d="M340,230 Q330,225 325,218" fill="none" stroke="#6B7280" stroke-width="1"/>
+  <text x="315" y="230" font-size="13" font-style="italic" fill="#6B7280">&#952;</text>
+  <path d="M340,230 Q350,225 355,218" fill="none" stroke="#6B7280" stroke-width="1"/>
+  <text x="358" y="230" font-size="13" font-style="italic" fill="#6B7280">&#952;</text>
+
+  <!-- Tension arrows at element ends -->
+  <line x1="305" y1="125" x2="270" y2="145" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR2)"/>
+  <text x="255" y="155" font-size="14" font-style="italic" fill="#8B0029" font-weight="bold">&#964;</text>
+
+  <line x1="375" y1="125" x2="410" y2="145" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR2)"/>
+  <text x="418" y="155" font-size="14" font-style="italic" fill="#8B0029" font-weight="bold">&#964;</text>
+
+  <!-- Velocity arrows (string moving left in pulse frame) -->
+  <line x1="150" y1="220" x2="100" y2="220" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB2)"/>
+  <text x="125" y="240" text-anchor="middle" font-size="13" font-style="italic" fill="#2563EB" font-weight="bold">v</text>
+
+  <line x1="560" y1="220" x2="510" y2="220" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB2)"/>
+  <text x="535" y="240" text-anchor="middle" font-size="13" font-style="italic" fill="#2563EB" font-weight="bold">v</text>
+
+  <!-- Net force arrow (downward toward center) -->
+  <line x1="340" y1="118" x2="340" y2="165" stroke="#8B0029" stroke-width="2" marker-end="url(#arrR2)" stroke-dasharray="none"/>
+  <text x="355" y="150" font-size="13" fill="#8B0029" font-weight="bold">F</text>
+
+  <!-- Derivation box -->
+  <rect x="80" y="290" width="540" height="90" rx="8" fill="#f8f0f2" stroke="#e0c0c8" stroke-width="1"/>
+  <text x="350" y="315" text-anchor="middle" font-size="13" fill="#1a1a1a">
+    <tspan font-weight="bold" fill="#8B0029">F = ma :</tspan>
+    <tspan dx="10" font-style="italic">&#964; &#916;l/R = (&#956; &#916;l) v</tspan><tspan font-size="10" dy="-5">2</tspan><tspan dy="5">/R</tspan>
+  </text>
+  <text x="350" y="345" text-anchor="middle" font-size="16" fill="#8B0029" font-weight="bold" font-style="italic">
+    v = &#8730;(&#964;/&#956;)
+  </text>
+  <text x="350" y="370" text-anchor="middle" font-size="12" fill="#6B7280">
+    &#964; : 장력(tension), &#956; : 선밀도(linear density)
+  </text>
+</svg>

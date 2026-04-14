@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 420" font-family="sans-serif">
+  <defs>
+    <marker id="dfArrG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 8 3, 0 6"/>
+    </marker>
+  </defs>
+
+  <!-- ===== Left: Damped Oscillation ===== -->
+  <text x="180" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">감쇠진동</text>
+
+  <g transform="translate(40, 50)">
+    <!-- Axes -->
+    <line x1="0" y1="150" x2="310" y2="150" stroke="#6B7280" stroke-width="1.5" marker-end="url(#dfArrG)"/>
+    <line x1="0" y1="280" x2="0" y2="20" stroke="#6B7280" stroke-width="1.5" marker-end="url(#dfArrG)"/>
+    <text x="315" y="155" font-size="13" font-style="italic" fill="#6B7280">t</text>
+    <text x="-8" y="18" font-size="13" font-style="italic" fill="#6B7280">x</text>
+
+    <!-- +x_m and -x_m -->
+    <text x="-25" y="55" font-size="12" font-style="italic" fill="#6B7280">+x<tspan font-size="8" baseline-shift="sub">m</tspan></text>
+    <text x="-25" y="250" font-size="12" font-style="italic" fill="#6B7280">-x<tspan font-size="8" baseline-shift="sub">m</tspan></text>
+
+    <!-- Envelope: x_m * e^(-bt/2m) (upper) -->
+    <path d="M 0,50 C 60,60 120,80 180,100 C 220,112 260,125 300,135" fill="none" stroke="#8B0029" stroke-width="1.5" stroke-dasharray="6 4"/>
+    <!-- Envelope (lower) -->
+    <path d="M 0,250 C 60,240 120,220 180,200 C 220,188 260,175 300,165" fill="none" stroke="#8B0029" stroke-width="1.5" stroke-dasharray="6 4"/>
+
+    <!-- Damped cosine: approximate as decaying oscillation -->
+    <path d="M 0,50
+      C 8,50 12,75 20,100 C 28,125 32,150 40,175 C 48,200 52,230 60,245
+      C 68,245 72,225 80,200 C 88,175 92,150 100,125 C 108,100 112,78 120,65
+      C 128,65 132,82 140,105 C 148,128 152,150 160,172 C 168,194 172,212 180,220
+      C 188,220 192,205 200,188 C 208,171 212,155 220,140 C 228,125 232,112 240,107
+      C 248,107 252,118 260,132 C 268,146 272,155 280,163 C 288,171 292,176 300,175"
+      fill="none" stroke="#2563EB" stroke-width="2.5"/>
+
+    <!-- Labels -->
+    <text x="140" y="42" font-size="12" fill="#8B0029" font-style="italic">x<tspan font-size="8" baseline-shift="sub">m</tspan>e<tspan font-size="9" baseline-shift="super">-bt/2m</tspan></text>
+    <text x="140" y="275" font-size="12" fill="#8B0029" font-style="italic">-x<tspan font-size="8" baseline-shift="sub">m</tspan>e<tspan font-size="9" baseline-shift="super">-bt/2m</tspan></text>
+
+    <!-- Formula -->
+    <text x="150" y="310" text-anchor="middle" font-size="13" fill="#2563EB" font-weight="bold" font-style="italic">x(t) = x<tspan font-size="9" baseline-shift="sub">m</tspan>e<tspan font-size="10" baseline-shift="super">-bt/2m</tspan> cos(&#x3C9;'t + &#x3C6;)</text>
+    <text x="150" y="330" text-anchor="middle" font-size="12" fill="#6B7280">&#x3C9;' = &#x221A;(k/m - b&#xB2;/4m&#xB2;)</text>
+  </g>
+
+  <!-- ===== Right: Resonance Curve ===== -->
+  <text x="560" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">공명 곡선 (강제진동)</text>
+
+  <g transform="translate(400, 50)">
+    <!-- Axes -->
+    <line x1="0" y1="260" x2="310" y2="260" stroke="#6B7280" stroke-width="1.5" marker-end="url(#dfArrG)"/>
+    <line x1="0" y1="280" x2="0" y2="10" stroke="#6B7280" stroke-width="1.5" marker-end="url(#dfArrG)"/>
+    <text x="315" y="265" font-size="13" font-style="italic" fill="#6B7280">&#x3C9;<tspan font-size="9" baseline-shift="sub">d</tspan></text>
+    <text x="-10" y="8" font-size="13" font-style="italic" fill="#6B7280">A</text>
+
+    <!-- omega_0 marker -->
+    <line x1="150" y1="255" x2="150" y2="265" stroke="#6B7280" stroke-width="1"/>
+    <text x="150" y="280" text-anchor="middle" font-size="12" font-style="italic" fill="#6B7280">&#x3C9;<tspan font-size="8" baseline-shift="sub">0</tspan></text>
+    <line x1="150" y1="20" x2="150" y2="260" stroke="#6B7280" stroke-width="0.5" stroke-dasharray="3 3"/>
+
+    <!-- Curve 1: small damping (sharp, tall peak) -->
+    <path d="M 5,255 C 20,252 50,248 80,240 C 100,232 120,210 135,140 C 142,100 148,40 150,30 C 152,40 158,100 165,140 C 180,210 200,240 220,248 C 250,254 280,256 305,257"
+      fill="none" stroke="#8B0029" stroke-width="2.5"/>
+    <text x="200" y="70" font-size="12" fill="#8B0029" font-weight="bold">b 작음</text>
+
+    <!-- Curve 2: medium damping (broader, lower peak) -->
+    <path d="M 5,252 C 20,248 50,240 80,225 C 100,210 120,180 135,140 C 142,118 148,95 150,90 C 152,95 158,118 165,140 C 180,180 200,210 220,225 C 250,244 280,250 305,253"
+      fill="none" stroke="#2563EB" stroke-width="2"/>
+    <text x="210" y="130" font-size="12" fill="#2563EB" font-weight="bold">b 중간</text>
+
+    <!-- Curve 3: large damping (very broad, low peak) -->
+    <path d="M 5,248 C 20,244 50,235 80,218 C 100,205 120,190 135,178 C 142,172 148,168 150,167 C 152,168 158,172 165,178 C 180,190 200,205 220,218 C 250,238 280,246 305,250"
+      fill="none" stroke="#6B7280" stroke-width="1.5"/>
+    <text x="218" y="180" font-size="12" fill="#6B7280" font-weight="bold">b 큼</text>
+
+    <!-- Peak annotation -->
+    <circle cx="150" cy="30" r="4" fill="#8B0029"/>
+    <text x="175" y="24" font-size="12" fill="#8B0029" font-weight="bold">공명!</text>
+    <text x="175" y="40" font-size="11" fill="#8B0029">&#x3C9;<tspan font-size="8" baseline-shift="sub">d</tspan> = &#x3C9;<tspan font-size="8" baseline-shift="sub">0</tspan></text>
+
+    <!-- Formula -->
+    <text x="150" y="310" text-anchor="middle" font-size="13" fill="#8B0029" font-weight="bold">&#x3C9;<tspan font-size="9" baseline-shift="sub">d</tspan> &#x2248; &#x3C9;<tspan font-size="9" baseline-shift="sub">0</tspan> 일 때 진폭 최대</text>
+    <text x="150" y="330" text-anchor="middle" font-size="12" fill="#6B7280">감쇠가 작을수록 공명 peak 가 날카롭다</text>
+  </g>
+</svg>

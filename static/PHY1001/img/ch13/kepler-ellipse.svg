@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -6 750 436" font-family="sans-serif">
+  <defs>
+    <marker id="keArrR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="keArrB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="keArrG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+  </defs>
+
+  <!-- Ellipse -->
+  <ellipse cx="375" cy="210" rx="280" ry="160" fill="none" stroke="#8B0029" stroke-width="2"/>
+
+  <!-- Center of ellipse -->
+  <circle cx="375" cy="210" r="3" fill="#6B7280"/>
+
+  <!-- Sun at focus F (left focus) -->
+  <!-- c = sqrt(a^2 - b^2) = sqrt(280^2 - 160^2) = sqrt(52800) ~ 230 -->
+  <circle cx="145" cy="210" r="18" fill="#8B0029"/>
+  <text x="145" y="250" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">태양 (M)</text>
+
+  <!-- Other focus F' -->
+  <circle cx="605" cy="210" r="4" fill="none" stroke="#6B7280" stroke-width="2"/>
+  <text x="605" y="240" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">F'</text>
+
+  <!-- Semi-major axis a -->
+  <line x1="95" y1="370" x2="655" y2="370" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="95" y1="360" x2="95" y2="380" stroke="#6B7280" stroke-width="1"/>
+  <line x1="655" y1="360" x2="655" y2="380" stroke="#6B7280" stroke-width="1"/>
+  <text x="375" y="395" text-anchor="middle" font-size="14" fill="#6B7280" font-weight="bold">2<tspan font-style="italic">a</tspan></text>
+
+  <!-- Semi-major axis label (half) -->
+  <line x1="375" y1="210" x2="655" y2="210" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="515" y="200" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">a</text>
+
+  <!-- Semi-minor axis b -->
+  <line x1="375" y1="50" x2="375" y2="210" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="390" y="130" font-size="14" fill="#6B7280" font-style="italic">b</text>
+
+  <!-- Perihelion (closest) -->
+  <circle cx="95" cy="210" r="5" fill="#8B0029"/>
+  <text x="95" y="280" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">근일점</text>
+  <text x="95" y="298" text-anchor="middle" font-size="14" fill="#8B0029">(perihelion)</text>
+
+  <!-- Rp label -->
+  <line x1="95" y1="320" x2="145" y2="320" stroke="#8B0029" stroke-width="2"/>
+  <line x1="95" y1="313" x2="95" y2="327" stroke="#8B0029" stroke-width="1"/>
+  <line x1="145" y1="313" x2="145" y2="327" stroke="#8B0029" stroke-width="1"/>
+  <text x="120" y="342" text-anchor="middle" font-size="14" fill="#8B0029" font-style="italic">R<tspan font-size="10" baseline-shift="sub">p</tspan></text>
+
+  <!-- Aphelion (farthest) -->
+  <circle cx="655" cy="210" r="5" fill="#2563EB"/>
+  <text x="655" y="280" text-anchor="middle" font-size="14" fill="#2563EB" font-weight="bold">원일점</text>
+  <text x="655" y="298" text-anchor="middle" font-size="14" fill="#2563EB">(aphelion)</text>
+
+  <!-- Ra label -->
+  <line x1="145" y1="320" x2="655" y2="320" stroke="#2563EB" stroke-width="2"/>
+  <line x1="655" y1="313" x2="655" y2="327" stroke="#2563EB" stroke-width="1"/>
+  <text x="400" y="342" text-anchor="middle" font-size="14" fill="#2563EB" font-style="italic">R<tspan font-size="10" baseline-shift="sub">a</tspan></text>
+
+  <!-- Planet -->
+  <circle cx="190" cy="87" r="8" fill="#2563EB"/>
+  <text x="210" y="80" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">m</text>
+
+  <!-- Velocity vector at planet -->
+  <line x1="190" y1="87" x2="240" y2="55" stroke="#2563EB" stroke-width="2.5" marker-end="url(#keArrB)"/>
+  <text x="250" y="52" font-size="14" fill="#2563EB" font-style="italic" font-weight="bold">v</text>
+
+  <!-- ea label -->
+  <line x1="375" y1="210" x2="145" y2="210" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="260" y="228" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">ea</text>
+
+  <!-- Kepler 1st law text -->
+  <text x="375" y="28" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">케플러 제1법칙: 모든 행성은 타원 궤도를 그린다</text>
+</svg>

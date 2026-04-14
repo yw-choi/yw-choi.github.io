@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="sans-serif">
+  <defs>
+    <marker id="arrR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="arrB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="arrG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="200" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#8B0029">횡파 (Transverse wave)</text>
+  <text x="600" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#8B0029">종파 (Longitudinal wave)</text>
+
+  <!-- === Transverse Wave (Left) === -->
+  <g transform="translate(40, 60)">
+    <!-- Equilibrium line -->
+    <line x1="0" y1="150" x2="320" y2="150" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+    <!-- Wave shape -->
+    <path d="M 0,150 C 20,150 30,70 50,70 C 70,70 80,150 100,150 C 120,150 130,230 150,230 C 170,230 180,150 200,150 C 220,150 230,70 250,70 C 270,70 280,150 300,150" fill="none" stroke="#8B0029" stroke-width="2.5"/>
+
+    <!-- Particles on wave -->
+    <circle cx="0" cy="150" r="5" fill="#F3F4F6" stroke="#6B7280" stroke-width="1.5"/>
+    <circle cx="50" cy="70" r="5" fill="#F3F4F6" stroke="#6B7280" stroke-width="1.5"/>
+    <circle cx="100" cy="150" r="5" fill="#F3F4F6" stroke="#6B7280" stroke-width="1.5"/>
+    <circle cx="150" cy="230" r="5" fill="#F3F4F6" stroke="#6B7280" stroke-width="1.5"/>
+    <circle cx="200" cy="150" r="5" fill="#F3F4F6" stroke="#6B7280" stroke-width="1.5"/>
+    <circle cx="250" cy="70" r="5" fill="#F3F4F6" stroke="#6B7280" stroke-width="1.5"/>
+    <circle cx="300" cy="150" r="5" fill="#F3F4F6" stroke="#6B7280" stroke-width="1.5"/>
+
+    <!-- Velocity arrows (vertical, transverse) -->
+    <line x1="50" y1="70" x2="50" y2="40" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB)"/>
+    <line x1="150" y1="230" x2="150" y2="260" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB)"/>
+    <line x1="250" y1="70" x2="250" y2="40" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB)"/>
+
+    <!-- Propagation arrow -->
+    <line x1="120" y1="310" x2="210" y2="310" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+    <text x="165" y="335" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">v (전파 방향)</text>
+
+    <!-- Oscillation label -->
+    <text x="50" y="28" text-anchor="middle" font-size="12" fill="#2563EB" font-style="italic">진동 방향</text>
+    <text x="165" y="368" text-anchor="middle" font-size="12" fill="#6B7280">진동 방향 &#8869; 전파 방향</text>
+  </g>
+
+  <!-- === Longitudinal Wave (Right) === -->
+  <g transform="translate(420, 60)">
+    <!-- Background guide line -->
+    <line x1="0" y1="150" x2="340" y2="150" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+    <!-- Spring coils -->
+    <g stroke="#8B0029" stroke-width="1.8">
+      <!-- Compression 1 -->
+      <line x1="8" y1="120" x2="8" y2="180"/>
+      <line x1="14" y1="120" x2="14" y2="180"/>
+      <line x1="20" y1="120" x2="20" y2="180"/>
+      <line x1="26" y1="120" x2="26" y2="180"/>
+      <line x1="32" y1="120" x2="32" y2="180"/>
+      <line x1="38" y1="120" x2="38" y2="180"/>
+      <!-- Rarefaction 1 -->
+      <line x1="55" y1="120" x2="55" y2="180"/>
+      <line x1="72" y1="120" x2="72" y2="180"/>
+      <line x1="89" y1="120" x2="89" y2="180"/>
+      <!-- Compression 2 -->
+      <line x1="108" y1="120" x2="108" y2="180"/>
+      <line x1="114" y1="120" x2="114" y2="180"/>
+      <line x1="120" y1="120" x2="120" y2="180"/>
+      <line x1="126" y1="120" x2="126" y2="180"/>
+      <line x1="132" y1="120" x2="132" y2="180"/>
+      <line x1="138" y1="120" x2="138" y2="180"/>
+      <!-- Rarefaction 2 -->
+      <line x1="155" y1="120" x2="155" y2="180"/>
+      <line x1="172" y1="120" x2="172" y2="180"/>
+      <line x1="189" y1="120" x2="189" y2="180"/>
+      <!-- Compression 3 -->
+      <line x1="208" y1="120" x2="208" y2="180"/>
+      <line x1="214" y1="120" x2="214" y2="180"/>
+      <line x1="220" y1="120" x2="220" y2="180"/>
+      <line x1="226" y1="120" x2="226" y2="180"/>
+      <line x1="232" y1="120" x2="232" y2="180"/>
+      <line x1="238" y1="120" x2="238" y2="180"/>
+      <!-- Rarefaction 3 -->
+      <line x1="255" y1="120" x2="255" y2="180"/>
+      <line x1="272" y1="120" x2="272" y2="180"/>
+      <line x1="289" y1="120" x2="289" y2="180"/>
+      <!-- End -->
+      <line x1="308" y1="120" x2="308" y2="180"/>
+      <line x1="314" y1="120" x2="314" y2="180"/>
+      <line x1="320" y1="120" x2="320" y2="180"/>
+    </g>
+
+    <!-- Labels -->
+    <text x="23" y="105" text-anchor="middle" font-size="11" fill="#8B0029" font-weight="bold">압축</text>
+    <text x="72" y="105" text-anchor="middle" font-size="11" fill="#6B7280">팽창</text>
+    <text x="123" y="105" text-anchor="middle" font-size="11" fill="#8B0029" font-weight="bold">압축</text>
+    <text x="172" y="105" text-anchor="middle" font-size="11" fill="#6B7280">팽창</text>
+    <text x="223" y="105" text-anchor="middle" font-size="11" fill="#8B0029" font-weight="bold">압축</text>
+    <text x="272" y="105" text-anchor="middle" font-size="11" fill="#6B7280">팽창</text>
+
+    <!-- Horizontal oscillation arrows -->
+    <line x1="55" y1="210" x2="85" y2="210" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB)"/>
+    <line x1="55" y1="210" x2="25" y2="210" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB)"/>
+    <text x="55" y="230" text-anchor="middle" font-size="12" fill="#2563EB" font-style="italic">진동 방향</text>
+
+    <!-- Propagation arrow -->
+    <line x1="120" y1="310" x2="210" y2="310" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+    <text x="165" y="335" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">v (전파 방향)</text>
+
+    <text x="165" y="368" text-anchor="middle" font-size="12" fill="#6B7280">진동 방향 &#8741; 전파 방향</text>
+  </g>
+</svg>

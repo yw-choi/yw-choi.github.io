@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 420" font-family="sans-serif">
+  <defs>
+    <marker id="arrR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="arrB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="arrG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+  </defs>
+
+  <!-- Container wall (right side) -->
+  <rect x="480" y="40" width="20" height="320" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <!-- Hatching on wall -->
+  <g stroke="#6B7280" stroke-width="1">
+    <line x1="485" y1="50" x2="500" y2="35"/>
+    <line x1="485" y1="80" x2="500" y2="65"/>
+    <line x1="485" y1="110" x2="500" y2="95"/>
+    <line x1="485" y1="140" x2="500" y2="125"/>
+    <line x1="485" y1="170" x2="500" y2="155"/>
+    <line x1="485" y1="200" x2="500" y2="185"/>
+    <line x1="485" y1="230" x2="500" y2="215"/>
+    <line x1="485" y1="260" x2="500" y2="245"/>
+    <line x1="485" y1="290" x2="500" y2="275"/>
+    <line x1="485" y1="320" x2="500" y2="305"/>
+    <line x1="485" y1="350" x2="500" y2="335"/>
+  </g>
+  <text x="510" y="200" font-size="14" fill="#6B7280" text-anchor="start" transform="rotate(90,510,200)">container wall</text>
+
+  <!-- Molecule approaching -->
+  <circle cx="250" cy="180" r="14" fill="#F3F4F6" stroke="#8B0029" stroke-width="2"/>
+  <text x="250" y="185" font-size="13" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+
+  <!-- Incoming velocity arrow -->
+  <line x1="280" y1="168" x2="440" y2="128" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB)"/>
+  <text x="370" y="118" font-size="14" fill="#2563EB" font-style="italic" font-weight="bold">v</text>
+
+  <!-- Normal to wall (dashed) -->
+  <line x1="480" y1="100" x2="280" y2="100" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="300" y="92" font-size="12" fill="#6B7280">normal</text>
+
+  <!-- Molecule leaving (after bounce) -->
+  <circle cx="250" cy="280" r="14" fill="#F3F4F6" stroke="#8B0029" stroke-width="2" stroke-dasharray="4 3"/>
+  <text x="250" y="285" font-size="13" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+
+  <!-- Outgoing velocity arrow -->
+  <line x1="440" y1="232" x2="280" y2="268" stroke="#2563EB" stroke-width="2.5" stroke-dasharray="4 3" marker-end="url(#arrB)"/>
+  <text x="370" y="268" font-size="14" fill="#2563EB" font-style="italic" font-weight="bold">v</text>
+
+  <!-- Collision point on wall -->
+  <circle cx="480" cy="180" r="5" fill="#8B0029"/>
+
+  <!-- x-component arrows at collision point -->
+  <!-- Before: +v_x pointing right -->
+  <line x1="370" y1="140" x2="460" y2="140" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <text x="400" y="134" font-size="13" fill="#8B0029" font-style="italic">+v<tspan font-size="10" baseline-shift="sub">x</tspan></text>
+
+  <!-- After: -v_x pointing left -->
+  <line x1="460" y1="220" x2="370" y2="220" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <text x="395" y="240" font-size="13" fill="#8B0029" font-style="italic">-v<tspan font-size="10" baseline-shift="sub">x</tspan></text>
+
+  <!-- Momentum transfer annotation -->
+  <text x="80" y="370" font-size="14" fill="#8B0029" font-weight="bold">
+    <tspan font-style="italic">&#x394;p</tspan><tspan font-size="10" baseline-shift="sub">x</tspan> = -2<tspan font-style="italic">mv</tspan><tspan font-size="10" baseline-shift="sub">x</tspan>
+  </text>
+  <text x="80" y="392" font-size="12" fill="#6B7280">(wall receives +2mv<tspan font-size="9" baseline-shift="sub">x</tspan>)</text>
+
+  <!-- Title -->
+  <text x="40" y="35" font-size="18" fill="#8B0029" font-weight="bold">Molecule-Wall Collision</text>
+</svg>

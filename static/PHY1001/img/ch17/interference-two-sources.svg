@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 410" font-family="sans-serif">
+  <rect width="700" height="410" fill="white"/>
+
+  <text x="350" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#8B0029">두 점음원의 간섭</text>
+
+  <!-- Source S1 -->
+  <circle cx="150" cy="130" r="8" fill="#8B0029"/>
+  <text x="150" y="115" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">S&#x2081;</text>
+
+  <!-- Source S2 -->
+  <circle cx="150" cy="270" r="8" fill="#2563EB"/>
+  <text x="150" y="300" text-anchor="middle" font-size="14" font-weight="bold" fill="#2563EB">S&#x2082;</text>
+
+  <!-- Wavefronts from S1 -->
+  <circle cx="150" cy="130" r="45" fill="none" stroke="#8B002930" stroke-width="1"/>
+  <circle cx="150" cy="130" r="90" fill="none" stroke="#8B002930" stroke-width="1"/>
+  <circle cx="150" cy="130" r="135" fill="none" stroke="#8B002930" stroke-width="1"/>
+  <circle cx="150" cy="130" r="180" fill="none" stroke="#8B002930" stroke-width="1"/>
+  <circle cx="150" cy="130" r="225" fill="none" stroke="#8B002930" stroke-width="1"/>
+
+  <!-- Wavefronts from S2 -->
+  <circle cx="150" cy="270" r="45" fill="none" stroke="#2563EB30" stroke-width="1"/>
+  <circle cx="150" cy="270" r="90" fill="none" stroke="#2563EB30" stroke-width="1"/>
+  <circle cx="150" cy="270" r="135" fill="none" stroke="#2563EB30" stroke-width="1"/>
+  <circle cx="150" cy="270" r="180" fill="none" stroke="#2563EB30" stroke-width="1"/>
+  <circle cx="150" cy="270" r="225" fill="none" stroke="#2563EB30" stroke-width="1"/>
+
+  <!-- Point P -->
+  <circle cx="530" cy="140" r="5" fill="#1a1a1a"/>
+  <text x="545" y="145" font-size="14" font-weight="bold" fill="#1a1a1a">P</text>
+
+  <!-- Path L1 -->
+  <line x1="150" y1="130" x2="530" y2="140" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="340" y="118" text-anchor="middle" font-size="13" fill="#8B0029" font-style="italic">L&#x2081;</text>
+
+  <!-- Path L2 -->
+  <line x1="150" y1="270" x2="530" y2="140" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="370" y="232" text-anchor="middle" font-size="13" fill="#2563EB" font-style="italic">L&#x2082;</text>
+
+  <!-- D label -->
+  <line x1="130" y1="130" x2="130" y2="270" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="115" y="205" text-anchor="middle" font-size="13" fill="#6B7280" font-style="italic">D</text>
+
+  <!-- Explanation box -->
+  <rect x="380" y="280" width="300" height="105" rx="8" fill="#f8f0f2" stroke="#e0c0c8" stroke-width="1"/>
+  <text x="530" y="305" text-anchor="middle" font-size="12" fill="#1a1a1a" font-weight="bold">경로차와 간섭 조건</text>
+  <text x="530" y="325" text-anchor="middle" font-size="12" fill="#1a1a1a">&#x0394;L = |L&#x2082; &#x2212; L&#x2081;|</text>
+  <text x="530" y="348" text-anchor="middle" font-size="12" fill="#8B0029" font-weight="bold">보강: &#x0394;L/&#x03BB; = 0, 1, 2, ...</text>
+  <text x="530" y="371" text-anchor="middle" font-size="12" fill="#2563EB" font-weight="bold">상쇄: &#x0394;L/&#x03BB; = 0.5, 1.5, 2.5, ...</text>
+</svg>

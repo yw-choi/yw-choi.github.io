@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 465" font-family="sans-serif">
+  <defs>
+    <marker id="arrR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="arrG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="350" y="35" text-anchor="middle" font-size="18" font-weight="bold" fill="#8B0029">깊이에 따른 압력 변화</text>
+
+  <!-- Container walls -->
+  <rect x="150" y="60" width="280" height="340" rx="4" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+
+  <!-- Fluid with gradient (darker at bottom) -->
+  <linearGradient id="fluidGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#93C5FD" stop-opacity="0.5"/>
+    <stop offset="100%" stop-color="#1E40AF" stop-opacity="0.7"/>
+  </linearGradient>
+  <rect x="152" y="100" width="276" height="298" fill="url(#fluidGrad)"/>
+
+  <!-- Surface label -->
+  <line x1="150" y1="100" x2="430" y2="100" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="445" y="104" font-size="14" fill="#2563EB" font-style="italic">수면</text>
+
+  <!-- Air label -->
+  <text x="290" y="85" text-anchor="middle" font-size="14" fill="#6B7280">공기 (p₀)</text>
+
+  <!-- Pressure arrows on left side (increasing with depth) -->
+  <line x1="120" y1="140" x2="155" y2="140" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <line x1="110" y1="210" x2="155" y2="210" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <line x1="95" y1="280" x2="155" y2="280" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <line x1="80" y1="350" x2="155" y2="350" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+
+  <!-- Pressure arrows on right side -->
+  <line x1="460" y1="140" x2="425" y2="140" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <line x1="470" y1="210" x2="425" y2="210" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <line x1="485" y1="280" x2="425" y2="280" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <line x1="500" y1="350" x2="425" y2="350" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+
+  <!-- Depth dimension line -->
+  <line x1="520" y1="100" x2="520" y2="350" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="515" y1="100" x2="525" y2="100" stroke="#6B7280" stroke-width="1"/>
+  <line x1="515" y1="350" x2="525" y2="350" stroke="#6B7280" stroke-width="1"/>
+  <line x1="520" y1="108" x2="520" y2="342" stroke="#6B7280" stroke-width="1" marker-end="url(#arrG)"/>
+  <text x="535" y="230" font-size="16" font-style="italic" fill="#6B7280">h</text>
+
+  <!-- Small fluid element at depth h -->
+  <rect x="260" y="330" width="60" height="40" rx="3" fill="none" stroke="#8B0029" stroke-width="2" stroke-dasharray="4 3"/>
+  <text x="290" y="355" text-anchor="middle" font-size="12" fill="#8B0029">ΔV</text>
+
+  <!-- Reference point at surface -->
+  <circle cx="290" cy="100" r="4" fill="#2563EB"/>
+
+  <!-- Pressure labels -->
+  <text x="62" y="144" font-size="13" fill="#8B0029" font-style="italic">p ≈ p₀</text>
+  <text x="40" y="354" font-size="13" fill="#8B0029" font-style="italic">p = p₀ + ρgh</text>
+
+  <!-- Formula box -->
+  <rect x="80" y="405" width="540" height="35" rx="6" fill="#F3F4F6" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="350" y="428" text-anchor="middle" font-size="16" fill="#8B0029" font-weight="bold">
+    p = p₀ + ρgh  (깊이 h에서의 절대 압력)
+  </text>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 420" font-family="sans-serif">
+  <defs>
+    <marker id="rArrow" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
+      <path d="M0,0 L6,2.5 L0,5 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- Axes -->
+  <line x1="80" y1="350" x2="650" y2="350" stroke="#6B7280" stroke-width="1.5" marker-end="url(#rArrow)"/>
+  <line x1="80" y1="370" x2="80" y2="30" stroke="#6B7280" stroke-width="1.5" marker-end="url(#rArrow)"/>
+  <text x="620" y="375" font-size="14" fill="#6B7280" font-style="italic">ω<tspan baseline-shift="sub" font-size="10">d</tspan>/ω<tspan baseline-shift="sub" font-size="10">0</tspan></text>
+  <text x="40" y="30" font-size="14" fill="#6B7280">진폭 x<tspan baseline-shift="sub" font-size="10">m</tspan></text>
+
+  <!-- x-axis labels -->
+  <text x="80" y="368" font-size="12" fill="#6B7280" text-anchor="middle">0</text>
+  <text x="200" y="368" font-size="12" fill="#6B7280" text-anchor="middle">0.5</text>
+  <text x="350" y="368" font-size="12" fill="#6B7280" text-anchor="middle">1.0</text>
+  <text x="500" y="368" font-size="12" fill="#6B7280" text-anchor="middle">1.5</text>
+  <line x1="200" y1="347" x2="200" y2="353" stroke="#6B7280" stroke-width="1"/>
+  <line x1="350" y1="347" x2="350" y2="353" stroke="#6B7280" stroke-width="1"/>
+  <line x1="500" y1="347" x2="500" y2="353" stroke="#6B7280" stroke-width="1"/>
+
+  <!-- Vertical dashed line at resonance ω_d/ω = 1 -->
+  <line x1="350" y1="50" x2="350" y2="350" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- Curve 1: small damping (b = small, tall narrow peak) -->
+  <path d="M80,340 Q120,338 160,330 Q200,315 240,280 Q280,200 310,120 Q330,65 350,50 Q370,65 390,120 Q420,200 460,280 Q500,315 540,330 Q580,338 620,340" fill="none" stroke="#8B0029" stroke-width="2.5"/>
+  <text x="420" y="85" font-size="12" fill="#8B0029" font-weight="bold">b 작음 (약한 감쇠)</text>
+
+  <!-- Curve 2: medium damping -->
+  <path d="M80,340 Q120,336 160,325 Q200,310 240,280 Q280,230 310,185 Q330,160 350,150 Q370,160 390,185 Q420,230 460,280 Q500,310 540,325 Q580,336 620,340" fill="none" stroke="#2563EB" stroke-width="2"/>
+  <text x="420" y="170" font-size="12" fill="#2563EB" font-weight="bold">b 중간</text>
+
+  <!-- Curve 3: large damping (broad low peak) -->
+  <path d="M80,340 Q120,336 160,330 Q200,320 240,305 Q280,280 310,260 Q330,248 350,245 Q370,248 390,260 Q420,280 460,305 Q500,320 540,330 Q580,336 620,340" fill="none" stroke="#6B7280" stroke-width="2"/>
+  <text x="420" y="260" font-size="12" fill="#6B7280" font-weight="bold">b 큼 (강한 감쇠)</text>
+
+  <!-- Resonance label -->
+  <text x="350" y="395" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold">공명 (ω<tspan baseline-shift="sub" font-size="10">d</tspan> = ω<tspan baseline-shift="sub" font-size="10">0</tspan>)</text>
+
+  <!-- Arrow pointing to peak -->
+  <line x1="350" y1="42" x2="350" y2="50" stroke="#8B0029" stroke-width="2"/>
+  <polygon points="345,48 350,38 355,48" fill="#8B0029"/>
+</svg>

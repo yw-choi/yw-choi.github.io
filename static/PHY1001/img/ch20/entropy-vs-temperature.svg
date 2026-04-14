@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 450" font-family="sans-serif">
+  <defs>
+    <marker id="arr-ts" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#6B7280"/>
+    </marker>
+    <marker id="arr-ts-r" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#8B0029"/>
+    </marker>
+    <marker id="arr-ts-b" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#2563EB"/>
+    </marker>
+    <marker id="arr-ts-g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="350" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">카르노 순환의 T-S 다이어그램</text>
+
+  <!-- Axes -->
+  <line x1="100" y1="380" x2="620" y2="380" stroke="#6B7280" stroke-width="2" marker-end="url(#arr-ts)"/>
+  <line x1="100" y1="380" x2="100" y2="50" stroke="#6B7280" stroke-width="2" marker-end="url(#arr-ts)"/>
+  <text x="620" y="410" text-anchor="end" font-size="15" font-style="italic" fill="#6B7280">S (엔트로피)</text>
+  <text x="60" y="60" text-anchor="middle" font-size="15" font-style="italic" fill="#6B7280">T</text>
+
+  <!-- Carnot cycle rectangle -->
+  <!-- a (Sa, TH) -> b (Sb, TH): isothermal expansion -->
+  <!-- b (Sb, TH) -> c (Sb, TL): adiabatic expansion -->
+  <!-- c (Sb, TL) -> d (Sa, TL): isothermal compression -->
+  <!-- d (Sa, TL) -> a (Sa, TH): adiabatic compression -->
+
+  <!-- Shaded area = W_net -->
+  <rect x="200" y="120" width="250" height="200" fill="#8B0029" fill-opacity="0.08"/>
+
+  <!-- ab: isothermal at T_H — RED (primary, matches PV diagram) -->
+  <line x1="200" y1="120" x2="450" y2="120" stroke="#8B0029" stroke-width="2.5"/>
+  <line x1="310" y1="120" x2="340" y2="120" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arr-ts-r)"/>
+
+  <!-- bc: adiabatic (vertical) — GRAY dashed (matches PV diagram) -->
+  <line x1="450" y1="120" x2="450" y2="320" stroke="#6B7280" stroke-width="2" stroke-dasharray="4 3"/>
+  <line x1="450" y1="200" x2="450" y2="230" stroke="#6B7280" stroke-width="2" marker-end="url(#arr-ts-g)"/>
+
+  <!-- cd: isothermal at T_L — BLUE (secondary, matches PV diagram) -->
+  <line x1="450" y1="320" x2="200" y2="320" stroke="#2563EB" stroke-width="2.5"/>
+  <line x1="340" y1="320" x2="310" y2="320" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arr-ts-b)"/>
+
+  <!-- da: adiabatic (vertical) — GRAY dashed (matches PV diagram) -->
+  <line x1="200" y1="320" x2="200" y2="120" stroke="#6B7280" stroke-width="2" stroke-dasharray="4 3"/>
+  <line x1="200" y1="230" x2="200" y2="200" stroke="#6B7280" stroke-width="2" marker-end="url(#arr-ts-g)"/>
+
+  <!-- Points -->
+  <circle cx="200" cy="120" r="5" fill="#8B0029"/>
+  <circle cx="450" cy="120" r="5" fill="#8B0029"/>
+  <circle cx="450" cy="320" r="5" fill="#2563EB"/>
+  <circle cx="200" cy="320" r="5" fill="#2563EB"/>
+
+  <text x="188" y="108" font-size="16" font-weight="bold" font-style="italic" fill="#8B0029">a</text>
+  <text x="458" y="108" font-size="16" font-weight="bold" font-style="italic" fill="#8B0029">b</text>
+  <text x="458" y="340" font-size="16" font-weight="bold" font-style="italic" fill="#2563EB">c</text>
+  <text x="188" y="340" font-size="16" font-weight="bold" font-style="italic" fill="#2563EB">d</text>
+
+  <!-- Temperature labels -->
+  <line x1="95" y1="120" x2="100" y2="120" stroke="#6B7280" stroke-width="1"/>
+  <text x="85" y="125" text-anchor="end" font-size="14" font-style="italic" fill="#8B0029">T<tspan baseline-shift="sub" font-size="10">H</tspan></text>
+  <line x1="95" y1="320" x2="100" y2="320" stroke="#6B7280" stroke-width="1"/>
+  <text x="85" y="325" text-anchor="end" font-size="14" font-style="italic" fill="#2563EB">T<tspan baseline-shift="sub" font-size="10">L</tspan></text>
+
+  <!-- Entropy labels -->
+  <line x1="200" y1="380" x2="200" y2="385" stroke="#6B7280" stroke-width="1"/>
+  <text x="200" y="402" text-anchor="middle" font-size="13" font-style="italic" fill="#6B7280">S<tspan baseline-shift="sub" font-size="10">a</tspan></text>
+  <line x1="450" y1="380" x2="450" y2="385" stroke="#6B7280" stroke-width="1"/>
+  <text x="450" y="402" text-anchor="middle" font-size="13" font-style="italic" fill="#6B7280">S<tspan baseline-shift="sub" font-size="10">b</tspan></text>
+
+  <!-- Q_H and Q_L labels -->
+  <text x="325" y="105" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">|Q<tspan baseline-shift="sub" font-size="10">H</tspan>| 흡수</text>
+  <text x="325" y="350" text-anchor="middle" font-size="14" font-weight="bold" fill="#2563EB">|Q<tspan baseline-shift="sub" font-size="10">L</tspan>| 방출</text>
+
+  <!-- W label in center -->
+  <text x="325" y="225" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029" font-style="italic">W = |Q<tspan baseline-shift="sub" font-size="11">H</tspan>| − |Q<tspan baseline-shift="sub" font-size="11">L</tspan>|</text>
+
+  <!-- Process labels on sides -->
+  <text x="480" y="220" font-size="12" font-weight="bold" fill="#6B7280">단열</text>
+  <text x="480" y="236" font-size="12" fill="#6B7280">ΔS = 0</text>
+  <text x="148" y="220" text-anchor="end" font-size="12" font-weight="bold" fill="#6B7280">단열</text>
+  <text x="148" y="236" text-anchor="end" font-size="12" fill="#6B7280">ΔS = 0</text>
+</svg>

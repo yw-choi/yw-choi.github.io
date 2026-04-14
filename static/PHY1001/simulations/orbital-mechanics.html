@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>궤도 역학 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 14px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute; white-space: nowrap; line-height: 1; font-size: 13px; pointer-events: none;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.92em; }
+.canvas-overlay .katex-label.with-bg {
+  background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px;
+}
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-v" style="color:#2563EB;"></div>
+      <div class="katex-label with-bg" id="lbl-r" style="color:#6B7280;"></div>
+    </div>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>궤도 역학</h2>
+      <div class="subtitle">Orbital Mechanics (Ch.13)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>초기 속력 v&#x2080; = <span id="velVal">1.00</span> v<sub>c</sub></label>
+      <input type="range" id="velSlider" min="0.3" max="1.5" value="1.0" step="0.01">
+    </div>
+
+    <div class="control-group">
+      <label>초기 거리 r&#x2080; = <span id="distVal">1.0</span> R</label>
+      <input type="range" id="distSlider" min="0.5" max="3.0" value="1.0" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>중심 질량 M = <span id="massVal">1.0</span> M&#x2080;</label>
+      <input type="range" id="massSlider" min="0.5" max="3.0" value="1.0" step="0.1">
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const lblV = document.getElementById('lbl-v');
+const lblR = document.getElementById('lbl-r');
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
+}
+
+const velSlider = document.getElementById('velSlider');
+const distSlider = document.getElementById('distSlider');
+const massSlider = document.getElementById('massSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+// Normalized units: G*M0 = 1, R = 1
+const GM0 = 1;
+let x, y, vx, vy;
+let trail = [];
+let running = false, animId = null, lastTs = null;
+let orbitTime = 0;
+let maxTrailLen = 2000;
+
+function getParams() {
+  return {
+    v0frac: parseFloat(velSlider.value),
+    r0: parseFloat(distSlider.value),
+    Mfrac: parseFloat(massSlider.value)
+  };
+}
+
+function getGM() { return GM0 * getParams().Mfrac; }
+
+function circularSpeed(r, GM) { return Math.sqrt(GM / r); }
+
+function escapeSpeed(r, GM) { return Math.sqrt(2 * GM / r); }
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function reset() {
+  if (animId) cancelAnimationFrame(animId);
+  running = false; animId = null; lastTs = null;
+  orbitTime = 0;
+
+  const { v0frac, r0, Mfrac } = getParams();
+  const GM = GM0 * Mfrac;
+  const vc = circularSpeed(r0, GM);
+  const v0 = v0frac * vc;
+
+  // Start at right side, moving upward
+  x = r0; y = 0;
+  vx = 0; vy = v0;
+  trail = [{x, y}];
+
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  updateInfo(); draw();
+}
+
+function start() {
+  if (running) return;
+  running = true; lastTs = null;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+}
+
+function step(ts) {
+  if (!running) return;
+  if (!lastTs) { lastTs = ts; animId = requestAnimationFrame(step); return; }
+  const dtReal = Math.min((ts - lastTs) / 1000, 0.04);
+  lastTs = ts;
+
+  const GM = getGM();
+  // Simulation speed factor
+  const simSpeed = 2.0;
+  const dt = dtReal * simSpeed;
+  const substeps = 8;
+  const h = dt / substeps;
+
+  for (let i = 0; i < substeps; i++) {
+    // Velocity Verlet
+    let r2 = x * x + y * y;
+    let r = Math.sqrt(r2);
+    if (r < 0.05) { stop(); return; } // collision
+    let r3 = r2 * r;
+    let ax = -GM * x / r3;
+    let ay = -GM * y / r3;
+
+    x += vx * h + 0.5 * ax * h * h;
+    y += vy * h + 0.5 * ay * h * h;
+
+    let r2n = x * x + y * y;
+    let rn = Math.sqrt(r2n);
+    let r3n = r2n * rn;
+    let axn = -GM * x / r3n;
+    let ayn = -GM * y / r3n;
+
+    vx += 0.5 * (ax + axn) * h;
+    vy += 0.5 * (ay + ayn) * h;
+  }
+
+  orbitTime += dt;
+  trail.push({x, y});
+  if (trail.length > maxTrailLen) trail.shift();
+
+  updateInfo(); draw();
+  animId = requestAnimationFrame(step);
+}
+
+function getOrbitalElements() {
+  const GM = getGM();
+  const r = Math.sqrt(x * x + y * y);
+  const v2 = vx * vx + vy * vy;
+  const v = Math.sqrt(v2);
+
+  // Specific energy
+  const E = 0.5 * v2 - GM / r;
+
+  // Angular momentum (per unit mass)
+  const L = x * vy - y * vx;
+
+  // Semi-major axis
+  const a = E < 0 ? -GM / (2 * E) : Infinity;
+
+  // Eccentricity
+  const e = E < 0 ? Math.sqrt(1 + 2 * E * L * L / (GM * GM)) : NaN;
+
+  // Period
+  const T = a < Infinity ? 2 * Math.PI * Math.sqrt(a * a * a / GM) : Infinity;
+
+  return { r, v, E, L, a, e, T };
+}
+
+function updateInfo() {
+  const { v0frac, r0, Mfrac } = getParams();
+  const GM = getGM();
+  const elem = getOrbitalElements();
+
+  const box = document.getElementById('infoBox');
+  let html = '';
+  html += '<span class="label">거리:</span> <span class="val">r = ' + elem.r.toFixed(3) + ' R</span><br>';
+  html += '<span class="label">속력:</span> <span class="val">v = ' + elem.v.toFixed(3) + ' v<sub>c</sub></span><br>';
+  html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
+  html += tex('E') + ' = <span class="val">' + elem.E.toFixed(4) + '</span><br>';
+  html += tex('L') + ' = <span class="val">' + elem.L.toFixed(4) + '</span><br>';
+  if (elem.a < Infinity && elem.a > 0) {
+    html += tex('a') + ' = <span class="val">' + elem.a.toFixed(3) + ' R</span><br>';
+    html += tex('e') + ' = <span class="val">' + (isNaN(elem.e) ? '-' : elem.e.toFixed(4)) + '</span><br>';
+    html += tex('T') + ' = <span class="val">' + elem.T.toFixed(3) + '</span>';
+  } else {
+    html += '<span style="color:#8B0029">비속박 궤도 (E &#x2265; 0)</span>';
+  }
+  box.innerHTML = html;
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 9;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath(); ctx.fill();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  lblV.style.display = 'none';
+  lblR.style.display = 'none';
+
+  const GM = getGM();
+  const elem = getOrbitalElements();
+
+  // Coordinate transform: simulation coords -> screen
+  // Scale so that initial orbit fits nicely
+  const { r0 } = getParams();
+  const maxR = Math.max(r0 * 2.5, elem.a < Infinity && elem.a > 0 ? elem.a * (1 + (isNaN(elem.e) ? 0 : elem.e)) * 1.3 : r0 * 3);
+  const cx = CW * 0.48;
+  const cy = CH * 0.5;
+  const scale = Math.min(CW * 0.38, CH * 0.38) / maxR;
+
+  function toScreen(sx, sy) {
+    return [cx + sx * scale, cy - sy * scale];
+  }
+
+  // Draw grid circles (dashed)
+  ctx.strokeStyle = 'rgba(0,0,0,0.06)'; ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
+  for (let rr = 1; rr <= 5; rr++) {
+    const rpx = rr * scale;
+    if (rpx > 5 && rpx < Math.max(CW, CH)) {
+      ctx.beginPath(); ctx.arc(cx, cy, rpx, 0, Math.PI * 2); ctx.stroke();
+    }
+  }
+  ctx.setLineDash([]);
+
+  // Draw trail
+  if (trail.length > 1) {
+    ctx.strokeStyle = 'rgba(139,0,41,0.35)'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    let [sx, sy] = toScreen(trail[0].x, trail[0].y);
+    ctx.moveTo(sx, sy);
+    for (let i = 1; i < trail.length; i++) {
+      [sx, sy] = toScreen(trail[i].x, trail[i].y);
+      ctx.lineTo(sx, sy);
+    }
+    ctx.stroke();
+  }
+
+  // Central mass
+  const [csx, csy] = toScreen(0, 0);
+  const centralR = 12 + getParams().Mfrac * 4;
+  ctx.fillStyle = '#FFD700'; ctx.strokeStyle = '#FF8C00'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(csx, csy, centralR, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('M', csx, csy);
+  ctx.textBaseline = 'alphabetic';
+
+  // Orbiting body
+  const [bx, by] = toScreen(x, y);
+  ctx.fillStyle = '#F3F4F6'; ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(bx, by, 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('m', bx, by);
+  ctx.textBaseline = 'alphabetic';
+
+  // Velocity arrow
+  const v = Math.sqrt(vx * vx + vy * vy);
+  if (v > 0.01) {
+    const vScale = Math.min(v * scale * 0.4, 80);
+    const vnx = vx / v, vny = vy / v;
+    const vEndX = bx + vScale * vnx;
+    const vEndY = by - vScale * vny;
+    drawArrow(bx, by, vEndX, vEndY, '#2563EB', 2.5);
+    posLabel(lblV, vEndX + 5, vEndY - 14, '<span style="color:#2563EB;font-weight:bold">' + tex('v') + '</span>');
+  }
+
+  // Gravity arrow (toward center)
+  const r = Math.sqrt(x * x + y * y);
+  if (r > 0.1) {
+    const gScale = Math.min(GM / (r * r) * scale * 0.3, 60);
+    const gnx = -x / r, gny = -y / r;
+    const gEndX = bx + gScale * gnx;
+    const gEndY = by - gScale * gny;
+    drawArrow(bx, by, gEndX, gEndY, '#8B0029', 2);
+  }
+
+  // Distance line (dashed)
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+  ctx.beginPath(); ctx.moveTo(csx, csy); ctx.lineTo(bx, by); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // r label
+  const rmx = (csx + bx) / 2;
+  const rmy = (csy + by) / 2;
+  posLabel(lblR, rmx + 8, rmy - 12, '<span style="color:#6B7280">' + tex('r=' + elem.r.toFixed(2)) + '</span>');
+
+  // Energy bar chart (bottom-right)
+  if (elem.a > 0 && elem.a < Infinity) {
+    const barAreaX = CW * 0.78;
+    const barBaseY = CH * 0.75;
+    const K = 0.5 * v * v;
+    const U = -GM / r;
+    const E = K + U;
+    const maxE = Math.max(K, Math.abs(U)) * 1.1;
+    const maxBarH = CH * 0.2;
+    const eScale = maxBarH / maxE;
+    const barW = 28, barGap = 8;
+
+    ctx.fillStyle = '#444'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('에너지', barAreaX + barW + barGap / 2, barBaseY - maxBarH - 10);
+
+    // K bar (up)
+    const kH = K * eScale;
+    ctx.fillStyle = 'rgba(37,99,235,0.4)'; ctx.strokeStyle = '#2563EB'; ctx.lineWidth = 1;
+    ctx.fillRect(barAreaX, barBaseY - kH, barW, kH);
+    ctx.strokeRect(barAreaX, barBaseY - kH, barW, kH);
+    ctx.fillStyle = '#2563EB'; ctx.font = '10px sans-serif';
+    ctx.fillText('K', barAreaX + barW / 2, barBaseY + 14);
+
+    // U bar (down, negative)
+    const uH = Math.abs(U) * eScale;
+    ctx.fillStyle = 'rgba(139,0,41,0.3)'; ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 1;
+    ctx.fillRect(barAreaX + barW + barGap, barBaseY, barW, uH);
+    ctx.strokeRect(barAreaX + barW + barGap, barBaseY, barW, uH);
+    ctx.fillStyle = '#8B0029'; ctx.font = '10px sans-serif';
+    ctx.fillText('U', barAreaX + barW + barGap + barW / 2, barBaseY + 14);
+
+    // Baseline
+    ctx.strokeStyle = '#999'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(barAreaX - 5, barBaseY);
+    ctx.lineTo(barAreaX + 2 * barW + barGap + 5, barBaseY);
+    ctx.stroke();
+
+    // E total line
+    const eY = barBaseY - E * eScale;
+    ctx.strokeStyle = '#2e7d32'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(barAreaX - 5, eY);
+    ctx.lineTo(barAreaX + 2 * barW + barGap + 5, eY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#2e7d32'; ctx.font = 'bold 10px sans-serif';
+    ctx.fillText('E', barAreaX + 2 * barW + barGap + 12, eY + 4);
+  }
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML = '궤도 역학: ' + tex('E = K + U = -\\frac{GMm}{2a}');
+  document.getElementById('theoremBox').innerHTML =
+    '케플러 법칙 & 에너지 보존<br>' +
+    tex('T^2 = \\frac{4\\pi^2}{GM}a^3') + '<br>' +
+    tex('E = -\\frac{GMm}{2a}');
+  updateFormula();
+}
+
+function updateFormula() {
+  const { v0frac, r0, Mfrac } = getParams();
+  const GM = GM0 * Mfrac;
+  const vc = circularSpeed(r0, GM);
+  const vesc = escapeSpeed(r0, GM);
+  const v0 = v0frac * vc;
+
+  const box = document.getElementById('formulaBox');
+  let orbitType = '';
+  if (v0frac < 0.99 || v0frac > 1.01) {
+    const E = 0.5 * v0 * v0 - GM / r0;
+    if (E < -1e-6) orbitType = '타원 궤도 (E < 0)';
+    else if (E > 1e-6) orbitType = '쌍곡선 궤도 (E > 0)';
+    else orbitType = '포물선 궤도 (E = 0)';
+  } else {
+    orbitType = '원 궤도 (E < 0)';
+  }
+
+  box.innerHTML =
+    '<b>궤도 유형:</b> ' + orbitType + '<br>' +
+    tex('v_c = \\sqrt{GM/r_0} = ' + vc.toFixed(3)) + '<br>' +
+    tex('v_{\\text{esc}} = \\sqrt{2GM/r_0} = ' + vesc.toFixed(3)) + '<br>' +
+    tex('v_0 = ' + v0.toFixed(3) + ' (' + v0frac.toFixed(2) + '\\,v_c)');
+}
+
+[velSlider, distSlider, massSlider].forEach(sl => {
+  sl.addEventListener('input', () => {
+    document.getElementById('velVal').textContent = parseFloat(velSlider.value).toFixed(2);
+    document.getElementById('distVal').textContent = parseFloat(distSlider.value).toFixed(1);
+    document.getElementById('massVal').textContent = parseFloat(massSlider.value).toFixed(1);
+    updateFormula(); reset();
+  });
+});
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+window.addEventListener('resize', resize);
+
+renderStatic();
+document.getElementById('velVal').textContent = parseFloat(velSlider.value).toFixed(2);
+document.getElementById('distVal').textContent = parseFloat(distSlider.value).toFixed(1);
+document.getElementById('massVal').textContent = parseFloat(massSlider.value).toFixed(1);
+reset();
+resize();
+</script>
+</body>
+</html>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이상기체 분자 운동 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; }
+canvas { width: 100%; height: 100%; display: block; }
+.controls { width: 260px; padding: 14px; background: #faf5f6; border-left: 2px solid rgba(139,0,41,0.15); overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+h2 { color: #8B0029; font-size: 1.05rem; margin-bottom: 2px; }
+.subtitle { color: #888; font-size: 0.72rem; margin-bottom: 6px; }
+label { display: block; font-size: 0.8rem; color: #555; margin-bottom: 2px; }
+.slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.slider-row input[type="range"] { flex: 1; accent-color: #8B0029; }
+.slider-val { font-size: 0.8rem; font-weight: 600; color: #8B0029; min-width: 65px; text-align: right; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 10px; font-size: 0.78rem; line-height: 1.9; color: #555; }
+.formula-box .katex { font-size: 0.92em; }
+.formula-box b { color: #8B0029; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 0.75rem; }
+.info-item { background: white; border: 1px solid rgba(139,0,41,0.1); border-radius: 6px; padding: 5px 7px; }
+.info-item .lbl { color: #888; font-size: 0.68rem; display: block; }
+.info-item .val { color: #8B0029; font-weight: 700; font-family: ui-monospace, monospace; font-size: 0.82rem; }
+.info-item.full { grid-column: 1 / -1; }
+.info-item.highlight { background: #fff8e1; border-color: #f5c842; }
+.btn-row { display: flex; gap: 8px; }
+button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+.btn-primary { background: #8B0029; color: white; }
+.btn-primary:hover { background: #a3003a; }
+.btn-secondary { background: rgba(139,0,41,0.1); color: #8B0029; }
+.btn-secondary:hover { background: rgba(139,0,41,0.2); }
+.hist-area { background: white; border: 1px solid rgba(139,0,41,0.1); border-radius: 8px; overflow: hidden; }
+.hist-area canvas { width: 100%; height: 140px; display: block; }
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.92); padding: 2px 5px; border-radius: 3px; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { flex: none; height: 55vh; }
+  .controls { width: 100%; border-left: none; border-top: 2px solid rgba(139,0,41,0.15); height: 45vh; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lblPiston" style="color:#6B7280;font-size:10px;"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>이상기체 분자 운동</h2>
+      <div class="subtitle">Kinetic Theory of Gases &mdash; Ch.19</div>
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div>
+      <label>온도 <i>T</i></label>
+      <div class="slider-row">
+        <input type="range" id="sliderT" min="100" max="1200" value="300" step="10">
+        <span class="slider-val" id="valT">300 K</span>
+      </div>
+      <label>분자 수 <i>N</i></label>
+      <div class="slider-row">
+        <input type="range" id="sliderN" min="20" max="300" value="100" step="1">
+        <span class="slider-val" id="valN">100</span>
+      </div>
+      <label>피스톤 위치 (부피)</label>
+      <div class="slider-row">
+        <input type="range" id="sliderVol" min="30" max="100" value="80" step="1">
+        <span class="slider-val" id="valVol">80%</span>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-primary" id="btnPlay" onclick="togglePlay()">&#9654; 시작</button>
+      <button class="btn-secondary" onclick="resetSim()">&#8634; 초기화</button>
+    </div>
+
+    <div class="info-grid" id="infoGrid">
+      <div class="info-item"><span class="lbl">온도 T</span><span class="val" id="dispT">300 K</span></div>
+      <div class="info-item"><span class="lbl">분자 수 N</span><span class="val" id="dispN">100</span></div>
+      <div class="info-item"><span class="lbl">부피 V (arb)</span><span class="val" id="dispV">—</span></div>
+      <div class="info-item"><span class="lbl">압력 P (arb)</span><span class="val" id="dispP">—</span></div>
+      <div class="info-item highlight full"><span class="lbl">PV / NkT</span><span class="val" id="dispRatio">—</span></div>
+      <div class="info-item"><span class="lbl">v_rms (이론)</span><span class="val" id="dispVrmsT">—</span></div>
+      <div class="info-item"><span class="lbl">v_rms (측정)</span><span class="val" id="dispVrmsM">—</span></div>
+      <div class="info-item full"><span class="lbl">K_avg / kT (이론: 1.0 for 2D)</span><span class="val" id="dispKE">—</span></div>
+    </div>
+
+    <div>
+      <label style="text-align:center;font-weight:600;color:#8B0029">속력 분포 (Maxwell-Boltzmann)</label>
+      <div class="hist-area">
+        <canvas id="histCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== Constants ==========
+const kB = 1.38e-23;
+const mMol = 4.65e-26; // ~N2
+
+const simCanvas = document.getElementById('canvas');
+const simCtx = simCanvas.getContext('2d');
+const histCanvas = document.getElementById('histCanvas');
+const histCtx = histCanvas.getContext('2d');
+
+let dpr = window.devicePixelRatio || 1;
+let W, H, hW, hH;
+const MOL_R = 3;
+const WALL_PAD = 30;
+
+let temperature = 300;
+let targetN = 100;
+let volFrac = 0.80;
+let molecules = [];
+let running = false;
+let animId = null;
+let animRunning = false;
+
+// Pressure measurement
+let wallMomentum = 0;
+let pressureSmoothed = 0;
+const P_WINDOW = 1/30;
+let pTimer = 0;
+let frameCount = 0;
+
+// Box
+function getBox() {
+  const pad = WALL_PAD;
+  const boxW = (W - 2 * pad) * volFrac;
+  return { x: pad, y: pad, w: boxW, h: H - 2 * pad };
+}
+
+function resize() {
+  const rect = simCanvas.getBoundingClientRect();
+  W = rect.width * dpr; H = rect.height * dpr;
+  simCanvas.width = W; simCanvas.height = H;
+
+  const hRect = histCanvas.getBoundingClientRect();
+  hW = hRect.width * dpr; hH = hRect.height * dpr;
+  histCanvas.width = hW; histCanvas.height = hH;
+}
+
+// ========== Molecules ==========
+const SCALE = 0.0012;
+
+function gaussRandom() {
+  let u, v, s;
+  do { u = Math.random()*2-1; v = Math.random()*2-1; s = u*u+v*v; } while(s>=1||s===0);
+  return u * Math.sqrt(-2*Math.log(s)/s);
+}
+
+function mbSpeed(T) {
+  const sigma = Math.sqrt(kB*T/mMol)*SCALE;
+  return { vx: sigma*gaussRandom(), vy: sigma*gaussRandom() };
+}
+
+function createMolecule() {
+  const box = getBox();
+  const m = MOL_R + 2;
+  const x = box.x + m + Math.random()*(box.w - 2*m);
+  const y = box.y + m + Math.random()*(box.h - 2*m);
+  const v = mbSpeed(temperature);
+  return { x, y, vx: v.vx, vy: v.vy };
+}
+
+function initMolecules() {
+  molecules = [];
+  for (let i = 0; i < targetN; i++) molecules.push(createMolecule());
+}
+
+function adjustCount() {
+  while (molecules.length < targetN) molecules.push(createMolecule());
+  while (molecules.length > targetN) molecules.pop();
+}
+
+function rescaleVelocities() {
+  if (!molecules.length) return;
+  const sigma = Math.sqrt(kB*temperature/mMol)*SCALE;
+  let sumV2 = 0;
+  molecules.forEach(m => sumV2 += m.vx*m.vx + m.vy*m.vy);
+  const cur = Math.sqrt(sumV2/(2*molecules.length));
+  if (cur < 1e-12) { molecules.forEach(m => { const v = mbSpeed(temperature); m.vx=v.vx; m.vy=v.vy; }); return; }
+  const s = sigma/cur;
+  molecules.forEach(m => { m.vx *= s; m.vy *= s; });
+}
+
+// ========== Physics ==========
+function step() {
+  const box = getBox();
+  const lw = box.x, rw = box.x+box.w, tw = box.y, bw = box.y+box.h;
+  let dpTotal = 0;
+  const perim = 2*(box.w)+2*(box.h);
+
+  molecules.forEach(m => {
+    m.x += m.vx; m.y += m.vy;
+    if (m.x - MOL_R < lw) { m.x = lw+MOL_R; dpTotal += 2*Math.abs(m.vx); m.vx = Math.abs(m.vx); }
+    if (m.x + MOL_R > rw) { m.x = rw-MOL_R; dpTotal += 2*Math.abs(m.vx); m.vx = -Math.abs(m.vx); }
+    if (m.y - MOL_R < tw) { m.y = tw+MOL_R; dpTotal += 2*Math.abs(m.vy); m.vy = Math.abs(m.vy); }
+    if (m.y + MOL_R > bw) { m.y = bw-MOL_R; dpTotal += 2*Math.abs(m.vy); m.vy = -Math.abs(m.vy); }
+  });
+
+  wallMomentum += dpTotal;
+  pTimer += 1/60;
+  if (pTimer >= P_WINDOW) {
+    const raw = wallMomentum / (pTimer * perim);
+    pressureSmoothed = pressureSmoothed * 0.82 + raw * 0.18;
+    wallMomentum = 0; pTimer = 0;
+  }
+}
+
+// ========== Drawing ==========
+function speedColor(speed) {
+  const sigma = Math.sqrt(kB*temperature/mMol)*SCALE;
+  const t = Math.min(1, Math.max(0, speed/(3.5*sigma)));
+  let r, g, b;
+  if (t < 0.25) { r=0; g=Math.floor(255*t*4); b=255; }
+  else if (t < 0.5) { r=0; g=255; b=Math.floor(255*(1-(t-0.25)*4)); }
+  else if (t < 0.75) { r=Math.floor(255*(t-0.5)*4); g=255; b=0; }
+  else { r=255; g=Math.floor(255*(1-(t-0.75)*4)); b=0; }
+  return `rgb(${r},${g},${b})`;
+}
+
+function drawSim() {
+  simCtx.clearRect(0,0,W,H);
+  simCtx.fillStyle = '#fafafa';
+  simCtx.fillRect(0,0,W,H);
+
+  const box = getBox();
+
+  // Box
+  simCtx.strokeStyle = '#8B0029';
+  simCtx.lineWidth = 2*dpr;
+  simCtx.strokeRect(box.x, box.y, box.w, box.h);
+
+  // Piston (right wall)
+  const pw = 10*dpr;
+  const grad = simCtx.createLinearGradient(box.x+box.w-pw, 0, box.x+box.w+pw, 0);
+  grad.addColorStop(0, '#c0c0c0'); grad.addColorStop(0.5, '#e0e0e0'); grad.addColorStop(1, '#999');
+  simCtx.fillStyle = grad;
+  simCtx.fillRect(box.x+box.w-pw/2, box.y, pw, box.h);
+
+  // Piston label
+  const lbl = document.getElementById('lblPiston');
+  const rect = simCanvas.getBoundingClientRect();
+  lbl.style.left = ((box.x+box.w)/dpr - 25) + 'px';
+  lbl.style.top = ((box.y)/dpr - 16) + 'px';
+  lbl.textContent = '◀ piston ▶';
+
+  // Color legend
+  const legX = box.x + 8*dpr, legY = box.y + box.h - 20*dpr;
+  const legW = 80*dpr, legH = 8*dpr;
+  const legGrad = simCtx.createLinearGradient(legX, 0, legX+legW, 0);
+  legGrad.addColorStop(0, '#00f'); legGrad.addColorStop(0.25, '#0ff');
+  legGrad.addColorStop(0.5, '#0f0'); legGrad.addColorStop(0.75, '#ff0'); legGrad.addColorStop(1, '#f00');
+  simCtx.fillStyle = legGrad;
+  simCtx.fillRect(legX, legY, legW, legH);
+  simCtx.fillStyle = '#888';
+  simCtx.font = (9*dpr) + 'px sans-serif';
+  simCtx.textAlign = 'left';
+  simCtx.fillText('slow', legX/dpr < 1 ? legX : legX, legY + legH + 10*dpr);
+  simCtx.textAlign = 'right';
+  simCtx.fillText('fast', legX + legW, legY + legH + 10*dpr);
+
+  // Molecules
+  molecules.forEach(m => {
+    const spd = Math.sqrt(m.vx*m.vx + m.vy*m.vy);
+    simCtx.beginPath();
+    simCtx.arc(m.x, m.y, MOL_R*dpr, 0, Math.PI*2);
+    simCtx.fillStyle = speedColor(spd);
+    simCtx.fill();
+  });
+}
+
+function drawHist() {
+  histCtx.clearRect(0,0,hW,hH);
+  histCtx.fillStyle = '#fff';
+  histCtx.fillRect(0,0,hW,hH);
+  if (!molecules.length) return;
+
+  const sigma = Math.sqrt(kB*temperature/mMol)*SCALE;
+  const maxSpd = 5*sigma;
+  const nBins = 25;
+  const binW = maxSpd/nBins;
+  const bins = new Array(nBins).fill(0);
+  molecules.forEach(m => {
+    const s = Math.sqrt(m.vx*m.vx + m.vy*m.vy);
+    const idx = Math.min(nBins-1, Math.floor(s/binW));
+    bins[idx]++;
+  });
+
+  const padL=30*dpr, padR=10*dpr, padT=10*dpr, padB=22*dpr;
+  const pW=hW-padL-padR, pH=hH-padT-padB;
+  const maxC = Math.max(1,...bins);
+  const bW = pW/nBins;
+
+  bins.forEach((c,i) => {
+    const bh = (c/maxC)*pH;
+    const bx = padL + i*bW;
+    const by = padT + pH - bh;
+    histCtx.fillStyle = speedColor((i+0.5)*binW);
+    histCtx.globalAlpha = 0.7;
+    histCtx.fillRect(bx, by, bW-1*dpr, bh);
+    histCtx.globalAlpha = 1;
+  });
+
+  // MB 2D theory curve
+  histCtx.beginPath();
+  histCtx.strokeStyle = '#8B0029';
+  histCtx.lineWidth = 2*dpr;
+  const N = molecules.length;
+  for (let i=0;i<=150;i++) {
+    const v = (i/150)*maxSpd;
+    const fv = (v/(sigma*sigma))*Math.exp(-v*v/(2*sigma*sigma));
+    const yVal = fv*N*binW;
+    const px = padL + (v/maxSpd)*pW;
+    const py = padT + pH - (yVal/maxC)*pH;
+    if (i===0) histCtx.moveTo(px,py); else histCtx.lineTo(px,py);
+  }
+  histCtx.stroke();
+
+  // Axes
+  histCtx.strokeStyle = '#999';
+  histCtx.lineWidth = 1*dpr;
+  histCtx.beginPath();
+  histCtx.moveTo(padL, padT);
+  histCtx.lineTo(padL, padT+pH);
+  histCtx.lineTo(padL+pW, padT+pH);
+  histCtx.stroke();
+
+  histCtx.fillStyle = '#555';
+  histCtx.font = (8*dpr)+'px sans-serif';
+  histCtx.textAlign = 'center';
+  histCtx.fillText('speed v', padL+pW/2, hH-2*dpr);
+
+  // Theory label
+  histCtx.fillStyle = '#8B0029';
+  histCtx.font = 'bold '+(8*dpr)+'px sans-serif';
+  histCtx.textAlign = 'right';
+  histCtx.fillText('— MB theory', hW-padR, padT+12*dpr);
+}
+
+function updateInfo() {
+  const N = molecules.length;
+  const box = getBox();
+  const V = box.w * box.h;
+
+  let sumV2 = 0;
+  molecules.forEach(m => sumV2 += m.vx*m.vx + m.vy*m.vy);
+  const vrmsM = N>0 ? Math.sqrt(sumV2/N) : 0;
+  const vrmsT = Math.sqrt(2*kB*temperature/mMol)*SCALE; // 2D
+
+  const sigma2 = kB*temperature/mMol*SCALE*SCALE;
+  const PV = pressureSmoothed * V;
+  const NkT = N * sigma2;
+  const ratio = NkT>0 ? PV/NkT : 0;
+
+  const keAvg = N>0 ? 0.5*mMol*sumV2/(N*SCALE*SCALE) : 0;
+  const keRatio = kB*temperature > 0 ? keAvg/(kB*temperature) : 0;
+
+  document.getElementById('dispT').textContent = temperature + ' K';
+  document.getElementById('dispN').textContent = N;
+  document.getElementById('dispV').textContent = V.toFixed(0);
+  document.getElementById('dispP').textContent = pressureSmoothed.toFixed(4);
+  document.getElementById('dispRatio').textContent = ratio.toFixed(3) + (ratio>0.8&&ratio<1.2?' ✓':'');
+  document.getElementById('dispVrmsT').textContent = vrmsT.toFixed(2);
+  document.getElementById('dispVrmsM').textContent = vrmsM.toFixed(2);
+  document.getElementById('dispKE').textContent = keRatio.toFixed(3);
+
+  document.getElementById('valT').textContent = temperature + ' K';
+  document.getElementById('valN').textContent = targetN;
+  document.getElementById('valVol').textContent = Math.round(volFrac*100) + '%';
+}
+
+// ========== Events ==========
+document.getElementById('sliderT').addEventListener('input', e => {
+  temperature = parseInt(e.target.value);
+  rescaleVelocities();
+});
+document.getElementById('sliderN').addEventListener('input', e => {
+  targetN = parseInt(e.target.value);
+  adjustCount();
+});
+document.getElementById('sliderVol').addEventListener('input', e => {
+  volFrac = parseInt(e.target.value)/100;
+  const box = getBox();
+  molecules.forEach(m => {
+    if (m.x + MOL_R > box.x + box.w) { m.x = box.x+box.w-MOL_R-1; m.vx = -Math.abs(m.vx); }
+  });
+});
+
+// ========== Animation ==========
+function animate() {
+  if (!running) { animRunning = false; return; }
+  step();
+  drawSim();
+  frameCount++;
+  if (frameCount % 3 === 0) { drawHist(); updateInfo(); }
+  animId = requestAnimationFrame(animate);
+}
+
+function togglePlay() {
+  running = !running;
+  const btn = document.getElementById('btnPlay');
+  if (running) {
+    btn.innerHTML = '&#9646;&#9646; 일시정지';
+    if (!animRunning) { animRunning = true; animate(); }
+  } else {
+    btn.innerHTML = '&#9654; 시작';
+    cancelAnimationFrame(animId); animRunning = false;
+  }
+}
+
+function resetSim() {
+  running = false; animRunning = false;
+  cancelAnimationFrame(animId);
+  document.getElementById('btnPlay').innerHTML = '&#9654; 시작';
+  temperature = 300; targetN = 100; volFrac = 0.80;
+  document.getElementById('sliderT').value = 300;
+  document.getElementById('sliderN').value = 100;
+  document.getElementById('sliderVol').value = 80;
+  wallMomentum = 0; pressureSmoothed = 0; pTimer = 0; frameCount = 0;
+  resize();
+  initMolecules();
+  drawSim(); drawHist(); updateInfo();
+}
+
+// ========== KaTeX formulas ==========
+function renderFormulas() {
+  const box = document.getElementById('formulaBox');
+  const lines = [
+    katex.renderToString('pV = NkT', {throwOnError:false}),
+    '<b>압력</b> = 분자 충돌의 운동량 전달',
+    katex.renderToString('K_{\\text{avg}} = \\tfrac{1}{2}mv_{\\text{rms}}^2 = \\tfrac{3}{2}kT', {throwOnError:false}),
+    '<b>온도</b> = 평균 병진 운동에너지의 척도',
+  ];
+  box.innerHTML = lines.join('<br>');
+}
+
+// ========== Init ==========
+window.addEventListener('resize', () => { resize(); drawSim(); drawHist(); });
+resize();
+renderFormulas();
+initMolecules();
+drawSim(); drawHist(); updateInfo();
+</script>
+</body>
+</html>

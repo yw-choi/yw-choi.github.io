@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" font-family="sans-serif">
+  <defs>
+    <marker id="cArrB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="cArrR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="cArrG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+  </defs>
+
+  <!-- Pipe: wide section on left, narrow on right -->
+  <!-- Top boundary -->
+  <path d="M 60,100 L 280,100 C 340,100 360,150 400,160 L 680,160" fill="none" stroke="#6B7280" stroke-width="2"/>
+  <!-- Bottom boundary -->
+  <path d="M 60,280 L 280,280 C 340,280 360,230 400,220 L 680,220" fill="none" stroke="#6B7280" stroke-width="2"/>
+
+  <!-- Fill the pipe -->
+  <path d="M 60,100 L 280,100 C 340,100 360,150 400,160 L 680,160 L 680,220 L 400,220 C 360,230 340,280 280,280 L 60,280 Z" fill="#D1E8FF" fill-opacity="0.4"/>
+
+  <!-- A1 dimension (left side) -->
+  <line x1="45" y1="100" x2="45" y2="280" stroke="#8B0029" stroke-width="1.5"/>
+  <line x1="40" y1="100" x2="55" y2="100" stroke="#8B0029" stroke-width="1.5"/>
+  <line x1="40" y1="280" x2="55" y2="280" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="35" y="195" text-anchor="end" font-size="16" font-weight="bold" fill="#8B0029">
+    <tspan font-style="italic">A</tspan><tspan font-size="12" dy="3">1</tspan>
+  </text>
+
+  <!-- A2 dimension (right side) -->
+  <line x1="695" y1="160" x2="695" y2="220" stroke="#8B0029" stroke-width="1.5"/>
+  <line x1="690" y1="160" x2="700" y2="160" stroke="#8B0029" stroke-width="1.5"/>
+  <line x1="690" y1="220" x2="700" y2="220" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="715" y="195" font-size="16" font-weight="bold" fill="#8B0029">
+    <tspan font-style="italic">A</tspan><tspan font-size="12" dy="3">2</tspan>
+  </text>
+
+  <!-- Flow velocity arrows (left, wide, slower -> short arrows) -->
+  <line x1="100" y1="150" x2="140" y2="150" stroke="#2563EB" stroke-width="2.5" marker-end="url(#cArrB)"/>
+  <line x1="100" y1="190" x2="140" y2="190" stroke="#2563EB" stroke-width="2.5" marker-end="url(#cArrB)"/>
+  <line x1="100" y1="230" x2="140" y2="230" stroke="#2563EB" stroke-width="2.5" marker-end="url(#cArrB)"/>
+  <text x="145" y="145" font-size="15" font-weight="bold" fill="#2563EB">
+    <tspan font-style="italic">v</tspan><tspan font-size="11" dy="3">1</tspan>
+  </text>
+
+  <!-- Flow velocity arrows (right, narrow, faster -> long arrows) -->
+  <line x1="520" y1="180" x2="600" y2="180" stroke="#8B0029" stroke-width="2.5" marker-end="url(#cArrR)"/>
+  <line x1="520" y1="200" x2="600" y2="200" stroke="#8B0029" stroke-width="2.5" marker-end="url(#cArrR)"/>
+  <text x="605" y="178" font-size="15" font-weight="bold" fill="#8B0029">
+    <tspan font-style="italic">v</tspan><tspan font-size="11" dy="3">2</tspan>
+  </text>
+
+  <!-- Streamlines -->
+  <path d="M 80,130 C 200,130 350,155 650,170" fill="none" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+  <path d="M 80,190 C 200,190 350,190 650,190" fill="none" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+  <path d="M 80,250 C 200,250 350,225 650,210" fill="none" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+
+  <!-- Labels -->
+  <text x="170" y="310" text-anchor="middle" font-size="14" fill="#6B7280">&#xB113;&#xC740; &#xB2E8;&#xBA74; (&#xB290;&#xB9B0; &#xC720;&#xC18D;)</text>
+  <text x="560" y="250" text-anchor="middle" font-size="14" fill="#6B7280">&#xC881;&#xC740; &#xB2E8;&#xBA74; (&#xBE60;&#xB978; &#xC720;&#xC18D;)</text>
+
+  <!-- Equation box -->
+  <rect x="130" y="340" width="490" height="40" rx="6" fill="#F3F4F6" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="375" y="366" text-anchor="middle" font-size="16" fill="#8B0029" font-weight="bold">
+    A&#x2081;v&#x2081; = A&#x2082;v&#x2082; = &#xC77C;&#xC815;  (&#xC5F0;&#xC18D; &#xBC29;&#xC815;&#xC2DD;)
+  </text>
+
+  <!-- Title -->
+  <text x="375" y="45" text-anchor="middle" font-size="18" font-weight="bold" fill="#8B0029">&#xC5F0;&#xC18D; &#xBC29;&#xC815;&#xC2DD;: &#xC720;&#xB7C9; &#xBCF4;&#xC874;</text>
+</svg>
