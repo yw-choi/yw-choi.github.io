@@ -8,6 +8,10 @@ title: Publications
 
 † Equal Contributions, * Corresponding Author
 
+17. Byunghyun Kim†, Ayoung Yuk†, Yunyeong Chang†, Dongsin Kim†, Daesung Park, **Young Woo Choi**\*, Miyoung Kim\*, Moon Sung Kang\*, and Hyobin Yoo\*,  
+Dislocation Networks in Marginally Twisted Bilayer MoS<sub>2</sub>,  
+[ACS Materials Letters (2026)](https://doi.org/10.1021/acsmaterialslett.5c01692).
+
 16. Byeongin Lee, Junho Bang, Sayan Banerjee, João Augusto Sobral, **Young Woo Choi**, Claudia Felser, Mathias S. Scheurer, Jian-Feng Ge, and Doohee Cho,  
 Anomalous impurity-induced charge modulations in black phosphorus,  
 [Phys. Rev. B **113**, L041105 (2026)](https://journals.aps.org/prb/abstract/10.1103/39jp-9dkp).
