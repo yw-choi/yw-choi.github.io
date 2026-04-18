@@ -8,7 +8,7 @@ title: Publications
 
 † Equal Contributions, * Corresponding Author
 
-17. Byunghyun Kim†, Ayoung Yuk†, Yunyeong Chang†, Dongsin Kim†, Daesung Park, **Young Woo Choi**\*, Miyoung Kim\*, Moon Sung Kang\*, and Hyobin Yoo\*,  
+17. Byunghyun Kim†, Ayoung Yuk†, Yunyeong Chang†, **Dongsin Kim**†, Daesung Park, **Young Woo Choi**\*, Miyoung Kim\*, Moon Sung Kang\*, and Hyobin Yoo\*,  
 Dislocation Networks in Marginally Twisted Bilayer MoS<sub>2</sub>,  
 [ACS Materials Letters (2026)](https://doi.org/10.1021/acsmaterialslett.5c01692).
 
