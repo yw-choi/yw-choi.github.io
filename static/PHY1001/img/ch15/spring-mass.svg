@@ -3,9 +3,6 @@
     <marker id="arrowR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
       <path d="M0,0 L8,3 L0,6 Z" fill="#8B0029"/>
     </marker>
-    <marker id="arrowB" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <path d="M0,0 L8,3 L0,6 Z" fill="#2563EB"/>
-    </marker>
     <marker id="arrowG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
       <path d="M0,0 L8,3 L0,6 Z" fill="#6B7280"/>
     </marker>
@@ -17,27 +14,27 @@
   <!-- Wall -->
   <rect x="20" y="100" width="15" height="150" fill="url(#hatch)" stroke="#6B7280" stroke-width="2"/>
 
-  <!-- Spring (zigzag) -->
-  <polyline points="35,175 55,175 65,155 85,195 105,155 125,195 145,155 165,195 185,155 205,195 215,175 235,175" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Spring (stretched, x > 0): wall (x=35) → block left edge (x=315) -->
+  <polyline points="35,175 50,175 60,155 80,195 100,155 120,195 140,155 160,195 180,155 200,195 220,155 240,195 260,155 280,195 300,175 315,175"
+            fill="none" stroke="#6B7280" stroke-width="2" stroke-linejoin="round"/>
 
-  <!-- Block -->
-  <rect x="235" y="145" width="60" height="60" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2" rx="3"/>
-  <text x="265" y="180" font-size="16" fill="#1a1a1a" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+  <!-- Block at x = +0.5 x_m (between equilibrium x=265 and +x_m x=365) -->
+  <rect x="315" y="145" width="60" height="60" fill="#F3F4F6" stroke="#6B7280" stroke-width="2" rx="3"/>
+  <text x="345" y="180" font-size="16" fill="#1a1a1a" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
 
   <!-- Surface -->
   <line x1="20" y1="205" x2="700" y2="205" stroke="#6B7280" stroke-width="2"/>
   <line x1="60" y1="210" x2="40" y2="225" stroke="#6B7280" stroke-width="1"/>
-  <line x1="100" y1="210" x2="80" y2="225" stroke="#6B7280" stroke-width="1"/>
-  <line x1="140" y1="210" x2="120" y2="225" stroke="#6B7280" stroke-width="1"/>
+  <line x1="120" y1="210" x2="100" y2="225" stroke="#6B7280" stroke-width="1"/>
   <line x1="180" y1="210" x2="160" y2="225" stroke="#6B7280" stroke-width="1"/>
-  <line x1="220" y1="210" x2="200" y2="225" stroke="#6B7280" stroke-width="1"/>
-  <line x1="260" y1="210" x2="240" y2="225" stroke="#6B7280" stroke-width="1"/>
+  <line x1="240" y1="210" x2="220" y2="225" stroke="#6B7280" stroke-width="1"/>
   <line x1="300" y1="210" x2="280" y2="225" stroke="#6B7280" stroke-width="1"/>
-  <line x1="340" y1="210" x2="320" y2="225" stroke="#6B7280" stroke-width="1"/>
+  <line x1="360" y1="210" x2="340" y2="225" stroke="#6B7280" stroke-width="1"/>
+  <line x1="420" y1="210" x2="400" y2="225" stroke="#6B7280" stroke-width="1"/>
 
-  <!-- Equilibrium position marker -->
-  <line x1="265" y1="205" x2="265" y2="240" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <text x="265" y="255" font-size="13" fill="#6B7280" text-anchor="middle">x = 0</text>
+  <!-- Equilibrium position marker (block's natural rest position when spring is at natural length) -->
+  <line x1="265" y1="100" x2="265" y2="240" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="265" y="255" font-size="13" fill="#6B7280" text-anchor="middle">x = 0 (평형)</text>
 
   <!-- Left extreme -->
   <line x1="165" y1="205" x2="165" y2="240" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
@@ -47,20 +44,25 @@
   <line x1="365" y1="205" x2="365" y2="240" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
   <text x="365" y="255" font-size="13" fill="#6B7280" text-anchor="middle">+x<tspan baseline-shift="sub" font-size="9">m</tspan></text>
 
-  <!-- x axis arrow -->
-  <line x1="100" y1="280" x2="400" y2="280" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrowG)"/>
-  <text x="410" y="284" font-size="14" fill="#6B7280" font-style="italic">x</text>
+  <!-- Current x indication: from x=0 to block center (x=345) -->
+  <line x1="265" y1="225" x2="345" y2="225" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arrowG)"/>
+  <text x="305" y="220" font-size="13" fill="#1a1a1a" text-anchor="middle" font-style="italic">x &gt; 0</text>
 
-  <!-- Force arrow F = -kx (pointing left, restoring force when x > 0) -->
-  <line x1="295" y1="120" x2="245" y2="120" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
-  <text x="300" y="124" font-size="13" fill="#8B0029" font-style="italic" font-weight="bold">F</text>
-  <!-- Force label -->
-  <text x="500" y="130" font-size="14" fill="#8B0029" font-weight="bold">훅 법칙 (Hooke's Law):</text>
-  <text x="500" y="155" font-size="15" fill="#8B0029" font-style="italic">F = −kx</text>
-  <text x="500" y="185" font-size="13" fill="#1a1a1a">x &gt; 0 일 때 → F &lt; 0 (왼쪽)</text>
-  <text x="500" y="205" font-size="13" fill="#1a1a1a">x &lt; 0 일 때 → F &gt; 0 (오른쪽)</text>
-  <text x="500" y="230" font-size="13" fill="#2563EB">항상 평형점을 향하는 복원력!</text>
+  <!-- x axis arrow -->
+  <line x1="100" y1="285" x2="430" y2="285" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrowG)"/>
+  <text x="440" y="289" font-size="14" fill="#6B7280" font-style="italic">x</text>
+
+  <!-- Restoring force F = -kx (block displaced to +x → F points left/restoring) -->
+  <line x1="345" y1="120" x2="280" y2="120" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
+  <text x="350" y="124" font-size="13" fill="#8B0029" font-style="italic" font-weight="bold">F</text>
+
+  <!-- Right side description -->
+  <text x="490" y="130" font-size="14" fill="#1a1a1a" font-weight="bold">훅 법칙 (Hooke's Law):</text>
+  <text x="490" y="158" font-size="16" fill="#8B0029" font-style="italic" font-weight="bold">F = −k x</text>
+  <text x="490" y="186" font-size="13" fill="#1a1a1a">x &gt; 0 → F &lt; 0 (왼쪽으로)</text>
+  <text x="490" y="206" font-size="13" fill="#1a1a1a">x &lt; 0 → F &gt; 0 (오른쪽으로)</text>
+  <text x="490" y="230" font-size="13" fill="#2563EB">항상 평형점을 향하는 복원력</text>
 
   <!-- Spring constant label -->
-  <text x="120" y="135" font-size="13" fill="#6B7280" font-style="italic">k</text>
+  <text x="170" y="148" font-size="13" fill="#6B7280" font-style="italic">k</text>
 </svg>

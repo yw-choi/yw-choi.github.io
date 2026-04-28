@@ -42,7 +42,7 @@
   <text x="115" y="205" text-anchor="middle" font-size="13" fill="#6B7280" font-style="italic">D</text>
 
   <!-- Explanation box -->
-  <rect x="380" y="280" width="300" height="105" rx="8" fill="#f8f0f2" stroke="#e0c0c8" stroke-width="1"/>
+  <rect x="380" y="280" width="300" height="105" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
   <text x="530" y="305" text-anchor="middle" font-size="12" fill="#1a1a1a" font-weight="bold">경로차와 간섭 조건</text>
   <text x="530" y="325" text-anchor="middle" font-size="12" fill="#1a1a1a">&#x0394;L = |L&#x2082; &#x2212; L&#x2081;|</text>
   <text x="530" y="348" text-anchor="middle" font-size="12" fill="#8B0029" font-weight="bold">보강: &#x0394;L/&#x03BB; = 0, 1, 2, ...</text>

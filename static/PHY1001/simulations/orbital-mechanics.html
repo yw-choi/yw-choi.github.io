@@ -249,7 +249,7 @@ function getOrbitalElements() {
   const a = E < 0 ? -GM / (2 * E) : Infinity;
 
   // Eccentricity
-  const e = E < 0 ? Math.sqrt(1 + 2 * E * L * L / (GM * GM)) : NaN;
+  const e = E < 0 ? Math.sqrt(Math.max(0, 1 + 2 * E * L * L / (GM * GM))) : NaN;
 
   // Period
   const T = a < Infinity ? 2 * Math.PI * Math.sqrt(a * a * a / GM) : Infinity;

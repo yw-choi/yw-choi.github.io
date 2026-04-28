@@ -13,25 +13,28 @@
     <text x="0" y="0" text-anchor="middle" font-size="20" font-weight="bold" fill="#8B0029">(a) 인장</text>
     <text x="0" y="22" text-anchor="middle" font-size="14" fill="#6B7280">(Tension)</text>
 
-    <!-- Stretched shape -->
-    <rect x="-40" y="65" width="80" height="210" fill="#F3F4F6" stroke="#6B7280" stroke-width="2" rx="3"/>
-    <!-- Original shape (dashed, drawn on top) -->
+    <!-- Stretched shape (bottom anchored at y=260, top extended up to y=50) -->
+    <rect x="-40" y="50" width="80" height="210" fill="#F3F4F6" stroke="#6B7280" stroke-width="2" rx="3"/>
+    <!-- Original shape (dashed, same bottom, original top at y=80) -->
     <rect x="-40" y="80" width="80" height="180" fill="none" stroke="#6B7280" stroke-width="1.2" stroke-dasharray="4 3" rx="3"/>
 
-    <!-- Force arrows -->
-    <line x1="0" y1="65" x2="0" y2="22" stroke="#8B0029" stroke-width="2.5" marker-end="url(#tdR)"/>
-    <text x="14" y="40" font-size="20" font-weight="bold" font-style="italic" fill="#8B0029">F</text>
+    <!-- Force arrow (applied tension at top) -->
+    <line x1="0" y1="50" x2="0" y2="10" stroke="#8B0029" stroke-width="2.5" marker-end="url(#tdR)"/>
+    <text x="14" y="28" font-size="20" font-weight="bold" font-style="italic" fill="#8B0029">F</text>
 
-    <line x1="0" y1="275" x2="0" y2="318" stroke="#8B0029" stroke-width="2.5" marker-end="url(#tdR)"/>
-    <text x="14" y="312" font-size="20" font-weight="bold" font-style="italic" fill="#8B0029">F</text>
+    <!-- Force arrow (reaction at fixed bottom) -->
+    <line x1="0" y1="260" x2="0" y2="303" stroke="#8B0029" stroke-width="2.5" marker-end="url(#tdR)"/>
+    <text x="14" y="297" font-size="20" font-weight="bold" font-style="italic" fill="#8B0029">F</text>
 
-    <!-- ΔL dimension on right -->
-    <line x1="60" y1="80" x2="60" y2="65" stroke="#2563EB" stroke-width="1"/>
-    <text x="70" y="78" font-size="18" fill="#2563EB" font-weight="bold">
+    <!-- ΔL dimension (full elongation between original top and stretched top) -->
+    <line x1="60" y1="80" x2="60" y2="50" stroke="#6B7280" stroke-width="1"/>
+    <line x1="53" y1="80" x2="67" y2="80" stroke="#6B7280" stroke-width="1"/>
+    <line x1="53" y1="50" x2="67" y2="50" stroke="#6B7280" stroke-width="1"/>
+    <text x="72" y="70" font-size="18" fill="#1a1a1a" font-weight="bold">
       <tspan font-style="italic">&#x394;L</tspan>
     </text>
 
-    <!-- L dimension on left -->
+    <!-- L dimension on left (original length) -->
     <line x1="-60" y1="80" x2="-60" y2="260" stroke="#6B7280" stroke-width="1.2" stroke-dasharray="4 3"/>
     <line x1="-67" y1="80" x2="-53" y2="80" stroke="#6B7280" stroke-width="1.2"/>
     <line x1="-67" y1="260" x2="-53" y2="260" stroke="#6B7280" stroke-width="1.2"/>
@@ -57,8 +60,10 @@
     <text x="-115" y="250" font-size="20" font-weight="bold" font-style="italic" fill="#8B0029">F</text>
 
     <!-- Δx dimension showing horizontal displacement of top -->
-    <line x1="-50" y1="64" x2="-25" y2="64" stroke="#2563EB" stroke-width="1"/>
-    <text x="-37" y="56" text-anchor="middle" font-size="18" fill="#2563EB" font-weight="bold">
+    <line x1="-50" y1="64" x2="-25" y2="64" stroke="#6B7280" stroke-width="1"/>
+    <line x1="-50" y1="58" x2="-50" y2="70" stroke="#6B7280" stroke-width="1"/>
+    <line x1="-25" y1="58" x2="-25" y2="70" stroke="#6B7280" stroke-width="1"/>
+    <text x="-37" y="50" text-anchor="middle" font-size="18" fill="#1a1a1a" font-weight="bold">
       <tspan font-style="italic">&#x394;x</tspan>
     </text>
 

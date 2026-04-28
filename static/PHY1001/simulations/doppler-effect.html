@@ -355,10 +355,11 @@ function draw() {
 }
 
 function renderStatic() {
-  document.getElementById('canvasTitle').innerHTML = '도플러 효과: ' + tex("f' = f\\dfrac{v \\pm v_D}{v \\mp v_S}");
+  document.getElementById('canvasTitle').innerHTML = '도플러 효과: ' + tex("f' = f\\dfrac{v \\pm v_O}{v \\mp v_S}");
   document.getElementById('theoremBox').innerHTML =
     '도플러 효과 (Doppler Effect)<br>' +
-    tex("f' = f\\frac{v \\pm v_D}{v \\mp v_S}") + '<br>' +
+    tex("f' = f\\frac{v \\pm v_O}{v \\mp v_S}") + '<br>' +
+    '관측자 정지 (' + tex('v_O = 0') + '): ' + tex("f' = f\\dfrac{v}{v \\mp v_S}") + '<br>' +
     '초음속: ' + tex('\\sin\\theta = v/v_S');
   updateFormula();
 }

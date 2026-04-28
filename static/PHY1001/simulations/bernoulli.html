@@ -261,8 +261,9 @@ function updateInfo() {
   box.innerHTML = html;
 
   const fBox = document.getElementById('formulaBox');
+  // Reference: y_1 = 0 (so rho*g*y_1 = 0). Constant equals point-1 sum.
   fBox.innerHTML =
-    '<b>점 1:</b> ' + tex('p_1 + \\tfrac{1}{2}\\rho v_1^2 + \\rho g y_1') + '<br>' +
+    '<b>점 1:</b> ' + tex('p_1 + \\tfrac{1}{2}\\rho v_1^2 + \\rho g y_1') + ' &nbsp;<span style="color:#888;font-size:0.85em">(y₁=0 기준)</span><br>' +
     '<b>점 2:</b> ' + tex('p_2 + \\tfrac{1}{2}\\rho v_2^2 + \\rho g y_2') + '<br>' +
     '<span style="color:#2e7d32;font-weight:700">' + tex('= ' + ((p1 + 0.5 * rho * v1 * v1) / 1000).toFixed(1) + '\\text{ kPa (일정)}') + '</span>';
 }

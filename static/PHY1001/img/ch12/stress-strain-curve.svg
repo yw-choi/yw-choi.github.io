@@ -48,7 +48,7 @@
 
   <!-- Yield point dot -->
   <circle cx="220" cy="220" r="6" fill="#8B0029"/>
-  <text x="234" y="216" font-size="18" font-weight="bold" fill="#8B0029">항복점</text>
+  <text x="234" y="208" font-size="18" font-weight="bold" fill="#8B0029">항복점</text>
 
   <!-- Ultimate strength dot -->
   <circle cx="430" cy="100" r="6" fill="#8B0029"/>
@@ -60,5 +60,5 @@
   <text x="615" y="172" font-size="18" font-weight="bold" fill="#8B0029">파단</text>
 
   <!-- E slope label inside the elastic region -->
-  <text x="170" y="345" font-size="18" font-weight="bold" fill="#2563EB">기울기 = <tspan font-style="italic">E</tspan></text>
+  <text x="170" y="345" font-size="18" font-weight="bold" fill="#8B0029">기울기 = <tspan font-style="italic">E</tspan></text>
 </svg>

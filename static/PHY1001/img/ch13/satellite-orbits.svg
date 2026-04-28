@@ -1,52 +1,56 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -6 700 506" font-family="sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 500" font-family="sans-serif">
   <defs>
     <marker id="soArrB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
       <polygon points="0 0, 10 3.5, 0 7"/>
     </marker>
+    <marker id="soArrG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
   </defs>
 
-  <!-- Earth -->
-  <circle cx="350" cy="250" r="55" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
-  <text x="350" y="256" text-anchor="middle" font-size="14" fill="white" font-weight="bold">지구</text>
-  <text x="350" y="275" text-anchor="middle" font-size="14" fill="white" font-style="italic">M</text>
-
-  <!-- Circular orbit (innermost) -->
-  <circle cx="350" cy="250" r="110" fill="none" stroke="#8B0029" stroke-width="2"/>
-  <circle cx="460" cy="250" r="5" fill="#8B0029"/>
-  <line x1="460" y1="248" x2="460" y2="195" stroke="#2563EB" stroke-width="2.5" marker-end="url(#soArrB)"/>
-  <text x="475" y="210" font-size="14" fill="#2563EB" font-style="italic" font-weight="bold">v</text>
-  <text x="500" y="260" font-size="14" fill="#8B0029" font-weight="bold">원궤도</text>
-  <text x="500" y="278" font-size="14" fill="#8B0029">E = -GMm/2r</text>
-
-  <!-- Elliptical orbit -->
-  <ellipse cx="310" cy="250" rx="190" ry="150" fill="none" stroke="#2563EB" stroke-width="2" stroke-dasharray="4 3"/>
-  <text x="140" y="140" font-size="14" fill="#2563EB" font-weight="bold">타원 궤도</text>
-  <text x="140" y="158" font-size="14" fill="#2563EB">E = -GMm/2a</text>
-
-  <!-- Escape trajectory (parabolic-ish) -->
-  <path d="M 460,250 Q 500,180 530,80 " fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="4 3"/>
-  <text x="540" y="90" font-size="14" fill="#6B7280" font-weight="bold">탈출 궤도</text>
-  <text x="540" y="108" font-size="14" fill="#6B7280">E = 0</text>
-
-  <!-- Energy diagram on bottom -->
-  <line x1="100" y1="420" x2="630" y2="420" stroke="#6B7280" stroke-width="2"/>
-  <text x="365" y="412" text-anchor="middle" font-size="14" fill="#6B7280" font-weight="bold">에너지 비교</text>
-
-  <!-- Circular orbit energy bar -->
-  <rect x="150" y="435" width="100" height="22" rx="4" fill="#8B0029" fill-opacity="0.15" stroke="#8B0029" stroke-width="2"/>
-  <text x="200" y="451" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">원궤도</text>
-  <text x="200" y="475" text-anchor="middle" font-size="14" fill="#8B0029">E = -K</text>
-
-  <!-- Elliptical orbit energy bar -->
-  <rect x="300" y="435" width="100" height="22" rx="4" fill="#2563EB" fill-opacity="0.15" stroke="#2563EB" stroke-width="2"/>
-  <text x="350" y="451" text-anchor="middle" font-size="14" fill="#2563EB" font-weight="bold">타원 궤도</text>
-  <text x="350" y="475" text-anchor="middle" font-size="14" fill="#2563EB">K + U 변동</text>
-
-  <!-- Escape energy bar -->
-  <rect x="450" y="435" width="100" height="22" rx="4" fill="#6B7280" fill-opacity="0.15" stroke="#6B7280" stroke-width="2"/>
-  <text x="500" y="451" text-anchor="middle" font-size="14" fill="#6B7280" font-weight="bold">탈출</text>
-  <text x="500" y="475" text-anchor="middle" font-size="14" fill="#6B7280">E &#x2265; 0</text>
-
   <!-- Title -->
-  <text x="350" y="30" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">위성 궤도와 에너지</text>
+  <text x="350" y="32" text-anchor="middle" font-size="16" fill="#8B0029" font-weight="bold">위성 궤도와 에너지</text>
+
+  <!-- Earth at (350, 240) -->
+  <circle cx="350" cy="240" r="36" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
+  <text x="350" y="245" text-anchor="middle" font-size="13" fill="white" font-weight="bold">지구 M</text>
+
+  <!-- Circular orbit (radius r = 100, centered at Earth) -->
+  <circle cx="350" cy="240" r="100" fill="none" stroke="#8B0029" stroke-width="2"/>
+  <circle cx="450" cy="240" r="5" fill="#8B0029"/>
+  <line x1="450" y1="238" x2="450" y2="190" stroke="#2563EB" stroke-width="2.5" marker-end="url(#soArrB)"/>
+  <text x="465" y="205" font-size="14" fill="#2563EB" font-style="italic" font-weight="bold">v</text>
+  <text x="500" y="232" font-size="14" fill="#8B0029" font-weight="bold">원궤도 (a = r)</text>
+  <text x="500" y="252" font-size="14" fill="#8B0029">E = -GMm/(2a)</text>
+
+  <!-- Elliptical orbit: center (250, 240), a=200, b=173, c=100. Right focus = Earth (350, 240). -->
+  <ellipse cx="250" cy="240" rx="200" ry="173" fill="none" stroke="#2563EB" stroke-width="2" stroke-dasharray="4 3"/>
+  <!-- Perihelion (right vertex at 450, 240) and aphelion (left vertex at 50, 240) -->
+  <circle cx="50" cy="240" r="3" fill="#2563EB"/>
+  <circle cx="450" cy="240" r="3" fill="#2563EB"/>
+  <text x="60" y="258" font-size="12" fill="#6B7280">원점</text>
+  <text x="450" y="258" text-anchor="middle" font-size="12" fill="#6B7280">근점</text>
+  <text x="100" y="120" font-size="14" fill="#2563EB" font-weight="bold">타원 궤도</text>
+  <text x="100" y="138" font-size="14" fill="#2563EB">E = -GMm/(2a)</text>
+
+  <!-- Escape trajectory (open hyperbolic-like curve passing far from Earth) -->
+  <path d="M 350,140 Q 470,170 540,90" fill="none" stroke="#6B7280" stroke-width="2"/>
+  <path d="M 540,90 L 600,40" fill="none" stroke="#6B7280" stroke-width="2" marker-end="url(#soArrG)"/>
+  <text x="555" y="120" font-size="14" fill="#6B7280" font-weight="bold">탈출 궤도</text>
+  <text x="555" y="138" font-size="14" fill="#6B7280">E &#x2265; 0</text>
+
+  <!-- Energy comparison bars -->
+  <text x="350" y="395" text-anchor="middle" font-size="14" fill="#1a1a1a" font-weight="bold">총 역학적 에너지 부호</text>
+
+  <rect x="120" y="410" width="140" height="26" rx="4" fill="#8B0029" fill-opacity="0.15" stroke="#8B0029" stroke-width="2"/>
+  <text x="190" y="428" text-anchor="middle" font-size="13" fill="#8B0029" font-weight="bold">원·타원 (속박)</text>
+  <text x="190" y="455" text-anchor="middle" font-size="13" fill="#8B0029">E &lt; 0</text>
+
+  <rect x="280" y="410" width="140" height="26" rx="4" fill="#6B7280" fill-opacity="0.15" stroke="#6B7280" stroke-width="2"/>
+  <text x="350" y="428" text-anchor="middle" font-size="13" fill="#6B7280" font-weight="bold">포물선 (탈출 경계)</text>
+  <text x="350" y="455" text-anchor="middle" font-size="13" fill="#6B7280">E = 0</text>
+
+  <rect x="440" y="410" width="140" height="26" rx="4" fill="#1a1a1a" fill-opacity="0.10" stroke="#1a1a1a" stroke-width="2"/>
+  <text x="510" y="428" text-anchor="middle" font-size="13" fill="#1a1a1a" font-weight="bold">쌍곡선 (탈출)</text>
+  <text x="510" y="455" text-anchor="middle" font-size="13" fill="#1a1a1a">E &gt; 0</text>
 </svg>

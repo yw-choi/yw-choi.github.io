@@ -60,7 +60,7 @@
   <text x="108" y="130" text-anchor="middle" font-size="12" fill="#6B7280" font-style="italic">vt</text>
 
   <!-- Formula box -->
-  <rect x="440" y="310" width="280" height="70" rx="8" fill="#f8f0f2" stroke="#e0c0c8" stroke-width="1"/>
+  <rect x="440" y="310" width="280" height="70" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
   <text x="580" y="335" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">sin &#x03B8; = v / v&#x209B;</text>
   <text x="580" y="360" text-anchor="middle" font-size="13" fill="#6B7280">Ma = v&#x209B; / v  (Mach number)</text>
 </svg>

@@ -13,11 +13,11 @@
 
   <!-- Fluid container (U-shape with different widths) -->
   <!-- Bottom horizontal tube -->
-  <rect x="120" y="280" width="500" height="60" rx="4" fill="#D1E8FF" stroke="#6B7280" stroke-width="2"/>
+  <rect x="120" y="280" width="500" height="60" rx="4" fill="#2563EB" fill-opacity="0.18" stroke="#6B7280" stroke-width="2"/>
   <!-- Left narrow cylinder -->
-  <rect x="140" y="100" width="60" height="180" rx="2" fill="#D1E8FF" stroke="#6B7280" stroke-width="2"/>
+  <rect x="140" y="100" width="60" height="180" rx="2" fill="#2563EB" fill-opacity="0.18" stroke="#6B7280" stroke-width="2"/>
   <!-- Right wide cylinder -->
-  <rect x="480" y="140" width="120" height="140" rx="2" fill="#D1E8FF" stroke="#6B7280" stroke-width="2"/>
+  <rect x="480" y="140" width="120" height="140" rx="2" fill="#2563EB" fill-opacity="0.18" stroke="#6B7280" stroke-width="2"/>
 
   <!-- Left piston -->
   <rect x="135" y="90" width="70" height="20" rx="3" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
@@ -25,15 +25,15 @@
   <rect x="475" y="130" width="130" height="20" rx="3" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
 
   <!-- Force arrows -->
-  <!-- F_i (small, down) on left piston -->
+  <!-- F_i (input, small, downward) on left piston. Length ~42 px. -->
   <line x1="170" y1="40" x2="170" y2="82" stroke="#8B0029" stroke-width="2.5" marker-end="url(#pArrR)"/>
   <text x="170" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">
     <tspan font-style="italic">F</tspan><tspan font-size="12" dy="4">i</tspan>
   </text>
 
-  <!-- F_o (large, up) on right piston -->
-  <line x1="540" y1="190" x2="540" y2="158" stroke="#2563EB" stroke-width="2.5" marker-end="url(#pArrB)"/>
-  <text x="540" y="205" text-anchor="middle" font-size="16" font-weight="bold" fill="#2563EB">
+  <!-- F_o (output, large, upward — pushes load up). Length ~92 px (A_o/A_i ~ 2.2). -->
+  <line x1="540" y1="220" x2="540" y2="128" stroke="#8B0029" stroke-width="3" marker-end="url(#pArrR)"/>
+  <text x="555" y="180" font-size="16" font-weight="bold" fill="#8B0029">
     <tspan font-style="italic">F</tspan><tspan font-size="12" dy="4">o</tspan>
   </text>
 
@@ -73,7 +73,7 @@
   <text x="375" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#8B0029">&#xD30C;&#xC2A4;&#xCE7C; &#xC6D0;&#xB9AC;: &#xC720;&#xC555; &#xB9AC;&#xD504;&#xD2B8;</text>
 
   <!-- Car on right piston -->
-  <rect x="495" y="108" width="90" height="22" rx="4" fill="#6B7280" stroke="#444" stroke-width="1.5"/>
-  <circle cx="510" cy="130" r="6" fill="#444"/>
-  <circle cx="570" cy="130" r="6" fill="#444"/>
+  <rect x="495" y="108" width="90" height="22" rx="4" fill="#6B7280" stroke="#6B7280" stroke-width="1.5"/>
+  <circle cx="510" cy="130" r="6" fill="#6B7280"/>
+  <circle cx="570" cy="130" r="6" fill="#6B7280"/>
 </svg>

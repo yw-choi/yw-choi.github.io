@@ -212,7 +212,7 @@ function updateInfo() {
 
   const sb = document.getElementById('statusBox');
   if (s.slipping) {
-    sb.textContent = '미끄러짐!  f > μₛN';
+    sb.innerHTML = '<b>미끄러짐!</b> 평형이 깨졌으므로 표시된 ' + kx('F_w, f') + ' 값은 “평형이 유지되었다면 필요한 값”이며 실제로는 ' + kx('f = \\mu_s N') + '으로 한계점에 있다.';
     sb.className = 'status-box status-slip';
   } else {
     const ratio = (s.f / s.fMax * 100).toFixed(0);

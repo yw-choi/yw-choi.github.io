@@ -6,67 +6,72 @@
     <marker id="arrB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
       <polygon points="0 0, 10 3.5, 0 7"/>
     </marker>
-    <marker id="arrG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
-      <polygon points="0 0, 10 3.5, 0 7"/>
-    </marker>
   </defs>
 
+  <!-- Title -->
+  <text x="350" y="30" text-anchor="middle" font-size="18" fill="#8B0029" font-weight="bold">분자-벽 탄성 충돌</text>
+
   <!-- Container wall (right side) -->
-  <rect x="480" y="40" width="20" height="320" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
-  <!-- Hatching on wall -->
+  <rect x="480" y="60" width="20" height="320" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
   <g stroke="#6B7280" stroke-width="1">
-    <line x1="485" y1="50" x2="500" y2="35"/>
-    <line x1="485" y1="80" x2="500" y2="65"/>
-    <line x1="485" y1="110" x2="500" y2="95"/>
-    <line x1="485" y1="140" x2="500" y2="125"/>
-    <line x1="485" y1="170" x2="500" y2="155"/>
-    <line x1="485" y1="200" x2="500" y2="185"/>
-    <line x1="485" y1="230" x2="500" y2="215"/>
-    <line x1="485" y1="260" x2="500" y2="245"/>
-    <line x1="485" y1="290" x2="500" y2="275"/>
-    <line x1="485" y1="320" x2="500" y2="305"/>
-    <line x1="485" y1="350" x2="500" y2="335"/>
+    <line x1="500" y1="70" x2="515" y2="55"/>
+    <line x1="500" y1="100" x2="515" y2="85"/>
+    <line x1="500" y1="130" x2="515" y2="115"/>
+    <line x1="500" y1="160" x2="515" y2="145"/>
+    <line x1="500" y1="190" x2="515" y2="175"/>
+    <line x1="500" y1="220" x2="515" y2="205"/>
+    <line x1="500" y1="250" x2="515" y2="235"/>
+    <line x1="500" y1="280" x2="515" y2="265"/>
+    <line x1="500" y1="310" x2="515" y2="295"/>
+    <line x1="500" y1="340" x2="515" y2="325"/>
+    <line x1="500" y1="370" x2="515" y2="355"/>
   </g>
-  <text x="510" y="200" font-size="14" fill="#6B7280" text-anchor="start" transform="rotate(90,510,200)">container wall</text>
 
-  <!-- Molecule approaching -->
-  <circle cx="250" cy="180" r="14" fill="#F3F4F6" stroke="#8B0029" stroke-width="2"/>
-  <text x="250" y="185" font-size="13" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
-
-  <!-- Incoming velocity arrow -->
-  <line x1="280" y1="168" x2="440" y2="128" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB)"/>
-  <text x="370" y="118" font-size="14" fill="#2563EB" font-style="italic" font-weight="bold">v</text>
-
-  <!-- Normal to wall (dashed) -->
-  <line x1="480" y1="100" x2="280" y2="100" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <text x="300" y="92" font-size="12" fill="#6B7280">normal</text>
-
-  <!-- Molecule leaving (after bounce) -->
-  <circle cx="250" cy="280" r="14" fill="#F3F4F6" stroke="#8B0029" stroke-width="2" stroke-dasharray="4 3"/>
-  <text x="250" y="285" font-size="13" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
-
-  <!-- Outgoing velocity arrow -->
-  <line x1="440" y1="232" x2="280" y2="268" stroke="#2563EB" stroke-width="2.5" stroke-dasharray="4 3" marker-end="url(#arrB)"/>
-  <text x="370" y="268" font-size="14" fill="#2563EB" font-style="italic" font-weight="bold">v</text>
+  <!-- Wall normal (dashed horizontal at collision point y=210) -->
+  <line x1="280" y1="210" x2="480" y2="210" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="290" y="204" font-size="12" fill="#6B7280">벽 법선</text>
 
   <!-- Collision point on wall -->
-  <circle cx="480" cy="180" r="5" fill="#8B0029"/>
+  <circle cx="480" cy="210" r="4" fill="#1a1a1a"/>
 
-  <!-- x-component arrows at collision point -->
-  <!-- Before: +v_x pointing right -->
-  <line x1="370" y1="140" x2="460" y2="140" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
-  <text x="400" y="134" font-size="13" fill="#8B0029" font-style="italic">+v<tspan font-size="10" baseline-shift="sub">x</tspan></text>
+  <!-- Incoming molecule (lower-left of collision; trajectory rises toward wall: +v_x, +v_y in math → -y in SVG) -->
+  <circle cx="240" cy="290" r="14" fill="#F3F4F6" stroke="#8B0029" stroke-width="2"/>
+  <text x="240" y="295" font-size="13" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
 
-  <!-- After: -v_x pointing left -->
-  <line x1="460" y1="220" x2="370" y2="220" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
-  <text x="395" y="240" font-size="13" fill="#8B0029" font-style="italic">-v<tspan font-size="10" baseline-shift="sub">x</tspan></text>
+  <!-- Incoming velocity arrow: from molecule (254, 282) to near collision (470, 217) -->
+  <line x1="254" y1="282" x2="470" y2="217" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB)"/>
+  <text x="345" y="240" font-size="14" fill="#2563EB" font-style="italic" font-weight="bold">v (입사)</text>
+
+  <!-- Outgoing molecule (upper-left of collision; same y-direction continues UP: -v_x, +v_y in math → -y in SVG) -->
+  <circle cx="240" cy="130" r="14" fill="#F3F4F6" stroke="#8B0029" stroke-width="2" stroke-dasharray="4 3"/>
+  <text x="240" y="135" font-size="13" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+
+  <!-- Outgoing velocity arrow: from near collision (470, 203) to outgoing molecule (254, 138) -->
+  <line x1="470" y1="203" x2="254" y2="138" stroke="#2563EB" stroke-width="2.5" stroke-dasharray="4 3" marker-end="url(#arrB)"/>
+  <text x="320" y="170" font-size="14" fill="#2563EB" font-style="italic" font-weight="bold">v' (반사)</text>
+
+  <!-- Component decomposition near collision point -->
+  <!-- Before: +v_x (right) -->
+  <line x1="430" y1="252" x2="475" y2="252" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <text x="438" y="268" font-size="13" fill="#8B0029" font-style="italic">+v<tspan font-size="10" baseline-shift="sub">x</tspan></text>
+
+  <!-- After: -v_x (left) -->
+  <line x1="475" y1="172" x2="430" y2="172" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <text x="430" y="166" font-size="13" fill="#8B0029" font-style="italic">-v<tspan font-size="10" baseline-shift="sub">x</tspan></text>
+
+  <!-- v_y preserved (vertical, on both sides of collision in same direction) -->
+  <line x1="495" y1="280" x2="495" y2="240" stroke="#6B7280" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <text x="525" y="265" font-size="13" fill="#6B7280" font-style="italic">v<tspan font-size="10" baseline-shift="sub">y</tspan> (보존)</text>
+  <line x1="540" y1="180" x2="540" y2="140" stroke="#6B7280" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <text x="555" y="165" font-size="13" fill="#6B7280" font-style="italic">v<tspan font-size="10" baseline-shift="sub">y</tspan></text>
 
   <!-- Momentum transfer annotation -->
-  <text x="80" y="370" font-size="14" fill="#8B0029" font-weight="bold">
-    <tspan font-style="italic">&#x394;p</tspan><tspan font-size="10" baseline-shift="sub">x</tspan> = -2<tspan font-style="italic">mv</tspan><tspan font-size="10" baseline-shift="sub">x</tspan>
+  <text x="40" y="368" font-size="14" fill="#1a1a1a">탄성 충돌:
+    <tspan font-style="italic">v<tspan font-size="10" baseline-shift="sub">x</tspan></tspan> 부호 반전,
+    <tspan font-style="italic">v<tspan font-size="10" baseline-shift="sub">y</tspan></tspan> 보존
   </text>
-  <text x="80" y="392" font-size="12" fill="#6B7280">(wall receives +2mv<tspan font-size="9" baseline-shift="sub">x</tspan>)</text>
-
-  <!-- Title -->
-  <text x="40" y="35" font-size="18" fill="#8B0029" font-weight="bold">Molecule-Wall Collision</text>
+  <text x="40" y="392" font-size="14" fill="#8B0029" font-weight="bold">
+    <tspan font-style="italic">&#x394;p</tspan><tspan font-size="10" baseline-shift="sub">x</tspan> = -2<tspan font-style="italic">mv</tspan><tspan font-size="10" baseline-shift="sub">x</tspan>
+    &#x2003; (벽이 받는 운동량 = +2<tspan font-style="italic">mv</tspan><tspan font-size="10" baseline-shift="sub">x</tspan>)
+  </text>
 </svg>

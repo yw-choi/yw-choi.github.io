@@ -13,7 +13,7 @@
   <rect x="40" y="60" width="250" height="320" rx="4" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
   <!-- Fluid -->
   <linearGradient id="bFluid" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stop-color="#93C5FD" stop-opacity="0.4"/>
+    <stop offset="0%" stop-color="#2563EB" stop-opacity="0.4"/>
     <stop offset="100%" stop-color="#2563EB" stop-opacity="0.5"/>
   </linearGradient>
   <rect x="42" y="110" width="246" height="268" fill="url(#bFluid)"/>
@@ -73,7 +73,7 @@
 
   <!-- Equation box -->
   <rect x="50" y="400" width="650" height="35" rx="6" fill="#F3F4F6" stroke="#8B0029" stroke-width="1.5"/>
-  <text x="375" y="423" text-anchor="middle" font-size="15" fill="#8B0029" font-weight="bold">
-    &#xBD80;&#xB825;: F&#x2095; = &#x3C1;&#x2091;gV&#x2092;&#x1D64;&#x2095; = m&#x2091;g  (&#xBC30;&#xC81C;&#xB41C; &#xC720;&#xCCB4;&#xC758; &#xBB34;&#xAC8C;)
+  <text x="375" y="423" text-anchor="middle" font-size="15" fill="#1a1a1a" font-weight="bold">
+    부력: <tspan font-style="italic">F</tspan><tspan font-size="12" dy="3">b</tspan><tspan dy="-3"> = </tspan><tspan font-style="italic">&#x3C1;</tspan><tspan font-size="12" dy="3">f</tspan><tspan dy="-3"> </tspan><tspan font-style="italic">gV</tspan><tspan font-size="12" dy="3">disp</tspan><tspan dy="-3"> = </tspan><tspan font-style="italic">m</tspan><tspan font-size="12" dy="3">f</tspan><tspan dy="-3" font-style="italic">g</tspan><tspan dy="0"> &#x2003;(배제된 유체의 무게)</tspan>
   </text>
 </svg>

@@ -40,6 +40,6 @@
   <text x="325" y="405" text-anchor="middle" font-size="13" fill="#8B0029" font-weight="bold">T<tspan baseline-shift="sub" font-size="10">beat</tspan> = 1/f<tspan baseline-shift="sub" font-size="10">beat</tspan></text>
 
   <!-- Formula -->
-  <rect x="480" y="230" width="240" height="35" rx="6" fill="#f8f0f2" stroke="#e0c0c8" stroke-width="1"/>
+  <rect x="480" y="230" width="240" height="35" rx="6" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
   <text x="600" y="253" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">f<tspan baseline-shift="sub" font-size="10">beat</tspan> = f<tspan baseline-shift="sub" font-size="10">1</tspan> - f<tspan baseline-shift="sub" font-size="10">2</tspan></text>
 </svg>

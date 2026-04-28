@@ -170,9 +170,10 @@ function dampedX(t, m, k, b) {
   const disc = omega0sq - gamma * gamma;
 
   if (disc > 0) {
-    // Underdamped
+    // Underdamped, IC: x(0)=x0, v(0)=0
+    // x(t) = e^{-γt} [x0 cos(ω' t) + (γ x0 / ω') sin(ω' t)]
     const wd = Math.sqrt(disc);
-    return x0 * Math.exp(-gamma * t) * Math.cos(wd * t);
+    return x0 * Math.exp(-gamma * t) * (Math.cos(wd * t) + (gamma / wd) * Math.sin(wd * t));
   } else if (disc < -0.001) {
     // Overdamped
     const r1 = -gamma + Math.sqrt(-disc);
@@ -202,9 +203,11 @@ function updateInfo() {
   html += '<span class="label">변위:</span> <span class="val">x/x<sub>m</sub> = ' + xNow.toFixed(4) + '</span><br>';
   html += '<span class="label">포락선:</span> <span class="val">' + Math.exp(-gamma * tSim).toFixed(4) + '</span><br>';
 
+  // Regime window scaled to ±5% of b_crit so the slider step (0.1 kg/s) reliably hits "임계" zone.
+  const regimeWindow = Math.max(0.15, 0.05 * bcrit);
   let regime;
-  if (b < bcrit - 0.15) regime = '<span style="color:#2563EB;font-weight:700">미감쇠 (underdamped)</span>';
-  else if (b > bcrit + 0.15) regime = '<span style="color:#6B7280;font-weight:700">과감쇠 (overdamped)</span>';
+  if (b < bcrit - regimeWindow) regime = '<span style="color:#2563EB;font-weight:700">미감쇠 (underdamped)</span>';
+  else if (b > bcrit + regimeWindow) regime = '<span style="color:#6B7280;font-weight:700">과감쇠 (overdamped)</span>';
   else regime = '<span style="color:#8B0029;font-weight:700">임계감쇠 (critically damped)</span>';
   html += '<span class="label">상태:</span> ' + regime;
   box.innerHTML = html;
@@ -326,8 +329,9 @@ function draw() {
 
   // Regime indicator
   let regimeText, regimeColor;
-  if (b < bcrit - 0.15) { regimeText = '미감쇠 (Underdamped)'; regimeColor = '#2563EB'; }
-  else if (b > bcrit + 0.15) { regimeText = '과감쇠 (Overdamped)'; regimeColor = '#6B7280'; }
+  const regimeWindow = Math.max(0.15, 0.05 * bcrit);
+  if (b < bcrit - regimeWindow) { regimeText = '미감쇠 (Underdamped)'; regimeColor = '#2563EB'; }
+  else if (b > bcrit + regimeWindow) { regimeText = '과감쇠 (Overdamped)'; regimeColor = '#6B7280'; }
   else { regimeText = '임계감쇠 (Critically Damped)'; regimeColor = '#8B0029'; }
 
   ctx.fillStyle = regimeColor; ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'right';

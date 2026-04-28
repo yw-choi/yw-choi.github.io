@@ -360,8 +360,7 @@ function computeOrbitalElements(M) {
   let ecc, a, period, type;
   if (E < -1e-6) {
     a = -G_CONST * M / (2 * E);
-    ecc = Math.sqrt(1 + 2 * E * L * L / (G_CONST * M * G_CONST * M));
-    if (ecc < 0) ecc = 0;
+    ecc = Math.sqrt(Math.max(0, 1 + 2 * E * L * L / (G_CONST * M * G_CONST * M)));
     period = 2 * Math.PI * Math.sqrt(a * a * a / (G_CONST * M));
     type = ecc < 0.01 ? '원궤도' : '타원 궤도';
   } else if (E < 1e-6) {
@@ -371,7 +370,7 @@ function computeOrbitalElements(M) {
     period = Infinity;
   } else {
     type = '쌍곡선 궤도 (탈출)';
-    ecc = Math.sqrt(1 + 2 * E * L * L / (G_CONST * M * G_CONST * M));
+    ecc = Math.sqrt(Math.max(0, 1 + 2 * E * L * L / (G_CONST * M * G_CONST * M)));
     a = Infinity;
     period = Infinity;
   }
