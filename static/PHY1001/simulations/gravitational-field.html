@@ -55,12 +55,12 @@ button.reset-btn:hover { background: #a3003a; }
     <div class="theorem-box" id="theoremBox"></div>
 
     <div class="control-group">
-      <label>질량 1: M&#x2081; = <span id="m1Val">3.0</span></label>
+      <label>질량 1: M<sub>1</sub> = <span id="m1Val">3.0</span></label>
       <input type="range" id="m1Slider" min="0" max="5" value="3" step="0.1">
     </div>
 
     <div class="control-group">
-      <label>질량 2: M&#x2082; = <span id="m2Val">1.0</span></label>
+      <label>질량 2: M<sub>2</sub> = <span id="m2Val">1.0</span></label>
       <input type="range" id="m2Slider" min="0" max="5" value="1" step="0.1">
     </div>
 
@@ -178,7 +178,7 @@ function draw() {
 
   // Draw equipotential lines
   if (showPotCB.checked) {
-    const gridRes = 2; // pixel steps
+    const gridRes = 4; // pixel steps; enough for smooth contours without slowing the iframe
     const potGrid = [];
     const cols = Math.ceil(CW / gridRes);
     const rows = Math.ceil(CH / gridRes);
@@ -278,18 +278,39 @@ function draw() {
     }
   }
 
+  // Draw zero-field point for the two-mass line. It is not a potential maximum;
+  // it is only where the vector sum of the two fields cancels.
+  if (masses.length === 2) {
+    const left = masses[0].x < masses[1].x ? masses[0] : masses[1];
+    const right = masses[0].x < masses[1].x ? masses[1] : masses[0];
+    const q = Math.sqrt(left.m / right.m);
+    const zeroX = (left.x + q * right.x) / (1 + q);
+    const [zx, zy] = toScreen(zeroX, 0);
+    ctx.fillStyle = '#fff';
+    ctx.strokeStyle = '#8B0029';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(zx, zy, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#8B0029';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('g=0', zx, zy - 10);
+  }
+
   // Draw masses
-  for (const mass of masses) {
+  masses.forEach((mass, idx) => {
     const [mx, my] = toScreen(mass.x, mass.y);
     const r = 10 + mass.m * 4;
     ctx.fillStyle = '#FFD700'; ctx.strokeStyle = '#FF8C00'; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.arc(mx, my, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
     ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('M', mx, my);
+    ctx.fillText('M' + (idx + 1), mx, my);
     ctx.textBaseline = 'alphabetic';
     ctx.fillStyle = '#6B7280'; ctx.font = '11px sans-serif';
     ctx.fillText(mass.m.toFixed(1), mx, my + r + 14);
-  }
+  });
 
   updateInfo();
 }
@@ -303,21 +324,23 @@ function updateInfo() {
   let html = '<span class="label">총 질량:</span> ' + totalM.toFixed(1) + '<br>';
   html += '<span class="label">질량 수:</span> ' + masses.length + '<br>';
   html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
-  html += tex('\\vec{g} = -\\sum_i \\frac{GM_i}{r_i^2}\\hat{r}_i');
+  html += tex('\\Phi = -\\sum_i \\frac{GM_i}{r_i}') + '<br>';
+  html += tex('\\vec{g} = -\\nabla\\Phi');
   box.innerHTML = html;
 }
 
 function renderStatic() {
-  document.getElementById('canvasTitle').innerHTML = '중력장: ' + tex('\\vec{g}(\\vec{r}) = -\\sum \\frac{GM_i}{r_i^2}\\hat{r}_i');
+  document.getElementById('canvasTitle').innerHTML = '중력장: ' + tex('\\vec{g} = -\\nabla\\Phi');
   document.getElementById('theoremBox').innerHTML =
     '중력장과 퍼텐셜<br>' +
-    tex('\\vec{g} = -\\nabla U/m') + '<br>' +
-    tex('U = -\\sum \\frac{GM_i m}{r_i}');
+    tex('\\Phi = U/m = -\\sum \\frac{GM_i}{r_i}') + '<br>' +
+    tex('\\vec{g} = -\\nabla\\Phi');
 
   const box = document.getElementById('formulaBox');
   box.innerHTML =
     '<b>파랑 화살표:</b> 중력장 벡터 ' + tex('\\vec{g}') + '<br>' +
-    '<b>빨강 등고선:</b> 등퍼텐셜선 ' + tex('U = \\text{const}') + '<br>' +
+    '<b>빨강 등고선:</b> 등퍼텐셜선 ' + tex('\\Phi = \\text{const}') + '<br>' +
+    '<b>흰 점:</b> 두 질량의 장이 상쇄되는 지점 ' + tex('\\vec{g}=0') + '<br>' +
     tex('\\vec{g} \\perp') + ' 등퍼텐셜선 (항상 수직)';
 }
 

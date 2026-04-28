@@ -248,8 +248,8 @@ function getOrbitalElements() {
   // Semi-major axis
   const a = E < 0 ? -GM / (2 * E) : Infinity;
 
-  // Eccentricity
-  const e = E < 0 ? Math.sqrt(Math.max(0, 1 + 2 * E * L * L / (GM * GM))) : NaN;
+  // Eccentricity: e < 1 bound ellipse, e = 1 parabola, e > 1 hyperbola.
+  const e = Math.sqrt(Math.max(0, 1 + 2 * E * L * L / (GM * GM)));
 
   // Period
   const T = a < Infinity ? 2 * Math.PI * Math.sqrt(a * a * a / GM) : Infinity;
@@ -261,20 +261,24 @@ function updateInfo() {
   const { v0frac, r0, Mfrac } = getParams();
   const GM = getGM();
   const elem = getOrbitalElements();
+  const vcNow = circularSpeed(elem.r, GM);
+  const vescNow = escapeSpeed(elem.r, GM);
 
   const box = document.getElementById('infoBox');
   let html = '';
   html += '<span class="label">거리:</span> <span class="val">r = ' + elem.r.toFixed(3) + ' R</span><br>';
-  html += '<span class="label">속력:</span> <span class="val">v = ' + elem.v.toFixed(3) + ' v<sub>c</sub></span><br>';
+  html += '<span class="label">속력:</span> <span class="val">v/v<sub>c</sub>(r) = ' + (elem.v / vcNow).toFixed(3) + '</span><br>';
+  html += '<span class="label">탈출비:</span> <span class="val">v/v<sub>esc</sub>(r) = ' + (elem.v / vescNow).toFixed(3) + '</span><br>';
   html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
-  html += tex('E') + ' = <span class="val">' + elem.E.toFixed(4) + '</span><br>';
-  html += tex('L') + ' = <span class="val">' + elem.L.toFixed(4) + '</span><br>';
+  html += tex('\\varepsilon = K/m + U/m') + ' = <span class="val">' + elem.E.toFixed(4) + '</span><br>';
+  html += tex('h=L/m') + ' = <span class="val">' + elem.L.toFixed(4) + '</span><br>';
+  html += tex('e') + ' = <span class="val">' + elem.e.toFixed(4) + '</span><br>';
   if (elem.a < Infinity && elem.a > 0) {
     html += tex('a') + ' = <span class="val">' + elem.a.toFixed(3) + ' R</span><br>';
-    html += tex('e') + ' = <span class="val">' + (isNaN(elem.e) ? '-' : elem.e.toFixed(4)) + '</span><br>';
     html += tex('T') + ' = <span class="val">' + elem.T.toFixed(3) + '</span>';
   } else {
-    html += '<span style="color:#8B0029">비속박 궤도 (E &#x2265; 0)</span>';
+    const kind = Math.abs(elem.E) < 1e-5 ? '포물선 탈출 경계' : '쌍곡선 탈출';
+    html += '<span style="color:#8B0029">' + kind + ' (E &#x2265; 0)</span>';
   }
   box.innerHTML = html;
 }
@@ -395,8 +399,10 @@ function draw() {
     const eScale = maxBarH / maxE;
     const barW = 28, barGap = 8;
 
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.fillRect(barAreaX - 8, barBaseY - maxBarH - 27, 2 * barW + barGap + 28, 18);
     ctx.fillStyle = '#444'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('에너지', barAreaX + barW + barGap / 2, barBaseY - maxBarH - 10);
+    ctx.fillText('에너지(단위질량당)', barAreaX + barW + barGap / 2, barBaseY - maxBarH - 14);
 
     // K bar (up)
     const kH = K * eScale;
@@ -465,7 +471,8 @@ function updateFormula() {
     '<b>궤도 유형:</b> ' + orbitType + '<br>' +
     tex('v_c = \\sqrt{GM/r_0} = ' + vc.toFixed(3)) + '<br>' +
     tex('v_{\\text{esc}} = \\sqrt{2GM/r_0} = ' + vesc.toFixed(3)) + '<br>' +
-    tex('v_0 = ' + v0.toFixed(3) + ' (' + v0frac.toFixed(2) + '\\,v_c)');
+    tex('v_0 = ' + v0.toFixed(3) + ' (' + v0frac.toFixed(2) + '\\,v_c)') + '<br>' +
+    tex('v_0/v_{\\text{esc}} = ' + (v0 / vesc).toFixed(3));
 }
 
 [velSlider, distSlider, massSlider].forEach(sl => {

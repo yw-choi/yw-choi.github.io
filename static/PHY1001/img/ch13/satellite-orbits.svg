@@ -28,8 +28,8 @@
   <!-- Perihelion (right vertex at 450, 240) and aphelion (left vertex at 50, 240) -->
   <circle cx="50" cy="240" r="3" fill="#2563EB"/>
   <circle cx="450" cy="240" r="3" fill="#2563EB"/>
-  <text x="60" y="258" font-size="12" fill="#6B7280">원점</text>
-  <text x="450" y="258" text-anchor="middle" font-size="12" fill="#6B7280">근점</text>
+  <text x="60" y="258" font-size="12" fill="#6B7280">원지점</text>
+  <text x="450" y="258" text-anchor="middle" font-size="12" fill="#6B7280">근지점</text>
   <text x="100" y="120" font-size="14" fill="#2563EB" font-weight="bold">타원 궤도</text>
   <text x="100" y="138" font-size="14" fill="#2563EB">E = -GMm/(2a)</text>
 
