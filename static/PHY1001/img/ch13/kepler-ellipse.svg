@@ -1,78 +1,498 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -6 750 436" font-family="sans-serif">
-  <defs>
-    <marker id="keArrR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
-      <polygon points="0 0, 10 3.5, 0 7"/>
-    </marker>
-    <marker id="keArrB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
-      <polygon points="0 0, 10 3.5, 0 7"/>
-    </marker>
-    <marker id="keArrG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
-      <polygon points="0 0, 10 3.5, 0 7"/>
-    </marker>
-  </defs>
-
-  <!-- Ellipse -->
-  <ellipse cx="375" cy="210" rx="280" ry="160" fill="none" stroke="#8B0029" stroke-width="2"/>
-
-  <!-- Center of ellipse -->
-  <circle cx="375" cy="210" r="3" fill="#6B7280"/>
-
-  <!-- Sun at focus F (left focus) -->
-  <!-- c = sqrt(a^2 - b^2) = sqrt(280^2 - 160^2) = sqrt(52800) ~ 230 -->
-  <circle cx="145" cy="210" r="18" fill="#8B0029"/>
-  <text x="145" y="250" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">태양 (M)</text>
-
-  <!-- Other focus F' -->
-  <circle cx="605" cy="210" r="4" fill="none" stroke="#6B7280" stroke-width="2"/>
-  <text x="605" y="240" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">F'</text>
-
-  <!-- Semi-major axis a -->
-  <line x1="95" y1="370" x2="655" y2="370" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <line x1="95" y1="360" x2="95" y2="380" stroke="#6B7280" stroke-width="1"/>
-  <line x1="655" y1="360" x2="655" y2="380" stroke="#6B7280" stroke-width="1"/>
-  <text x="375" y="395" text-anchor="middle" font-size="14" fill="#6B7280" font-weight="bold">2<tspan font-style="italic">a</tspan></text>
-
-  <!-- Semi-major axis label (half) -->
-  <line x1="375" y1="210" x2="655" y2="210" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <text x="515" y="200" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">a</text>
-
-  <!-- Semi-minor axis b -->
-  <line x1="375" y1="50" x2="375" y2="210" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <text x="390" y="130" font-size="14" fill="#6B7280" font-style="italic">b</text>
-
-  <!-- Perihelion (closest) -->
-  <circle cx="95" cy="210" r="5" fill="#8B0029"/>
-  <text x="95" y="280" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">근일점</text>
-  <text x="95" y="298" text-anchor="middle" font-size="14" fill="#8B0029">(perihelion)</text>
-
-  <!-- Rp label -->
-  <line x1="95" y1="320" x2="145" y2="320" stroke="#8B0029" stroke-width="2"/>
-  <line x1="95" y1="313" x2="95" y2="327" stroke="#8B0029" stroke-width="1"/>
-  <line x1="145" y1="313" x2="145" y2="327" stroke="#8B0029" stroke-width="1"/>
-  <text x="120" y="342" text-anchor="middle" font-size="14" fill="#8B0029" font-style="italic">R<tspan font-size="10" baseline-shift="sub">p</tspan></text>
-
-  <!-- Aphelion (farthest) -->
-  <circle cx="655" cy="210" r="5" fill="#2563EB"/>
-  <text x="655" y="280" text-anchor="middle" font-size="14" fill="#2563EB" font-weight="bold">원일점</text>
-  <text x="655" y="298" text-anchor="middle" font-size="14" fill="#2563EB">(aphelion)</text>
-
-  <!-- Ra label -->
-  <line x1="145" y1="320" x2="655" y2="320" stroke="#2563EB" stroke-width="2"/>
-  <line x1="655" y1="313" x2="655" y2="327" stroke="#2563EB" stroke-width="1"/>
-  <text x="400" y="342" text-anchor="middle" font-size="14" fill="#2563EB" font-style="italic">R<tspan font-size="10" baseline-shift="sub">a</tspan></text>
-
-  <!-- Planet -->
-  <circle cx="190" cy="87" r="8" fill="#2563EB"/>
-  <text x="210" y="80" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">m</text>
-
-  <!-- Velocity vector at planet -->
-  <line x1="190" y1="87" x2="240" y2="55" stroke="#2563EB" stroke-width="2.5" marker-end="url(#keArrB)"/>
-  <text x="250" y="52" font-size="14" fill="#2563EB" font-style="italic" font-weight="bold">v</text>
-
-  <!-- ea label -->
-  <line x1="375" y1="210" x2="145" y2="210" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <text x="260" y="228" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">ea</text>
-
-  <!-- Kepler 1st law text -->
-  <text x="375" y="28" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">케플러 제1법칙: 모든 행성은 타원 궤도를 그린다</text>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="780" height="460" viewBox="0 0 561.6 331.2" xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <title>Kepler first law ellipse diagram</title>
+  <desc>An elliptical orbit with the Sun at one focus, showing semimajor axis, semiminor axis, focus distance, perihelion, and aphelion.</desc>
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.9, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 331.2
+L 561.6 331.2
+L 561.6 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="line2d_1">
+    <path d="M 125.770213 162.499404
+L 435.829787 162.499404
+" clip-path="url(#pd2a4644bf2)" style="fill: none; stroke-dasharray: 4.8,4.8; stroke-dashoffset: 0; stroke: #374151; stroke-width: 1.2"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 280.8 162.499404
+L 280.8 33.024006
+" clip-path="url(#pd2a4644bf2)" style="fill: none; stroke-dasharray: 4.8,4.8; stroke-dashoffset: 0; stroke: #374151; stroke-width: 1.2"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 435.829787 162.499404
+L 435.735137 157.975754
+L 435.451302 153.457627
+L 434.978629 148.950541
+L 434.317695 144.459998
+L 433.469307 139.991483
+L 432.434501 135.550451
+L 431.214541 131.142326
+L 429.810915 126.772489
+L 428.225339 122.446277
+L 426.459748 118.168972
+L 424.10647 113.108113
+L 421.501224 108.134095
+L 418.648591 103.255666
+L 415.553587 98.481401
+L 412.221653 93.819695
+L 408.658647 89.278745
+L 404.870835 84.866535
+L 400.864876 80.590823
+L 396.647813 76.459126
+L 392.227062 72.478708
+L 387.610395 68.656569
+L 382.805929 64.999429
+L 377.822112 61.513717
+L 372.667706 58.205563
+L 367.351774 55.080783
+L 361.883663 52.144871
+L 356.272987 49.402989
+L 350.529611 46.859959
+L 344.663634 44.520251
+L 338.685369 42.387979
+L 332.605327 40.466892
+L 326.434198 38.760368
+L 320.182834 37.271408
+L 313.862225 36.002629
+L 307.483484 34.956262
+L 301.057828 34.134148
+L 294.596553 33.53773
+L 288.11102 33.168059
+L 281.612633 33.025784
+L 275.112817 33.111156
+L 268.623001 33.424023
+L 262.154595 33.963836
+L 255.718971 34.729647
+L 249.327447 35.720108
+L 242.991259 36.933477
+L 236.721548 38.367623
+L 230.529337 40.020022
+L 224.425515 41.88777
+L 218.420813 43.967583
+L 212.525788 46.255804
+L 206.750807 48.748409
+L 201.106022 51.441016
+L 195.601358 54.328891
+L 190.246495 57.406957
+L 185.050846 60.6698
+L 180.023548 64.111685
+L 175.17344 67.726559
+L 170.509049 71.508067
+L 166.038576 75.449561
+L 161.769882 79.544109
+L 157.710472 83.784513
+L 153.867484 88.163316
+L 150.247674 92.672821
+L 146.857406 97.305098
+L 143.702643 102.052003
+L 140.78893 106.905189
+L 138.121391 111.856123
+L 135.704716 116.8961
+L 133.543153 122.016259
+L 131.939485 126.337817
+L 130.517583 130.703531
+L 129.279186 135.108069
+L 128.225804 139.546053
+L 127.358724 144.012065
+L 126.679004 148.500651
+L 126.187475 153.006331
+L 125.884737 157.523601
+L 125.771159 162.046948
+L 125.846881 166.570847
+L 126.111809 171.089775
+L 126.56562 175.598213
+L 127.207761 180.090657
+L 128.037446 184.561621
+L 129.053664 189.005646
+L 130.255172 193.417305
+L 131.640504 197.791211
+L 133.207969 202.122024
+L 134.955652 206.404456
+L 137.28774 211.472153
+L 139.872157 216.453743
+L 142.70436 221.340468
+L 145.779369 226.123737
+L 149.091777 230.795138
+L 152.63576 235.346459
+L 156.405088 239.769697
+L 160.393132 244.057075
+L 164.59288 248.201054
+L 168.99695 252.19435
+L 173.597596 256.029939
+L 178.38673 259.701079
+L 183.355932 263.201315
+L 188.496464 266.524492
+L 193.799289 269.664767
+L 199.255082 272.61662
+L 204.85425 275.37486
+L 210.58695 277.934637
+L 216.443102 280.291451
+L 222.412409 282.441157
+L 228.484376 284.379977
+L 234.648326 286.104501
+L 240.893422 287.611697
+L 247.208683 288.898915
+L 253.583007 289.963891
+L 260.005184 290.804754
+L 266.463924 291.420025
+L 272.94787 291.808622
+L 279.445622 291.969862
+L 285.945756 291.903461
+L 292.436842 291.609536
+L 298.907467 291.088604
+L 305.346255 290.341581
+L 311.741885 289.36978
+L 318.083112 288.17491
+L 324.358785 286.759071
+L 330.557872 285.124754
+L 336.669472 283.274831
+L 342.68284 281.212556
+L 348.587403 278.941554
+L 354.372779 276.465819
+L 360.028796 273.789702
+L 365.54551 270.91791
+L 370.91322 267.855492
+L 376.122489 264.607832
+L 381.164158 261.18064
+L 386.029362 257.579943
+L 390.709548 253.812071
+L 395.196485 249.883649
+L 399.482286 245.801584
+L 403.559414 241.573053
+L 407.420701 237.205492
+L 411.059358 232.706579
+L 414.468987 228.084225
+L 417.643593 223.346557
+L 420.577595 218.501904
+L 423.265834 213.558786
+L 425.703583 208.525892
+L 427.886556 203.412073
+L 429.508297 199.095222
+L 430.948457 194.733685
+L 432.205277 190.332788
+L 433.277222 185.897905
+L 434.162984 181.434451
+L 434.861481 176.947876
+L 435.371859 172.443658
+L 435.693497 167.927299
+L 435.826001 163.404311
+L 435.829787 162.499404
+L 435.829787 162.499404
+" clip-path="url(#pd2a4644bf2)" style="fill: none; stroke: #8b0029; stroke-width: 3.2; stroke-linecap: round"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'Apple SD Gothic Neo', 'DejaVu Sans'; fill: #8b0029" transform="translate(183.423617 210.460303)">태양</text>
+    <text style="font-weight: 700; font-size: 14px; font-family: 'Apple SD Gothic Neo', 'DejaVu Sans'; fill: #8b0029" transform="translate(178.98518 224.679928)">(초점)</text>
+   </g>
+   <g id="text_2">
+    <g id="patch_2">
+     <path d="M 380.019064 152.257021
+L 424.694689 152.257021
+Q 426.854689 152.257021 426.854689 150.097021
+L 426.854689 139.608271
+Q 426.854689 137.448271 424.694689 137.448271
+L 380.019064 137.448271
+Q 377.859064 137.448271 377.859064 139.608271
+L 377.859064 150.097021
+Q 377.859064 152.257021 380.019064 152.257021
+z
+" style="fill: #ffffff; opacity: 0.94"/>
+    </g>
+    <text style="font-size: 12px; font-family: 'Apple SD Gothic Neo', 'DejaVu Sans'; text-anchor: start; fill: #374151" x="380.019064" y="148.825771" transform="rotate(-0 380.019064 148.825771)">다른 초점</text>
+   </g>
+   <g id="text_3">
+    <g id="patch_3">
+     <path d="M 285.450894 149.156426
+L 306.210894 149.156426
+Q 308.370894 149.156426 308.370894 146.996426
+L 308.370894 136.543301
+Q 308.370894 134.383301 306.210894 134.383301
+L 285.450894 134.383301
+Q 283.290894 134.383301 283.290894 136.543301
+L 283.290894 146.996426
+Q 283.290894 149.156426 285.450894 149.156426
+z
+" style="fill: #ffffff; opacity: 0.94"/>
+    </g>
+    <text style="font-size: 12px; font-family: 'Apple SD Gothic Neo', 'DejaVu Sans'; text-anchor: start; fill: #374151" x="285.450894" y="145.725176" transform="rotate(-0 285.450894 145.725176)">중심</text>
+   </g>
+   <g id="patch_4">
+    <path d="M 282.588854 178.002383
+Q 358.314894 178.002383 434.040933 178.002383
+" style="fill: none; stroke: #374151; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 287.788854 180.602383
+L 282.588854 178.002383
+L 287.788854 175.402383
+" style="fill: none; stroke: #374151; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 428.840933 175.402383
+L 434.040933 178.002383
+L 428.840933 180.602383
+" style="fill: none; stroke: #374151; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="text_4">
+    <g id="patch_5">
+     <path d="M 353.354894 205.556968
+L 363.274894 205.556968
+Q 366.154894 205.556968 366.154894 202.676968
+L 366.154894 188.854468
+Q 366.154894 185.974468 363.274894 185.974468
+L 353.354894 185.974468
+Q 350.474894 185.974468 350.474894 188.854468
+L 350.474894 202.676968
+Q 350.474894 205.556968 353.354894 205.556968
+z
+" style="fill: #ffffff; opacity: 0.94"/>
+    </g>
+    <!-- $a$ -->
+    <g style="fill: #111827" transform="translate(353.354894 200.981968)">
+     <text>
+      <tspan x="0" y="-0.03125" style="font-style: oblique; font-size: 16px; font-family: 'DejaVu Sans'; fill: #111827">a</tspan>
+     </text>
+    </g>
+   </g>
+   <g id="patch_6">
+    <path d="M 293.202383 160.822353
+Q 293.202383 97.761705 293.202383 34.701057
+" style="fill: none; stroke: #374151; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 295.802383 155.622353
+L 293.202383 160.822353
+L 290.602383 155.622353
+" style="fill: none; stroke: #374151; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 290.602383 39.901057
+L 293.202383 34.701057
+L 295.802383 39.901057
+" style="fill: none; stroke: #374151; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="text_5">
+    <g id="patch_7">
+     <path d="M 302.50417 107.552955
+L 312.74417 107.552955
+Q 315.62417 107.552955 315.62417 104.672955
+L 315.62417 90.850455
+Q 315.62417 87.970455 312.74417 87.970455
+L 302.50417 87.970455
+Q 299.62417 87.970455 299.62417 90.850455
+L 299.62417 104.672955
+Q 299.62417 107.552955 302.50417 107.552955
+z
+" style="fill: #ffffff; opacity: 0.94"/>
+    </g>
+    <!-- $b$ -->
+    <g style="fill: #111827" transform="translate(302.50417 102.977955)">
+     <text>
+      <tspan x="0" y="-0.84375" style="font-style: oblique; font-size: 16px; font-family: 'DejaVu Sans'; fill: #111827">b</tspan>
+     </text>
+    </g>
+   </g>
+   <g id="patch_8">
+    <path d="M 197.210668 146.996426
+Q 238.166809 146.996426 279.122949 146.996426
+" style="fill: none; stroke: #374151; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 202.410668 149.596426
+L 197.210668 146.996426
+L 202.410668 144.396426
+" style="fill: none; stroke: #374151; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 273.922949 144.396426
+L 279.122949 146.996426
+L 273.922949 149.596426
+" style="fill: none; stroke: #374151; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="text_6">
+    <g id="patch_9">
+     <path d="M 217.096809 138.66434
+L 259.236809 138.66434
+Q 261.756809 138.66434 261.756809 136.14434
+L 261.756809 124.049653
+Q 261.756809 121.529653 259.236809 121.529653
+L 217.096809 121.529653
+Q 214.576809 121.529653 214.576809 124.049653
+L 214.576809 136.14434
+Q 214.576809 138.66434 217.096809 138.66434
+z
+" style="fill: #ffffff; opacity: 0.94"/>
+    </g>
+    <!-- $c=ea$ -->
+    <g style="fill: #111827" transform="translate(217.096809 134.661215)">
+     <text>
+      <tspan x="0" y="-0.15625" style="font-style: oblique; font-size: 14px; font-family: 'DejaVu Sans'; fill: #111827">c</tspan>
+      <tspan x="24.882812" y="-0.15625" style="font-style: oblique; font-size: 14px; font-family: 'DejaVu Sans'; fill: #111827">e</tspan>
+      <tspan x="33.496094" y="-0.15625" style="font-style: oblique; font-size: 14px; font-family: 'DejaVu Sans'; fill: #111827">a</tspan>
+      <tspan x="10.424805" y="-0.15625" style="font-size: 14px; font-family: 'DejaVu Sans'; fill: #111827">=</tspan>
+     </text>
+    </g>
+   </g>
+   <g id="text_7">
+    <g id="patch_10">
+     <path d="M 66.425213 140.034638
+L 185.115213 140.034638
+Q 187.455213 140.034638 187.455213 137.694638
+L 187.455213 123.134638
+Q 187.455213 120.794638 185.115213 120.794638
+L 66.425213 120.794638
+Q 64.085213 120.794638 64.085213 123.134638
+L 64.085213 137.694638
+Q 64.085213 140.034638 66.425213 140.034638
+z
+" style="fill: #ffffff; opacity: 0.94"/>
+    </g>
+    <!-- 근일점 $R_p=a(1-e)$ -->
+    <g style="fill: #8b0029" transform="translate(66.425213 133.664638)">
+     <text>
+      <tspan x="0" y="-0.28125" style="font-size: 13px; font-family: 'Apple SD Gothic Neo'; fill: #8b0029">근</tspan>
+      <tspan x="11.24501" y="-0.28125" style="font-size: 13px; font-family: 'Apple SD Gothic Neo'; fill: #8b0029">일</tspan>
+      <tspan x="22.490021" y="-0.28125" style="font-size: 13px; font-family: 'Apple SD Gothic Neo'; fill: #8b0029">점</tspan>
+      <tspan x="33.735031" y="-0.28125" style="font-size: 13px; font-family: 'Apple SD Gothic Neo'; fill: #8b0029"> </tspan>
+      <tspan x="37.154022" y="-0.28125" style="font-style: oblique; font-size: 13px; font-family: 'DejaVu Sans'; fill: #8b0029">R</tspan>
+      <tspan x="68.276581" y="-0.28125" style="font-style: oblique; font-size: 13px; font-family: 'DejaVu Sans'; fill: #8b0029">a</tspan>
+      <tspan x="105.543671" y="-0.28125" style="font-style: oblique; font-size: 13px; font-family: 'DejaVu Sans'; fill: #8b0029">e</tspan>
+      <tspan x="46.186737" y="1.851562" style="font-style: oblique; font-size: 9.1px; font-family: 'DejaVu Sans'; fill: #8b0029">p</tspan>
+      <tspan x="54.851288" y="-0.28125" style="font-size: 13px; font-family: 'DejaVu Sans'; fill: #8b0029">=</tspan>
+      <tspan x="76.242889" y="-0.28125" style="font-size: 13px; font-family: 'DejaVu Sans'; fill: #8b0029">(</tspan>
+      <tspan x="81.314667" y="-0.28125" style="font-size: 13px; font-family: 'DejaVu Sans'; fill: #8b0029">1</tspan>
+      <tspan x="92.118378" y="-0.28125" style="font-size: 13px; font-family: 'DejaVu Sans'; fill: #8b0029">−</tspan>
+      <tspan x="113.541718" y="-0.28125" style="font-size: 13px; font-family: 'DejaVu Sans'; fill: #8b0029">)</tspan>
+     </text>
+    </g>
+   </g>
+   <g id="text_8">
+    <g id="patch_11">
+     <path d="M 376.614787 140.034638
+L 495.044787 140.034638
+Q 497.384787 140.034638 497.384787 137.694638
+L 497.384787 124.824638
+Q 497.384787 122.484638 495.044787 122.484638
+L 376.614787 122.484638
+Q 374.274787 122.484638 374.274787 124.824638
+L 374.274787 137.694638
+Q 374.274787 140.034638 376.614787 140.034638
+z
+" style="fill: #ffffff; opacity: 0.94"/>
+    </g>
+    <!-- 원일점 $R_a=a(1+e)$ -->
+    <g style="fill: #2563eb" transform="translate(376.614787 135.354638)">
+     <text>
+      <tspan x="0" y="-0.28125" style="font-size: 13px; font-family: 'Apple SD Gothic Neo'; fill: #2563eb">원</tspan>
+      <tspan x="11.24501" y="-0.28125" style="font-size: 13px; font-family: 'Apple SD Gothic Neo'; fill: #2563eb">일</tspan>
+      <tspan x="22.490021" y="-0.28125" style="font-size: 13px; font-family: 'Apple SD Gothic Neo'; fill: #2563eb">점</tspan>
+      <tspan x="33.735031" y="-0.28125" style="font-size: 13px; font-family: 'Apple SD Gothic Neo'; fill: #2563eb"> </tspan>
+      <tspan x="37.154022" y="-0.28125" style="font-style: oblique; font-size: 13px; font-family: 'DejaVu Sans'; fill: #2563eb">R</tspan>
+      <tspan x="68.07663" y="-0.28125" style="font-style: oblique; font-size: 13px; font-family: 'DejaVu Sans'; fill: #2563eb">a</tspan>
+      <tspan x="105.343719" y="-0.28125" style="font-style: oblique; font-size: 13px; font-family: 'DejaVu Sans'; fill: #2563eb">e</tspan>
+      <tspan x="46.186737" y="1.851562" style="font-style: oblique; font-size: 9.1px; font-family: 'DejaVu Sans'; fill: #2563eb">a</tspan>
+      <tspan x="54.651337" y="-0.28125" style="font-size: 13px; font-family: 'DejaVu Sans'; fill: #2563eb">=</tspan>
+      <tspan x="76.042938" y="-0.28125" style="font-size: 13px; font-family: 'DejaVu Sans'; fill: #2563eb">(</tspan>
+      <tspan x="81.114716" y="-0.28125" style="font-size: 13px; font-family: 'DejaVu Sans'; fill: #2563eb">1</tspan>
+      <tspan x="91.918427" y="-0.28125" style="font-size: 13px; font-family: 'DejaVu Sans'; fill: #2563eb">+</tspan>
+      <tspan x="113.341766" y="-0.28125" style="font-size: 13px; font-family: 'DejaVu Sans'; fill: #2563eb">)</tspan>
+     </text>
+    </g>
+   </g>
+   <g id="text_9">
+    <g id="patch_12">
+     <path d="M 352.350897 102.81269
+L 405.950897 102.81269
+Q 412.030897 102.81269 412.030897 96.73269
+L 412.030897 82.91019
+Q 412.030897 76.83019 405.950897 76.83019
+L 352.350897 76.83019
+Q 346.270897 76.83019 346.270897 82.91019
+L 346.270897 96.73269
+Q 346.270897 102.81269 352.350897 102.81269
+z
+" style="fill: #f3f4f6; stroke: #d1d5db; stroke-linejoin: miter"/>
+    </g>
+    <!-- $e=c/a$ -->
+    <g style="fill: #111827" transform="translate(352.350897 95.03769)">
+     <text>
+      <tspan x="0" y="-0.328125" style="font-style: oblique; font-size: 16px; font-family: 'DejaVu Sans'; fill: #111827">e</tspan>
+      <tspan x="29.484375" y="-0.328125" style="font-style: oblique; font-size: 16px; font-family: 'DejaVu Sans'; fill: #111827">c</tspan>
+      <tspan x="43.671875" y="-0.328125" style="font-style: oblique; font-size: 16px; font-family: 'DejaVu Sans'; fill: #111827">a</tspan>
+      <tspan x="12.960938" y="-0.328125" style="font-size: 16px; font-family: 'DejaVu Sans'; fill: #111827">=</tspan>
+      <tspan x="38.28125" y="-0.328125" style="font-size: 16px; font-family: 'DejaVu Sans'; fill: #111827">/</tspan>
+     </text>
+    </g>
+   </g>
+   <g id="PathCollection_1">
+    <defs>
+     <path id="mfd706dbc66" d="M 0 9.486833
+C 2.515938 9.486833 4.929167 8.48724 6.708204 6.708204
+C 8.48724 4.929167 9.486833 2.515938 9.486833 0
+C 9.486833 -2.515938 8.48724 -4.929167 6.708204 -6.708204
+C 4.929167 -8.48724 2.515938 -9.486833 0 -9.486833
+C -2.515938 -9.486833 -4.929167 -8.48724 -6.708204 -6.708204
+C -8.48724 -4.929167 -9.486833 -2.515938 -9.486833 0
+C -9.486833 2.515938 -8.48724 4.929167 -6.708204 6.708204
+C -4.929167 8.48724 -2.515938 9.486833 0 9.486833
+z
+" style="stroke: #8b0029"/>
+    </defs>
+    <g clip-path="url(#pd2a4644bf2)">
+     <use xlink:href="#mfd706dbc66" x="195.533617" y="162.499404" style="fill: #8b0029; stroke: #8b0029"/>
+    </g>
+   </g>
+   <g id="PathCollection_2">
+    <defs>
+     <path id="mb3582f4f8c" d="M 0 4.242641
+C 1.125161 4.242641 2.204391 3.795609 3 3
+C 3.795609 2.204391 4.242641 1.125161 4.242641 0
+C 4.242641 -1.125161 3.795609 -2.204391 3 -3
+C 2.204391 -3.795609 1.125161 -4.242641 0 -4.242641
+C -1.125161 -4.242641 -2.204391 -3.795609 -3 -3
+C -3.795609 -2.204391 -4.242641 -1.125161 -4.242641 0
+C -4.242641 1.125161 -3.795609 2.204391 -3 3
+C -2.204391 3.795609 -1.125161 4.242641 0 4.242641
+z
+" style="stroke: #374151; stroke-width: 2"/>
+    </defs>
+    <g clip-path="url(#pd2a4644bf2)">
+     <use xlink:href="#mb3582f4f8c" x="366.066383" y="162.499404" style="fill: #ffffff; stroke: #374151; stroke-width: 2"/>
+    </g>
+   </g>
+   <g id="PathCollection_3">
+    <defs>
+     <path id="mb17b8f6adf" d="M 0 2.828427
+C 0.750108 2.828427 1.469594 2.530406 2 2
+C 2.530406 1.469594 2.828427 0.750108 2.828427 0
+C 2.828427 -0.750108 2.530406 -1.469594 2 -2
+C 1.469594 -2.530406 0.750108 -2.828427 0 -2.828427
+C -0.750108 -2.828427 -1.469594 -2.530406 -2 -2
+C -2.530406 -1.469594 -2.828427 -0.750108 -2.828427 0
+C -2.828427 0.750108 -2.530406 1.469594 -2 2
+C -1.469594 2.530406 -0.750108 2.828427 0 2.828427
+z
+" style="stroke: #374151"/>
+    </defs>
+    <g clip-path="url(#pd2a4644bf2)">
+     <use xlink:href="#mb17b8f6adf" x="280.8" y="162.499404" style="fill: #374151; stroke: #374151"/>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pd2a4644bf2">
+   <rect x="91.66366" y="19.872" width="378.272681" height="291.456"/>
+  </clipPath>
+ </defs>
 </svg>

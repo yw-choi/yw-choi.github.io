@@ -1,49 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 400" font-family="sans-serif">
-  <!-- Kepler's 2nd law: equal areas in equal times -->
-  <!-- Ellipse: rx=220, ry=210, c=65.6, e=0.298 (mild eccentricity for visual clarity) -->
-  <!-- Sun at left focus (309, 200); perihelion (155, 200); aphelion (595, 200) -->
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="460" viewBox="0 0 780 460" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <title>Kepler's second law: equal areas in equal times</title>
+  <desc>Near perihelion the planet moves faster and sweeps a wide angular sector; near aphelion it moves slower and sweeps a narrow angular sector with the same area in the same time.</desc>
 
-  <!-- Elliptical orbit -->
-  <ellipse cx="375" cy="200" rx="220" ry="210" fill="none" stroke="#6B7280" stroke-width="2"/>
-
-  <!-- Major axis (light dashed) -->
-  <line x1="155" y1="200" x2="595" y2="200" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-
-  <!-- Sun at focus -->
-  <circle cx="309" cy="200" r="12" fill="#8B0029"/>
-  <text x="309" y="234" text-anchor="middle" font-size="14" fill="#6B7280" font-weight="bold">태양</text>
-
-  <!-- Area 1: near perihelion. Half-angle 28.7° from sun, r_p ≈ 159 → endpoints (170, 124) and (170, 276). -->
-  <path d="M 309 200 L 170 124 A 220 210 0 0 1 170 276 Z"
-        fill="#8B0029" opacity="0.25" stroke="#8B0029" stroke-width="1"/>
-  <text x="210" y="200" font-size="14" fill="#8B0029" font-weight="bold" text-anchor="middle">&#x0394;A&#x2081;</text>
-
-  <!-- Area 2: near aphelion. Half-angle 7.5° from sun, r_a ≈ 285 → endpoints (591, 163) and (591, 237). -->
-  <path d="M 309 200 L 591 163 A 220 210 0 0 1 591 237 Z"
-        fill="#2563EB" opacity="0.25" stroke="#2563EB" stroke-width="1"/>
-  <text x="540" y="204" font-size="14" fill="#2563EB" font-weight="bold" text-anchor="middle">&#x0394;A&#x2082;</text>
-
-  <!-- Radii lines (sun to orbit points) -->
-  <line x1="309" y1="200" x2="170" y2="124" stroke="#8B0029" stroke-width="2"/>
-  <line x1="309" y1="200" x2="170" y2="276" stroke="#8B0029" stroke-width="2"/>
-  <line x1="309" y1="200" x2="591" y2="163" stroke="#2563EB" stroke-width="2"/>
-  <line x1="309" y1="200" x2="591" y2="237" stroke="#2563EB" stroke-width="2"/>
-
-  <!-- Planet dots at boundary points -->
-  <circle cx="170" cy="124" r="5" fill="#8B0029"/>
-  <circle cx="170" cy="276" r="5" fill="#8B0029"/>
-  <circle cx="591" cy="163" r="5" fill="#2563EB"/>
-  <circle cx="591" cy="237" r="5" fill="#2563EB"/>
-
-  <!-- Speed labels -->
-  <text x="155" y="100" font-size="14" fill="#8B0029" text-anchor="middle">v 큼 (빠름)</text>
-  <text x="595" y="155" font-size="14" fill="#2563EB" text-anchor="middle">v 작음 (느림)</text>
-
-  <!-- Equal areas text -->
-  <text x="375" y="345" text-anchor="middle" font-size="14" fill="#1a1a1a" font-weight="bold">
-    같은 시간 &#x0394;t 동안 휩쓰는 면적: &#x0394;A&#x2081; = &#x0394;A&#x2082;
+  <rect width="780" height="460" fill="#ffffff"/>
+  <text x="390" y="34" text-anchor="middle" font-size="17" font-weight="700" fill="#8B0029">
+    케플러 제2법칙: 같은 시간에는 같은 면적
   </text>
-  <text x="375" y="368" text-anchor="middle" font-size="13" fill="#6B7280">
-    dA/dt = L/(2m) = 일정 (각운동량 보존)
+
+  <!-- Orbit: center (390,200), a=250, b=155; Sun at left focus -->
+  <ellipse cx="390" cy="200" rx="250" ry="155" fill="none" stroke="#6B7280" stroke-width="2"/>
+  <line x1="140" y1="200" x2="640" y2="200" stroke="#6B7280" stroke-width="1.1" stroke-dasharray="5 4"/>
+  <circle cx="195" cy="200" r="14" fill="#8B0029"/>
+  <text x="195" y="233" text-anchor="middle" font-size="14" font-weight="700" fill="#8B0029">태양</text>
+
+  <!-- Equal-time sectors. The arc endpoints are chosen on the shown ellipse. -->
+  <path d="M195,200 L163,135 A250,155 0 0 0 163,265 Z"
+        fill="#8B0029" fill-opacity="0.18" stroke="#8B0029" stroke-width="1.4"/>
+  <path d="M195,200 L636,174 A250,155 0 0 1 636,226 Z"
+        fill="#2563EB" fill-opacity="0.18" stroke="#2563EB" stroke-width="1.4"/>
+
+  <line x1="195" y1="200" x2="163" y2="135" stroke="#8B0029" stroke-width="2"/>
+  <line x1="195" y1="200" x2="163" y2="265" stroke="#8B0029" stroke-width="2"/>
+  <line x1="195" y1="200" x2="636" y2="174" stroke="#2563EB" stroke-width="2"/>
+  <line x1="195" y1="200" x2="636" y2="226" stroke="#2563EB" stroke-width="2"/>
+
+  <circle cx="163" cy="135" r="5" fill="#8B0029"/>
+  <circle cx="163" cy="265" r="5" fill="#8B0029"/>
+  <circle cx="636" cy="174" r="5" fill="#2563EB"/>
+  <circle cx="636" cy="226" r="5" fill="#2563EB"/>
+
+  <text x="176" y="114" text-anchor="middle" font-size="14" font-weight="700" fill="#8B0029">가까울 때 빠름</text>
+  <text x="630" y="154" text-anchor="middle" font-size="14" font-weight="700" fill="#2563EB">멀 때 느림</text>
+  <text x="225" y="205" text-anchor="middle" font-size="15" font-weight="700" fill="#8B0029">ΔA₁</text>
+  <text x="540" y="205" text-anchor="middle" font-size="15" font-weight="700" fill="#2563EB">ΔA₂</text>
+
+  <rect x="170" y="382" width="440" height="48" rx="7" fill="#F3F4F6" stroke="#e5e7eb"/>
+  <text x="390" y="404" text-anchor="middle" font-size="15" font-weight="700" fill="#1a1a1a">
+    ΔA₁ = ΔA₂ for the same Δt
+  </text>
+  <text x="390" y="425" text-anchor="middle" font-size="14" fill="#6B7280">
+    dA/dt = L/(2m) = 일정  ⇔  각운동량 보존
   </text>
 </svg>

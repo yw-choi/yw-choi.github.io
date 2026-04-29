@@ -1,63 +1,47 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 420" font-family="sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="440" viewBox="0 0 760 440" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <title>Gravity inside and outside a uniform sphere</title>
+  <desc>For a uniform sphere, gravitational force increases linearly inside the sphere and decreases as inverse square outside the sphere.</desc>
   <defs>
-    <marker id="axisArrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/>
+    <marker id="axisArrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#6B7280"/>
     </marker>
   </defs>
 
-  <rect x="0" y="0" width="740" height="420" fill="white"/>
-
-  <text x="370" y="34" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">
-    균일 밀도 구 내부와 외부의 중력
+  <rect width="760" height="440" fill="#ffffff"/>
+  <text x="380" y="34" text-anchor="middle" font-size="17" font-weight="700" fill="#8B0029">
+    균일 밀도 구의 내부와 외부 중력
   </text>
 
-  <!-- Plot area -->
-  <line x1="90" y1="340" x2="650" y2="340" stroke="#6B7280" stroke-width="2" marker-end="url(#axisArrow)"/>
-  <line x1="90" y1="340" x2="90" y2="70" stroke="#6B7280" stroke-width="2" marker-end="url(#axisArrow)"/>
+  <!-- Axes -->
+  <line x1="92" y1="342" x2="682" y2="342" stroke="#6B7280" stroke-width="2" marker-end="url(#axisArrow)"/>
+  <line x1="92" y1="342" x2="92" y2="72" stroke="#6B7280" stroke-width="2" marker-end="url(#axisArrow)"/>
+  <text x="680" y="369" text-anchor="end" font-size="15" fill="#6B7280" font-style="italic">r/R</text>
+  <text x="42" y="76" font-size="15" fill="#6B7280" font-style="italic">F/F(R)</text>
 
-  <!-- Grid -->
-  <g stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3" opacity="0.35">
-    <line x1="90" y1="260" x2="650" y2="260"/>
-    <line x1="90" y1="180" x2="650" y2="180"/>
-    <line x1="90" y1="100" x2="650" y2="100"/>
-    <line x1="230" y1="340" x2="230" y2="70"/>
-    <line x1="370" y1="340" x2="370" y2="70"/>
-    <line x1="510" y1="340" x2="510" y2="70"/>
-  </g>
+  <!-- Surface reference -->
+  <line x1="345" y1="342" x2="345" y2="96" stroke="#6B7280" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <line x1="92" y1="106" x2="665" y2="106" stroke="#6B7280" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="345" y="368" text-anchor="middle" font-size="14" fill="#8B0029" font-style="italic">r = R</text>
+  <text x="82" y="111" text-anchor="end" font-size="13" fill="#6B7280">1</text>
+  <text x="92" y="368" text-anchor="middle" font-size="13" fill="#6B7280">0</text>
 
-  <!-- Surface marker r=R -->
-  <line x1="370" y1="340" x2="370" y2="82" stroke="#8B0029" stroke-width="1.5" stroke-dasharray="4 3"/>
-  <text x="370" y="365" text-anchor="middle" font-size="14" fill="#8B0029" font-style="italic">r = R</text>
-  <text x="70" y="105" text-anchor="end" font-size="14" fill="#6B7280" font-style="italic">F(R)</text>
-  <line x1="84" y1="100" x2="96" y2="100" stroke="#6B7280" stroke-width="1"/>
-
-  <!-- Curves: inside F/F_R = r/R, outside F/F_R = (R/r)^2 -->
-  <path d="M 90 340 L 370 100" fill="none" stroke="#8B0029" stroke-width="2.5"/>
-  <path d="M 370 100
-           C 420 139, 455 177, 485 210
-           C 525 253, 570 288, 650 313"
-        fill="none" stroke="#2563EB" stroke-width="2.5"/>
-
-  <!-- Surface point -->
-  <circle cx="370" cy="100" r="5" fill="#8B0029"/>
+  <!-- Curves: inside F/F(R)=r/R, outside F/F(R)=1/(r/R)^2 -->
+  <path d="M92,342 L345,106" fill="none" stroke="#8B0029" stroke-width="2.8"/>
+  <path d="M345,106 C390,143 438,183 488,219 C544,259 603,285 665,299"
+        fill="none" stroke="#2563EB" stroke-width="2.8"/>
+  <circle cx="345" cy="106" r="5" fill="#8B0029"/>
 
   <!-- Region labels -->
-  <rect x="150" y="126" width="155" height="58" rx="6" fill="#F3F4F6" stroke="#e5e7eb"/>
-  <text x="228" y="150" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">구 내부</text>
-  <text x="228" y="172" text-anchor="middle" font-size="14" fill="#8B0029" font-style="italic">F ∝ r</text>
+  <rect x="132" y="126" width="150" height="55" rx="7" fill="#F3F4F6" stroke="#e5e7eb"/>
+  <text x="207" y="149" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="700">구 내부</text>
+  <text x="207" y="170" text-anchor="middle" font-size="14" fill="#8B0029" font-style="italic">F/F(R) = r/R</text>
 
-  <rect x="465" y="132" width="155" height="58" rx="6" fill="#F3F4F6" stroke="#e5e7eb"/>
-  <text x="543" y="156" text-anchor="middle" font-size="14" fill="#2563EB" font-weight="bold">구 외부</text>
-  <text x="543" y="178" text-anchor="middle" font-size="14" fill="#2563EB" font-style="italic">F ∝ 1/r²</text>
+  <rect x="470" y="142" width="170" height="55" rx="7" fill="#F3F4F6" stroke="#e5e7eb"/>
+  <text x="555" y="165" text-anchor="middle" font-size="14" fill="#2563EB" font-weight="700">구 외부</text>
+  <text x="555" y="186" text-anchor="middle" font-size="14" fill="#2563EB" font-style="italic">F/F(R) = (R/r)²</text>
 
-  <!-- Formula strip -->
-  <text x="370" y="395" text-anchor="middle" font-size="14" fill="#1a1a1a">
-    균일 구 내부: M<tspan baseline-shift="sub" font-size="10">ins</tspan> = M(r³/R³),
-    F = GmM<tspan baseline-shift="sub" font-size="10">ins</tspan>/r² = GmMr/R³
+  <rect x="140" y="392" width="480" height="30" rx="7" fill="#F3F4F6" stroke="#e5e7eb"/>
+  <text x="380" y="412" text-anchor="middle" font-size="13" fill="#1a1a1a">
+    균일 밀도에서는 Mᵢₙₛ = M(r/R)³ 이므로 내부 힘은 중심에서 0, 표면에서 최대
   </text>
-
-  <!-- Axis labels -->
-  <text x="662" y="346" font-size="14" fill="#6B7280" font-style="italic">r</text>
-  <text x="52" y="72" font-size="14" fill="#6B7280" font-style="italic">F</text>
-  <text x="90" y="365" text-anchor="middle" font-size="14" fill="#6B7280">0</text>
 </svg>

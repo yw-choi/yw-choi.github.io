@@ -1,136 +1,299 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 470" font-family="sans-serif">
-  <defs>
-    <marker id="peArrG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/>
-    </marker>
-    <marker id="peArrR" markerWidth="9" markerHeight="6" refX="9" refY="3" orient="auto">
-      <polygon points="0 0, 9 3, 0 6" fill="#8B0029"/>
-    </marker>
-    <marker id="peArrB" markerWidth="9" markerHeight="6" refX="9" refY="3" orient="auto">
-      <polygon points="0 0, 9 3, 0 6" fill="#2563EB"/>
-    </marker>
-    <pattern id="forbidPat" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
-      <line x1="0" y1="0" x2="0" y2="8" stroke="#6B7280" stroke-width="0.7" opacity="0.4"/>
-    </pattern>
-  </defs>
-
-  <!-- Title -->
-  <text x="380" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#8B0029">중력 퍼텐셜에너지 U(r) = -GMm/r</text>
-
-  <!--
-    Plot rectangle: x in [120, 700], y in [60, 410].
-    Origin (r=0) at x=120; r increases rightward.
-    U=0 at y=60; U becomes more negative downward.
-    Use 1 R = 75 px on x-axis: r=R at x=195, r=2R at x=270, ..., r=8R at x=720 (clipped at 700).
-    U(R) maps to y=410 (deepest).  U(r)/U(R) = R/r.
-  -->
-
-  <!-- Forbidden region for the bound-orbit example (E = -0.375 |U_R|): r > r_max ≈ 2.67R, x_max ≈ 320.
-       Shade x > 320 down to E line as classically forbidden. -->
-  <rect x="320" y="60" width="380" height="170" fill="url(#forbidPat)"/>
-
-  <!-- y-axis (U) -->
-  <line x1="120" y1="430" x2="120" y2="50" stroke="#6B7280" stroke-width="2" marker-end="url(#peArrG)"/>
-  <text x="100" y="55" font-size="15" fill="#1a1a1a" font-style="italic">U</text>
-
-  <!-- x-axis (r) at U=0 -->
-  <line x1="100" y1="60" x2="720" y2="60" stroke="#6B7280" stroke-width="2" marker-end="url(#peArrG)"/>
-  <text x="725" y="64" font-size="15" fill="#1a1a1a" font-style="italic">r</text>
-  <text x="115" y="50" text-anchor="end" font-size="12" fill="#6B7280">0</text>
-
-  <!-- r-axis tick marks at R, 2R, 4R, 6R -->
-  <g stroke="#6B7280" stroke-width="1">
-    <line x1="195" y1="58" x2="195" y2="64"/>
-    <line x1="270" y1="58" x2="270" y2="64"/>
-    <line x1="420" y1="58" x2="420" y2="64"/>
-    <line x1="570" y1="58" x2="570" y2="64"/>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="760" height="470" viewBox="0 0 547.2 338.4" xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <title>Gravitational potential energy curve</title>
+  <desc>The dimensionless gravitational potential energy U/(GMm/R) follows -R/r and approaches zero from below as r goes to infinity.</desc>
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.9, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 338.4
+L 547.2 338.4
+L 547.2 0
+L 0 0
+z
+" style="fill: #ffffff"/>
   </g>
-  <text x="195" y="48" text-anchor="middle" font-size="12" fill="#6B7280" font-style="italic">R</text>
-  <text x="270" y="48" text-anchor="middle" font-size="12" fill="#6B7280">2R</text>
-  <text x="420" y="48" text-anchor="middle" font-size="12" fill="#6B7280">4R</text>
-  <text x="570" y="48" text-anchor="middle" font-size="12" fill="#6B7280">6R</text>
-
-  <!-- Earth (planet) at r=R, drawn just above x-axis as visual marker -->
-  <circle cx="195" cy="430" r="14" fill="#2563EB" stroke="#1a1a1a" stroke-width="1"/>
-  <text x="195" y="455" text-anchor="middle" font-size="11" fill="#6B7280">행성 (r = R)</text>
-
-  <!-- U(r) curve: hyperbolic -1/r shape.
-       Computed reference points (x, y):
-       r=R   → (195, 410)   U/U_R = 1
-       r=1.25R→ (213.75, 340) U/U_R = 0.8
-       r=1.5R→ (232.5, 293.3) ≈ (233, 293) U/U_R = 0.667
-       r=2R  → (270, 235)    U/U_R = 0.5
-       r=2.5R→ (307.5, 200)  ≈ (308, 200) U/U_R = 0.4
-       r=3R  → (345, 176.7)  ≈ (345, 177) U/U_R = 0.333
-       r=4R  → (420, 147.5)  ≈ (420, 148) U/U_R = 0.25
-       r=5R  → (495, 130)    U/U_R = 0.2
-       r=6R  → (570, 118.3)  ≈ (570, 118) U/U_R = 0.167
-       r=8R  → (720, 103.75) ≈ (700, 104) (clipped)
-  -->
-  <path d="M 195,410
-           C 200,360 220,310 233,293
-           S 258,250 270,235
-           S 295,210 308,200
-           S 332,182 345,177
-           S 395,155 420,148
-           S 470,134 495,130
-           S 545,121 570,118
-           S 660,108 700,104"
-        fill="none" stroke="#8B0029" stroke-width="2.5"/>
-  <text x="495" y="170" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">U(r) = -GMm/r</text>
-
-  <!-- Surface point: U(R) = -GMm/R -->
-  <circle cx="195" cy="410" r="5" fill="#8B0029"/>
-  <line x1="120" y1="410" x2="195" y2="410" stroke="#8B0029" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="115" y="414" text-anchor="end" font-size="13" fill="#8B0029" font-weight="bold">-GMm/R</text>
-
-  <!-- E = 0 line: escape boundary -->
-  <line x1="120" y1="60" x2="700" y2="60" stroke="#1a1a1a" stroke-width="1.5" stroke-dasharray="6 4"/>
-  <text x="700" y="76" text-anchor="end" font-size="13" fill="#1a1a1a">E = 0  (탈출 경계, r→∞에서 U=0)</text>
-
-  <!-- E = -0.375 |U_R| line: bound orbit (turning point at r_max ≈ 2.67R, x ≈ 320, y=200) -->
-  <line x1="120" y1="200" x2="700" y2="200" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="6 4"/>
-  <text x="120" y="194" font-size="13" fill="#2563EB" font-weight="bold">E &lt; 0  (속박 궤도)</text>
-
-  <!-- Turning point at intersection of E line with U(r) curve -->
-  <circle cx="320" cy="200" r="5" fill="#2563EB"/>
-  <line x1="320" y1="200" x2="320" y2="60" stroke="#2563EB" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="328" y="78" font-size="12" fill="#2563EB" font-style="italic">r<tspan font-size="9" baseline-shift="sub">max</tspan> (회귀점)</text>
-
-  <!-- Allowed-region label inside left side -->
-  <text x="240" y="115" font-size="12" fill="#6B7280" font-style="italic">허용 영역 (E ≥ U)</text>
-  <text x="500" y="170" font-size="12" fill="#6B7280" font-style="italic">금지 영역 (U &gt; E)</text>
-
-  <!-- ============================================================
-       K, U decomposition at r = 2R (x=270, on the curve y=235).
-       At E_bound y=200: K bar from y=235 up to y=200 (height 35).
-       |U| bar from y=60 (U=0) down to y=235 (height 175).
-       ============================================================ -->
-
-  <!-- Marker dot on curve at r=2R -->
-  <circle cx="270" cy="235" r="5" fill="#1a1a1a"/>
-
-  <!-- K bar (curve up to E line), at x=275 -->
-  <line x1="275" y1="235" x2="275" y2="200" stroke="#2563EB" stroke-width="4"/>
-  <line x1="270" y1="235" x2="280" y2="235" stroke="#2563EB" stroke-width="2"/>
-  <line x1="270" y1="200" x2="280" y2="200" stroke="#2563EB" stroke-width="2"/>
-
-  <!-- |U| bar (U=0 baseline down to curve), at x=265 -->
-  <line x1="265" y1="60" x2="265" y2="235" stroke="#8B0029" stroke-width="4"/>
-  <line x1="260" y1="60" x2="270" y2="60" stroke="#8B0029" stroke-width="2"/>
-  <line x1="260" y1="235" x2="270" y2="235" stroke="#8B0029" stroke-width="2"/>
-
-  <!-- Decomposition labels with leader lines pointing out -->
-  <text x="295" y="221" font-size="13" fill="#2563EB" font-weight="bold" font-style="italic">K = E - U</text>
-  <line x1="293" y1="218" x2="280" y2="218" stroke="#2563EB" stroke-width="1"/>
-
-  <text x="200" y="155" font-size="13" fill="#8B0029" font-weight="bold" font-style="italic">|U|</text>
-  <line x1="220" y1="151" x2="263" y2="151" stroke="#8B0029" stroke-width="1"/>
-
-  <!-- Vertical guide at r=2R sample point -->
-  <line x1="270" y1="235" x2="270" y2="60" stroke="#6B7280" stroke-width="0.5" stroke-dasharray="2 3" opacity="0.6"/>
-  <text x="270" y="265" text-anchor="middle" font-size="11" fill="#6B7280" font-style="italic">샘플 위치</text>
-
-  <!-- Vertical "U &lt; 0" axis label -->
-  <text x="80" y="240" text-anchor="middle" font-size="13" fill="#8B0029" transform="rotate(-90, 80, 240)">U &lt; 0  (중력 우물)</text>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 65.664 287.64
+L 522.576 287.64
+L 522.576 60.912
+L 65.664 60.912
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 65.664 82.955
+L 522.576 82.955
+" clip-path="url(#p855c02649e)" style="fill: none; stroke-dasharray: 4.6,4.6; stroke-dashoffset: 0; stroke: #374151; stroke-width: 1.15"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_2">
+      <defs>
+       <path id="macfccd3e43" d="M 0 0
+L 0 5
+" style="stroke: #111827; stroke-width: 0.9"/>
+      </defs>
+      <g>
+       <use xlink:href="#macfccd3e43" x="65.664" y="287.64" style="fill: #111827; stroke: #111827; stroke-width: 0.9"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 13px; font-family: 'Apple SD Gothic Neo', 'DejaVu Sans'; text-anchor: middle; fill: #111827" x="65.664" y="305.993594" transform="rotate(-0 65.664 305.993594)">0</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#macfccd3e43" x="121.047273" y="287.64" style="fill: #111827; stroke: #111827; stroke-width: 0.9"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 13px; font-family: 'Apple SD Gothic Neo', 'DejaVu Sans'; text-anchor: middle; fill: #111827" x="121.047273" y="305.993594" transform="rotate(-0 121.047273 305.993594)">1</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#macfccd3e43" x="176.430545" y="287.64" style="fill: #111827; stroke: #111827; stroke-width: 0.9"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 13px; font-family: 'Apple SD Gothic Neo', 'DejaVu Sans'; text-anchor: middle; fill: #111827" x="176.430545" y="305.993594" transform="rotate(-0 176.430545 305.993594)">2</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#macfccd3e43" x="287.197091" y="287.64" style="fill: #111827; stroke: #111827; stroke-width: 0.9"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 13px; font-family: 'Apple SD Gothic Neo', 'DejaVu Sans'; text-anchor: middle; fill: #111827" x="287.197091" y="305.993594" transform="rotate(-0 287.197091 305.993594)">4</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#macfccd3e43" x="397.963636" y="287.64" style="fill: #111827; stroke: #111827; stroke-width: 0.9"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 13px; font-family: 'Apple SD Gothic Neo', 'DejaVu Sans'; text-anchor: middle; fill: #111827" x="397.963636" y="305.993594" transform="rotate(-0 397.963636 305.993594)">6</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#macfccd3e43" x="508.730182" y="287.64" style="fill: #111827; stroke: #111827; stroke-width: 0.9"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 13px; font-family: 'Apple SD Gothic Neo', 'DejaVu Sans'; text-anchor: middle; fill: #111827" x="508.730182" y="305.993594" transform="rotate(-0 508.730182 305.993594)">8</text>
+     </g>
+    </g>
+    <g id="text_7">
+     <!-- $r/R$ -->
+     <g style="fill: #111827" transform="translate(283.395 326.740313)">
+      <text>
+       <tspan x="0" y="-0.0625" style="font-style: oblique; font-size: 15px; font-family: 'DejaVu Sans'; fill: #111827">r</tspan>
+       <tspan x="10.970703" y="-0.0625" style="font-style: oblique; font-size: 15px; font-family: 'DejaVu Sans'; fill: #111827">R</tspan>
+       <tspan x="6.166992" y="-0.0625" style="font-size: 15px; font-family: 'DejaVu Sans'; fill: #111827">/</tspan>
+      </text>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_8">
+      <path d="M 65.664 240.405
+L 522.576 240.405
+" clip-path="url(#p855c02649e)" style="fill: none; stroke: #d1d5db; stroke-opacity: 0.7; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_9">
+      <defs>
+       <path id="m3290c72d19" d="M 0 0
+L -5 0
+" style="stroke: #111827; stroke-width: 0.9"/>
+      </defs>
+      <g>
+       <use xlink:href="#m3290c72d19" x="65.664" y="240.405" style="fill: #111827; stroke: #111827; stroke-width: 0.9"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 13px; font-family: 'Apple SD Gothic Neo', 'DejaVu Sans'; text-anchor: end; fill: #111827" x="57.164" y="245.331797" transform="rotate(-0 57.164 245.331797)">-1</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_10">
+      <path d="M 65.664 161.68
+L 522.576 161.68
+" clip-path="url(#p855c02649e)" style="fill: none; stroke: #d1d5db; stroke-opacity: 0.7; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#m3290c72d19" x="65.664" y="161.68" style="fill: #111827; stroke: #111827; stroke-width: 0.9"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 13px; font-family: 'Apple SD Gothic Neo', 'DejaVu Sans'; text-anchor: end; fill: #111827" x="57.164" y="166.606797" transform="rotate(-0 57.164 166.606797)">-0.5</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_12">
+      <path d="M 65.664 82.955
+L 522.576 82.955
+" clip-path="url(#p855c02649e)" style="fill: none; stroke: #d1d5db; stroke-opacity: 0.7; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_13">
+      <g>
+       <use xlink:href="#m3290c72d19" x="65.664" y="82.955" style="fill: #111827; stroke: #111827; stroke-width: 0.9"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 13px; font-family: 'Apple SD Gothic Neo', 'DejaVu Sans'; text-anchor: end; fill: #111827" x="57.164" y="87.881797" transform="rotate(-0 57.164 87.881797)">0</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 65.664 287.64
+L 65.664 60.912
+" style="fill: none; stroke: #374151; stroke-width: 1.15; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 65.664 287.64
+L 522.576 287.64
+" style="fill: none; stroke: #374151; stroke-width: 1.15; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_11">
+    <g id="patch_5">
+     <path d="M 306.581236 142.248
+L 438.881236 142.248
+Q 442.121236 142.248 442.121236 139.008
+L 442.121236 122.808
+Q 442.121236 119.568 438.881236 119.568
+L 306.581236 119.568
+Q 303.341236 119.568 303.341236 122.808
+L 303.341236 139.008
+Q 303.341236 142.248 306.581236 142.248
+z
+" style="fill: #ffffff; opacity: 0.92"/>
+    </g>
+    <!-- $U(r)=-GMm/r$ -->
+    <g style="fill: #8b0029" transform="translate(306.581236 136.488)">
+     <text>
+      <tspan x="0" y="-0.34375" style="font-style: oblique; font-size: 18px; font-family: 'DejaVu Sans'; fill: #8b0029">U</tspan>
+      <tspan x="20.197266" y="-0.34375" style="font-style: oblique; font-size: 18px; font-family: 'DejaVu Sans'; fill: #8b0029">r</tspan>
+      <tspan x="71.797852" y="-0.34375" style="font-style: oblique; font-size: 18px; font-family: 'DejaVu Sans'; fill: #8b0029">G</tspan>
+      <tspan x="85.746094" y="-0.34375" style="font-style: oblique; font-size: 18px; font-family: 'DejaVu Sans'; fill: #8b0029">M</tspan>
+      <tspan x="101.276367" y="-0.34375" style="font-style: oblique; font-size: 18px; font-family: 'DejaVu Sans'; fill: #8b0029">m</tspan>
+      <tspan x="124.875" y="-0.34375" style="font-style: oblique; font-size: 18px; font-family: 'DejaVu Sans'; fill: #8b0029">r</tspan>
+      <tspan x="13.174805" y="-0.34375" style="font-size: 18px; font-family: 'DejaVu Sans'; fill: #8b0029">(</tspan>
+      <tspan x="27.597656" y="-0.34375" style="font-size: 18px; font-family: 'DejaVu Sans'; fill: #8b0029">)</tspan>
+      <tspan x="38.126953" y="-0.34375" style="font-size: 18px; font-family: 'DejaVu Sans'; fill: #8b0029">=</tspan>
+      <tspan x="56.71582" y="-0.34375" style="font-size: 18px; font-family: 'DejaVu Sans'; fill: #8b0029">−</tspan>
+      <tspan x="118.810547" y="-0.34375" style="font-size: 18px; font-family: 'DejaVu Sans'; fill: #8b0029">/</tspan>
+     </text>
+    </g>
+   </g>
+   <g id="text_12">
+    <!-- $U/(GMm/R)$ -->
+    <g style="fill: #111827" transform="translate(65.664 49.74288)">
+     <text>
+      <tspan x="0" y="-0.625" style="font-style: oblique; font-size: 15px; font-family: 'DejaVu Sans'; fill: #111827">U</tspan>
+      <tspan x="21.884766" y="-0.625" style="font-style: oblique; font-size: 15px; font-family: 'DejaVu Sans'; fill: #111827">G</tspan>
+      <tspan x="33.508301" y="-0.625" style="font-style: oblique; font-size: 15px; font-family: 'DejaVu Sans'; fill: #111827">M</tspan>
+      <tspan x="46.450195" y="-0.625" style="font-style: oblique; font-size: 15px; font-family: 'DejaVu Sans'; fill: #111827">m</tspan>
+      <tspan x="65.865723" y="-0.625" style="font-style: oblique; font-size: 15px; font-family: 'DejaVu Sans'; fill: #111827">R</tspan>
+      <tspan x="10.979004" y="-0.625" style="font-size: 15px; font-family: 'DejaVu Sans'; fill: #111827">/</tspan>
+      <tspan x="16.032715" y="-0.625" style="font-size: 15px; font-family: 'DejaVu Sans'; fill: #111827">(</tspan>
+      <tspan x="61.062012" y="-0.625" style="font-size: 15px; font-family: 'DejaVu Sans'; fill: #111827">/</tspan>
+      <tspan x="76.288086" y="-0.625" style="font-size: 15px; font-family: 'DejaVu Sans'; fill: #111827">)</tspan>
+     </text>
+    </g>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 700; font-size: 17px; font-family: 'Apple SD Gothic Neo', 'DejaVu Sans'; text-anchor: middle; fill: #8b0029" x="294.12" y="39.839183" transform="rotate(-0 294.12 39.839183)">중력 퍼텐셜에너지 곡선</text>
+   </g>
+   <g id="line2d_14">
+    <path d="M 99.668647 339.4
+L 101.654813 325.241728
+L 103.780533 311.729646
+L 105.906253 299.645063
+L 108.031973 288.773115
+L 110.157693 278.939999
+L 112.637699 268.592845
+L 115.117706 259.28347
+L 117.597712 250.863202
+L 120.077719 243.210473
+L 122.557726 236.224912
+L 125.392019 228.951744
+L 128.226312 222.337577
+L 131.060605 216.296727
+L 133.894899 210.757747
+L 136.729192 205.66059
+L 139.917772 200.391409
+L 143.106352 195.55613
+L 146.294932 191.103277
+L 149.837798 186.551327
+L 153.380665 182.367082
+L 156.923531 178.507718
+L 160.820685 174.594345
+L 164.717838 170.988906
+L 168.969278 167.365947
+L 173.220718 164.0294
+L 177.826444 160.700241
+L 182.786457 157.407812
+L 187.746471 154.382915
+L 193.06077 151.403331
+L 198.729357 148.487431
+L 204.75223 145.64971
+L 211.12939 142.901193
+L 217.860836 140.249859
+L 224.94657 137.70108
+L 232.386589 135.258028
+L 240.535182 132.820828
+L 249.038062 130.508597
+L 258.249515 128.234087
+L 268.169542 126.016025
+L 278.798141 123.868653
+L 290.489601 121.741047
+L 302.889634 119.713659
+L 316.352527 117.739585
+L 330.87828 115.834437
+L 346.82118 113.970023
+L 364.181226 112.166367
+L 383.312705 110.407013
+L 404.215618 108.712066
+L 427.244251 107.071628
+L 452.75289 105.482374
+L 481.095823 103.945439
+L 508.730182 102.63625
+L 508.730182 102.63625
+" clip-path="url(#p855c02649e)" style="fill: none; stroke: #8b0029; stroke-width: 3.3; stroke-linecap: round"/>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p855c02649e">
+   <rect x="65.664" y="60.912" width="456.912" height="226.728"/>
+  </clipPath>
+ </defs>
 </svg>
