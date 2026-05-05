@@ -8,6 +8,8 @@ author:
 
 > ⚠️ This note is meant to publish agent skills actually being used in our lab, but the present draft was written by Claude. It has not yet been reviewed by Y.W. Choi. Treat the description and excerpts as agent-generated until that review happens.
 
+![Research Intel Agent](thumbnail.png)
+
 A Claude Code skill that scans the literature once per day and posts research-gap candidates to a Slack channel with strict inline citations. Lives at `~/julia/base/skills/research-intel/` and runs nightly via cron at 21:00 KST.
 
 ## Core idea
