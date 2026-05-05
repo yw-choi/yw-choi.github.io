@@ -2,9 +2,18 @@
 <article class="mt-4 notes-article">
   <header class="mb-4">
     <h1 class="fs-3 fw-light">{{ .Title }}</h1>
-    <time class="text-muted" style="font-size: 0.9em;" datetime="{{ .Date.Format "2006-01-02" }}">
-      {{ .Date.Format "January 2, 2006" }}
-    </time>
+    <div class="text-muted" style="font-size: 0.9em;">
+      {{ with .Params.author }}
+        {{ if reflect.IsMap . }}
+          {{ with .name }}<span>{{ . }}</span>{{ end }}
+          {{ with .email }}<a href="mailto:{{ . }}" class="text-muted text-decoration-none">&lt;{{ . }}&gt;</a>{{ end }}
+        {{ else }}
+          <span>{{ . }}</span>
+        {{ end }}
+        <span class="mx-1">·</span>
+      {{ end }}
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+    </div>
     {{ with .Params.tags }}
     <div class="mt-1">
       {{ range . }}
