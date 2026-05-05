@@ -2,99 +2,100 @@
 title: "Crystal structure 4-view plot"
 date: 2026-05-05
 tags: ["python", "ase", "matplotlib", "visualization", "claude-code-skill"]
-summary: "Publication-quality VESTA-like 4-view crystal structure figure (view ‖ a, view ‖ b, view ‖ c, perspective) — ASE 입력 + matplotlib 렌더러로 외부 GUI 없이 PNG 한 장 생성."
+summary: "A Claude Code Agent Skill that renders publication-quality 4-view crystal-structure figures (view ‖ a, view ‖ b, view ‖ c, perspective) directly from a CIF/POSCAR/XYZ file or an ASE preset — no GUI."
 ---
 
-VESTA로 결정구조 figure를 그릴 때마다 GUI를 열고 회전시키고 export 설정을 맞추는 게 반복적이라서, ASE 입력 한 줄로 4-view 패널을 PNG로 뽑아내는 스크립트를 만들었습니다. Nature / PRX / Sci. Adv. 의 결정구조 figure 8편을 비교하며 컨벤션을 칼리브레이션 했고, 사용자 검토 ~10회를 거쳐 기본값을 고정했습니다.
+Every time I make a crystal-structure figure for a paper or talk, I open VESTA, rotate the model, tweak export settings, and re-run the same dance. To remove that loop I built a small renderer that takes one ASE-readable input and writes a 2×2 PNG with the four standard views. The defaults were calibrated against eight published Nature / PRX / Sci. Adv. structure figures and tightened over ~10 review iterations.
 
-![MoS2 4-view](thumbnail.png)
+The script ships as a Claude Code Agent Skill so I can also invoke it conversationally ("plot MoS2 monolayer"), but it is just a Python file — `python plot_crystal.py mx2:MoS2 -o mos2.png` works on its own.
 
-## 무엇을 그리는가
+![MoS2 monolayer 4-view](thumbnail.png)
 
-한 figure에 네 패널:
+## What it draws
 
-| 패널 | 시점 |
+| panel | view |
 |---|---|
-| **a** | view ‖ a (a축 방향에서 본 모습, 화면 = bc 평면) |
+| **a** | view ‖ a (camera along the a-axis, screen = bc plane) |
 | **b** | view ‖ b |
 | **c** | view ‖ c (top view) |
 | **d** | perspective (a ←, b →, c ↑) |
 
-Perspective는 회전 행렬을 `R = Rx(α) @ Rz(β)` 순서로 구성해서 어떤 tilt 각에서도 **c축이 화면에서 정확히 수직**으로 유지되도록 했습니다. 기본값 `α=-55°, β=210°`이면 a/b가 좌하·우하로 대칭, c가 위쪽.
+The perspective rotation is composed as `R = Rx(α) @ Rz(β)`. Because `Rz` rotates around c first, **the c-axis is always exactly vertical on screen** for any tilt α. The default `(α = -55°, β = 210°)` puts the a-axis down-left and the b-axis down-right symmetrically, with c straight up.
 
-## 사용법
+## Usage
 
-```bash
-# Claude Code skill로 호출
-python3 ~/julia/base/skills/crystal-plot/scripts/plot_crystal.py mx2:MoS2 -o mos2.png
-```
-
-또는 sogang-qmp/skills 로 symlink 했다면:
+Once installed under `~/.claude/skills/crystal-plot/`:
 
 ```bash
 python3 "${CLAUDE_SKILL_DIR}/scripts/plot_crystal.py" mx2:MoS2 -o mos2.png
 ```
 
-입력은 다음 중 하나:
-
-- 구조 파일 (`.cif`, `POSCAR`, `.vasp`, `.xyz`, `.traj` 등 ASE가 읽을 수 있는 모든 포맷)
-- ASE preset: `mx2:MoS2`, `mx2:WSe2:1T`, `bulk:Si`, `bulk:NaCl:rocksalt:5.64`, `graphene`
-
-## 주요 옵션
-
-```text
---repeat NX,NY,NZ       supercell 반복 (default: 3,3,1 if layered, else 2,2,2)
---perspective AX,AZ     기본 -55,210
---bond-scale 1.15       bond 컷오프 = scale × Σr_cov
---radius-scale 0.40     atom 반지름 = covalent_radius × scale
---no-cell-box           perspective 패널의 dashed cell box 끄기
---dpi 240
-```
-
-## 다른 결정 예시
+Or run the script directly from a clone of the repo:
 
 ```bash
-python3 plot_crystal.py bulk:Si -o si.png
+python3 scripts/plot_crystal.py mx2:MoS2 -o mos2.png
+```
+
+Input can be:
+
+- a structure file (`.cif`, `POSCAR`, `.vasp`, `.xyz`, `.traj` — anything `ase.io.read` accepts)
+- an ASE preset: `mx2:MoS2`, `mx2:WSe2:1T`, `bulk:Si`, `bulk:NaCl:rocksalt:5.64`, `graphene`
+
+## Common options
+
+```text
+--repeat NX,NY,NZ       supercell repeat (default: 3,3,1 if layered, else 2,2,2)
+--perspective AX,AZ     tilt + azimuth in degrees (default: -55,210)
+--bond-scale 1.15       bond cutoff = scale × Σr_cov
+--radius-scale 0.40     atom radius = covalent_radius × scale
+--no-cell-box           omit the dashed cell box on the perspective panel
+--dpi 240
+--figsize 11,8
+```
+
+## More examples
+
+```bash
+python3 scripts/plot_crystal.py bulk:Si -o si.png
 ```
 
 ![Diamond Si](example_si.png)
 
 ```bash
-python3 plot_crystal.py bulk:NaCl:rocksalt:5.64 -o nacl.png
+python3 scripts/plot_crystal.py bulk:NaCl:rocksalt:5.64 -o nacl.png
 ```
 
 ![NaCl rocksalt](example_nacl.png)
 
-## 렌더링 컨벤션
+## Conventions baked in
 
-VESTA를 쓰면서 항상 손으로 만지던 부분을 모두 기본값으로 고정했습니다:
+The defaults are not opinions — they are the contract. Calibrated through review against published figures.
 
-- **Atom**: pixel-level Phong shading (ambient 0.32 + diffuse 0.70, 광원 좌상단 (-0.45, 0.55, 0.70)). 1픽셀 anti-aliased rim. specular 없는 matte. 같은 색의 sphere는 캐싱돼서 1000개 atom도 빠르게 렌더.
-- **Bond**: two-tone (중간점에서 색 split), dark outline 없음, 두께 ≈ 0.11 × bond length.
-- **Bond cutoff**: 1.15 × Σ(공유결합반지름). 추가 규칙으로 같은 원소 + cov_radius > 1.30 Å (Mo-Mo, W-W 등) 제외, heavy-metal m-m + d > Σr_cov 제외. 이 규칙이 covalent solid (Si, C 등)에는 영향 없도록 cov_radius > 1.30 조건을 같이 걸었음.
-- **Palette**: VESTA-Jmol을 약 20% desaturate한 톤 (Mo = teal, S = mustard, O = red).
-- **Depth (perspective)**: 가까운 atom 100% / 먼 atom 78% 크기로 선형 스케일. per-atom zorder로 occlude. bond 두께·zorder도 동시 스케일.
-- **Tripod**: a/b/c 화살표 RGB(red/green/blue), italic lowercase 라벨에 흰 halo. 화면 평면을 뚫고 들어가는 축은 흰 동그라미 + 가운데 점.
-- **Cell box**: dashed 파란선 (0.7 pt), perspective 패널에만.
-- **No** "view ‖ a/b/c" 텍스트 라벨, **no** specular highlight, **no** depth fog, **no** shadow.
+- **Atoms** rendered as Phong-shaded sphere images (ambient 0.32 + diffuse 0.70, light from the upper-left at `(-0.45, 0.55, 0.70)`), 1-pixel anti-aliased rim, no specular highlight. Cached by color, so a 1000-atom figure still renders quickly.
+- **Bonds** are two-tone, split at the midpoint, no dark outline, width ≈ 0.11 × bond length. The cutoff is `scale × Σr_cov` (default 1.15) with two refinements:
+  - reject same-element bonds when covalent radius > 1.30 Å (kills incidental Mo-Mo, W-W in layered crystals)
+  - reject long heavy-metal bonds where `d > Σr_cov`
+  - both rules check covalent radius > 1.30 Å so Si, C, and other genuinely covalent solids stay bonded.
+- **Palette**: a softened VESTA-Jmol scheme (Mo = teal, S = mustard, O = red, …).
+- **Depth (perspective only)**: front atoms full size, back atoms 0.78×, linear in projected depth. Per-atom `zorder` so closer spheres occlude farther ones; bond width and `zorder` scale together.
+- **Tripod**: a / b / c arrows in RGB (red / green / blue) with italic lowercase labels and a white halo. The axis pointing into the screen is shown as a small white circle with a center dot. Each panel reserves a structure-free margin in the chosen corner so the arrows never overlap atoms.
+- **Cell box**: dashed blue (`#0d33bf`, 4-on / 3-off, 0.7 pt), drawn only on the perspective panel by default.
+- **Not included**: "view ‖ a" text labels (rejected during review), specular highlights, depth fog, ground-plane shadows.
 
-## 의존성
+## Dependencies
 
 ```text
 numpy, matplotlib, ase
 ```
 
-ASE가 conda base에 없을 수 있어서 `pip install --user ase` 한번 필요.
+ASE is the only one not in a typical conda base. `pip install --user ase` is enough; the script exits cleanly with code 2 if any dependency is missing.
 
-## 코드
+## Code
 
-- 개인 julia: [`yw-choi/julia` /base/skills/crystal-plot](https://github.com/yw-choi/julia/tree/main/base/skills/crystal-plot)
-- 연구실 공용: [`sogang-qmp/skills` /crystal-plot](https://github.com/sogang-qmp/skills/tree/main/crystal-plot)
+[`sogang-qmp/skills-crystal-plot`](https://github.com/sogang-qmp/skills-crystal-plot) — public, MIT. Single-file renderer, ~470 LoC.
 
-스크립트는 단일 파일 (~470 LoC) 이고 numpy + matplotlib + ase만 의존하니, Claude Code 환경 밖에서도 그대로 실행 가능합니다.
+## Out of scope
 
-## 한계
-
-- ball-and-stick 전용. 다면체 (perovskite octahedra, ZIF tetrahedra) 렌더링 안 함.
-- 인터랙티브 viewer 아님 — 결과는 정적 PNG. 회전/줌이 필요하면 `ase gui` 또는 VESTA.
-- charge density / orbital isosurface 미지원.
+- Interactive 3D viewer — use `ase gui` or VESTA.
+- Polyhedral rendering (perovskite octahedra, ZIF tetrahedra) — ball-and-stick only.
+- Charge density / orbital isosurfaces — VESTA + `.cube` is still the right tool.

@@ -293,7 +293,7 @@
 
 .notes-content img,
 .notes-content figure img {
-    max-width: 100%;
+    max-width: min(100%, 640px);
     height: auto;
     display: block;
     margin: 1.5rem auto;
