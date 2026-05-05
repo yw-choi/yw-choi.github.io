@@ -1,5 +1,5 @@
 ---
-title: "Agent Skills: research-intel (RIA)"
+title: "Agent Skills: Research Intel Agent (RIA)"
 date: 2026-05-05
 author:
   name: "Young Woo Choi"
