@@ -1,6 +1,9 @@
 ---
 title: "Agent Skills: research-intel (RIA)"
 date: 2026-05-05
+author:
+  name: "Young Woo Choi"
+  email: "ywchoi02@sogang.ac.kr"
 tags: ["claude-code-skill", "literature-scan", "openalex", "arxiv", "research-agent"]
 ---
 
