@@ -8,6 +8,8 @@ author:
 
 > ⚠️ This note is meant to publish lab tools we actually use, but the present draft was written by Claude. It has not yet been reviewed by Y.W. Choi. Treat the description as agent-generated until that review happens.
 
+![Feeds](thumbnail.png)
+
 A daily RSS reader that scores every incoming article 1 to 5 against my research profile, groups results into a single static HTML page, and posts the link to Slack. Lives at [`sogang-qmp/feeds`](https://github.com/sogang-qmp/feeds); the live output is at <https://vesper.sogang.ac.kr/feeds/>.
 
 ## Core idea
