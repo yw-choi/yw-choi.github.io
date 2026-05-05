@@ -4,7 +4,6 @@ date: 2026-05-05
 author:
   name: "Young Woo Choi"
   email: "ywchoi02@sogang.ac.kr"
-tags: ["claude-code-skill", "literature-scan", "openalex", "arxiv", "research-agent"]
 ---
 
 > ⚠️ This note is meant to publish agent skills actually being used in our lab, but the present draft was written by Claude. It has not yet been reviewed by Y.W. Choi. Treat the description and excerpts as agent-generated until that review happens.

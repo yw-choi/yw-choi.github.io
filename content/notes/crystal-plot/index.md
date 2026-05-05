@@ -4,7 +4,6 @@ date: 2026-05-05
 author:
   name: "Young Woo Choi"
   email: "ywchoi02@sogang.ac.kr"
-tags: ["python", "ase", "matplotlib", "visualization", "claude-code-skill"]
 ---
 
 A simple Claude Code agent skill for crystal structure plotting. A reasonable starting point for further tuning.

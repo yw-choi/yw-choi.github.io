@@ -14,13 +14,6 @@
       {{ end }}
       <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
     </div>
-    {{ with .Params.tags }}
-    <div class="mt-1">
-      {{ range . }}
-      <span class="badge bg-light text-muted fw-light border">{{ . }}</span>
-      {{ end }}
-    </div>
-    {{ end }}
     {{ with .Params.summary }}
     <p class="text-muted fw-light mt-3 mb-0" style="line-height: 1.7;">{{ . }}</p>
     {{ end }}
