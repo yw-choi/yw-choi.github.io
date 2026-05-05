@@ -25,6 +25,13 @@ unsafe = true
 [markup.goldmark.parser.attribute]
 block = true
 title = true
+[markup.highlight]
+style = "github"
+codeFences = true
+guessSyntax = true
+lineNumbers = false
+tabWidth = 2
+noClasses = true
 
 
 [menus]
@@ -52,6 +59,10 @@ weight = 45
 name = 'Lectures'
 pageRef = '/lectures'
 weight = 47
+[[menus.main]]
+name = 'Notes'
+pageRef = '/notes'
+weight = 48
 [[menus.main]]
 name = 'Photos'
 pageRef = '/photos'

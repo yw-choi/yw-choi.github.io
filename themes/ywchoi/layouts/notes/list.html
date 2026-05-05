@@ -1,0 +1,48 @@
+{{ define "main" }}
+<h3 class="mb-4">{{ .Title }}</h3>
+<div class="mb-5">
+  {{ with .Params.summary }}<p class="lead fw-light text-muted">{{ . }}</p>{{ end }}
+  {{ .Content }}
+
+  <div class="row g-4 mt-2" id="notes-grid">
+    {{ range .Pages.ByDate.Reverse }}
+    <div class="col-12 col-sm-6 col-md-4 gallery-item">
+      <a href="{{ .RelPermalink }}" class="d-block link-dark text-decoration-none">
+        <figure class="figure m-0">
+          <div class="gallery-thumb-wrapper">
+            {{ $thumb := "" }}
+            {{ with .Params.thumbnail }}
+              {{ $thumb = . }}
+            {{ else }}
+              {{ with .Resources.GetMatch "thumbnail.*" }}{{ $thumb = .RelPermalink }}{{ end }}
+              {{ if not $thumb }}{{ with .Resources.GetMatch "cover.*" }}{{ $thumb = .RelPermalink }}{{ end }}{{ end }}
+              {{ if not $thumb }}
+                {{ range first 1 (.Resources.ByType "image") }}{{ $thumb = .RelPermalink }}{{ end }}
+              {{ end }}
+            {{ end }}
+            {{ if $thumb }}
+            <img loading="lazy" src="{{ $thumb }}" alt="{{ .Title }}" class="gallery-thumb-img w-100" />
+            {{ else }}
+            <div class="gallery-thumb-placeholder w-100 h-100 d-flex align-items-center justify-content-center text-muted small">
+              <span>{{ .Title }}</span>
+            </div>
+            {{ end }}
+          </div>
+          <figcaption class="mt-2">
+            <div class="fw-light">{{ .Title }}</div>
+            <div class="text-muted small mt-1">
+              {{ .Date.Format "January 2, 2006" }}
+              {{ with .Params.tags }}
+              <span class="ms-2">
+                {{ range . }}<span class="badge bg-light text-muted fw-light border me-1">{{ . }}</span>{{ end }}
+              </span>
+              {{ end }}
+            </div>
+          </figcaption>
+        </figure>
+      </a>
+    </div>
+    {{ end }}
+  </div>
+</div>
+{{ end }}
