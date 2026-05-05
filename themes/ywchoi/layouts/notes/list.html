@@ -31,12 +31,15 @@
           <figcaption class="mt-2">
             <div class="fw-light">{{ .Title }}</div>
             <div class="text-muted small mt-1">
-              {{ .Date.Format "January 2, 2006" }}
-              {{ with .Params.tags }}
-              <span class="ms-2">
-                {{ range . }}<span class="badge bg-light text-muted fw-light border me-1">{{ . }}</span>{{ end }}
-              </span>
+              {{ with .Params.author }}
+                {{ if reflect.IsMap . }}
+                  {{ with .name }}<span>{{ . }}</span>{{ end }}
+                {{ else }}
+                  <span>{{ . }}</span>
+                {{ end }}
+                <span class="mx-1">·</span>
               {{ end }}
+              {{ .Date.Format "January 2, 2006" }}
             </div>
           </figcaption>
         </figure>
