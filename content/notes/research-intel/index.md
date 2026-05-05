@@ -65,6 +65,3 @@ This second example illustrates one habit of the agent that turns out to be usef
 >
 > *Missing:* Gatti et al. [1] observed, by ARPES on monolayer TMD/hBN stacks, that hBN polar phonons remotely dress TMD quasiparticles and produce *replica bands* — but the theory side stops at a *modified Fröhlich model* with only "semi-quantitative agreement". Sohier-Calandra-Mauri's 2D Fröhlich first-principles framework [2] handles only *isolated* monolayer TMDs, with no remote substrate phonon. Existing substrate-remote-phonon work [3] is at the tight-binding effective-Fröhlich level. The full *TMD/hBN heterostructure supercell DFPT + Wannier-interpolated cross-interface remote Fröhlich coupling g_νk(q)* is therefore missing.
 
-## Repo
-
-The skill lives in [`yw-choi/julia`](https://github.com/yw-choi/julia) at `base/skills/research-intel/` (`SKILL.md`, `config.yaml`, `tools/collect.py`).
