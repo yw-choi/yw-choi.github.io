@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 450" font-family="sans-serif">
+  <defs>
+    <marker id="fcArrB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="fcArrR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+  </defs>
+
+  <text x="380" y="34" text-anchor="middle" font-size="18" font-weight="bold" fill="#8B0029">낙하하는 물줄기와 연속 방정식</text>
+
+  <rect x="115" y="70" width="160" height="38" rx="6" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <rect x="228" y="103" width="48" height="26" rx="4" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+
+  <path d="M 226,130 C 220,180 218,230 224,282 C 228,320 234,360 242,405" fill="none" stroke="#2563EB" stroke-width="20" stroke-linecap="round" opacity="0.35"/>
+  <path d="M 275,130 C 282,180 283,230 278,282 C 274,320 267,360 258,405" fill="none" stroke="#2563EB" stroke-width="20" stroke-linecap="round" opacity="0.35"/>
+  <path d="M 234,130 C 231,180 231,230 236,282 C 240,320 245,360 250,405" fill="none" stroke="#2563EB" stroke-width="7" stroke-linecap="round"/>
+  <path d="M 267,130 C 270,180 270,230 264,282 C 260,320 255,360 250,405" fill="none" stroke="#2563EB" stroke-width="7" stroke-linecap="round"/>
+
+  <ellipse cx="250" cy="152" rx="36" ry="11" fill="white" stroke="#8B0029" stroke-width="2"/>
+  <ellipse cx="250" cy="332" rx="18" ry="7" fill="white" stroke="#8B0029" stroke-width="2"/>
+  <text x="196" y="157" text-anchor="end" font-size="15" fill="#8B0029" font-style="italic">A₀</text>
+  <text x="196" y="337" text-anchor="end" font-size="15" fill="#8B0029" font-style="italic">A</text>
+
+  <line x1="330" y1="152" x2="330" y2="200" stroke="#2563EB" stroke-width="2.5" marker-end="url(#fcArrB)"/>
+  <text x="348" y="180" font-size="15" fill="#2563EB" font-style="italic">v₀</text>
+  <line x1="330" y1="332" x2="330" y2="407" stroke="#2563EB" stroke-width="2.5" marker-end="url(#fcArrB)"/>
+  <text x="348" y="377" font-size="15" fill="#2563EB" font-style="italic">v &gt; v₀</text>
+
+  <line x1="405" y1="152" x2="405" y2="332" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="397" y1="152" x2="413" y2="152" stroke="#6B7280" stroke-width="1"/>
+  <line x1="397" y1="332" x2="413" y2="332" stroke="#6B7280" stroke-width="1"/>
+  <text x="420" y="247" font-size="15" fill="#6B7280" font-style="italic">h</text>
+
+  <rect x="460" y="115" width="215" height="90" rx="6" fill="#F3F4F6" stroke="#6B7280" stroke-width="1.5"/>
+  <text x="568" y="143" text-anchor="middle" font-size="15" fill="#1a1a1a">중력으로 속력 증가</text>
+  <text x="568" y="173" text-anchor="middle" font-size="16" fill="#8B0029" font-weight="bold">v² = v₀² + 2gh</text>
+
+  <rect x="460" y="245" width="215" height="90" rx="6" fill="#F3F4F6" stroke="#6B7280" stroke-width="1.5"/>
+  <text x="568" y="273" text-anchor="middle" font-size="15" fill="#1a1a1a">비압축성 물</text>
+  <text x="568" y="303" text-anchor="middle" font-size="16" fill="#8B0029" font-weight="bold">A₀v₀ = Av</text>
+
+  <line x1="460" y1="355" x2="460" y2="405" stroke="#8B0029" stroke-width="2.5" marker-end="url(#fcArrR)"/>
+  <text x="480" y="389" font-size="14" fill="#8B0029">아래로 갈수록 A 감소</text>
+</svg>
