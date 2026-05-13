@@ -79,7 +79,7 @@ button.reset-btn:hover { background: #a3003a; }
     <div class="formula-box" id="formulaBox"></div>
 
     <div class="legend" id="legendBox">
-      <div class="legend-item"><div class="legend-swatch" style="background:#2563EB"></div>감쇠 진동 x(t)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#2563EB"></div>부족감쇠 진동 x(t)</div>
       <div class="legend-item"><div class="legend-swatch" style="background:#8B0029;height:2px;border-top:1px dashed #8B0029"></div>포락선 ±x<sub>m</sub>e<sup>−bt/2m</sup></div>
       <div class="legend-item"><div class="legend-swatch" style="background:#6B7280"></div>비감쇠 (b = 0) 참고</div>
     </div>
@@ -188,6 +188,15 @@ function dampedX(t, m, k, b) {
   }
 }
 
+function envelopeAmplitude(t, m, k, b) {
+  const gamma = b / (2 * m);
+  const disc = k / m - gamma * gamma;
+  if (disc <= 0) return null;
+  const wd = Math.sqrt(disc);
+  const coeff = x0 * Math.hypot(1, gamma / wd);
+  return coeff * Math.exp(-gamma * t);
+}
+
 function updateInfo() {
   const { m, k, b } = getParams();
   const omega0 = Math.sqrt(k / m);
@@ -201,16 +210,24 @@ function updateInfo() {
   let html = '';
   html += '<span class="label">시간:</span> <span class="val">t = ' + tSim.toFixed(2) + ' s</span><br>';
   html += '<span class="label">변위:</span> <span class="val">x/x<sub>m</sub> = ' + xNow.toFixed(4) + '</span><br>';
-  html += '<span class="label">포락선:</span> <span class="val">' + Math.exp(-gamma * tSim).toFixed(4) + '</span><br>';
+  const envelopeNow = envelopeAmplitude(tSim, m, k, b);
+  html += '<span class="label">포락선:</span> ';
+  if (envelopeNow === null) {
+    html += '<span class="val">진동 없음</span><br>';
+  } else {
+    html += '<span class="val">' + envelopeNow.toFixed(4) + '</span><br>';
+  }
 
   // Regime window scaled to ±5% of b_crit so the slider step (0.1 kg/s) reliably hits "임계" zone.
   const regimeWindow = Math.max(0.15, 0.05 * bcrit);
   let regime;
-  if (b < bcrit - regimeWindow) regime = '<span style="color:#2563EB;font-weight:700">미감쇠 (underdamped)</span>';
+  if (b < bcrit - regimeWindow) regime = '<span style="color:#2563EB;font-weight:700">부족감쇠 (underdamped)</span>';
   else if (b > bcrit + regimeWindow) regime = '<span style="color:#6B7280;font-weight:700">과감쇠 (overdamped)</span>';
   else regime = '<span style="color:#8B0029;font-weight:700">임계감쇠 (critically damped)</span>';
   html += '<span class="label">상태:</span> ' + regime;
   box.innerHTML = html;
+
+  document.getElementById('legendBox').children[1].style.opacity = envelopeNow === null ? '0.35' : '1';
 }
 
 function draw() {
@@ -228,6 +245,8 @@ function draw() {
   const gy = CH * 0.50;
   const gw = CW - 80;
   const gh = CH * 0.38;
+  const env0 = envelopeAmplitude(0, m, k, b) ?? 1;
+  const yScale = gh * 0.90 / Math.max(1, env0 * 1.04);
 
   // Axes
   ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1.5;
@@ -239,11 +258,11 @@ function draw() {
 
   // Amplitude lines
   ctx.strokeStyle = '#ddd'; ctx.lineWidth = 0.5;
-  ctx.beginPath(); ctx.moveTo(gx, gy - gh * 0.95); ctx.lineTo(gx + gw, gy - gh * 0.95); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(gx, gy + gh * 0.95); ctx.lineTo(gx + gw, gy + gh * 0.95); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(gx, gy - yScale); ctx.lineTo(gx + gw, gy - yScale); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(gx, gy + yScale); ctx.lineTo(gx + gw, gy + yScale); ctx.stroke();
   ctx.fillStyle = '#999'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
-  ctx.fillText('+1', gx - 4, gy - gh * 0.95 + 4);
-  ctx.fillText('−1', gx - 4, gy + gh * 0.95 + 4);
+  ctx.fillText('+1', gx - 4, gy - yScale + 4);
+  ctx.fillText('−1', gx - 4, gy + yScale + 4);
   ctx.fillText('0', gx - 4, gy + 4);
 
   // Time ticks
@@ -266,13 +285,13 @@ function draw() {
     if (tt > tSim && tSim > 0) break;
     const xVal = x0 * Math.cos(omega0 * tt);
     const px = gx + (tt / tMax) * gw;
-    const py = gy - xVal * gh * 0.95;
+    const py = gy - xVal * yScale;
     if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
   }
   ctx.strokeStyle = 'rgba(107,114,128,0.25)'; ctx.lineWidth = 1; ctx.stroke();
 
   // Envelope (dashed red)
-  const drawEnvelope = gamma > 0.001;
+  const drawEnvelope = gamma > 0.001 && envelopeAmplitude(0, m, k, b) !== null;
   if (drawEnvelope) {
     ctx.setLineDash([6, 3]);
     // Upper envelope
@@ -280,9 +299,9 @@ function draw() {
     for (let i = 0; i <= N; i++) {
       const tt = i * dt;
       if (tt > tSim && tSim > 0) break;
-      const env = x0 * Math.exp(-gamma * tt);
+      const env = envelopeAmplitude(tt, m, k, b);
       const px = gx + (tt / tMax) * gw;
-      const py = gy - env * gh * 0.95;
+      const py = gy - env * yScale;
       if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
     }
     ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 1.5; ctx.stroke();
@@ -292,9 +311,9 @@ function draw() {
     for (let i = 0; i <= N; i++) {
       const tt = i * dt;
       if (tt > tSim && tSim > 0) break;
-      const env = -x0 * Math.exp(-gamma * tt);
+      const env = -envelopeAmplitude(tt, m, k, b);
       const px = gx + (tt / tMax) * gw;
-      const py = gy - env * gh * 0.95;
+      const py = gy - env * yScale;
       if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
     }
     ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 1.5; ctx.stroke();
@@ -308,7 +327,7 @@ function draw() {
     if (tt > tSim && tSim > 0) break;
     const xVal = dampedX(tt, m, k, b);
     const px = gx + (tt / tMax) * gw;
-    const py = gy - xVal * gh * 0.95;
+    const py = gy - xVal * yScale;
     if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
   }
   ctx.strokeStyle = '#2563EB'; ctx.lineWidth = 2.5; ctx.stroke();
@@ -317,7 +336,7 @@ function draw() {
   if (tSim > 0 && tSim < tMax) {
     const xNow = dampedX(tSim, m, k, b);
     const cpx = gx + (tSim / tMax) * gw;
-    const cpy = gy - xNow * gh * 0.95;
+    const cpy = gy - xNow * yScale;
     ctx.fillStyle = '#2563EB';
     ctx.beginPath(); ctx.arc(cpx, cpy, 5, 0, Math.PI * 2); ctx.fill();
 
@@ -330,7 +349,7 @@ function draw() {
   // Regime indicator
   let regimeText, regimeColor;
   const regimeWindow = Math.max(0.15, 0.05 * bcrit);
-  if (b < bcrit - regimeWindow) { regimeText = '미감쇠 (Underdamped)'; regimeColor = '#2563EB'; }
+  if (b < bcrit - regimeWindow) { regimeText = '부족감쇠 (Underdamped)'; regimeColor = '#2563EB'; }
   else if (b > bcrit + regimeWindow) { regimeText = '과감쇠 (Overdamped)'; regimeColor = '#6B7280'; }
   else { regimeText = '임계감쇠 (Critically Damped)'; regimeColor = '#8B0029'; }
 

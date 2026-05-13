@@ -1,68 +1,58 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 350" font-family="sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="sans-serif">
   <defs>
-    <marker id="arrowR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <path d="M0,0 L8,3 L0,6 Z" fill="#8B0029"/>
+    <marker id="springRedArrow" markerWidth="18" markerHeight="14" refX="17" refY="7" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L18,7 L0,14 Z" fill="#8B0029"/>
     </marker>
-    <marker id="arrowG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <path d="M0,0 L8,3 L0,6 Z" fill="#6B7280"/>
+    <marker id="springBlueArrow" markerWidth="18" markerHeight="14" refX="17" refY="7" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L18,7 L0,14 Z" fill="#2563EB"/>
     </marker>
-    <pattern id="hatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
-      <line x1="0" y1="0" x2="0" y2="8" stroke="#6B7280" stroke-width="1"/>
+    <marker id="springGrayArrow" markerWidth="16" markerHeight="12" refX="15" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L16,6 L0,12 Z" fill="#6B7280"/>
+    </marker>
+    <pattern id="springWallHatch" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="10" stroke="#6B7280" stroke-width="1.2"/>
     </pattern>
   </defs>
 
-  <!-- Wall -->
-  <rect x="20" y="100" width="15" height="150" fill="url(#hatch)" stroke="#6B7280" stroke-width="2"/>
+  <rect width="800" height="420" fill="#ffffff"/>
 
-  <!-- Spring (stretched, x > 0): wall (x=35) → block left edge (x=315) -->
-  <polyline points="35,175 50,175 60,155 80,195 100,155 120,195 140,155 160,195 180,155 200,195 220,155 240,195 260,155 280,195 300,175 315,175"
-            fill="none" stroke="#6B7280" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="68" y="92" width="30" height="186" fill="url(#springWallHatch)" stroke="#6B7280" stroke-width="2"/>
+  <line x1="56" y1="256" x2="708" y2="256" stroke="#6B7280" stroke-width="2.4"/>
+  <g stroke="#6B7280" stroke-width="1.3" opacity="0.75">
+    <line x1="104" y1="266" x2="84" y2="286"/>
+    <line x1="184" y1="266" x2="164" y2="286"/>
+    <line x1="264" y1="266" x2="244" y2="286"/>
+    <line x1="344" y1="266" x2="324" y2="286"/>
+    <line x1="424" y1="266" x2="404" y2="286"/>
+    <line x1="504" y1="266" x2="484" y2="286"/>
+    <line x1="584" y1="266" x2="564" y2="286"/>
+    <line x1="664" y1="266" x2="644" y2="286"/>
+  </g>
 
-  <!-- Block at x = +0.5 x_m (between equilibrium x=265 and +x_m x=365) -->
-  <rect x="315" y="145" width="60" height="60" fill="#F3F4F6" stroke="#6B7280" stroke-width="2" rx="3"/>
-  <text x="345" y="180" font-size="16" fill="#1a1a1a" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+  <line x1="392" y1="70" x2="392" y2="342" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <line x1="586" y1="92" x2="586" y2="342" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="392" y="365" text-anchor="middle" font-size="24" fill="#6B7280">0</text>
 
-  <!-- Surface -->
-  <line x1="20" y1="205" x2="700" y2="205" stroke="#6B7280" stroke-width="2"/>
-  <line x1="60" y1="210" x2="40" y2="225" stroke="#6B7280" stroke-width="1"/>
-  <line x1="120" y1="210" x2="100" y2="225" stroke="#6B7280" stroke-width="1"/>
-  <line x1="180" y1="210" x2="160" y2="225" stroke="#6B7280" stroke-width="1"/>
-  <line x1="240" y1="210" x2="220" y2="225" stroke="#6B7280" stroke-width="1"/>
-  <line x1="300" y1="210" x2="280" y2="225" stroke="#6B7280" stroke-width="1"/>
-  <line x1="360" y1="210" x2="340" y2="225" stroke="#6B7280" stroke-width="1"/>
-  <line x1="420" y1="210" x2="400" y2="225" stroke="#6B7280" stroke-width="1"/>
+  <polyline points="98,192 126,192 142,154 174,230 206,154 238,230 270,154 302,230 334,154 366,230 398,154 430,230 462,154 494,230 520,192"
+            fill="none" stroke="#6B7280" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
 
-  <!-- Equilibrium position marker (block's natural rest position when spring is at natural length) -->
-  <line x1="265" y1="100" x2="265" y2="240" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <text x="265" y="255" font-size="13" fill="#6B7280" text-anchor="middle">x = 0 (평형)</text>
+  <rect x="520" y="142" width="132" height="100" rx="6" fill="#F3F4F6" stroke="#6B7280" stroke-width="3"/>
+  <text x="586" y="203" text-anchor="middle" font-size="40" font-weight="700" font-style="italic" fill="#1a1a1a">m</text>
 
-  <!-- Left extreme -->
-  <line x1="165" y1="205" x2="165" y2="240" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <text x="165" y="255" font-size="13" fill="#6B7280" text-anchor="middle">−x<tspan baseline-shift="sub" font-size="9">m</tspan></text>
+  <line x1="640" y1="100" x2="466" y2="100" stroke="#8B0029" stroke-width="5.5" marker-end="url(#springRedArrow)"/>
+  <rect x="541" y="66" width="36" height="30" rx="4" fill="#ffffff" fill-opacity="0.92"/>
+  <text x="559" y="90" text-anchor="middle" font-size="30" font-weight="700" font-style="italic" fill="#8B0029">F</text>
 
-  <!-- Right extreme -->
-  <line x1="365" y1="205" x2="365" y2="240" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <text x="365" y="255" font-size="13" fill="#6B7280" text-anchor="middle">+x<tspan baseline-shift="sub" font-size="9">m</tspan></text>
+  <line x1="626" y1="284" x2="488" y2="284" stroke="#8B0029" stroke-width="4.5" marker-end="url(#springRedArrow)"/>
+  <rect x="546" y="253" width="34" height="30" rx="4" fill="#ffffff" fill-opacity="0.92"/>
+  <text x="563" y="277" text-anchor="middle" font-size="28" font-weight="700" font-style="italic" fill="#8B0029">a</text>
 
-  <!-- Current x indication: from x=0 to block center (x=345) -->
-  <line x1="265" y1="225" x2="345" y2="225" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arrowG)"/>
-  <text x="305" y="220" font-size="13" fill="#1a1a1a" text-anchor="middle" font-style="italic">x &gt; 0</text>
+  <line x1="392" y1="324" x2="586" y2="324" stroke="#2563EB" stroke-width="4.5" marker-end="url(#springBlueArrow)"/>
+  <line x1="392" y1="310" x2="392" y2="338" stroke="#2563EB" stroke-width="2"/>
+  <line x1="586" y1="310" x2="586" y2="338" stroke="#2563EB" stroke-width="2"/>
+  <rect x="475" y="288" width="30" height="30" rx="4" fill="#ffffff" fill-opacity="0.92"/>
+  <text x="490" y="312" text-anchor="middle" font-size="28" font-weight="700" font-style="italic" fill="#2563EB">x</text>
 
-  <!-- x axis arrow -->
-  <line x1="100" y1="285" x2="430" y2="285" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrowG)"/>
-  <text x="440" y="289" font-size="14" fill="#6B7280" font-style="italic">x</text>
-
-  <!-- Restoring force F = -kx (block displaced to +x → F points left/restoring) -->
-  <line x1="345" y1="120" x2="280" y2="120" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
-  <text x="350" y="124" font-size="13" fill="#8B0029" font-style="italic" font-weight="bold">F</text>
-
-  <!-- Right side description -->
-  <text x="490" y="130" font-size="14" fill="#1a1a1a" font-weight="bold">훅 법칙 (Hooke's Law):</text>
-  <text x="490" y="158" font-size="16" fill="#8B0029" font-style="italic" font-weight="bold">F = −k x</text>
-  <text x="490" y="186" font-size="13" fill="#1a1a1a">x &gt; 0 → F &lt; 0 (왼쪽으로)</text>
-  <text x="490" y="206" font-size="13" fill="#1a1a1a">x &lt; 0 → F &gt; 0 (오른쪽으로)</text>
-  <text x="490" y="230" font-size="13" fill="#2563EB">항상 평형점을 향하는 복원력</text>
-
-  <!-- Spring constant label -->
-  <text x="170" y="148" font-size="13" fill="#6B7280" font-style="italic">k</text>
+  <line x1="126" y1="386" x2="712" y2="386" stroke="#6B7280" stroke-width="2.5" marker-end="url(#springGrayArrow)"/>
+  <text x="735" y="393" font-size="26" font-style="italic" fill="#6B7280">x</text>
 </svg>

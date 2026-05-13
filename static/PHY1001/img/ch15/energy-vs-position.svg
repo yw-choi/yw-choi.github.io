@@ -1,45 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 420" font-family="sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 390" font-family="sans-serif">
   <defs>
-    <marker id="eArrow" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
-      <path d="M0,0 L6,2.5 L0,5 Z" fill="#6B7280"/>
+    <marker id="axisArrowEnergy" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#6B7280"/>
     </marker>
   </defs>
 
-  <!-- Axes -->
-  <line x1="100" y1="330" x2="600" y2="330" stroke="#6B7280" stroke-width="1.5" marker-end="url(#eArrow)"/>
-  <line x1="350" y1="350" x2="350" y2="40" stroke="#6B7280" stroke-width="1.5" marker-end="url(#eArrow)"/>
-  <text x="610" y="334" font-size="14" fill="#6B7280" font-style="italic">x</text>
-  <text x="355" y="35" font-size="14" fill="#6B7280">에너지</text>
+  <rect x="0" y="0" width="760" height="390" fill="#ffffff"/>
+  <rect x="104" y="48" width="586" height="270" rx="8" fill="#F3F4F6"/>
 
-  <!-- x labels -->
-  <text x="170" y="350" font-size="13" fill="#6B7280" text-anchor="middle">−x<tspan baseline-shift="sub" font-size="9">m</tspan></text>
-  <text x="530" y="350" font-size="13" fill="#6B7280" text-anchor="middle">+x<tspan baseline-shift="sub" font-size="9">m</tspan></text>
-  <text x="350" y="350" font-size="12" fill="#6B7280" text-anchor="middle">0</text>
+  <g stroke="#6B7280" stroke-width="1" opacity="0.35">
+    <line x1="250" y1="64" x2="250" y2="318"/>
+    <line x1="380" y1="64" x2="380" y2="318"/>
+    <line x1="510" y1="64" x2="510" y2="318"/>
+    <line x1="120" y1="140" x2="676" y2="140"/>
+    <line x1="120" y1="206" x2="676" y2="206"/>
+    <line x1="120" y1="272" x2="676" y2="272"/>
+  </g>
 
-  <!-- E = const line (total mechanical energy) -->
-  <line x1="140" y1="80" x2="560" y2="80" stroke="#6B7280" stroke-width="2"/>
-  <text x="570" y="75" font-size="13" fill="#6B7280" font-weight="bold">E = ½kx²<tspan baseline-shift="sub" font-size="9">m</tspan></text>
-  <text x="570" y="93" font-size="12" fill="#6B7280">= K + U</text>
+  <g stroke="#6B7280" stroke-width="2.5" marker-end="url(#axisArrowEnergy)">
+    <line x1="92" y1="318" x2="700" y2="318"/>
+    <line x1="104" y1="332" x2="104" y2="48"/>
+  </g>
 
-  <!-- U(x) = ½kx² parabola -->
-  <path d="M170,330 Q190,310 210,280 Q250,180 290,110 Q330,80 350,80 Q370,80 410,110 Q450,180 490,280 Q510,310 530,330" fill="none" stroke="#8B0029" stroke-width="2.5"/>
-  <text x="540" y="290" font-size="14" fill="#8B0029" font-weight="bold">U(x) = ½kx²</text>
+  <g stroke="#6B7280" stroke-width="1.6" stroke-dasharray="7 5" opacity="0.8">
+    <line x1="150" y1="80" x2="150" y2="318"/>
+    <line x1="610" y1="80" x2="610" y2="318"/>
+  </g>
 
-  <!-- K(x) = E - U inverted parabola -->
-  <path d="M170,80 Q190,100 210,130 Q250,230 290,300 Q330,330 350,330 Q370,330 410,300 Q450,230 490,130 Q510,100 530,80" fill="none" stroke="#2563EB" stroke-width="2.5"/>
-  <text x="540" y="150" font-size="14" fill="#2563EB" font-weight="bold">K(x) = ½k(x²<tspan baseline-shift="sub" font-size="9">m</tspan>−x²)</text>
+  <line x1="150" y1="80" x2="610" y2="80" stroke="#6B7280" stroke-width="5" stroke-linecap="round"/>
+  <path d="M150,80 C218,218 296,318 380,318 C464,318 542,218 610,80"
+        fill="none" stroke="#8B0029" stroke-width="6" stroke-linecap="round"/>
+  <path d="M150,318 C218,180 296,80 380,80 C464,80 542,180 610,318"
+        fill="none" stroke="#2563EB" stroke-width="6" stroke-linecap="round"/>
 
-  <!-- Vertical dashed lines at ±x_m -->
-  <line x1="170" y1="80" x2="170" y2="330" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <line x1="530" y1="80" x2="530" y2="330" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <g font-size="26" font-weight="700">
+    <text x="486" y="65" fill="#6B7280">전체 에너지</text>
+    <text x="418" y="126" fill="#2563EB">운동 에너지</text>
+    <text x="438" y="248" fill="#8B0029">위치 에너지</text>
+  </g>
 
-  <!-- Annotations -->
-  <rect x="30" y="50" width="90" height="55" rx="5" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
-  <text x="75" y="68" font-size="11" fill="#8B0029" text-anchor="middle" font-weight="bold">x = ±x<tspan baseline-shift="sub" font-size="8">m</tspan></text>
-  <text x="75" y="84" font-size="11" fill="#1a1a1a" text-anchor="middle">K = 0</text>
-  <text x="75" y="98" font-size="11" fill="#1a1a1a" text-anchor="middle">U = E</text>
-
-  <rect x="310" y="360" width="80" height="38" rx="5" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
-  <text x="350" y="378" font-size="11" fill="#2563EB" text-anchor="middle" font-weight="bold">x = 0</text>
-  <text x="350" y="394" font-size="11" fill="#1a1a1a" text-anchor="middle">K = E, U = 0</text>
+  <g font-size="30" font-weight="700" fill="#6B7280">
+    <text x="38" y="54">에너지</text>
+    <text x="620" y="364">위치</text>
+  </g>
 </svg>

@@ -100,8 +100,8 @@ button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.7
       </div>
       <label>초기 각도 &theta;<sub>0</sub></label>
       <div class="slider-row">
-        <input type="range" id="slTh" min="5" max="45" step="1" value="20">
-        <span class="slider-val" id="valTh">20&deg;</span>
+        <input type="range" id="slTh" min="5" max="25" step="1" value="15">
+        <span class="slider-val" id="valTh">15&deg;</span>
       </div>
     </div>
 
@@ -284,7 +284,7 @@ function updateUI() {
       kx('\\theta(t) \\approx \\theta_0\\cos(\\omega t)') + '<br>' +
       kx('\\omega = \\sqrt{g/L}') + ' = ' + omega.toFixed(2) + ' rad/s<br>' +
       kx('T = 2\\pi\\sqrt{L/g}') + ' = ' + T.toFixed(3) + ' s<br>' +
-      '<b style="color:#8B0029">주기는 질량에 무관!</b>';
+      '<b style="color:#8B0029">소각 근사 범위에서 질량에 무관</b>';
   }
 
   // Info box
