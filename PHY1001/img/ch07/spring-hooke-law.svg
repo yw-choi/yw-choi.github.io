@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 480" width="700" height="480" font-family="sans-serif">
+  <defs>
+    <marker id="arrowR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
+    </marker>
+    <marker id="arrowB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
+    </marker>
+    <marker id="arrowG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- x-axis (full width) -->
+  <line x1="60" y1="460" x2="680" y2="460" stroke="#000000" stroke-width="2" marker-end="url(#arrowG)"/>
+  <text x="685" y="465" font-size="14" font-style="italic" fill="#000000">x</text>
+
+  <!-- x=0 tick on axis -->
+  <line x1="350" y1="452" x2="350" y2="468" stroke="#000000" stroke-width="1"/>
+  <text x="350" y="478" text-anchor="middle" font-size="14" fill="#6B7280">0</text>
+
+  <!-- x < 0 region label -->
+  <text x="180" y="478" text-anchor="middle" font-size="14" fill="#6B7280">x &lt; 0</text>
+  <!-- x > 0 region label -->
+  <text x="520" y="478" text-anchor="middle" font-size="14" fill="#6B7280">x &gt; 0</text>
+
+  <!-- ===== STATE 1: Compressed (top, x < 0) ===== -->
+  <text x="30" y="70" font-size="14" font-weight="bold" fill="#8B0029">&#xC555;&#xCD95;</text>
+
+  <!-- Wall -->
+  <rect x="55" y="50" width="10" height="80" fill="#6B7280"/>
+  <line x1="55" y1="50" x2="55" y2="130" stroke="#000000" stroke-width="2"/>
+
+  <!-- Spring (compressed - fewer coils, shorter) -->
+  <polyline points="65,90 80,70 95,110 110,70 125,110 140,70 155,110 170,70 185,110 200,90"
+            fill="none" stroke="#6B7280" stroke-width="2" stroke-linejoin="round"/>
+
+  <!-- Block -->
+  <rect x="200" y="60" width="60" height="60" fill="#F3F4F6" stroke="#000000" stroke-width="2" rx="3"/>
+  <text x="230" y="97" text-anchor="middle" font-size="14" font-weight="bold" fill="#000000">m</text>
+
+  <!-- Force arrow (to the right, toward x=0) -->
+  <line x1="260" y1="90" x2="330" y2="90" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
+  <text x="340" y="88" font-size="14" font-weight="bold" fill="#8B0029">
+    <tspan font-style="italic">F</tspan><tspan font-size="11" dy="3">s</tspan>
+  </text>
+
+  <!-- Dashed line down to axis for block position -->
+  <line x1="230" y1="120" x2="230" y2="452" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- ===== STATE 2: Natural length (middle, x = 0) ===== -->
+  <text x="30" y="220" font-size="14" font-weight="bold" fill="#6B7280">&#xD3C9;&#xD615;</text>
+
+  <!-- Wall -->
+  <rect x="55" y="200" width="10" height="80" fill="#6B7280"/>
+  <line x1="55" y1="200" x2="55" y2="280" stroke="#000000" stroke-width="2"/>
+
+  <!-- Spring (natural length) -->
+  <polyline points="65,240 85,215 110,265 135,215 160,265 185,215 210,265 235,215 260,265 285,215 310,265 330,240"
+            fill="none" stroke="#6B7280" stroke-width="2" stroke-linejoin="round"/>
+
+  <!-- Block -->
+  <rect x="330" y="210" width="60" height="60" fill="#F3F4F6" stroke="#000000" stroke-width="2" rx="3"/>
+  <text x="360" y="247" text-anchor="middle" font-size="14" font-weight="bold" fill="#000000">m</text>
+
+  <!-- No force label -->
+  <text x="420" y="238" font-size="14" fill="#6B7280">
+    <tspan font-style="italic">F</tspan><tspan font-size="11" dy="3">s</tspan><tspan dy="-3"> = 0</tspan>
+  </text>
+
+  <!-- Dashed line down to axis for x=0 -->
+  <line x1="360" y1="270" x2="360" y2="452" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- ===== STATE 3: Stretched (bottom, x > 0) ===== -->
+  <text x="30" y="370" font-size="14" font-weight="bold" fill="#2563EB">&#xC2E0;&#xC7A5;</text>
+
+  <!-- Wall -->
+  <rect x="55" y="350" width="10" height="80" fill="#6B7280"/>
+  <line x1="55" y1="350" x2="55" y2="430" stroke="#000000" stroke-width="2"/>
+
+  <!-- Spring (stretched - more spread out) -->
+  <polyline points="65,390 90,365 120,415 150,365 180,415 210,365 240,415 270,365 300,415 330,365 360,415 390,365 420,415 445,390"
+            fill="none" stroke="#6B7280" stroke-width="2" stroke-linejoin="round"/>
+
+  <!-- Block -->
+  <rect x="445" y="360" width="60" height="60" fill="#F3F4F6" stroke="#000000" stroke-width="2" rx="3"/>
+  <text x="475" y="397" text-anchor="middle" font-size="14" font-weight="bold" fill="#000000">m</text>
+
+  <!-- Force arrow (to the left, toward x=0) -->
+  <line x1="445" y1="390" x2="370" y2="390" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
+  <text x="385" y="380" font-size="14" font-weight="bold" fill="#8B0029">
+    <tspan font-style="italic">F</tspan><tspan font-size="11" dy="3">s</tspan>
+  </text>
+
+  <!-- Dashed line down to axis for block position -->
+  <line x1="475" y1="420" x2="475" y2="452" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- Formula -->
+  <text x="600" y="240" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">
+    <tspan font-style="italic">F</tspan><tspan font-size="12" dy="3">s</tspan><tspan dy="-3"> = −</tspan><tspan font-style="italic">kx</tspan>
+  </text>
+  <text x="600" y="265" text-anchor="middle" font-size="14" fill="#6B7280">&#xD56D;&#xC0C1; &#xD3C9;&#xD615; &#xC704;&#xCE58; &#xBC29;&#xD5A5;</text>
+</svg>

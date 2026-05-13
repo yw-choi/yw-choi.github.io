@@ -43,6 +43,9 @@ button.reset-btn:hover { background: #a3003a; }
 .formula-overlay .formula-line { font-size: 14px; line-height: 1.7; color: #333; }
 .formula-overlay .formula-line .katex { font-size: 14px; }
 .formula-overlay .formula-line.highlight { color: #8B0029; font-weight: 700; }
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px; }
 @media (max-width: 700px) {
   .container { flex-direction: column; }
   .canvas-area { height: 55vh; }
@@ -55,6 +58,9 @@ button.reset-btn:hover { background: #a3003a; }
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
     <div class="canvas-title" id="canvasTitle"></div>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-theta0" style="color:#8B0029;font-weight:bold;"></div>
+    </div>
     <div class="formula-overlay" id="formulaOverlay">
       <div class="formula-line" id="formulaTrajectory"></div>
       <div class="formula-line highlight" id="formulaRange"></div>
@@ -99,6 +105,15 @@ button.reset-btn:hover { background: #a3003a; }
 
 <script>
 function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
+}
+
+const lblTheta0 = document.getElementById('lbl-theta0');
 
 const g = 9.8;
 
@@ -443,14 +458,14 @@ function drawMainView() {
     ctx.beginPath();
     ctx.arc(originX, originY, arcR, -theta, 0, false);
     ctx.stroke();
-    ctx.fillStyle = '#8B0029';
-    ctx.font = '13px sans-serif';
-    ctx.textAlign = 'left';
-    ctx.fillText('\u03B8\u2080 = ' + thetaDeg + '\u00B0', originX + arcR + 6, originY - arcR * Math.sin(theta / 2) / 2 + 4);
+    posLabel(lblTheta0, originX + arcR + 6, originY - arcR * Math.sin(theta / 2) / 2 - 6, tex('\\theta_0 = ' + thetaDeg + '^\\circ'));
+  } else {
+    lblTheta0.style.display = 'none';
   }
 }
 
 function drawSplitView() {
+  lblTheta0.style.display = 'none';
   const { v0, theta, thetaDeg } = getParams();
   const st = getState();
   const tFull = st.tFlight;

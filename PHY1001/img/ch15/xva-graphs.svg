@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" font-family="sans-serif">
+  <defs>
+    <marker id="axisArrowXva" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="760" height="420" fill="#ffffff"/>
+
+  <g stroke="#6B7280" stroke-width="1" stroke-dasharray="5 5" opacity="0.35">
+    <line x1="225" y1="28" x2="225" y2="342"/>
+    <line x1="318" y1="28" x2="318" y2="342"/>
+    <line x1="411" y1="28" x2="411" y2="342"/>
+    <line x1="504" y1="28" x2="504" y2="342"/>
+    <line x1="597" y1="28" x2="597" y2="342"/>
+  </g>
+
+  <g>
+    <rect x="116" y="32" width="594" height="100" rx="8" fill="#F3F4F6"/>
+    <rect x="116" y="158" width="594" height="100" rx="8" fill="#F3F4F6"/>
+    <rect x="116" y="284" width="594" height="100" rx="8" fill="#F3F4F6"/>
+  </g>
+
+  <g stroke="#6B7280" stroke-width="2" marker-end="url(#axisArrowXva)">
+    <line x1="132" y1="82" x2="696" y2="82"/>
+    <line x1="132" y1="208" x2="696" y2="208"/>
+    <line x1="132" y1="334" x2="696" y2="334"/>
+  </g>
+
+  <g stroke="#6B7280" stroke-width="1.4" opacity="0.55">
+    <line x1="132" y1="46" x2="690" y2="46"/>
+    <line x1="132" y1="118" x2="690" y2="118"/>
+    <line x1="132" y1="172" x2="690" y2="172"/>
+    <line x1="132" y1="244" x2="690" y2="244"/>
+    <line x1="132" y1="298" x2="690" y2="298"/>
+    <line x1="132" y1="370" x2="690" y2="370"/>
+  </g>
+
+  <path d="M132,46 C170,46 196,58 225,82 C254,106 280,118 318,118 C356,118 382,106 411,82 C440,58 466,46 504,46 C542,46 568,58 597,82 C626,106 652,118 690,118"
+        fill="none" stroke="#8B0029" stroke-width="6" stroke-linecap="round"/>
+  <path d="M132,208 C160,232 188,244 225,244 C262,244 290,232 318,208 C346,184 374,172 411,172 C448,172 476,184 504,208 C532,232 560,244 597,244 C634,244 662,232 690,208"
+        fill="none" stroke="#2563EB" stroke-width="6" stroke-linecap="round"/>
+  <path d="M132,370 C170,370 196,358 225,334 C254,310 280,298 318,298 C356,298 382,310 411,334 C440,358 466,370 504,370 C542,370 568,358 597,334 C626,310 652,298 690,298"
+        fill="none" stroke="#6B7280" stroke-width="6" stroke-linecap="round"/>
+
+  <g font-size="46" font-weight="700" text-anchor="middle">
+    <text x="62" y="97" fill="#8B0029">x</text>
+    <text x="62" y="223" fill="#2563EB">v</text>
+    <text x="62" y="349" fill="#6B7280">a</text>
+  </g>
+
+  <text x="640" y="405" font-size="30" font-weight="700" fill="#6B7280">시간</text>
+</svg>

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" width="700" height="400" font-family="sans-serif">
+  <defs>
+    <marker id="arrowG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#000000"/>
+    </marker>
+  </defs>
+
+  <!-- Axes -->
+  <line x1="80" y1="320" x2="650" y2="320" stroke="#000000" stroke-width="2" marker-end="url(#arrowG)"/>
+  <line x1="80" y1="320" x2="80" y2="40" stroke="#000000" stroke-width="2" marker-end="url(#arrowG)"/>
+
+  <!-- Axis labels -->
+  <text x="660" y="335" font-size="14" font-style="italic" fill="#000000">x</text>
+  <text x="65" y="35" font-size="14" font-style="italic" fill="#000000">F(x)</text>
+
+  <!-- Shaded area under curve between xi and xf -->
+  <path d="M 200,320 L 200,210 C 230,195 270,140 320,120 C 370,100 420,95 470,110 C 500,118 530,145 550,170 L 550,320 Z"
+        fill="#8B0029" fill-opacity="0.15" stroke="none"/>
+
+  <!-- F(x) curve -->
+  <path d="M 100,280 C 130,265 170,230 200,210 C 230,195 270,140 320,120 C 370,100 420,95 470,110 C 520,130 560,175 600,210"
+        fill="none" stroke="#8B0029" stroke-width="2.5"/>
+
+  <!-- Curve label -->
+  <text x="610" y="200" font-size="14" font-style="italic" fill="#8B0029" font-weight="bold">F(x)</text>
+
+  <!-- xi vertical line -->
+  <line x1="200" y1="320" x2="200" y2="210" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="200" y="345" text-anchor="middle" font-size="14" font-style="italic" fill="#6B7280">x<tspan font-size="11" dy="3">i</tspan></text>
+
+  <!-- xf vertical line -->
+  <line x1="550" y1="320" x2="550" y2="170" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="550" y="345" text-anchor="middle" font-size="14" font-style="italic" fill="#6B7280">x<tspan font-size="11" dy="3">f</tspan></text>
+
+  <!-- "Area = W" label inside the shaded region -->
+  <text x="375" y="260" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">&#xB113;&#xC774; = W</text>
+
+  <!-- Formula at top right -->
+  <rect x="420" y="42" width="250" height="50" rx="5" fill="white" stroke="#8B0029" stroke-width="1"/>
+  <text x="545" y="72" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">
+    <tspan font-style="italic">W</tspan> = ∫ <tspan font-style="italic">F</tspan>(<tspan font-style="italic">x</tspan>) d<tspan font-style="italic">x</tspan>
+  </text>
+
+  <!-- Origin label -->
+  <text x="70" y="338" font-size="14" fill="#6B7280">O</text>
+</svg>

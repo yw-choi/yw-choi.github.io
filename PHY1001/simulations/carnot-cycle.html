@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>카르노 순환 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 14px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute; white-space: nowrap; line-height: 1; font-size: 13px; pointer-events: none;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.92em; }
+.canvas-overlay .katex-label.with-bg {
+  background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px;
+}
+.step-indicator { display: flex; gap: 4px; flex-wrap: wrap; }
+.step-indicator .step { font-size: 11px; padding: 3px 7px; border-radius: 4px; background: #eee; color: #888; font-weight: 600; }
+.step-indicator .step.active { background: #8B0029; color: #fff; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-point" style="color:#8B0029;"></div>
+      <div class="katex-label with-bg" id="lbl-step" style="color:#2563EB;"></div>
+    </div>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>카르노 순환</h2>
+      <div class="subtitle">Carnot Cycle (Ch.20)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>고온 T_H = <span id="thVal">600</span> K</label>
+      <input type="range" id="thSlider" min="400" max="1200" value="600" step="10">
+    </div>
+
+    <div class="control-group">
+      <label>저온 T_L = <span id="tlVal">300</span> K</label>
+      <input type="range" id="tlSlider" min="200" max="600" value="300" step="10">
+    </div>
+
+    <div class="control-group">
+      <label>초기 부피 V_a = <span id="vaVal">1.0</span> L</label>
+      <input type="range" id="vaSlider" min="0.5" max="3.0" value="1.0" step="0.1">
+    </div>
+
+    <div class="step-indicator" id="stepIndicator">
+      <span class="step" id="s1">1. 등온팽창</span>
+      <span class="step" id="s2">2. 단열팽창</span>
+      <span class="step" id="s3">3. 등온압축</span>
+      <span class="step" id="s4">4. 단열압축</span>
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const lblPoint = document.getElementById('lbl-point');
+const lblStep = document.getElementById('lbl-step');
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
+}
+
+const thSlider = document.getElementById('thSlider');
+const tlSlider = document.getElementById('tlSlider');
+const vaSlider = document.getElementById('vaSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+// Physical constants
+const n = 1.0; // mol
+const R = 8.314;
+const gamma = 5/3; // monatomic ideal gas
+
+let running = false, animId = null, lastTs = null;
+let cycleProgress = 0; // 0 to 4 (each step is 1 unit)
+
+function getParams() {
+  const TH = parseFloat(thSlider.value);
+  let TL = parseFloat(tlSlider.value);
+  if (TL >= TH) TL = TH - 10;
+  const Va = parseFloat(vaSlider.value) * 1e-3; // L to m^3
+  return { TH, TL, Va };
+}
+
+// Calculate the four corner points of the Carnot cycle
+function calcCycle(TH, TL, Va) {
+  // a: (Va, pa) on TH isotherm
+  const pa = n * R * TH / Va;
+
+  // b: isothermal expansion at TH, choose Vb = 3*Va for visual clarity
+  const Vb = 3 * Va;
+  const pb = n * R * TH / Vb;
+
+  // c: adiabatic from b to TL: T*V^(gamma-1) = const
+  // TH * Vb^(g-1) = TL * Vc^(g-1)
+  const Vc = Vb * Math.pow(TH / TL, 1 / (gamma - 1));
+  const pc = n * R * TL / Vc;
+
+  // d: adiabatic from a to TL (going backward, d->a is adiabatic compression)
+  // TH * Va^(g-1) = TL * Vd^(g-1)
+  const Vd = Va * Math.pow(TH / TL, 1 / (gamma - 1));
+  const pd = n * R * TL / Vd;
+
+  // Heat and work
+  const QH = n * R * TH * Math.log(Vb / Va);
+  const QL = n * R * TL * Math.log(Vc / Vd);
+  const Wnet = QH - QL;
+  const eff = 1 - TL / TH;
+
+  return { Va, pa, Vb, pb, Vc, pc, Vd, pd, QH, QL, Wnet, eff, TH, TL };
+}
+
+// Get point on cycle at progress t (0-4)
+function getPointOnCycle(c, t) {
+  t = ((t % 4) + 4) % 4;
+  let V, p, stepIdx;
+  if (t < 1) {
+    // Step 1: isothermal expansion a->b at TH
+    stepIdx = 0;
+    const frac = t;
+    const lnV = Math.log(c.Va) + frac * (Math.log(c.Vb) - Math.log(c.Va));
+    V = Math.exp(lnV);
+    p = n * R * c.TH / V;
+  } else if (t < 2) {
+    // Step 2: adiabatic expansion b->c
+    stepIdx = 1;
+    const frac = t - 1;
+    const lnV = Math.log(c.Vb) + frac * (Math.log(c.Vc) - Math.log(c.Vb));
+    V = Math.exp(lnV);
+    const T = c.TH * Math.pow(c.Vb / V, gamma - 1);
+    p = n * R * T / V;
+  } else if (t < 3) {
+    // Step 3: isothermal compression c->d at TL
+    stepIdx = 2;
+    const frac = t - 2;
+    const lnV = Math.log(c.Vc) + frac * (Math.log(c.Vd) - Math.log(c.Vc));
+    V = Math.exp(lnV);
+    p = n * R * c.TL / V;
+  } else {
+    // Step 4: adiabatic compression d->a
+    stepIdx = 3;
+    const frac = t - 3;
+    const lnV = Math.log(c.Vd) + frac * (Math.log(c.Va) - Math.log(c.Vd));
+    V = Math.exp(lnV);
+    const T = c.TL * Math.pow(c.Vd / V, gamma - 1);
+    p = n * R * T / V;
+  }
+  return { V, p, stepIdx };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function reset() {
+  if (animId) cancelAnimationFrame(animId);
+  running = false; animId = null; lastTs = null;
+  cycleProgress = 0;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  updateInfo(); draw();
+}
+
+function start() {
+  if (running) return;
+  running = true; lastTs = null;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+}
+
+function step(ts) {
+  if (!running) return;
+  if (!lastTs) { lastTs = ts; animId = requestAnimationFrame(step); return; }
+  const dtReal = Math.min((ts - lastTs) / 1000, 0.04);
+  lastTs = ts;
+
+  cycleProgress += dtReal * 0.5; // speed: one full cycle in 8 seconds
+  if (cycleProgress >= 4) cycleProgress -= 4;
+
+  updateInfo(); draw();
+  animId = requestAnimationFrame(step);
+}
+
+function updateInfo() {
+  const params = getParams();
+  const c = calcCycle(params.TH, params.TL, params.Va);
+  const pt = getPointOnCycle(c, cycleProgress);
+
+  // Calculate current temperature
+  let T;
+  const stepFrac = cycleProgress % 1;
+  if (pt.stepIdx === 0) T = c.TH;
+  else if (pt.stepIdx === 1) T = c.TH * Math.pow(c.Vb / pt.V, gamma - 1);
+  else if (pt.stepIdx === 2) T = c.TL;
+  else T = c.TL * Math.pow(c.Vd / pt.V, gamma - 1);
+
+  // Step indicator
+  ['s1','s2','s3','s4'].forEach((id, i) => {
+    document.getElementById(id).classList.toggle('active', i === pt.stepIdx);
+  });
+
+  const box = document.getElementById('infoBox');
+  let html = '';
+  html += '<span class="label">효율:</span> ' + tex('\\varepsilon_C = 1 - \\frac{T_L}{T_H} = ' + (c.eff * 100).toFixed(1) + '\\%') + '<br>';
+  html += '<span class="label">흡수열:</span> <span class="val">' + tex('Q_H = ' + c.QH.toFixed(1) + '\\text{ J}') + '</span><br>';
+  html += '<span class="label">방출열:</span> <span class="val">' + tex('|Q_L| = ' + c.QL.toFixed(1) + '\\text{ J}') + '</span><br>';
+  html += '<span class="label">알짜 일:</span> <span class="val">' + tex('W = ' + c.Wnet.toFixed(1) + '\\text{ J}') + '</span><br>';
+  html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
+  html += '<span class="label">현재 상태:</span><br>';
+  html += tex('V = ' + (pt.V * 1e3).toFixed(2) + '\\text{ L}') + '<br>';
+  html += tex('p = ' + (pt.p / 1e3).toFixed(1) + '\\text{ kPa}') + '<br>';
+  html += tex('T = ' + T.toFixed(0) + '\\text{ K}');
+  box.innerHTML = html;
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 8;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath(); ctx.fill();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  lblPoint.style.display = 'none';
+  lblStep.style.display = 'none';
+
+  const params = getParams();
+  const c = calcCycle(params.TH, params.TL, params.Va);
+
+  // Determine plot range
+  const allV = [c.Va, c.Vb, c.Vc, c.Vd];
+  const allP = [c.pa, c.pb, c.pc, c.pd];
+  const Vmin = Math.min(...allV) * 0.7;
+  const Vmax = Math.max(...allV) * 1.15;
+  const Pmin = Math.min(...allP) * 0.5;
+  const Pmax = Math.max(...allP) * 1.2;
+
+  // Plot area
+  const margin = { left: 70, right: 40, top: 60, bottom: 50 };
+  const plotW = CW - margin.left - margin.right;
+  const plotH = CH - margin.top - margin.bottom;
+
+  function toX(V) { return margin.left + (Math.log(V) - Math.log(Vmin)) / (Math.log(Vmax) - Math.log(Vmin)) * plotW; }
+  function toY(p) { return margin.top + (1 - (Math.log(p) - Math.log(Pmin)) / (Math.log(Pmax) - Math.log(Pmin))) * plotH; }
+
+  // Axes
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(margin.left, margin.top);
+  ctx.lineTo(margin.left, margin.top + plotH);
+  ctx.lineTo(margin.left + plotW, margin.top + plotH);
+  ctx.stroke();
+
+  ctx.fillStyle = '#1a1a1a'; ctx.font = '14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('V (부피)', margin.left + plotW / 2, CH - 8);
+  ctx.save();
+  ctx.translate(18, margin.top + plotH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('p (압력)', 0, 0);
+  ctx.restore();
+
+  // Draw shaded cycle area
+  ctx.beginPath();
+  const stepsPerSegment = 40;
+  // a->b isothermal
+  for (let i = 0; i <= stepsPerSegment; i++) {
+    const frac = i / stepsPerSegment;
+    const lnV = Math.log(c.Va) + frac * (Math.log(c.Vb) - Math.log(c.Va));
+    const V = Math.exp(lnV);
+    const p = n * R * c.TH / V;
+    if (i === 0) ctx.moveTo(toX(V), toY(p)); else ctx.lineTo(toX(V), toY(p));
+  }
+  // b->c adiabatic
+  for (let i = 0; i <= stepsPerSegment; i++) {
+    const frac = i / stepsPerSegment;
+    const lnV = Math.log(c.Vb) + frac * (Math.log(c.Vc) - Math.log(c.Vb));
+    const V = Math.exp(lnV);
+    const T = c.TH * Math.pow(c.Vb / V, gamma - 1);
+    ctx.lineTo(toX(V), toY(n * R * T / V));
+  }
+  // c->d isothermal
+  for (let i = 0; i <= stepsPerSegment; i++) {
+    const frac = i / stepsPerSegment;
+    const lnV = Math.log(c.Vc) + frac * (Math.log(c.Vd) - Math.log(c.Vc));
+    const V = Math.exp(lnV);
+    const p = n * R * c.TL / V;
+    ctx.lineTo(toX(V), toY(p));
+  }
+  // d->a adiabatic
+  for (let i = 0; i <= stepsPerSegment; i++) {
+    const frac = i / stepsPerSegment;
+    const lnV = Math.log(c.Vd) + frac * (Math.log(c.Va) - Math.log(c.Vd));
+    const V = Math.exp(lnV);
+    const T = c.TL * Math.pow(c.Vd / V, gamma - 1);
+    ctx.lineTo(toX(V), toY(n * R * T / V));
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(139, 0, 41, 0.08)';
+  ctx.fill();
+
+  // Draw cycle curves
+  function drawSegment(Vstart, Vend, pFunc, color, lw) {
+    ctx.strokeStyle = color; ctx.lineWidth = lw;
+    ctx.beginPath();
+    for (let i = 0; i <= stepsPerSegment; i++) {
+      const frac = i / stepsPerSegment;
+      const lnV = Math.log(Vstart) + frac * (Math.log(Vend) - Math.log(Vstart));
+      const V = Math.exp(lnV);
+      const p = pFunc(V);
+      if (i === 0) ctx.moveTo(toX(V), toY(p)); else ctx.lineTo(toX(V), toY(p));
+    }
+    ctx.stroke();
+  }
+
+  // Draw arrows on each segment
+  function drawSegmentArrow(Vstart, Vend, pFunc, color) {
+    const frac = 0.5;
+    const lnV1 = Math.log(Vstart) + (frac - 0.02) * (Math.log(Vend) - Math.log(Vstart));
+    const lnV2 = Math.log(Vstart) + (frac + 0.02) * (Math.log(Vend) - Math.log(Vstart));
+    const V1 = Math.exp(lnV1), V2 = Math.exp(lnV2);
+    drawArrow(toX(V1), toY(pFunc(V1)), toX(V2), toY(pFunc(V2)), color, 2);
+  }
+
+  const currentStep = getPointOnCycle(c, cycleProgress).stepIdx;
+
+  // a->b isothermal TH
+  const pAB = V => n * R * c.TH / V;
+  drawSegment(c.Va, c.Vb, pAB, currentStep === 0 ? '#8B0029' : '#8B002966', currentStep === 0 ? 3 : 2);
+  drawSegmentArrow(c.Va, c.Vb, pAB, currentStep === 0 ? '#8B0029' : '#8B002966');
+
+  // b->c adiabatic
+  const pBC = V => n * R * (c.TH * Math.pow(c.Vb / V, gamma - 1)) / V;
+  drawSegment(c.Vb, c.Vc, pBC, currentStep === 1 ? '#2563EB' : '#2563EB66', currentStep === 1 ? 3 : 2);
+  drawSegmentArrow(c.Vb, c.Vc, pBC, currentStep === 1 ? '#2563EB' : '#2563EB66');
+
+  // c->d isothermal TL
+  const pCD = V => n * R * c.TL / V;
+  drawSegment(c.Vc, c.Vd, pCD, currentStep === 2 ? '#8B0029' : '#8B002966', currentStep === 2 ? 3 : 2);
+  drawSegmentArrow(c.Vc, c.Vd, pCD, currentStep === 2 ? '#8B0029' : '#8B002966');
+
+  // d->a adiabatic
+  const pDA = V => n * R * (c.TL * Math.pow(c.Vd / V, gamma - 1)) / V;
+  drawSegment(c.Vd, c.Va, pDA, currentStep === 3 ? '#2563EB' : '#2563EB66', currentStep === 3 ? 3 : 2);
+  drawSegmentArrow(c.Vd, c.Va, pDA, currentStep === 3 ? '#2563EB' : '#2563EB66');
+
+  // Corner points
+  const corners = [
+    { V: c.Va, p: c.pa, label: 'a', dx: -14, dy: -10 },
+    { V: c.Vb, p: c.pb, label: 'b', dx: 8, dy: -10 },
+    { V: c.Vc, p: c.pc, label: 'c', dx: 8, dy: 14 },
+    { V: c.Vd, p: c.pd, label: 'd', dx: -14, dy: 14 }
+  ];
+  corners.forEach(pt => {
+    const x = toX(pt.V), y = toY(pt.p);
+    ctx.fillStyle = '#8B0029';
+    ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(pt.label, x + pt.dx, y + pt.dy);
+  });
+  ctx.textBaseline = 'alphabetic';
+
+  // Isotherm labels
+  ctx.font = '12px sans-serif'; ctx.fillStyle = '#8B0029';
+  ctx.textAlign = 'left';
+  const thLblX = toX(c.Vb) + 10, thLblY = toY(c.pb) - 5;
+  ctx.fillText('T_H = ' + c.TH + ' K', thLblX, thLblY);
+  const tlLblX = toX(c.Vc) + 10, tlLblY = toY(c.pc) + 15;
+  ctx.fillStyle = '#2563EB';
+  ctx.fillText('T_L = ' + c.TL + ' K', tlLblX, tlLblY);
+
+  // W label
+  const wcx = (toX(c.Va) + toX(c.Vc)) / 2;
+  const wcy = (toY(c.pa) + toY(c.pc)) / 2;
+  ctx.fillStyle = '#8B0029'; ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('W', wcx, wcy);
+
+  // Current point
+  const pt = getPointOnCycle(c, cycleProgress);
+  const cx = toX(pt.V), cy = toY(pt.p);
+  ctx.fillStyle = '#fff'; ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(cx, cy, 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#8B0029';
+  ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Math.PI * 2); ctx.fill();
+
+  // Step name labels
+  const stepNames = ['등온 팽창 (Q_H 흡수)', '단열 팽창', '등온 압축 (Q_L 방출)', '단열 압축'];
+  posLabel(lblStep, cx + 12, cy - 20,
+    '<span style="color:' + (currentStep % 2 === 0 ? '#8B0029' : '#2563EB') + ';font-weight:bold;font-size:12px">' +
+    stepNames[currentStep] + '</span>');
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML = '카르노 순환: ' + tex('\\varepsilon_C = 1 - T_L/T_H');
+  document.getElementById('theoremBox').innerHTML =
+    '카르노 엔진 효율<br>' +
+    tex('\\varepsilon_C = 1 - \\dfrac{T_L}{T_H}');
+  updateFormula();
+}
+
+function updateFormula() {
+  const params = getParams();
+  const c = calcCycle(params.TH, params.TL, params.Va);
+  const box = document.getElementById('formulaBox');
+  box.innerHTML =
+    '<b>카르노 효율:</b><br>' +
+    tex('\\varepsilon_C = 1 - \\frac{' + c.TL + '}{' + c.TH + '} = ' + (c.eff * 100).toFixed(1) + '\\%') + '<br>' +
+    '<b>에너지 수지:</b><br>' +
+    tex('Q_H = ' + c.QH.toFixed(1) + '\\text{ J}') + '<br>' +
+    tex('|Q_L| = ' + c.QL.toFixed(1) + '\\text{ J}') + '<br>' +
+    tex('W = Q_H - |Q_L| = ' + c.Wnet.toFixed(1) + '\\text{ J}');
+}
+
+[thSlider, tlSlider, vaSlider].forEach(sl => {
+  sl.addEventListener('input', () => {
+    document.getElementById('thVal').textContent = parseFloat(thSlider.value).toFixed(0);
+    document.getElementById('tlVal').textContent = parseFloat(tlSlider.value).toFixed(0);
+    document.getElementById('vaVal').textContent = parseFloat(vaSlider.value).toFixed(1);
+    // Ensure TL < TH
+    if (parseFloat(tlSlider.value) >= parseFloat(thSlider.value)) {
+      tlSlider.value = parseFloat(thSlider.value) - 10;
+      document.getElementById('tlVal').textContent = parseFloat(tlSlider.value).toFixed(0);
+    }
+    updateFormula(); reset();
+  });
+});
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+window.addEventListener('resize', resize);
+
+renderStatic();
+document.getElementById('thVal').textContent = parseFloat(thSlider.value).toFixed(0);
+document.getElementById('tlVal').textContent = parseFloat(tlSlider.value).toFixed(0);
+document.getElementById('vaVal').textContent = parseFloat(vaSlider.value).toFixed(1);
+reset();
+resize();
+</script>
+</body>
+</html>

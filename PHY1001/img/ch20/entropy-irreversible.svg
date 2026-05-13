@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 370" font-family="sans-serif">
+  <defs>
+    <marker id="arrR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="arrG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="375" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#8B0029">자유 팽창 (Free Expansion) — 비가역 과정</text>
+
+  <!-- (a) Initial state -->
+  <text x="175" y="60" text-anchor="middle" font-size="15" font-weight="bold" fill="#6B7280">(a) 초기 상태 i</text>
+
+  <!-- Left container with gas -->
+  <rect x="50" y="80" width="120" height="180" rx="6" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <!-- Divider / stopcock -->
+  <rect x="170" y="80" width="10" height="180" fill="#6B7280"/>
+  <!-- Right container (vacuum) -->
+  <rect x="180" y="80" width="120" height="180" rx="6" fill="white" stroke="#6B7280" stroke-width="2"/>
+
+  <!-- Gas molecules in left -->
+  <circle cx="80" cy="120" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="110" cy="105" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="140" cy="135" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="95" cy="160" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="130" cy="180" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="70" cy="200" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="120" cy="220" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="155" cy="150" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="85" cy="240" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="145" cy="230" r="5" fill="#8B0029" opacity="0.8"/>
+
+  <!-- Labels -->
+  <text x="110" y="285" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">기체</text>
+  <text x="110" y="302" text-anchor="middle" font-size="13" fill="#6B7280" font-style="italic">V, T</text>
+  <text x="240" y="175" text-anchor="middle" font-size="14" fill="#6B7280" font-weight="bold">진공</text>
+  <text x="175" y="280" text-anchor="middle" font-size="12" fill="#6B7280">마개</text>
+
+  <!-- Arrow to right -->
+  <line x1="320" y1="170" x2="400" y2="170" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <text x="360" y="155" text-anchor="middle" font-size="13" fill="#8B0029" font-weight="bold">마개 열기</text>
+  <text x="360" y="198" text-anchor="middle" font-size="12" fill="#6B7280">비가역 과정</text>
+  <text x="360" y="215" text-anchor="middle" font-size="12" fill="#6B7280" font-style="italic">W = 0, Q = 0</text>
+
+  <!-- (b) Final state -->
+  <text x="560" y="60" text-anchor="middle" font-size="15" font-weight="bold" fill="#6B7280">(b) 최종 상태 f</text>
+
+  <!-- Full container -->
+  <rect x="430" y="80" width="250" height="180" rx="6" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <!-- Opening where stopcock was -->
+  <rect x="555" y="120" width="2" height="100" fill="#F3F4F6"/>
+
+  <!-- Spread molecules -->
+  <circle cx="460" cy="120" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="520" cy="105" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="600" cy="135" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="480" cy="180" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="640" cy="160" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="550" cy="200" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="610" cy="220" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="500" cy="230" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="570" cy="150" r="5" fill="#8B0029" opacity="0.8"/>
+  <circle cx="450" cy="240" r="5" fill="#8B0029" opacity="0.8"/>
+
+  <!-- Labels -->
+  <text x="555" y="285" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">기체</text>
+  <text x="555" y="302" text-anchor="middle" font-size="13" fill="#6B7280" font-style="italic">2V, T (온도 불변)</text>
+
+  <!-- Entropy note -->
+  <text x="375" y="338" text-anchor="middle" font-size="15" font-weight="bold" fill="#8B0029">ΔS = nR ln 2 > 0 — 엔트로피 증가!</text>
+</svg>

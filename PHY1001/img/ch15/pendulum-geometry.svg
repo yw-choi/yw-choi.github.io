@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 460" font-family="sans-serif">
+  <defs>
+    <marker id="arrow-red" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#8B0029"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2563EB"/>
+    </marker>
+    <style>
+      .axis { stroke: #6B7280; stroke-width: 1.5; stroke-dasharray: 6 5; }
+      .support { fill: #F3F4F6; stroke: #6B7280; stroke-width: 2; }
+      .string { stroke: #1a1a1a; stroke-width: 3; stroke-linecap: round; }
+      .arc { fill: none; stroke: #6B7280; stroke-width: 1.8; stroke-dasharray: 6 5; }
+      .angle { fill: none; stroke: #8B0029; stroke-width: 2.5; }
+      .label-bg { fill: #ffffff; fill-opacity: 0.94; stroke: none; }
+      .label { font-size: 18px; font-weight: 700; }
+    </style>
+  </defs>
+
+  <rect width="800" height="460" fill="#ffffff"/>
+
+  <rect x="278" y="42" width="164" height="22" rx="5" class="support"/>
+  <line x1="360" y1="72" x2="360" y2="352" class="axis"/>
+  <path d="M360 342 A270 270 0 0 0 486.8 310.4" class="arc"/>
+
+  <path d="M360 124 A52 52 0 0 0 384.4 117.9" class="angle"/>
+  <rect x="371" y="124" width="25" height="24" rx="4" class="label-bg"/>
+  <text x="383.5" y="142" text-anchor="middle" class="label" font-style="italic" fill="#8B0029">θ</text>
+
+  <circle cx="360" cy="72" r="8" fill="#6B7280"/>
+  <line x1="360" y1="72" x2="486.8" y2="310.4" class="string"/>
+
+  <rect x="410" y="179" width="28" height="28" rx="4" class="label-bg"/>
+  <text x="424" y="200" text-anchor="middle" class="label" font-style="italic" fill="#1a1a1a">L</text>
+
+  <line x1="486.8" y1="310.4" x2="438.0" y2="218.6" stroke="#2563EB" stroke-width="4.5" stroke-linecap="round" marker-end="url(#arrow-blue)"/>
+  <rect x="425" y="231" width="26" height="26" rx="4" class="label-bg"/>
+  <text x="438" y="251" text-anchor="middle" class="label" font-style="italic" fill="#2563EB">T</text>
+
+  <line x1="486.8" y1="310.4" x2="486.8" y2="420" stroke="#8B0029" stroke-width="4.5" stroke-linecap="round" marker-end="url(#arrow-red)"/>
+  <rect x="504" y="365" width="40" height="26" rx="4" class="label-bg"/>
+  <text x="524" y="385" text-anchor="middle" class="label" fill="#8B0029">mg</text>
+
+  <line x1="486.8" y1="310.4" x2="401.2" y2="355.9" stroke="#8B0029" stroke-width="4.5" stroke-linecap="round" marker-end="url(#arrow-red)"/>
+  <rect x="382" y="363" width="74" height="28" rx="4" class="label-bg"/>
+  <text x="419" y="384" text-anchor="middle" class="label" fill="#8B0029">mg sinθ</text>
+
+  <circle cx="486.8" cy="310.4" r="34" fill="#F3F4F6" stroke="#6B7280" stroke-width="2.5"/>
+  <text x="486.8" y="322.4" text-anchor="middle" font-size="34" font-weight="700" font-style="italic" fill="#1a1a1a">m</text>
+
+</svg>

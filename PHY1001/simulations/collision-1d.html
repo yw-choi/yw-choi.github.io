@@ -31,6 +31,15 @@ button.reset-btn:hover { background: #a3003a; }
 .play-btn.running { background: #b8860b; }
 .btn-row { display: flex; gap: 8px; }
 .btn-row button { flex: 1; }
+/* KaTeX overlay labels on canvas */
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
+.canvas-overlay .katex-label .katex { font-size: 0.92em; }
+.canvas-overlay .katex-label.bar-label { font-size: 9.5px; }
+.canvas-overlay .katex-label.bar-label .katex { font-size: 0.85em; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px; }
+.canvas-overlay .chart-title { position: absolute; white-space: nowrap; font-size: 12px; font-weight: bold; color: #444; pointer-events: none; }
+.canvas-overlay .chart-title .katex { font-size: 0.9em; }
 .canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
 .canvas-title .katex { font-size: 18px; color: #8B0029; }
 .formula-overlay { position: absolute; bottom: 0; left: 0; right: 0; pointer-events: none; padding: 8px 16px 10px; background: rgba(250,250,250,0.92); border-top: 1px solid #eee; }
@@ -49,6 +58,28 @@ button.reset-btn:hover { background: #a3003a; }
 <div class="container">
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <!-- Velocity labels -->
+      <div class="katex-label with-bg" id="lbl-v1" style="color:#8B0029;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lbl-v2" style="color:#2563EB;font-weight:bold;"></div>
+      <!-- Momentum chart -->
+      <div class="chart-title" id="lbl-mom-title"></div>
+      <div class="katex-label bar-label" id="lbl-p1" style="color:#8B0029;"></div>
+      <div class="katex-label bar-label" id="lbl-p2" style="color:#2563EB;"></div>
+      <div class="katex-label bar-label" id="lbl-pt" style="color:#444;font-weight:bold;"></div>
+      <div class="katex-label bar-label" id="lbl-p1v" style="color:#8B0029;"></div>
+      <div class="katex-label bar-label" id="lbl-p2v" style="color:#2563EB;"></div>
+      <div class="katex-label bar-label" id="lbl-ptv" style="color:#444;font-weight:bold;"></div>
+      <!-- Energy chart -->
+      <div class="chart-title" id="lbl-eng-title"></div>
+      <div class="katex-label" id="lbl-ki-ref" style="color:#aaa;"></div>
+      <div class="katex-label bar-label" id="lbl-k1" style="color:#8B0029;"></div>
+      <div class="katex-label bar-label" id="lbl-k2" style="color:#2563EB;"></div>
+      <div class="katex-label bar-label" id="lbl-kt" style="color:#444;font-weight:bold;"></div>
+      <div class="katex-label bar-label" id="lbl-k1v" style="color:#8B0029;"></div>
+      <div class="katex-label bar-label" id="lbl-k2v" style="color:#2563EB;"></div>
+      <div class="katex-label bar-label" id="lbl-ktv" style="color:#444;font-weight:bold;"></div>
+    </div>
     <div class="canvas-title" id="canvasTitle"></div>
     <div class="formula-overlay" id="formulaOverlay">
       <div class="formula-line" id="formulaP"></div>
@@ -121,6 +152,46 @@ button.reset-btn:hover { background: #a3003a; }
 function tex(expr) {
   return katex.renderToString(expr, { throwOnError: false });
 }
+
+function posLabel(el, px, py, html, anchor) {
+  // anchor: 'center' (default), 'right', 'left'
+  el.innerHTML = html;
+  el.style.display = '';
+  if (anchor === 'right') {
+    el.style.left = '';
+    el.style.right = (W - px) + 'px';
+    el.style.transform = 'translateY(-50%)';
+  } else if (anchor === 'left') {
+    el.style.left = px + 'px';
+    el.style.right = '';
+    el.style.transform = 'translateY(-50%)';
+  } else {
+    el.style.left = px + 'px';
+    el.style.right = '';
+    el.style.transform = 'translate(-50%, -50%)';
+  }
+  el.style.top = py + 'px';
+}
+function hideLabel(el) { el.style.display = 'none'; }
+
+// Overlay label elements
+const lblV1 = document.getElementById('lbl-v1');
+const lblV2 = document.getElementById('lbl-v2');
+const lblMomTitle = document.getElementById('lbl-mom-title');
+const lblP1 = document.getElementById('lbl-p1');
+const lblP2 = document.getElementById('lbl-p2');
+const lblPt = document.getElementById('lbl-pt');
+const lblP1v = document.getElementById('lbl-p1v');
+const lblP2v = document.getElementById('lbl-p2v');
+const lblPtv = document.getElementById('lbl-ptv');
+const lblEngTitle = document.getElementById('lbl-eng-title');
+const lblKiRef = document.getElementById('lbl-ki-ref');
+const lblK1 = document.getElementById('lbl-k1');
+const lblK2 = document.getElementById('lbl-k2');
+const lblKt = document.getElementById('lbl-kt');
+const lblK1v = document.getElementById('lbl-k1v');
+const lblK2v = document.getElementById('lbl-k2v');
+const lblKtv = document.getElementById('lbl-ktv');
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
@@ -264,16 +335,6 @@ function drawArrow(x1, y1, x2, y2, color, lw) {
   ctx.fill();
 }
 
-function drawTextWithBg(text, x, y, font, color) {
-  ctx.font = font;
-  const m = ctx.measureText(text);
-  const pad = 3;
-  ctx.fillStyle = 'rgba(255,255,255,0.85)';
-  ctx.fillRect(x - m.width / 2 - pad, y - 12 - pad, m.width + pad * 2, 16 + pad * 2);
-  ctx.fillStyle = color;
-  ctx.textAlign = 'center';
-  ctx.fillText(text, x, y);
-}
 
 function resize() {
   dpr = window.devicePixelRatio || 1;
@@ -292,6 +353,25 @@ function mToPixel(xm) {
   const trackLeft = 60;
   const trackRight = W - 20;
   return trackLeft + (xm - trackMin) / (trackMax - trackMin) * (trackRight - trackLeft);
+}
+
+function fixBarLabelOverlap(labels) {
+  // Check adjacent label pairs; if they overlap horizontally, nudge them apart vertically
+  for (let i = 0; i < labels.length - 1; i++) {
+    const a = labels[i];
+    const b = labels[i + 1];
+    if (a.style.display === 'none' || b.style.display === 'none') continue;
+    const ra = a.getBoundingClientRect();
+    const rb = b.getBoundingClientRect();
+    if (ra.width === 0 || rb.width === 0) continue;
+    const hOverlap = ra.right > rb.left - 2 && ra.left < rb.right + 2;
+    const vOverlap = Math.abs(ra.top - rb.top) < Math.max(ra.height, rb.height) + 2;
+    if (hOverlap && vOverlap) {
+      // Shift the second label down by the height of the first label + small gap
+      const curTop = parseFloat(b.style.top) || 0;
+      b.style.top = (curTop + ra.height + 4) + 'px';
+    }
+  }
 }
 
 function draw() {
@@ -380,10 +460,20 @@ function draw() {
       const arrowX = bx2 + bw2 / 2;
       const arrowY = by2 - 15;
       drawArrow(arrowX, arrowY, arrowX + vLen * vDir, arrowY, '#2563EB', 2.5);
-      drawTextWithBg('v₂ = ' + v2.toFixed(1) + ' m/s', arrowX + vLen * vDir / 2, arrowY - 8, 'bold 13px sans-serif', '#2563EB');
+      let lbl2X = arrowX + vLen * vDir / 2;
+      let lbl2Y = arrowY - 12;
+      if (vLen < 40) {
+        lbl2X = arrowX + vLen * vDir + (vDir > 0 ? 20 : -20);
+        lbl2Y = arrowY - 14;
+      }
+      posLabel(lblV2, lbl2X, lbl2Y,
+        tex('v_2 = ' + v2.toFixed(1) + '\\;\\text{m/s}'));
+    } else {
+      hideLabel(lblV2);
     }
   } else {
-    // Merged block
+    // Merged block — hide v2 label
+    hideLabel(lblV2);
     const mergedW = bw1 + bw2;
     const mergedH = Math.max(bh1, bh2);
     const bxM = mToPixel(x1) - mergedW / 2;
@@ -408,14 +498,45 @@ function draw() {
     const arrowX = mToPixel(x1);
     const arrowY = by1 - 15;
     drawArrow(arrowX, arrowY, arrowX + vLen * vDir, arrowY, '#8B0029', 2.5);
-    const label = merged ? 'v = ' + v1.toFixed(1) + ' m/s' : 'v₁ = ' + v1.toFixed(1) + ' m/s';
-    drawTextWithBg(label, arrowX + vLen * vDir / 2, arrowY - 8, 'bold 13px sans-serif', '#8B0029');
+    const v1Tex = merged
+      ? tex('v = ' + v1.toFixed(1) + '\\;\\text{m/s}')
+      : tex('v_1 = ' + v1.toFixed(1) + '\\;\\text{m/s}');
+    // If arrow is short, place label at arrow tip + offset to avoid overlap with mass label inside block
+    let lblX = arrowX + vLen * vDir / 2;
+    let lblY = arrowY - 12;
+    if (vLen < 40) {
+      // Place at the arrow tip, offset further from block
+      lblX = arrowX + vLen * vDir + (vDir > 0 ? 20 : -20);
+      lblY = arrowY - 14;
+    }
+    posLabel(lblV1, lblX, lblY, v1Tex);
+  } else {
+    hideLabel(lblV1);
+  }
+
+  // Overlap detection for velocity labels
+  if (lblV1.style.display !== 'none' && lblV2.style.display !== 'none') {
+    const r1 = lblV1.getBoundingClientRect();
+    const r2 = lblV2.getBoundingClientRect();
+    if (r1.right > r2.left - 4 && r1.left < r2.right + 4 &&
+        Math.abs(r1.top - r2.top) < r1.height + 4) {
+      // Shift v2 label up
+      const curTop = parseFloat(lblV2.style.top);
+      lblV2.style.top = (curTop - r1.height - 6) + 'px';
+    }
   }
 
   // Momentum bars (top right)
   drawMomentumBars();
   // Energy bars
   drawEnergyBars();
+
+  // Post-draw overlap fix for bar chart bottom labels
+  fixBarLabelOverlap([lblP1, lblP2, lblPt]);
+  fixBarLabelOverlap([lblK1, lblK2, lblKt]);
+  // Also fix value labels above bars
+  fixBarLabelOverlap([lblP1v, lblP2v, lblPtv]);
+  fixBarLabelOverlap([lblK1v, lblK2v, lblKtv]);
 }
 
 function drawMomentumBars() {
@@ -428,17 +549,16 @@ function drawMomentumBars() {
   const barX = W - 200;
   const barTopY = 30;
   const barW = 35;
-  const barGap = 10;
+  const barGap = 16;
   const maxBarH = H * 0.15;
   const maxP = Math.max(Math.abs(m1 * v1i) + Math.abs(m2 * v2i), Math.abs(pi_total), 1);
   const scale = maxBarH / maxP;
 
   const baseY = barTopY + maxBarH + 5;
 
-  ctx.fillStyle = '#444';
-  ctx.font = 'bold 12px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('운동량 (kg·m/s)', barX + barW * 1.5 + barGap, barTopY - 5);
+  // Chart title via KaTeX overlay
+  posLabel(lblMomTitle, barX + barW * 1.5 + barGap, barTopY - 5,
+    '운동량 ' + tex('(\\text{kg·m/s})'));
 
   // Baseline
   ctx.strokeStyle = '#999';
@@ -459,10 +579,8 @@ function drawMomentumBars() {
   ctx.strokeStyle = '#8B0029';
   ctx.lineWidth = 1;
   ctx.strokeRect(barX, h1 >= 0 ? baseY - h1 : baseY, barW, Math.abs(h1) || 1);
-  ctx.fillStyle = '#8B0029';
-  ctx.font = '11px sans-serif';
-  ctx.fillText('p₁', barX + barW / 2, baseY + 16);
-  ctx.fillText(p1_now.toFixed(1), barX + barW / 2, h1 >= 0 ? baseY - h1 - 4 : baseY + Math.abs(h1) + 14);
+  posLabel(lblP1, barX + barW / 2, baseY + 16, tex('p_1'));
+  posLabel(lblP1v, barX + barW / 2, h1 >= 0 ? baseY - h1 - 6 : baseY + Math.abs(h1) + 10, p1_now.toFixed(1));
 
   // p2 bar
   const h2 = p2_now * scale;
@@ -476,9 +594,8 @@ function drawMomentumBars() {
   ctx.strokeStyle = '#2563EB';
   ctx.lineWidth = 1;
   ctx.strokeRect(x2Bar, h2 >= 0 ? baseY - h2 : baseY, barW, Math.abs(h2) || 1);
-  ctx.fillStyle = '#2563EB';
-  ctx.fillText('p₂', x2Bar + barW / 2, baseY + 16);
-  ctx.fillText(p2_now.toFixed(1), x2Bar + barW / 2, h2 >= 0 ? baseY - h2 - 4 : baseY + Math.abs(h2) + 14);
+  posLabel(lblP2, x2Bar + barW / 2, baseY + 16, tex('p_2'));
+  posLabel(lblP2v, x2Bar + barW / 2, h2 >= 0 ? baseY - h2 - 6 : baseY + Math.abs(h2) + 10, p2_now.toFixed(1));
 
   // pTotal bar
   const hT = pTotal * scale;
@@ -492,10 +609,8 @@ function drawMomentumBars() {
   ctx.strokeStyle = '#444';
   ctx.lineWidth = 1.5;
   ctx.strokeRect(xTBar, hT >= 0 ? baseY - hT : baseY, barW, Math.abs(hT) || 1);
-  ctx.fillStyle = '#444';
-  ctx.font = 'bold 11px sans-serif';
-  ctx.fillText('p합', xTBar + barW / 2, baseY + 16);
-  ctx.fillText(pTotal.toFixed(1), xTBar + barW / 2, hT >= 0 ? baseY - hT - 4 : baseY + Math.abs(hT) + 14);
+  posLabel(lblPt, xTBar + barW / 2, baseY + 16, tex('p_{\\text{합}}'));
+  posLabel(lblPtv, xTBar + barW / 2, hT >= 0 ? baseY - hT - 6 : baseY + Math.abs(hT) + 10, pTotal.toFixed(1));
 }
 
 function drawEnergyBars() {
@@ -508,17 +623,16 @@ function drawEnergyBars() {
   const barX = W - 200;
   const barTopY = H * 0.30;
   const barW = 35;
-  const barGap = 10;
+  const barGap = 16;
   const maxBarH = H * 0.13;
   const maxK = Math.max(Ki, 1);
   const scale = maxBarH / maxK;
 
   const baseY = barTopY + maxBarH + 5;
 
-  ctx.fillStyle = '#444';
-  ctx.font = 'bold 12px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('운동에너지 (J)', barX + barW * 1.5 + barGap, barTopY - 5);
+  // Chart title via KaTeX overlay
+  posLabel(lblEngTitle, barX + barW * 1.5 + barGap, barTopY - 5,
+    '운동에너지 ' + tex('(\\text{J})'));
 
   ctx.strokeStyle = '#999';
   ctx.lineWidth = 1;
@@ -537,11 +651,8 @@ function drawEnergyBars() {
   ctx.lineTo(barX + barW * 3 + barGap * 2 + 5, baseY - kiH);
   ctx.stroke();
   ctx.setLineDash([]);
-  ctx.fillStyle = '#aaa';
-  ctx.font = '10px sans-serif';
-  ctx.textAlign = 'right';
-  ctx.fillText('K_i=' + Ki.toFixed(1), barX - 8, baseY - kiH + 4);
-  ctx.textAlign = 'center';
+  posLabel(lblKiRef, barX - 10, baseY - kiH,
+    tex('K_i = ' + Ki.toFixed(1)), 'right');
 
   // K1 bar
   const h1 = K1now * scale;
@@ -550,10 +661,8 @@ function drawEnergyBars() {
   ctx.strokeStyle = '#8B0029';
   ctx.lineWidth = 1;
   ctx.strokeRect(barX, baseY - h1, barW, Math.max(h1, 1));
-  ctx.fillStyle = '#8B0029';
-  ctx.font = '11px sans-serif';
-  ctx.fillText('K₁', barX + barW / 2, baseY + 16);
-  if (h1 > 2) ctx.fillText(K1now.toFixed(1), barX + barW / 2, baseY - h1 - 4);
+  posLabel(lblK1, barX + barW / 2, baseY + 16, tex('K_1'));
+  if (h1 > 2) { posLabel(lblK1v, barX + barW / 2, baseY - h1 - 6, K1now.toFixed(1)); } else { hideLabel(lblK1v); }
 
   // K2 bar
   const h2 = K2now * scale;
@@ -563,9 +672,8 @@ function drawEnergyBars() {
   ctx.strokeStyle = '#2563EB';
   ctx.lineWidth = 1;
   ctx.strokeRect(x2B, baseY - h2, barW, Math.max(h2, 1));
-  ctx.fillStyle = '#2563EB';
-  ctx.fillText('K₂', x2B + barW / 2, baseY + 16);
-  if (h2 > 2) ctx.fillText(K2now.toFixed(1), x2B + barW / 2, baseY - h2 - 4);
+  posLabel(lblK2, x2B + barW / 2, baseY + 16, tex('K_2'));
+  if (h2 > 2) { posLabel(lblK2v, x2B + barW / 2, baseY - h2 - 6, K2now.toFixed(1)); } else { hideLabel(lblK2v); }
 
   // Ktotal bar
   const hT = Ktotal * scale;
@@ -575,10 +683,8 @@ function drawEnergyBars() {
   ctx.strokeStyle = '#444';
   ctx.lineWidth = 1.5;
   ctx.strokeRect(xTB, baseY - hT, barW, Math.max(hT, 1));
-  ctx.fillStyle = '#444';
-  ctx.font = 'bold 11px sans-serif';
-  ctx.fillText('K합', xTB + barW / 2, baseY + 16);
-  if (hT > 2) ctx.fillText(Ktotal.toFixed(1), xTB + barW / 2, baseY - hT - 4);
+  posLabel(lblKt, xTB + barW / 2, baseY + 16, tex('K_{\\text{합}}'));
+  if (hT > 2) { posLabel(lblKtv, xTB + barW / 2, baseY - hT - 6, Ktotal.toFixed(1)); } else { hideLabel(lblKtv); }
 }
 
 const dt = 1 / 60;

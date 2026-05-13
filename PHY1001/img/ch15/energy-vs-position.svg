@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 390" font-family="sans-serif">
+  <defs>
+    <marker id="axisArrowEnergy" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="760" height="390" fill="#ffffff"/>
+  <rect x="104" y="48" width="586" height="270" rx="8" fill="#F3F4F6"/>
+
+  <g stroke="#6B7280" stroke-width="1" opacity="0.35">
+    <line x1="250" y1="64" x2="250" y2="318"/>
+    <line x1="380" y1="64" x2="380" y2="318"/>
+    <line x1="510" y1="64" x2="510" y2="318"/>
+    <line x1="120" y1="140" x2="676" y2="140"/>
+    <line x1="120" y1="206" x2="676" y2="206"/>
+    <line x1="120" y1="272" x2="676" y2="272"/>
+  </g>
+
+  <g stroke="#6B7280" stroke-width="2.5" marker-end="url(#axisArrowEnergy)">
+    <line x1="92" y1="318" x2="700" y2="318"/>
+    <line x1="104" y1="332" x2="104" y2="48"/>
+  </g>
+
+  <g stroke="#6B7280" stroke-width="1.6" stroke-dasharray="7 5" opacity="0.8">
+    <line x1="150" y1="80" x2="150" y2="318"/>
+    <line x1="610" y1="80" x2="610" y2="318"/>
+  </g>
+
+  <line x1="150" y1="80" x2="610" y2="80" stroke="#6B7280" stroke-width="5" stroke-linecap="round"/>
+  <path d="M150,80 C218,218 296,318 380,318 C464,318 542,218 610,80"
+        fill="none" stroke="#8B0029" stroke-width="6" stroke-linecap="round"/>
+  <path d="M150,318 C218,180 296,80 380,80 C464,80 542,180 610,318"
+        fill="none" stroke="#2563EB" stroke-width="6" stroke-linecap="round"/>
+
+  <g font-size="26" font-weight="700">
+    <text x="486" y="65" fill="#6B7280">전체 에너지</text>
+    <text x="418" y="126" fill="#2563EB">운동 에너지</text>
+    <text x="438" y="248" fill="#8B0029">위치 에너지</text>
+  </g>
+
+  <g font-size="30" font-weight="700" fill="#6B7280">
+    <text x="38" y="54">에너지</text>
+    <text x="620" y="364">위치</text>
+  </g>
+</svg>

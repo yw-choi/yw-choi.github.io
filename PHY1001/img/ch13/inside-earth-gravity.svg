@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="440" viewBox="0 0 760 440" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <title>Gravity inside and outside a uniform sphere</title>
+  <desc>For a uniform sphere, gravitational force increases linearly inside the sphere and decreases as inverse square outside the sphere.</desc>
+  <defs>
+    <marker id="axisArrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <rect width="760" height="440" fill="#ffffff"/>
+  <text x="380" y="34" text-anchor="middle" font-size="17" font-weight="700" fill="#8B0029">
+    균일 밀도 구의 내부와 외부 중력
+  </text>
+
+  <!-- Axes -->
+  <line x1="92" y1="342" x2="682" y2="342" stroke="#6B7280" stroke-width="2" marker-end="url(#axisArrow)"/>
+  <line x1="92" y1="342" x2="92" y2="72" stroke="#6B7280" stroke-width="2" marker-end="url(#axisArrow)"/>
+  <text x="680" y="369" text-anchor="end" font-size="15" fill="#6B7280" font-style="italic">r/R</text>
+  <text x="42" y="76" font-size="15" fill="#6B7280" font-style="italic">F/F(R)</text>
+
+  <!-- Surface reference -->
+  <line x1="345" y1="342" x2="345" y2="96" stroke="#6B7280" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <line x1="92" y1="106" x2="665" y2="106" stroke="#6B7280" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="345" y="368" text-anchor="middle" font-size="14" fill="#8B0029" font-style="italic">r = R</text>
+  <text x="82" y="111" text-anchor="end" font-size="13" fill="#6B7280">1</text>
+  <text x="92" y="368" text-anchor="middle" font-size="13" fill="#6B7280">0</text>
+
+  <!-- Curves: inside F/F(R)=r/R, outside F/F(R)=1/(r/R)^2 -->
+  <path d="M92,342 L345,106" fill="none" stroke="#8B0029" stroke-width="2.8"/>
+  <path d="M345,106 C390,143 438,183 488,219 C544,259 603,285 665,299"
+        fill="none" stroke="#2563EB" stroke-width="2.8"/>
+  <circle cx="345" cy="106" r="5" fill="#8B0029"/>
+
+  <!-- Region labels -->
+  <rect x="132" y="126" width="150" height="55" rx="7" fill="#F3F4F6" stroke="#e5e7eb"/>
+  <text x="207" y="149" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="700">구 내부</text>
+  <text x="207" y="170" text-anchor="middle" font-size="14" fill="#8B0029" font-style="italic">F/F(R) = r/R</text>
+
+  <rect x="470" y="142" width="170" height="55" rx="7" fill="#F3F4F6" stroke="#e5e7eb"/>
+  <text x="555" y="165" text-anchor="middle" font-size="14" fill="#2563EB" font-weight="700">구 외부</text>
+  <text x="555" y="186" text-anchor="middle" font-size="14" fill="#2563EB" font-style="italic">F/F(R) = (R/r)²</text>
+
+  <rect x="140" y="392" width="480" height="30" rx="7" fill="#F3F4F6" stroke="#e5e7eb"/>
+  <text x="380" y="412" text-anchor="middle" font-size="13" fill="#1a1a1a">
+    균일 밀도에서는 Mᵢₙₛ = M(r/R)³ 이므로 내부 힘은 중심에서 0, 표면에서 최대
+  </text>
+</svg>

@@ -12,11 +12,11 @@
   </defs>
 
   <!-- Circular path -->
-  <circle cx="330" cy="220" r="155" fill="none" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <circle cx="330" cy="220" r="155" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
 
   <!-- Center point -->
   <circle cx="330" cy="220" r="4" fill="#6B7280"/>
-  <text x="340" y="233" font-size="13" fill="#6B7280" font-weight="bold">O</text>
+  <text x="340" y="233" font-size="14" fill="#6B7280" font-weight="bold">O</text>
 
   <!-- Radius line -->
   <line x1="330" y1="220" x2="485" y2="220" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
@@ -51,12 +51,12 @@
   <text x="222" y="240" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">a</text>
 
   <!-- Legend -->
-  <line x1="30" y1="415" x2="50" y2="415" stroke="#2563EB" stroke-width="2.5"/>
-  <text x="55" y="420" font-size="13" fill="#2563EB" font-weight="bold">속도 (접선 방향)</text>
-  <line x1="230" y1="415" x2="250" y2="415" stroke="#8B0029" stroke-width="2.5"/>
-  <text x="255" y="420" font-size="13" fill="#8B0029" font-weight="bold">구심 가속도 (중심 방향)</text>
+  <line x1="30" y1="405" x2="50" y2="405" stroke="#2563EB" stroke-width="2.5"/>
+  <text x="55" y="410" font-size="14" fill="#2563EB" font-weight="bold">속도 (접선 방향)</text>
+  <line x1="230" y1="405" x2="250" y2="405" stroke="#8B0029" stroke-width="2.5"/>
+  <text x="255" y="410" font-size="14" fill="#8B0029" font-weight="bold">구심 가속도 (중심 방향)</text>
 
   <!-- Formula -->
-  <text x="580" y="415" font-size="14" fill="#1a1a1a" text-anchor="middle" font-style="italic">a = v²/R</text>
-  <text x="580" y="440" font-size="13" fill="#6B7280" text-anchor="middle">항상 중심을 향함</text>
+  <text x="580" y="405" font-size="14" fill="#1a1a1a" text-anchor="middle" font-style="italic">a = v²/R</text>
+  <text x="580" y="425" font-size="14" fill="#6B7280" text-anchor="middle">항상 중심을 향함</text>
 </svg>

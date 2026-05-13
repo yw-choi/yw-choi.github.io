@@ -63,6 +63,8 @@ label { display: block; font-size: 0.8rem; color: #555; margin-bottom: 2px; }
       <div class="katex-label with-bg" id="lbl-b" style="color:#2563EB;font-weight:bold;"></div>
       <div class="katex-label with-bg" id="lbl-s" style="color:#7c3aed;font-weight:bold;"></div>
       <div class="katex-label with-bg" id="lbl-b-shifted" style="color:#2563EB;font-weight:bold;"></div>
+      <div class="katex-label" id="lbl-ax" style="color:rgba(139,0,41,0.7);"></div>
+      <div class="katex-label" id="lbl-bx" style="color:rgba(37,99,235,0.7);"></div>
     </div>
   </div>
   <div class="controls">
@@ -171,6 +173,8 @@ const lblA = document.getElementById('lbl-a');
 const lblB = document.getElementById('lbl-b');
 const lblS = document.getElementById('lbl-s');
 const lblBShifted = document.getElementById('lbl-b-shifted');
+const lblAx = document.getElementById('lbl-ax');
+const lblBx = document.getElementById('lbl-bx');
 
 function getParams() {
   return {
@@ -354,19 +358,18 @@ function draw() {
 
     // Component labels on axes
     if (Math.abs(ax) > 0.3) {
-      ctx.fillStyle = 'rgba(139,0,41,0.7)';
-      ctx.font = '11px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'top';
-      ctx.fillText('a_x=' + ax.toFixed(1), (originX + axEnd) / 2, originY + 4);
+      posLabel(lblAx, (originX + axEnd) / 2 - 20, originY + 2, kx('a_x = ' + ax.toFixed(1)));
+    } else {
+      lblAx.style.display = 'none';
     }
     if (Math.abs(bx) > 0.3) {
-      ctx.fillStyle = 'rgba(37,99,235,0.7)';
-      ctx.font = '11px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'top';
-      ctx.fillText('b_x=' + bx.toFixed(1), (originX + bxEnd) / 2, originY + 18);
+      posLabel(lblBx, (originX + bxEnd) / 2 - 20, originY + 16, kx('b_x = ' + bx.toFixed(1)));
+    } else {
+      lblBx.style.display = 'none';
     }
+  } else {
+    lblAx.style.display = 'none';
+    lblBx.style.display = 'none';
   }
 
   // Head-to-tail: draw b shifted to tip of a
@@ -433,6 +436,39 @@ function draw() {
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
   ctx.fillText('벡터 덧셈: ', 14, 12);
+
+  // --- Overlap resolution for overlay labels ---
+  resolveOverlaps();
+}
+
+function resolveOverlaps() {
+  const labelEls = [lblA, lblB, lblS, lblBShifted, lblAx, lblBx];
+  // Collect visible labels with their rects
+  const items = [];
+  for (const el of labelEls) {
+    if (el.style.display === 'none') continue;
+    const r = el.getBoundingClientRect();
+    if (r.width === 0 && r.height === 0) continue;
+    items.push({ el, rect: r });
+  }
+  // For each pair, check overlap and nudge the second one vertically
+  const MIN_GAP = 4; // px gap desired between labels
+  for (let i = 0; i < items.length; i++) {
+    for (let j = i + 1; j < items.length; j++) {
+      const a = items[i].el.getBoundingClientRect();
+      const b = items[j].el.getBoundingClientRect();
+      // Check if they overlap (rects intersect)
+      const overlapX = a.left < b.right && a.right > b.left;
+      const overlapY = a.top < b.bottom && a.bottom > b.top;
+      if (overlapX && overlapY) {
+        // Compute how much they overlap vertically
+        const overlapAmt = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) + MIN_GAP;
+        // Move the second label down by the overlap amount
+        const currentTop = parseFloat(items[j].el.style.top) || 0;
+        items[j].el.style.top = (currentTop + overlapAmt) + 'px';
+      }
+    }
+  }
 }
 
 function update() {

@@ -8,19 +8,19 @@
     </marker>
   </defs>
 
-  <text x="375" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#8B0029">엘리베이터 안의 겉보기 무게</text>
+  <text x="375" y="30" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">엘리베이터 안의 겉보기 무게</text>
 
   <!-- Case 1: Accelerating up -->
   <g transform="translate(0,0)">
     <text x="125" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">위로 가속</text>
-    <text x="125" y="82" text-anchor="middle" font-size="12" fill="#2563EB" font-style="italic">a &uarr;</text>
+    <text x="125" y="82" text-anchor="middle" font-size="14" fill="#2563EB" font-style="italic">a ↑</text>
 
     <!-- Elevator box -->
     <rect x="65" y="95" width="120" height="160" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2" rx="4"/>
 
     <!-- Person (stick figure simplified as rectangle) -->
-    <rect x="100" y="185" width="50" height="60" fill="none" stroke="#1a1a1a" stroke-width="1.5" rx="3"/>
-    <circle cx="125" cy="170" r="12" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+    <rect x="100" y="185" width="50" height="60" fill="none" stroke="#1a1a1a" stroke-width="2" rx="3"/>
+    <circle cx="125" cy="170" r="12" fill="none" stroke="#1a1a1a" stroke-width="2"/>
     <!-- Scale -->
     <rect x="95" y="245" width="60" height="8" fill="#6B7280" rx="2"/>
 
@@ -28,12 +28,12 @@
     <circle cx="125" cy="320" r="4" fill="#1a1a1a"/>
     <!-- N up (longer) -->
     <line x1="125" y1="320" x2="125" y2="270" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aRd)"/>
-    <text x="140" y="278" font-size="13" fill="#8B0029" font-weight="bold" font-style="italic">F<tspan font-size="10" dy="3">N</tspan></text>
+    <text x="140" y="278" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">F<tspan font-size="10" dy="3">N</tspan></text>
     <!-- mg down (shorter) -->
     <line x1="125" y1="320" x2="125" y2="365" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aRd)"/>
-    <text x="140" y="360" font-size="13" fill="#8B0029" font-weight="bold">m<tspan font-style="italic">g</tspan></text>
+    <text x="140" y="360" font-size="14" fill="#8B0029" font-weight="bold">m<tspan font-style="italic">g</tspan></text>
 
-    <text x="125" y="400" text-anchor="middle" font-size="13" fill="#8B0029" font-weight="bold">
+    <text x="125" y="400" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">
       <tspan font-style="italic">F</tspan><tspan font-size="10" dy="3">N</tspan><tspan dy="-3"> &gt; m</tspan><tspan font-style="italic">g</tspan>
     </text>
   </g>
@@ -41,22 +41,22 @@
   <!-- Case 2: Constant velocity -->
   <g transform="translate(210,0)">
     <text x="125" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">등속</text>
-    <text x="125" y="82" text-anchor="middle" font-size="12" fill="#2563EB" font-style="italic">a = 0</text>
+    <text x="125" y="82" text-anchor="middle" font-size="14" fill="#2563EB" font-style="italic">a = 0</text>
 
     <rect x="65" y="95" width="120" height="160" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-    <rect x="100" y="185" width="50" height="60" fill="none" stroke="#1a1a1a" stroke-width="1.5" rx="3"/>
-    <circle cx="125" cy="170" r="12" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+    <rect x="100" y="185" width="50" height="60" fill="none" stroke="#1a1a1a" stroke-width="2" rx="3"/>
+    <circle cx="125" cy="170" r="12" fill="none" stroke="#1a1a1a" stroke-width="2"/>
     <rect x="95" y="245" width="60" height="8" fill="#6B7280" rx="2"/>
 
     <circle cx="125" cy="320" r="4" fill="#1a1a1a"/>
     <!-- N up (equal) -->
     <line x1="125" y1="320" x2="125" y2="275" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aRd)"/>
-    <text x="140" y="283" font-size="13" fill="#8B0029" font-weight="bold" font-style="italic">F<tspan font-size="10" dy="3">N</tspan></text>
+    <text x="140" y="283" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">F<tspan font-size="10" dy="3">N</tspan></text>
     <!-- mg down (equal) -->
     <line x1="125" y1="320" x2="125" y2="365" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aRd)"/>
-    <text x="140" y="360" font-size="13" fill="#8B0029" font-weight="bold">m<tspan font-style="italic">g</tspan></text>
+    <text x="140" y="360" font-size="14" fill="#8B0029" font-weight="bold">m<tspan font-style="italic">g</tspan></text>
 
-    <text x="125" y="400" text-anchor="middle" font-size="13" fill="#8B0029" font-weight="bold">
+    <text x="125" y="400" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">
       <tspan font-style="italic">F</tspan><tspan font-size="10" dy="3">N</tspan><tspan dy="-3"> = m</tspan><tspan font-style="italic">g</tspan>
     </text>
   </g>
@@ -64,22 +64,22 @@
   <!-- Case 3: Accelerating down -->
   <g transform="translate(420,0)">
     <text x="125" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">아래로 가속</text>
-    <text x="125" y="82" text-anchor="middle" font-size="12" fill="#2563EB" font-style="italic">a &darr;</text>
+    <text x="125" y="82" text-anchor="middle" font-size="14" fill="#2563EB" font-style="italic">a ↓</text>
 
     <rect x="65" y="95" width="120" height="160" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-    <rect x="100" y="185" width="50" height="60" fill="none" stroke="#1a1a1a" stroke-width="1.5" rx="3"/>
-    <circle cx="125" cy="170" r="12" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+    <rect x="100" y="185" width="50" height="60" fill="none" stroke="#1a1a1a" stroke-width="2" rx="3"/>
+    <circle cx="125" cy="170" r="12" fill="none" stroke="#1a1a1a" stroke-width="2"/>
     <rect x="95" y="245" width="60" height="8" fill="#6B7280" rx="2"/>
 
     <circle cx="125" cy="320" r="4" fill="#1a1a1a"/>
     <!-- N up (shorter) -->
     <line x1="125" y1="320" x2="125" y2="285" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aRd)"/>
-    <text x="140" y="293" font-size="13" fill="#8B0029" font-weight="bold" font-style="italic">F<tspan font-size="10" dy="3">N</tspan></text>
+    <text x="140" y="293" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">F<tspan font-size="10" dy="3">N</tspan></text>
     <!-- mg down (longer) -->
     <line x1="125" y1="320" x2="125" y2="375" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aRd)"/>
-    <text x="140" y="370" font-size="13" fill="#8B0029" font-weight="bold">m<tspan font-style="italic">g</tspan></text>
+    <text x="140" y="370" font-size="14" fill="#8B0029" font-weight="bold">m<tspan font-style="italic">g</tspan></text>
 
-    <text x="125" y="400" text-anchor="middle" font-size="13" fill="#8B0029" font-weight="bold">
+    <text x="125" y="400" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">
       <tspan font-style="italic">F</tspan><tspan font-size="10" dy="3">N</tspan><tspan dy="-3"> &lt; m</tspan><tspan font-style="italic">g</tspan>
     </text>
   </g>

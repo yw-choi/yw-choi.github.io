@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 420" font-family="sans-serif">
+  <defs>
+    <marker id="mfpArrR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 8 3, 0 6"/>
+    </marker>
+    <marker id="mfpArrG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 8 3, 0 6"/>
+    </marker>
+    <marker id="mfpArrB" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto" fill="#2563EB">
+      <polygon points="0 0, 8 3, 0 6"/>
+    </marker>
+  </defs>
+
+  <!-- Background molecules (stationary, gray) -->
+  <circle cx="120" cy="100" r="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <circle cx="300" cy="70" r="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <circle cx="450" cy="120" r="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <circle cx="200" cy="240" r="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <circle cx="380" cy="270" r="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <circle cx="550" cy="200" r="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <circle cx="500" cy="330" r="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <circle cx="100" cy="320" r="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <circle cx="600" cy="80" r="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <circle cx="330" cy="370" r="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+
+  <!-- Moving molecule path (zigzag) -->
+  <polyline points="60,350 120,310 200,230 300,80 450,130 550,190 500,320"
+            fill="none" stroke="#8B0029" stroke-width="2.5"/>
+
+  <!-- Collision markers -->
+  <circle cx="120" cy="310" r="5" fill="#8B0029" opacity="0.6"/>
+  <circle cx="200" cy="230" r="5" fill="#8B0029" opacity="0.6"/>
+  <circle cx="300" cy="80" r="5" fill="#8B0029" opacity="0.6"/>
+  <circle cx="450" cy="130" r="5" fill="#8B0029" opacity="0.6"/>
+  <circle cx="550" cy="190" r="5" fill="#8B0029" opacity="0.6"/>
+
+  <!-- Moving molecule (red, at start) -->
+  <circle cx="60" cy="350" r="12" fill="#8B0029" opacity="0.3" stroke="#8B0029" stroke-width="2"/>
+  <text x="35" y="380" font-size="12" fill="#8B0029" font-weight="bold">start</text>
+
+  <!-- Lambda annotations between collisions -->
+  <!-- Segment 1 -->
+  <line x1="90" y1="330" x2="90" y2="330" stroke="none"/>
+  <!-- Use dimension lines for lambda -->
+
+  <!-- Lambda label between collision 2 and 3 -->
+  <line x1="210" y1="205" x2="290" y2="105" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="260" y="140" font-size="16" fill="#2563EB" font-weight="bold" font-style="italic">&#x3BB;</text>
+
+  <!-- Lambda label between collision 3 and 4 -->
+  <line x1="310" y1="85" x2="440" y2="125" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="380" y="90" font-size="16" fill="#2563EB" font-weight="bold" font-style="italic">&#x3BB;</text>
+
+  <!-- Effective collision cylinder (bottom right) -->
+  <g transform="translate(440, 340)">
+    <rect x="0" y="-25" width="200" height="50" rx="25" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+    <!-- Diameter label -->
+    <line x1="0" y1="-30" x2="0" y2="30" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+    <text x="10" y="42" font-size="11" fill="#6B7280">2<tspan font-style="italic">d</tspan></text>
+    <!-- Length label -->
+    <line x1="0" y1="35" x2="200" y2="35" stroke="#6B7280" stroke-width="1" marker-end="url(#mfpArrG)"/>
+    <text x="80" y="52" font-size="11" fill="#6B7280" font-style="italic">v &#x394;t</text>
+  </g>
+
+  <!-- Formula -->
+  <text x="40" y="35" font-size="16" fill="#8B0029" font-weight="bold">Mean Free Path</text>
+  <text x="40" y="52" font-size="14" fill="#6B7280">
+    <tspan font-style="italic">&#x3BB;</tspan> = 1 / (&#x221A;2 &#x3C0;<tspan font-style="italic">d</tspan><tspan font-size="10" baseline-shift="super">2</tspan> <tspan font-style="italic">N</tspan>/<tspan font-style="italic">V</tspan>)
+  </text>
+</svg>

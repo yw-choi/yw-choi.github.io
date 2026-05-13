@@ -63,6 +63,9 @@ label { display: block; font-size: 0.8rem; color: #555; margin-bottom: 2px; }
       <div class="katex-label with-bg" id="lbl-proj" style="color:#6B7280;"></div>
       <div class="katex-label with-bg" id="lbl-result" style="color:#8B0029;font-weight:bold;font-size:14px;"></div>
       <div class="graph-title" id="lbl-graph-title"></div>
+      <div class="katex-label with-bg" id="lbl-phi-angle" style="color:#6B7280;font-size:12px;"></div>
+      <div class="katex-label" id="lbl-graph-xaxis" style="color:#1a1a1a;font-size:11px;"></div>
+      <div class="katex-label" id="lbl-curve" style="font-size:11px;"></div>
     </div>
   </div>
   <div class="controls">
@@ -169,6 +172,9 @@ const lblB = document.getElementById('lbl-b');
 const lblProj = document.getElementById('lbl-proj');
 const lblResult = document.getElementById('lbl-result');
 const lblGraphTitle = document.getElementById('lbl-graph-title');
+const lblPhiAngle = document.getElementById('lbl-phi-angle');
+const lblGraphXAxis = document.getElementById('lbl-graph-xaxis');
+const lblCurve = document.getElementById('lbl-curve');
 
 function getParams() {
   return {
@@ -404,30 +410,68 @@ function drawScene(p, ox, oy, w, h) {
     ctx.arc(originX, originY, arcR, 0, -p.phi, p.phi > 0);
     ctx.stroke();
 
-    // Phi label
-    const phiMid = -p.phi / 2;
-    ctx.fillStyle = '#6B7280';
-    ctx.font = '13px sans-serif';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('φ = ' + p.phiDeg + '°', originX + arcR * Math.cos(phiMid) + 6, originY + arcR * Math.sin(phiMid));
+    // Phi label (KaTeX overlay) — hide when vectors are too short
+    const minVecLen = Math.min(p.a, p.b) * scale;
+    if (minVecLen > 50) {
+      const phiMid = -p.phi / 2;
+      const phiR = arcR + 14;
+      const phiLblX = ox + originX + phiR * Math.cos(phiMid) + 6;
+      const phiLblY = oy + originY + phiR * Math.sin(phiMid) - 8;
+      posLabel(lblPhiAngle, phiLblX, phiLblY, kx('\\phi = ' + p.phiDeg + '^\\circ'));
+    } else {
+      lblPhiAngle.style.display = 'none';
+    }
+  } else {
+    lblPhiAngle.style.display = 'none';
   }
 
   // Draw vectors
   drawArrow(originX, originY, aEndX, aEndY, '#8B0029', 2.5);
   drawArrow(originX, originY, bEndX, bEndY, '#2563EB', 2.5);
 
-  // Vector labels
-  posLabel(lblA, ox + aEndX + 6, oy + aEndY - 16, kx('\\vec{a}'));
-  posLabel(lblB, ox + bEndX + 6, oy + bEndY - 16, kx('\\vec{b}'));
+  // Vector labels with overlap prevention
+  let lblAx = ox + aEndX + 6, lblAy = oy + aEndY - 16;
+  let lblBx = ox + bEndX + 6, lblBy = oy + bEndY - 16;
+
+  // Check a-b label overlap
+  const distAB = Math.sqrt((lblAx - lblBx) ** 2 + (lblAy - lblBy) ** 2);
+  if (distAB < 25) {
+    // Vectors nearly coincident — offset b label upward
+    lblBy = lblAy - 22;
+    // Also offset bx to avoid horizontal stacking
+    lblBx = lblBx + 4;
+  }
+
+  posLabel(lblA, lblAx, lblAy, kx('\\vec{a}'));
+  posLabel(lblB, lblBx, lblBy, kx('\\vec{b}'));
+
+  // Post-positioning overlap check: phi label vs a label
+  if (lblPhiAngle.style.display !== 'none') {
+    const phiRect = { x: parseFloat(lblPhiAngle.style.left), y: parseFloat(lblPhiAngle.style.top), w: 70, h: 18 };
+    const aRect = { x: lblAx, y: lblAy, w: 30, h: 18 };
+    if (Math.abs(phiRect.x - aRect.x) < 50 && Math.abs(phiRect.y - aRect.y) < 25) {
+      // Move phi label further away from vector a
+      const curPhiY = parseFloat(lblPhiAngle.style.top);
+      lblPhiAngle.style.top = (curPhiY - 20) + 'px';
+    }
+  }
 
   // Dot product result display (top-right of scene for dot mode)
   if (mode === 'dot') {
     const dot = p.a * p.b * Math.cos(p.phi);
-    posLabel(lblResult, ox + w - 180, oy + 16,
+    let resultX = ox + w - 180, resultY = oy + 16;
+    posLabel(lblResult, resultX, resultY,
       kx('\\vec{a}\\cdot\\vec{b} = ' + dot.toFixed(2)));
     lblResult.style.color = dot >= 0 ? '#8B0029' : '#d32f2f';
     lblResult.style.fontSize = '15px';
+
+    // Check overlap between lbl-a and lbl-result
+    const distAR = Math.sqrt((lblAx - resultX) ** 2 + (lblAy - resultY) ** 2);
+    if (distAR < 50) {
+      // Move result label further up/right to avoid overlap
+      posLabel(lblResult, resultX, resultY - 20,
+        kx('\\vec{a}\\cdot\\vec{b} = ' + dot.toFixed(2)));
+    }
   }
 
   // Title
@@ -492,12 +536,10 @@ function drawGraph(p, ox, oy, w, h) {
   ctx.beginPath(); ctx.moveTo(gx, py(0)); ctx.lineTo(gx + gw, py(0)); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx, gy + gh); ctx.stroke();
 
-  // Axis labels
-  ctx.fillStyle = '#1a1a1a';
-  ctx.font = '11px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'top';
-  ctx.fillText('φ (°)', gx + gw / 2, gy + gh + 14);
+  // Axis label (KaTeX overlay)
+  posLabel(lblGraphXAxis, ox + gx + gw / 2, oy + gy + gh + 12,
+    kx('\\phi\\;(^\\circ)'));
+  lblGraphXAxis.style.transform = 'translateX(-50%)';
 
   // Tick labels x-axis
   ctx.font = '9px sans-serif';
@@ -574,16 +616,15 @@ function drawGraph(p, ox, oy, w, h) {
   const labelOffset = curVal >= 0 ? -14 : 14;
   ctx.fillText(curVal.toFixed(2), markerX, markerY + labelOffset);
 
-  // Curve label
-  ctx.font = '11px sans-serif';
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'middle';
+  // Curve label (KaTeX overlay)
   if (mode === 'dot') {
-    ctx.fillStyle = '#8B0029';
-    ctx.fillText('ab cos φ', gx + gw - 55, py(p.a * p.b * Math.cos(350 * Math.PI / 180)) - 4);
+    const curveLblY = py(p.a * p.b * Math.cos(350 * Math.PI / 180)) - 8;
+    posLabel(lblCurve, ox + gx + gw - 60, oy + curveLblY, kx('ab\\cos\\phi'));
+    lblCurve.style.color = '#8B0029';
   } else {
-    ctx.fillStyle = '#7c3aed';
-    ctx.fillText('ab sin φ', gx + gw - 55, py(p.a * p.b * Math.sin(350 * Math.PI / 180)) - 4);
+    const curveLblY = py(p.a * p.b * Math.sin(350 * Math.PI / 180)) - 8;
+    posLabel(lblCurve, ox + gx + gw - 60, oy + curveLblY, kx('ab\\sin\\phi'));
+    lblCurve.style.color = '#7c3aed';
   }
 
   ctx.restore();

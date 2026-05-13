@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 430" font-family="sans-serif">
+  <text x="360" y="34" text-anchor="middle" font-size="18" font-weight="bold" fill="#8B0029">떠 있는 물체: 잠긴 부피 비율</text>
+
+  <rect x="70" y="110" width="580" height="245" rx="5" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <rect x="72" y="175" width="576" height="178" fill="#2563EB" opacity="0.22"/>
+  <line x1="70" y1="175" x2="650" y2="175" stroke="#2563EB" stroke-width="2"/>
+  <text x="622" y="164" text-anchor="end" font-size="14" fill="#2563EB">수면</text>
+
+  <rect x="250" y="140" width="140" height="170" rx="8" fill="white" stroke="#8B0029" stroke-width="2"/>
+  <rect x="250" y="175" width="140" height="135" rx="0" fill="#8B0029" opacity="0.18"/>
+  <line x1="245" y1="140" x2="395" y2="140" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="245" y1="310" x2="395" y2="310" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <line x1="420" y1="140" x2="420" y2="310" stroke="#6B7280" stroke-width="1"/>
+  <line x1="413" y1="140" x2="427" y2="140" stroke="#6B7280" stroke-width="1"/>
+  <line x1="413" y1="310" x2="427" y2="310" stroke="#6B7280" stroke-width="1"/>
+  <text x="435" y="229" font-size="14" fill="#6B7280" font-style="italic">Vobj</text>
+
+  <line x1="215" y1="175" x2="215" y2="310" stroke="#2563EB" stroke-width="1"/>
+  <line x1="208" y1="175" x2="222" y2="175" stroke="#2563EB" stroke-width="1"/>
+  <line x1="208" y1="310" x2="222" y2="310" stroke="#2563EB" stroke-width="1"/>
+  <text x="198" y="248" text-anchor="end" font-size="14" fill="#2563EB" font-style="italic">Vsub</text>
+
+  <line x1="320" y1="310" x2="320" y2="245" stroke="#8B0029" stroke-width="2.5"/>
+  <polygon points="320,235 314,247 326,247" fill="#8B0029"/>
+  <text x="335" y="274" font-size="14" fill="#8B0029" font-weight="bold">Fb</text>
+
+  <line x1="320" y1="140" x2="320" y2="205" stroke="#6B7280" stroke-width="2.5"/>
+  <polygon points="320,215 314,203 326,203" fill="#6B7280"/>
+  <text x="335" y="177" font-size="14" fill="#6B7280" font-weight="bold">mg</text>
+
+  <rect x="455" y="122" width="150" height="70" rx="6" fill="white" opacity="0.92" stroke="#6B7280" stroke-width="1"/>
+  <text x="530" y="148" text-anchor="middle" font-size="14" fill="#1a1a1a">정적 평형</text>
+  <text x="530" y="174" text-anchor="middle" font-size="16" fill="#8B0029" font-weight="bold">Fb = mg</text>
+
+  <rect x="105" y="374" width="510" height="36" rx="6" fill="#F3F4F6" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="360" y="398" text-anchor="middle" font-size="16" fill="#8B0029" font-weight="bold">Vsub / Vobj = ρobj / ρf</text>
+</svg>

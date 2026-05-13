@@ -476,17 +476,33 @@ header p { font-size: 0.85rem; color: #aab; margin-top: 4px; }
     ctx.save();
     var lH = Math.min(H * 0.40, 160);
     ctx.strokeStyle = '#4285f4'; ctx.lineWidth = 2.5; ctx.setLineDash([]);
-    var b = 14;
+    // 곡률을 R에 연동: R이 작을수록 더 휘어짐
+    var b = Math.max(6, Math.min(26, 900 / R));
     if (subtype === 'converging') {
-      ctx.beginPath(); ctx.moveTo(ox, oy - lH); ctx.quadraticCurveTo(ox - b, oy, ox, oy + lH); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(ox, oy - lH); ctx.quadraticCurveTo(ox + b, oy, ox, oy + lH); ctx.stroke();
+      // 양볼록: 가운데가 두껍고 위/아래로 뾰족한 vesica 형태
+      ctx.beginPath();
+      ctx.moveTo(ox, oy - lH);
+      ctx.quadraticCurveTo(ox - b, oy, ox, oy + lH);
+      ctx.quadraticCurveTo(ox + b, oy, ox, oy - lH);
+      ctx.closePath();
+      ctx.stroke();
       drawTri(ox, oy - lH, -1, '#4285f4');
       drawTri(ox, oy + lH, 1, '#4285f4');
     } else {
-      ctx.beginPath(); ctx.moveTo(ox, oy - lH); ctx.quadraticCurveTo(ox + b, oy, ox, oy + lH); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(ox, oy - lH); ctx.quadraticCurveTo(ox - b, oy, ox, oy + lH); ctx.stroke();
-      drawTri(ox, oy - lH, 1, '#4285f4');
-      drawTri(ox, oy + lH, -1, '#4285f4');
+      // 양오목: 위/아래가 넓고 가운데가 좁은 형태 (양옆이 안쪽으로 패임)
+      var halfW = Math.max(8, Math.min(22, b));
+      ctx.beginPath();
+      ctx.moveTo(ox - halfW, oy - lH);
+      ctx.lineTo(ox + halfW, oy - lH);
+      ctx.quadraticCurveTo(ox, oy, ox + halfW, oy + lH);
+      ctx.lineTo(ox - halfW, oy + lH);
+      ctx.quadraticCurveTo(ox, oy, ox - halfW, oy - lH);
+      ctx.closePath();
+      ctx.stroke();
+      drawTri(ox - halfW, oy - lH, 1, '#4285f4');
+      drawTri(ox + halfW, oy - lH, 1, '#4285f4');
+      drawTri(ox - halfW, oy + lH, -1, '#4285f4');
+      drawTri(ox + halfW, oy + lH, -1, '#4285f4');
     }
     ctx.strokeStyle = '#4285f4'; ctx.lineWidth = 1.5;
     ctx.beginPath(); ctx.moveTo(ox, oy - lH); ctx.lineTo(ox, oy + lH); ctx.stroke();

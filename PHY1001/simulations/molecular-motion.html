@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이상기체 분자 운동 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 14px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 16px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 16px; color: #8B0029; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>이상기체 분자 운동</h2>
+      <div class="subtitle">Molecular Motion & Maxwell Distribution (Ch.19)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>온도 T = <span id="tempVal">300</span> K</label>
+      <input type="range" id="tempSlider" min="50" max="800" value="300" step="10">
+    </div>
+
+    <div class="control-group">
+      <label>입자 수 N = <span id="numVal">150</span></label>
+      <input type="range" id="numSlider" min="30" max="400" value="150" step="10">
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const tempSlider = document.getElementById('tempSlider');
+const numSlider = document.getElementById('numSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+// Physics constants (scaled for visualization)
+const kB = 1.38e-23;
+const mO2 = 32e-3 / 6.02e23; // mass of one O2 molecule
+const M_O2 = 0.032; // molar mass kg/mol
+const R_gas = 8.314;
+
+// Simulation state
+let particles = [];
+let running = false, animId = null, lastTs = null;
+let wallHits = 0, wallHitTime = 0;
+let speedHistogram = new Array(25).fill(0);
+let histSamples = 0;
+
+// Box dimensions (in canvas coords, set during resize)
+let boxX = 30, boxY = 30, boxW = 300, boxH = 300;
+
+function getTemp() { return parseFloat(tempSlider.value); }
+function getNum() { return parseInt(numSlider.value); }
+
+function maxwellSpeed(T) {
+  // Generate Maxwell-distributed speed using Box-Muller for 3D
+  const sigma = Math.sqrt(kB * T / mO2);
+  const vx = sigma * gaussRandom();
+  const vy = sigma * gaussRandom();
+  return { vx, vy };
+}
+
+function gaussRandom() {
+  let u, v, s;
+  do { u = Math.random() * 2 - 1; v = Math.random() * 2 - 1; s = u*u + v*v; } while (s >= 1 || s === 0);
+  return u * Math.sqrt(-2 * Math.log(s) / s);
+}
+
+function initParticles() {
+  const N = getNum();
+  const T = getTemp();
+  particles = [];
+  for (let i = 0; i < N; i++) {
+    const { vx, vy } = maxwellSpeed(T);
+    particles.push({
+      x: boxX + 10 + Math.random() * (boxW - 20),
+      y: boxY + 10 + Math.random() * (boxH - 20),
+      vx: vx * 0.15, // scale factor for visualization (pixels per (m/s))
+      vy: vy * 0.15,
+      r: 3
+    });
+  }
+  wallHits = 0;
+  wallHitTime = 0;
+  speedHistogram.fill(0);
+  histSamples = 0;
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  // Box takes left portion, histogram takes right
+  boxW = Math.min(CW * 0.48, CH - 60);
+  boxH = boxW;
+  boxX = 25;
+  boxY = 40;
+
+  draw();
+}
+
+function reset() {
+  if (animId) cancelAnimationFrame(animId);
+  running = false; animId = null; lastTs = null;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  initParticles();
+  updateInfo();
+  draw();
+}
+
+function start() {
+  if (running) return;
+  running = true; lastTs = null;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+}
+
+function step(ts) {
+  if (!running) return;
+  if (!lastTs) { lastTs = ts; animId = requestAnimationFrame(step); return; }
+  const dtReal = Math.min((ts - lastTs) / 1000, 0.04);
+  lastTs = ts;
+
+  const substeps = 3;
+  const dt = dtReal / substeps;
+
+  for (let s = 0; s < substeps; s++) {
+    for (let p of particles) {
+      p.x += p.vx * dt * 500;
+      p.y += p.vy * dt * 500;
+
+      // Wall collisions
+      if (p.x - p.r < boxX) { p.x = boxX + p.r; p.vx = Math.abs(p.vx); wallHits++; }
+      if (p.x + p.r > boxX + boxW) { p.x = boxX + boxW - p.r; p.vx = -Math.abs(p.vx); wallHits++; }
+      if (p.y - p.r < boxY) { p.y = boxY + p.r; p.vy = Math.abs(p.vy); wallHits++; }
+      if (p.y + p.r > boxY + boxH) { p.y = boxY + boxH - p.r; p.vy = -Math.abs(p.vy); wallHits++; }
+    }
+  }
+
+  wallHitTime += dtReal;
+
+  // Update speed histogram every few frames
+  if (Math.random() < 0.3) {
+    updateHistogram();
+  }
+
+  updateInfo();
+  draw();
+  animId = requestAnimationFrame(step);
+}
+
+function updateHistogram() {
+  const T = getTemp();
+  const vScale = 0.15;
+  const maxSpeed = 4 * Math.sqrt(kB * T / mO2) * vScale; // max bin edge
+  const binWidth = maxSpeed / speedHistogram.length;
+
+  // Accumulate
+  histSamples++;
+  const tempHist = new Array(speedHistogram.length).fill(0);
+  for (let p of particles) {
+    const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+    const bin = Math.min(Math.floor(speed / binWidth), speedHistogram.length - 1);
+    tempHist[bin]++;
+  }
+  // Running average
+  const alpha = Math.min(0.05, 1 / histSamples);
+  for (let i = 0; i < speedHistogram.length; i++) {
+    speedHistogram[i] = speedHistogram[i] * (1 - alpha) + tempHist[i] * alpha;
+  }
+}
+
+function updateInfo() {
+  const T = getTemp();
+  const N = particles.length;
+
+  // Compute actual speeds from simulation
+  let sumV2 = 0, sumV = 0;
+  for (let p of particles) {
+    const v2 = p.vx * p.vx + p.vy * p.vy;
+    sumV2 += v2;
+    sumV += Math.sqrt(v2);
+  }
+  const vScale = 0.15;
+  const vrms_sim = Math.sqrt(sumV2 / N) / vScale;
+  const vavg_sim = (sumV / N) / vScale;
+
+  // Theoretical values
+  const vrms_th = Math.sqrt(3 * R_gas * T / M_O2);
+  const vavg_th = Math.sqrt(8 * R_gas * T / (Math.PI * M_O2));
+  const Kavg = 1.5 * kB * T;
+
+  // Pressure estimate from wall hits
+  let pressureStr = '---';
+  if (wallHitTime > 0.5) {
+    const rate = wallHits / wallHitTime;
+    pressureStr = rate.toFixed(0) + ' hits/s';
+  }
+
+  const box = document.getElementById('infoBox');
+  let html = '';
+  html += '<span class="label">실시간 측정:</span><br>';
+  html += tex('v_\\text{rms}') + ' = <span class="val">' + vrms_sim.toFixed(0) + ' m/s</span>';
+  html += ' <span style="color:#6B7280">(이론: ' + vrms_th.toFixed(0) + ')</span><br>';
+  html += tex('v_\\text{avg}') + ' = <span class="val">' + vavg_sim.toFixed(0) + ' m/s</span>';
+  html += ' <span style="color:#6B7280">(이론: ' + vavg_th.toFixed(0) + ')</span><br>';
+  html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
+  html += '<span class="label">평균 운동에너지:</span><br>';
+  html += tex('K_\\text{avg} = \\tfrac{3}{2}kT = ' + (Kavg * 1e21).toFixed(2) + '\\times 10^{-21}') + ' J<br>';
+  html += '<span class="label">벽 충돌률:</span> <span class="val">' + pressureStr + '</span>';
+  box.innerHTML = html;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  const T = getTemp();
+
+  // Draw box
+  ctx.fillStyle = '#F3F4F6';
+  ctx.fillRect(boxX, boxY, boxW, boxH);
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(boxX, boxY, boxW, boxH);
+
+  // Draw particles
+  for (let p of particles) {
+    const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+    const vScale = 0.15;
+    const maxV = 3 * Math.sqrt(kB * T / mO2) * vScale;
+    const frac = Math.min(speed / maxV, 1);
+
+    // Color: slow=blue, fast=red
+    const r = Math.floor(139 * frac);
+    const g = Math.floor(40 * (1 - frac));
+    const b = Math.floor(235 * (1 - frac) + 41 * frac);
+    ctx.fillStyle = `rgb(${r},${g},${b})`;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Draw speed histogram
+  drawHistogram(T);
+}
+
+function drawHistogram(T) {
+  const vScale = 0.15;
+  const maxSpeed = 4 * Math.sqrt(kB * T / mO2) * vScale;
+  const binWidth = maxSpeed / speedHistogram.length;
+
+  const histX = boxX + boxW + 40;
+  const histY = boxY;
+  const histW = CW - histX - 25;
+  const histH = boxH;
+
+  if (histW < 50) return;
+
+  // Histogram axes
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(histX, histY + histH);
+  ctx.lineTo(histX + histW, histY + histH);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(histX, histY + histH);
+  ctx.lineTo(histX, histY);
+  ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('속력 (m/s)', histX + histW / 2, histY + histH + 30);
+  ctx.save();
+  ctx.translate(histX - 14, histY + histH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('빈도', 0, 0);
+  ctx.restore();
+
+  // Speed tick marks
+  const nTicks = 4;
+  for (let i = 0; i <= nTicks; i++) {
+    const v = (i / nTicks) * maxSpeed / vScale;
+    const x = histX + (i / nTicks) * histW;
+    ctx.fillStyle = '#6B7280';
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(v.toFixed(0), x, histY + histH + 14);
+  }
+
+  // Find max for scaling
+  const maxCount = Math.max(...speedHistogram, 1);
+  const barW = histW / speedHistogram.length;
+
+  // Draw bars
+  for (let i = 0; i < speedHistogram.length; i++) {
+    const barH = (speedHistogram[i] / maxCount) * (histH - 20);
+    const x = histX + i * barW;
+    ctx.fillStyle = 'rgba(139, 0, 41, 0.5)';
+    ctx.fillRect(x + 1, histY + histH - barH, barW - 2, barH);
+    ctx.strokeStyle = '#8B0029';
+    ctx.lineWidth = 0.5;
+    ctx.strokeRect(x + 1, histY + histH - barH, barW - 2, barH);
+  }
+
+  // Draw theoretical Maxwell distribution curve (2D)
+  // For 2D: P(v) = (m/kT) * v * exp(-mv^2/(2kT))
+  ctx.beginPath();
+  ctx.strokeStyle = '#2563EB';
+  ctx.lineWidth = 2;
+  const N = particles.length;
+  for (let px = 0; px <= histW; px++) {
+    const vSim = (px / histW) * maxSpeed; // simulation speed units
+    const vReal = vSim / vScale; // real speed
+    // 2D Maxwell: P(v) = (M/(RT)) * v * exp(-Mv^2/(2RT))
+    const P2d = (M_O2 / (R_gas * T)) * vReal * Math.exp(-M_O2 * vReal * vReal / (2 * R_gas * T));
+    // Scale to match histogram
+    const binV = maxSpeed / speedHistogram.length / vScale; // real speed per bin
+    const expected = P2d * binV * N;
+    const y = (expected / maxCount) * (histH - 20);
+    if (px === 0) ctx.moveTo(histX + px, histY + histH - y);
+    else ctx.lineTo(histX + px, histY + histH - y);
+  }
+  ctx.stroke();
+
+  // Legend
+  ctx.fillStyle = 'rgba(139, 0, 41, 0.5)';
+  ctx.fillRect(histX + histW - 110, histY + 5, 12, 12);
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('시뮬레이션', histX + histW - 93, histY + 15);
+
+  ctx.strokeStyle = '#2563EB';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(histX + histW - 110, histY + 28);
+  ctx.lineTo(histX + histW - 98, histY + 28);
+  ctx.stroke();
+  ctx.fillStyle = '#2563EB';
+  ctx.fillText('Maxwell (2D)', histX + histW - 93, histY + 32);
+
+  // Title above histogram
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('속력 분포', histX + histW / 2, histY - 8);
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML = '이상기체 분자 운동: ' + tex('K_\\text{avg} = \\tfrac{3}{2}kT');
+  document.getElementById('theoremBox').innerHTML =
+    'Maxwell 속력 분포<br>' +
+    tex('P(v) = 4\\pi\\left(\\frac{M}{2\\pi RT}\\right)^{3/2} v^2 e^{-Mv^2/2RT}');
+  updateFormula();
+}
+
+function updateFormula() {
+  const T = getTemp();
+  const vrms = Math.sqrt(3 * R_gas * T / M_O2);
+  const vavg = Math.sqrt(8 * R_gas * T / (Math.PI * M_O2));
+  const vp = Math.sqrt(2 * R_gas * T / M_O2);
+  const Kavg = 1.5 * kB * T;
+
+  const box = document.getElementById('formulaBox');
+  box.innerHTML =
+    '<b>산소 O&#8322; (M = 32 g/mol), T = ' + T + ' K:</b><br>' +
+    tex('v_p = \\sqrt{\\frac{2RT}{M}} = ' + vp.toFixed(0) + '\\text{ m/s}') + '<br>' +
+    tex('v_\\text{avg} = \\sqrt{\\frac{8RT}{\\pi M}} = ' + vavg.toFixed(0) + '\\text{ m/s}') + '<br>' +
+    tex('v_\\text{rms} = \\sqrt{\\frac{3RT}{M}} = ' + vrms.toFixed(0) + '\\text{ m/s}');
+}
+
+tempSlider.addEventListener('input', () => {
+  document.getElementById('tempVal').textContent = tempSlider.value;
+  // Rescale velocities for new temperature
+  const Told = getTemp();
+  updateFormula();
+  rescaleVelocities();
+  speedHistogram.fill(0);
+  histSamples = 0;
+  wallHits = 0;
+  wallHitTime = 0;
+  updateInfo();
+  if (!running) draw();
+});
+
+function rescaleVelocities() {
+  const T = getTemp();
+  const vScale = 0.15;
+  for (let p of particles) {
+    const { vx, vy } = maxwellSpeed(T);
+    p.vx = vx * vScale;
+    p.vy = vy * vScale;
+  }
+}
+
+numSlider.addEventListener('input', () => {
+  document.getElementById('numVal').textContent = numSlider.value;
+  reset();
+});
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+window.addEventListener('resize', resize);
+
+renderStatic();
+document.getElementById('tempVal').textContent = tempSlider.value;
+document.getElementById('numVal').textContent = numSlider.value;
+reset();
+resize();
+</script>
+</body>
+</html>

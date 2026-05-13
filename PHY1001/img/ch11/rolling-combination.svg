@@ -1,72 +1,86 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 350" font-family="sans-serif">
-  <!-- Title row -->
-  <text x="130" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">순수 회전</text>
-  <text x="390" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">순수 병진</text>
-  <text x="650" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">구름 운동</text>
-
-  <!-- Plus and Equals signs -->
-  <text x="260" y="185" text-anchor="middle" font-size="36" font-weight="bold" fill="#6B7280">+</text>
-  <text x="520" y="185" text-anchor="middle" font-size="36" font-weight="bold" fill="#6B7280">=</text>
-
-  <!-- Defs: arrowhead -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" font-family="sans-serif">
   <defs>
-    <marker id="arrowR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+    <marker id="rcArrB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
       <polygon points="0 0, 10 3.5, 0 7"/>
     </marker>
-    <marker id="arrowB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
-      <polygon points="0 0, 10 3.5, 0 7"/>
-    </marker>
-    <marker id="arrowG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
+    <marker id="rcArrR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
       <polygon points="0 0, 10 3.5, 0 7"/>
     </marker>
   </defs>
 
-  <!-- Pure Rotation -->
-  <g transform="translate(130,175)">
-    <circle cx="0" cy="0" r="70" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
-    <circle cx="0" cy="0" r="4" fill="#1a1a1a"/>
-    <!-- Rotation arrows at top, bottom, left, right -->
-    <line x1="0" y1="-70" x2="30" y2="-70" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
-    <text x="40" y="-60" font-size="14" font-style="italic" fill="#8B0029">+ωR</text>
-    <line x1="0" y1="70" x2="-30" y2="70" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
-    <text x="-55" y="85" font-size="14" font-style="italic" fill="#8B0029">−ωR</text>
-    <!-- Center dot label -->
-    <text x="8" y="-5" font-size="13" fill="#6B7280">0</text>
-    <!-- Curved arrow for omega -->
-    <path d="M 25,-15 A 30,30 0 0,1 15,25" stroke="#8B0029" stroke-width="1.5" fill="none" marker-end="url(#arrowR)"/>
-    <text x="35" y="10" font-size="14" font-style="italic" fill="#8B0029">ω</text>
+  <!-- Title row -->
+  <text x="135" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#8B0029">순수 회전</text>
+  <text x="400" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#8B0029">순수 병진</text>
+  <text x="665" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#8B0029">구름 운동</text>
+
+  <!-- Plus and Equals signs -->
+  <text x="265" y="200" text-anchor="middle" font-size="46" font-weight="bold" fill="#6B7280">+</text>
+  <text x="530" y="200" text-anchor="middle" font-size="46" font-weight="bold" fill="#6B7280">=</text>
+
+  <!-- =========== Pure Rotation =========== -->
+  <g transform="translate(135, 190)">
+    <circle cx="0" cy="0" r="68" fill="#F3F4F6" stroke="#6B7280" stroke-width="2.5"/>
+    <circle cx="0" cy="0" r="3" fill="#6B7280"/>
+    <!-- Top: +ωR rightward -->
+    <line x1="0" y1="-68" x2="48" y2="-68" stroke="#2563EB" stroke-width="3" marker-end="url(#rcArrB)"/>
+    <text x="58" y="-60" font-size="18" fill="#2563EB" font-weight="bold">
+      +<tspan font-style="italic">&#x3C9;R</tspan>
+    </text>
+    <!-- Bottom: -ωR leftward -->
+    <line x1="0" y1="68" x2="-48" y2="68" stroke="#2563EB" stroke-width="3" marker-end="url(#rcArrB)"/>
+    <text x="-90" y="86" font-size="18" fill="#2563EB" font-weight="bold">
+      &#x2212;<tspan font-style="italic">&#x3C9;R</tspan>
+    </text>
+    <!-- Rotation arrow inside -->
+    <path d="M 28,-22 A 36,36 0 0,1 22,32" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#rcArrB)"/>
+    <text x="38" y="6" font-size="20" font-style="italic" fill="#2563EB" font-weight="bold">&#x3C9;</text>
   </g>
 
-  <!-- Pure Translation -->
-  <g transform="translate(390,175)">
-    <circle cx="0" cy="0" r="70" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
-    <circle cx="0" cy="0" r="4" fill="#1a1a1a"/>
-    <!-- All velocity arrows point right with same magnitude -->
-    <line x1="0" y1="-70" x2="40" y2="-70" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrowB)"/>
-    <text x="50" y="-60" font-size="14" font-style="italic" fill="#2563EB">v<tspan baseline-shift="sub" font-size="10">com</tspan></text>
-    <line x1="0" y1="0" x2="40" y2="0" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrowB)"/>
-    <text x="50" y="5" font-size="14" font-style="italic" fill="#2563EB">v<tspan baseline-shift="sub" font-size="10">com</tspan></text>
-    <line x1="0" y1="70" x2="40" y2="70" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrowB)"/>
-    <text x="50" y="75" font-size="14" font-style="italic" fill="#2563EB">v<tspan baseline-shift="sub" font-size="10">com</tspan></text>
+  <!-- =========== Pure Translation =========== -->
+  <g transform="translate(400, 190)">
+    <circle cx="0" cy="0" r="68" fill="#F3F4F6" stroke="#6B7280" stroke-width="2.5"/>
+    <circle cx="0" cy="0" r="3" fill="#6B7280"/>
+    <line x1="0" y1="-68" x2="48" y2="-68" stroke="#2563EB" stroke-width="3" marker-end="url(#rcArrB)"/>
+    <text x="58" y="-60" font-size="18" fill="#2563EB" font-weight="bold">
+      <tspan font-style="italic">v</tspan><tspan font-size="13" baseline-shift="sub">com</tspan>
+    </text>
+    <line x1="0" y1="0" x2="48" y2="0" stroke="#2563EB" stroke-width="3" marker-end="url(#rcArrB)"/>
+    <text x="58" y="8" font-size="18" fill="#2563EB" font-weight="bold">
+      <tspan font-style="italic">v</tspan><tspan font-size="13" baseline-shift="sub">com</tspan>
+    </text>
+    <line x1="0" y1="68" x2="48" y2="68" stroke="#2563EB" stroke-width="3" marker-end="url(#rcArrB)"/>
+    <text x="58" y="76" font-size="18" fill="#2563EB" font-weight="bold">
+      <tspan font-style="italic">v</tspan><tspan font-size="13" baseline-shift="sub">com</tspan>
+    </text>
   </g>
 
-  <!-- Rolling = combination -->
-  <g transform="translate(650,175)">
-    <circle cx="0" cy="0" r="70" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
-    <circle cx="0" cy="0" r="4" fill="#1a1a1a"/>
-    <!-- Top: vcom + ωR = 2vcom -->
-    <line x1="0" y1="-70" x2="60" y2="-70" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
-    <text x="68" y="-58" font-size="14" font-weight="bold" fill="#8B0029">2v<tspan baseline-shift="sub" font-size="10">com</tspan></text>
-    <!-- Center: vcom -->
-    <line x1="0" y1="0" x2="40" y2="0" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrowB)"/>
-    <text x="50" y="5" font-size="14" font-style="italic" fill="#2563EB">v<tspan baseline-shift="sub" font-size="10">com</tspan></text>
-    <!-- Bottom: vcom - ωR = 0 -->
-    <circle cx="0" cy="70" r="5" fill="none" stroke="#6B7280" stroke-width="2"/>
-    <text x="12" y="85" font-size="14" fill="#6B7280">0</text>
+  <!-- =========== Rolling =========== -->
+  <g transform="translate(665, 190)">
+    <circle cx="0" cy="0" r="68" fill="#F3F4F6" stroke="#6B7280" stroke-width="2.5"/>
+    <circle cx="0" cy="0" r="3" fill="#6B7280"/>
+    <!-- Top: 2 v_com (longer arrow) -->
+    <line x1="0" y1="-68" x2="96" y2="-68" stroke="#2563EB" stroke-width="3" marker-end="url(#rcArrB)"/>
+    <text x="38" y="-78" font-size="18" font-weight="bold" fill="#2563EB">
+      2<tspan font-style="italic">v</tspan><tspan font-size="13" baseline-shift="sub">com</tspan>
+    </text>
+    <!-- Center: v_com -->
+    <line x1="0" y1="0" x2="48" y2="0" stroke="#2563EB" stroke-width="3" marker-end="url(#rcArrB)"/>
+    <text x="58" y="8" font-size="18" fill="#2563EB" font-weight="bold">
+      <tspan font-style="italic">v</tspan><tspan font-size="13" baseline-shift="sub">com</tspan>
+    </text>
+    <!-- Bottom: contact point with v = 0 -->
+    <circle cx="0" cy="68" r="6" fill="none" stroke="#8B0029" stroke-width="2.5"/>
+    <text x="14" y="92" font-size="18" fill="#8B0029" font-weight="bold">v = 0</text>
     <!-- Ground line -->
-    <line x1="-90" y1="72" x2="90" y2="72" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+    <line x1="-90" y1="72" x2="120" y2="72" stroke="#6B7280" stroke-width="2"/>
+    <g stroke="#6B7280" stroke-width="1">
+      <line x1="-80" y1="72" x2="-92" y2="84"/>
+      <line x1="-50" y1="72" x2="-62" y2="84"/>
+      <line x1="-20" y1="72" x2="-32" y2="84"/>
+      <line x1="10" y1="72" x2="-2" y2="84"/>
+      <line x1="40" y1="72" x2="28" y2="84"/>
+      <line x1="70" y1="72" x2="58" y2="84"/>
+      <line x1="100" y1="72" x2="88" y2="84"/>
+    </g>
   </g>
-
-  <!-- Bottom label -->
-  <text x="390" y="330" text-anchor="middle" font-size="15" fill="#6B7280">구름 조건: v<tspan font-style="italic" baseline-shift="sub" font-size="11">com</tspan> = ωR (접촉점 속도 = 0)</text>
 </svg>

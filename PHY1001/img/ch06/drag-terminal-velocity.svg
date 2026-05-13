@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 400" font-family="sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 420" font-family="sans-serif">
   <defs>
     <marker id="ar-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
       <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
@@ -9,13 +9,13 @@
   </defs>
 
   <!-- Stage labels -->
-  <text x="125" y="35" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="bold">낙하 초기</text>
-  <text x="375" y="35" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="bold">가속 중</text>
-  <text x="625" y="35" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="bold">종단 속력</text>
+  <text x="125" y="35" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="bold">낙하 초기</text>
+  <text x="375" y="35" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="bold">가속 중</text>
+  <text x="625" y="35" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="bold">종단 속력</text>
 
   <!-- Stage 1: Early fall (v small, D small) -->
   <circle cx="125" cy="140" r="26" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
-  <text x="125" y="145" font-size="13" fill="#1a1a1a" text-anchor="middle" font-weight="bold">m</text>
+  <text x="125" y="145" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="bold">m</text>
   <!-- mg down (large arrow) -->
   <line x1="125" y1="168" x2="125" y2="285" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar-red)"/>
   <text x="140" y="265" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">mg</text>
@@ -23,15 +23,15 @@
   <line x1="125" y1="112" x2="125" y2="85" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-blue)"/>
   <text x="140" y="92" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">D</text>
   <!-- Description -->
-  <text x="125" y="315" font-size="12" fill="#6B7280" text-anchor="middle">v 작음, D 작음</text>
-  <text x="125" y="335" font-size="12" fill="#8B0029" text-anchor="middle" font-weight="bold">D ≪ mg → 가속</text>
+  <text x="125" y="315" font-size="14" fill="#6B7280" text-anchor="middle">v 작음, D 작음</text>
+  <text x="125" y="335" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold">D ≪ mg → 가속</text>
 
   <!-- Arrow between stages -->
-  <text x="250" y="170" font-size="30" fill="#6B7280">→</text>
+  <text x="250" y="170" font-size="14" fill="#6B7280">→</text>
 
   <!-- Stage 2: Accelerating (v medium, D medium) -->
   <circle cx="375" cy="140" r="26" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
-  <text x="375" y="145" font-size="13" fill="#1a1a1a" text-anchor="middle" font-weight="bold">m</text>
+  <text x="375" y="145" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="bold">m</text>
   <!-- mg down -->
   <line x1="375" y1="168" x2="375" y2="285" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar-red)"/>
   <text x="390" y="265" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">mg</text>
@@ -39,29 +39,29 @@
   <line x1="375" y1="112" x2="375" y2="60" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-blue)"/>
   <text x="390" y="68" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">D</text>
   <!-- Description -->
-  <text x="375" y="315" font-size="12" fill="#6B7280" text-anchor="middle">v 증가, D 증가</text>
-  <text x="375" y="335" font-size="12" fill="#8B0029" text-anchor="middle" font-weight="bold">D &lt; mg → 가속 감소</text>
+  <text x="375" y="315" font-size="14" fill="#6B7280" text-anchor="middle">v 증가, D 증가</text>
+  <text x="375" y="335" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold">D &lt; mg → 가속 감소</text>
 
   <!-- Arrow between stages -->
-  <text x="500" y="170" font-size="30" fill="#6B7280">→</text>
+  <text x="500" y="170" font-size="14" fill="#6B7280">→</text>
 
   <!-- Stage 3: Terminal velocity (D = mg) -->
   <circle cx="625" cy="140" r="26" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
-  <text x="625" y="145" font-size="13" fill="#1a1a1a" text-anchor="middle" font-weight="bold">m</text>
+  <text x="625" y="145" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="bold">m</text>
   <!-- mg down -->
   <line x1="625" y1="168" x2="625" y2="285" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar-red)"/>
   <text x="640" y="265" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">mg</text>
   <!-- D up (same length as mg) -->
-  <line x1="625" y1="112" x2="625" y2="0" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-blue)"/>
-  <text x="640" y="25" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">D</text>
+  <line x1="625" y1="112" x2="625" y2="20" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-blue)"/>
+  <text x="640" y="30" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">D</text>
   <!-- Equal brackets -->
-  <text x="660" y="140" font-size="18" fill="#6B7280" font-weight="bold">=</text>
+  <text x="660" y="140" font-size="14" fill="#6B7280" font-weight="bold">=</text>
   <!-- Description -->
-  <text x="625" y="315" font-size="12" fill="#6B7280" text-anchor="middle">v = v</text>
-  <text x="647" y="319" font-size="9" fill="#6B7280">t</text>
-  <text x="625" y="335" font-size="12" fill="#8B0029" text-anchor="middle" font-weight="bold">D = mg → a = 0</text>
+  <text x="625" y="315" font-size="14" fill="#6B7280" text-anchor="middle">v = v</text>
+  <text x="647" y="319" font-size="10" fill="#6B7280">t</text>
+  <text x="625" y="335" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold">D = mg → a = 0</text>
 
   <!-- Bottom formula -->
-  <rect x="210" y="360" width="330" height="30" fill="rgba(139,0,41,0.06)" rx="6"/>
+  <rect x="210" y="360" width="330" height="30" fill="#F3F4F6" rx="6"/>
   <text x="375" y="382" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">종단 속력: v_t = √(2mg / CρA)</text>
 </svg>

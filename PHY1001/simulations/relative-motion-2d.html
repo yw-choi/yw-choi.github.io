@@ -12,7 +12,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .container { display: flex; height: 100vh; }
 .canvas-area { flex: 1; position: relative; background: #fafafa; }
 canvas { display: block; width: 100%; height: 100%; }
-.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; min-height: 0; }
 .controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 2px; }
 .subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
 .control-group { display: flex; flex-direction: column; gap: 3px; }
@@ -33,9 +33,13 @@ button.reset-btn:hover { background: #a3003a; }
 .play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; }
 .play-btn:hover { background: #35a035; }
 .play-btn.running { background: #b8860b; }
-.btn-row { display: flex; gap: 8px; }
+.btn-row { display: flex; gap: 8px; margin-top: auto; flex-shrink: 0; }
 .btn-row button { flex: 1; }
 .canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 16px; font-weight: 700; color: #8B0029; }
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 13px; line-height: 1; pointer-events: none; }
+.canvas-overlay .katex-label .katex { font-size: 0.95em; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.88); padding: 1px 4px; border-radius: 3px; }
 .canvas-title .katex { font-size: 16px; color: #8B0029; }
 @media (max-width: 700px) {
   .container { flex-direction: column; }
@@ -49,6 +53,15 @@ button.reset-btn:hover { background: #a3003a; }
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
     <div class="canvas-title" id="canvasTitle"></div>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-vPR" style="color:#2563EB;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lbl-vPG" style="color:#8B0029;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lbl-vRG" style="color:#6B7280;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lbl-vecPR" style="color:#2563EB;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lbl-vecRG" style="color:#6B7280;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lbl-vecPG" style="color:#8B0029;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lbl-eq" style="color:#333;"></div>
+    </div>
   </div>
   <div class="controls">
     <div>
@@ -89,6 +102,27 @@ button.reset-btn:hover { background: #a3003a; }
 
 <script>
 function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = '';
+}
+
+function hideLabel(el) { el.style.display = 'none'; }
+
+const lblVPR = document.getElementById('lbl-vPR');
+const lblVPG = document.getElementById('lbl-vPG');
+const lblVRG = document.getElementById('lbl-vRG');
+const lblVecPR = document.getElementById('lbl-vecPR');
+const lblVecRG = document.getElementById('lbl-vecRG');
+const lblVecPG = document.getElementById('lbl-vecPG');
+const lblEq = document.getElementById('lbl-eq');
+
+function hideAllLabels() {
+  [lblVPR, lblVPG, lblVRG, lblVecPR, lblVecRG, lblVecPG, lblEq].forEach(hideLabel);
+}
 
 function renderStaticKaTeX() {
   document.getElementById('theoremEq').innerHTML = tex('\\vec{v}_{PG} = \\vec{v}_{PR} + \\vec{v}_{RG}');
@@ -241,6 +275,7 @@ function drawTextWithBg(text, tx, ty, font, color, align) {
 
 function draw() {
   ctx.clearRect(0, 0, W, H);
+  hideAllLabels();
   const st = getState();
   const { vr, vb, headingDeg } = getParams();
 
@@ -382,7 +417,7 @@ function drawRiverView(ox, oy, w, h, st, mode) {
   ctx.fillStyle = titleColor;
   ctx.beginPath();
   const boatSize = 8;
-  const headingRad = headingDeg * Math.PI / 180;
+  const headingRad = getParams().headingDeg * Math.PI / 180;
   // Point in heading direction
   const boatDir = isRiver ? headingRad : Math.atan2(st.vby_g, st.vbx_g);
   ctx.moveTo(boatPx + boatSize * Math.cos(boatDir - Math.PI / 2),
@@ -402,22 +437,31 @@ function drawRiverView(ox, oy, w, h, st, mode) {
       const vx = st.vbx_r * vScale;
       const vy = -st.vby_r * vScale;
       drawArrow(boatPx, boatPy, boatPx + vx, boatPy + vy, '#2563EB', 2);
-      drawTextWithBg('v_PR', boatPx + vx + 8, boatPy + vy - 4, 'bold 11px sans-serif', '#2563EB', 'left');
+      posLabel(lblVPR, ox + boatPx + vx + 6, oy + boatPy + vy - 12, tex('\\vec{v}_{PR}'));
+    } else {
+      hideLabel(lblVPR);
     }
+    hideLabel(lblVPG);
+    hideLabel(lblVRG);
   } else {
     // Show v_PG
     if (st.vPG > 0.3) {
       const vx = st.vbx_g * vScale;
       const vy = -st.vby_g * vScale;
       drawArrow(boatPx, boatPy, boatPx + vx, boatPy + vy, '#8B0029', 2);
-      drawTextWithBg('v_PG', boatPx + vx + 8, boatPy + vy - 4, 'bold 11px sans-serif', '#8B0029', 'left');
+      posLabel(lblVPG, ox + boatPx + vx + 6, oy + boatPy + vy - 12, tex('\\vec{v}_{PG}'));
+    } else {
+      hideLabel(lblVPG);
     }
     // Also show v_RG (river velocity)
     if (st.vr > 0.3) {
       const vrx = st.vr * vScale;
       drawArrow(boatPx, boatPy + 15, boatPx + vrx, boatPy + 15, '#6B7280', 1.5);
-      drawTextWithBg('v_RG', boatPx + vrx + 6, boatPy + 12, '10px sans-serif', '#6B7280', 'left');
+      posLabel(lblVRG, ox + boatPx + vrx + 4, oy + boatPy + 4, tex('\\vec{v}_{RG}'));
+    } else {
+      hideLabel(lblVRG);
     }
+    hideLabel(lblVPR);
   }
 
   // Border
@@ -465,7 +509,8 @@ function drawVectorDiagram(ox, oy, w, h, st) {
 
   // v_PR arrow (blue)
   drawArrow(startX, startY, startX + vPRx, startY + vPRy, '#2563EB', 2.5);
-  drawTextWithBg('v_PR = ' + vb.toFixed(1) + ' m/s', startX + vPRx / 2 - 15, startY + vPRy / 2 - 10, 'bold 12px sans-serif', '#2563EB', 'center');
+  posLabel(lblVecPR, ox + startX + vPRx / 2 - 30, oy + startY + vPRy / 2 - 18,
+    tex('v_{PR} = ' + vb.toFixed(1) + '\\;\\text{m/s}'));
 
   // v_RG arrow (gray) - from tip of v_PR
   const tipPRx = startX + vPRx;
@@ -473,7 +518,10 @@ function drawVectorDiagram(ox, oy, w, h, st) {
   const vRGx = vr * vScale;
   drawArrow(tipPRx, tipPRy, tipPRx + vRGx, tipPRy, '#6B7280', 2.5);
   if (vr > 0.1) {
-    drawTextWithBg('v_RG = ' + vr.toFixed(1) + ' m/s', tipPRx + vRGx / 2, tipPRy - 12, 'bold 12px sans-serif', '#6B7280', 'center');
+    posLabel(lblVecRG, ox + tipPRx + vRGx / 2 - 25, oy + tipPRy - 20,
+      tex('v_{RG} = ' + vr.toFixed(1) + '\\;\\text{m/s}'));
+  } else {
+    hideLabel(lblVecRG);
   }
 
   // v_PG arrow (red) - resultant from start to tip of v_RG
@@ -483,16 +531,16 @@ function drawVectorDiagram(ox, oy, w, h, st) {
     drawArrow(startX, startY, endX, endY, '#8B0029', 3);
     const midX = (startX + endX) / 2;
     const midY = (startY + endY) / 2;
-    drawTextWithBg('v_PG = ' + st.vPG.toFixed(2) + ' m/s', midX, midY + 18, 'bold 13px sans-serif', '#8B0029', 'center');
+    posLabel(lblVecPG, ox + midX - 30, oy + midY + 10,
+      tex('v_{PG} = ' + st.vPG.toFixed(2) + '\\;\\text{m/s}'));
+  } else {
+    hideLabel(lblVecPG);
   }
 
   // Equation with current values
   const eqY = h - 20;
-  ctx.fillStyle = '#333';
-  ctx.font = '13px sans-serif';
-  ctx.textAlign = 'center';
-  const eqText = 'v_PG = (' + st.vbx_g.toFixed(2) + ', ' + st.vby_g.toFixed(2) + ') m/s,  |v_PG| = ' + st.vPG.toFixed(2) + ' m/s';
-  drawTextWithBg(eqText, w / 2, eqY, '12px sans-serif', '#333', 'center');
+  posLabel(lblEq, ox + w / 2 - 140, oy + eqY - 10,
+    tex('\\vec{v}_{PG} = (' + st.vbx_g.toFixed(2) + ',\\,' + st.vby_g.toFixed(2) + ')\\;\\text{m/s},\\quad |\\vec{v}_{PG}| = ' + st.vPG.toFixed(2) + '\\;\\text{m/s}'));
 
   ctx.restore();
 }

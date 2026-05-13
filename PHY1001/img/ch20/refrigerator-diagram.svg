@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" font-family="sans-serif">
+  <defs>
+    <marker id="rfArrR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="rfArrB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="rfArrGr" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="300" y="28" text-anchor="middle" font-size="17" font-weight="bold" fill="#2563EB">냉동기 (Refrigerator)</text>
+
+  <!-- Hot reservoir -->
+  <rect x="175" y="50" width="250" height="50" rx="8" fill="#8B0029" fill-opacity="0.15" stroke="#8B0029" stroke-width="2"/>
+  <text x="300" y="72" text-anchor="middle" font-size="15" font-weight="bold" fill="#8B0029">고온 열원</text>
+  <text x="300" y="90" text-anchor="middle" font-size="14" fill="#8B0029" font-style="italic">T<tspan baseline-shift="sub" font-size="10">H</tspan></text>
+
+  <!-- Q_H arrow UP (heat ejected to hot reservoir) -->
+  <line x1="300" y1="175" x2="300" y2="105" stroke="#8B0029" stroke-width="2.5" marker-end="url(#rfArrR)"/>
+  <text x="328" y="145" font-size="14" font-weight="bold" fill="#8B0029" font-style="italic">|Q<tspan baseline-shift="sub" font-size="10">H</tspan>|</text>
+
+  <!-- Engine circle -->
+  <circle cx="300" cy="225" r="50" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <text x="300" y="220" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B7280">냉동기</text>
+  <text x="300" y="238" text-anchor="middle" font-size="12" fill="#6B7280">Refrigerator</text>
+
+  <!-- W arrow LEFT (work input) -->
+  <line x1="500" y1="225" x2="355" y2="225" stroke="#6B7280" stroke-width="2.5" marker-end="url(#rfArrGr)"/>
+  <text x="440" y="215" font-size="14" font-weight="bold" fill="#6B7280" font-style="italic">W</text>
+  <text x="510" y="245" text-anchor="start" font-size="12" fill="#6B7280">(일 입력)</text>
+
+  <!-- Q_L arrow UP (heat absorbed from cold) -->
+  <line x1="300" y1="345" x2="300" y2="280" stroke="#2563EB" stroke-width="2.5" marker-end="url(#rfArrB)"/>
+  <text x="328" y="318" font-size="14" font-weight="bold" fill="#2563EB" font-style="italic">|Q<tspan baseline-shift="sub" font-size="10">L</tspan>|</text>
+
+  <!-- Cold reservoir -->
+  <rect x="175" y="355" width="250" height="50" rx="8" fill="#2563EB" fill-opacity="0.12" stroke="#2563EB" stroke-width="2"/>
+  <text x="300" y="377" text-anchor="middle" font-size="15" font-weight="bold" fill="#2563EB">저온 열원</text>
+  <text x="300" y="395" text-anchor="middle" font-size="14" fill="#2563EB" font-style="italic">T<tspan baseline-shift="sub" font-size="10">L</tspan></text>
+
+  <!-- Energy conservation -->
+  <text x="300" y="435" text-anchor="middle" font-size="14" fill="#6B7280">에너지 보존:</text>
+  <text x="300" y="455" text-anchor="middle" font-size="15" font-weight="bold" fill="#2563EB">|Q<tspan baseline-shift="sub" font-size="10">H</tspan>| = W + |Q<tspan baseline-shift="sub" font-size="10">L</tspan>|</text>
+  <text x="300" y="475" text-anchor="middle" font-size="13" fill="#6B7280" font-style="italic">K = |Q<tspan baseline-shift="sub" font-size="10">L</tspan>| / W = T<tspan baseline-shift="sub" font-size="10">L</tspan> / (T<tspan baseline-shift="sub" font-size="10">H</tspan> − T<tspan baseline-shift="sub" font-size="10">L</tspan>)</text>
+</svg>

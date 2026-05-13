@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>정상파와 공명</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 14px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.play-btn { background: #2a7d2a; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+.play-btn:hover { background: #35a035; }
+.play-btn.running { background: #b8860b; }
+.btn-row { display: flex; gap: 8px; }
+.btn-row button { flex: 1; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute; white-space: nowrap; line-height: 1; font-size: 13px; pointer-events: none;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.92em; }
+.canvas-overlay .katex-label.with-bg {
+  background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px;
+}
+.mode-btns { display: flex; gap: 4px; flex-wrap: wrap; }
+.mode-btns button {
+  flex: 1; min-width: 40px; padding: 6px 2px; font-size: 12px; font-weight: 700;
+  border: 2px solid #8B0029; background: #fff; color: #8B0029;
+  border-radius: 5px; cursor: pointer;
+}
+.mode-btns button.active { background: #8B0029; color: #fff; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-fn" style="color:#8B0029;"></div>
+    </div>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>정상파와 공명</h2>
+      <div class="subtitle">Standing Waves & Resonance (Ch.16)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>배음 차수 n</label>
+      <div class="mode-btns" id="harmonicBtns">
+        <button data-n="1" class="active">1</button>
+        <button data-n="2">2</button>
+        <button data-n="3">3</button>
+        <button data-n="4">4</button>
+        <button data-n="5">5</button>
+        <button data-n="6">6</button>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label>줄 길이 L = <span id="lenVal">1.00</span> m</label>
+      <input type="range" id="lenSlider" min="0.5" max="2.0" value="1.0" step="0.05">
+    </div>
+
+    <div class="control-group">
+      <label>장력 &tau; = <span id="tensionVal">100</span> N</label>
+      <input type="range" id="tensionSlider" min="10" max="400" value="100" step="1">
+    </div>
+
+    <div class="control-group">
+      <label>선밀도 &mu; = <span id="muVal">0.04</span> kg/m</label>
+      <input type="range" id="muSlider" min="0.01" max="0.20" value="0.04" step="0.01">
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="play-btn" id="playBtn">&#9654; 시작</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const lblFn = document.getElementById('lbl-fn');
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
+}
+
+const lenSlider = document.getElementById('lenSlider');
+const tensionSlider = document.getElementById('tensionSlider');
+const muSlider = document.getElementById('muSlider');
+const playBtn = document.getElementById('playBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let n = 1;
+let t = 0;
+let running = false, animId = null, lastTs = null;
+
+function getParams() {
+  const L = parseFloat(lenSlider.value);
+  const tau = parseFloat(tensionSlider.value);
+  const mu = parseFloat(muSlider.value);
+  const v = Math.sqrt(tau / mu);
+  const lambda = 2 * L / n;
+  const f = v / lambda;
+  const omega = 2 * Math.PI * f;
+  const k = 2 * Math.PI / lambda;
+  return { L, tau, mu, v, lambda, f, omega, k, n };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function reset() {
+  if (animId) cancelAnimationFrame(animId);
+  running = false; animId = null; lastTs = null;
+  t = 0;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+  updateInfo(); draw();
+}
+
+function start() {
+  if (running) return;
+  running = true; lastTs = null;
+  playBtn.textContent = '\u23F8 일시정지';
+  playBtn.classList.add('running');
+  animId = requestAnimationFrame(step);
+}
+
+function stop() {
+  running = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  playBtn.textContent = '\u25B6 시작';
+  playBtn.classList.remove('running');
+}
+
+function step(ts) {
+  if (!running) return;
+  if (!lastTs) { lastTs = ts; animId = requestAnimationFrame(step); return; }
+  const dtReal = Math.min((ts - lastTs) / 1000, 0.04);
+  lastTs = ts;
+  t += dtReal;
+  updateInfo(); draw();
+  animId = requestAnimationFrame(step);
+}
+
+function updateInfo() {
+  const p = getParams();
+  const box = document.getElementById('infoBox');
+  let html = '';
+  html += '<span class="label">배음 차수:</span> <span class="val">n = ' + p.n + '</span><br>';
+  html += '<span class="label">파동 속력:</span> ' + tex('v = ' + p.v.toFixed(1) + '\\text{ m/s}') + '<br>';
+  html += '<span class="label">파장:</span> ' + tex('\\lambda = ' + p.lambda.toFixed(3) + '\\text{ m}') + '<br>';
+  html += '<span class="label">공명 진동수:</span> ' + tex('f_{' + p.n + '} = ' + p.f.toFixed(1) + '\\text{ Hz}') + '<br>';
+  html += '<span class="label">마디 수:</span> <span class="val">' + (p.n + 1) + '개</span>';
+  html += ' | <span class="label">배 수:</span> <span class="val">' + p.n + '개</span>';
+  box.innerHTML = html;
+}
+
+function updateFormula() {
+  const p = getParams();
+  const box = document.getElementById('formulaBox');
+  const f1 = p.v / (2 * p.L);
+  box.innerHTML =
+    '<b>공명 진동수:</b><br>' +
+    tex('f_n = n\\dfrac{v}{2L} = n \\cdot ' + f1.toFixed(1) + '\\text{ Hz}') + '<br>' +
+    '<b>파동 속력:</b><br>' +
+    tex('v = \\sqrt{\\tau/\\mu} = ' + p.v.toFixed(1) + '\\text{ m/s}');
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  lblFn.style.display = 'none';
+
+  const p = getParams();
+  const margin = 60;
+  const stringY0 = CH * 0.3; // Standing wave center
+  const waveY2 = CH * 0.72; // Individual waves center
+  const stringLen = CW - 2 * margin;
+  const ampPx = Math.min(CH * 0.15, 80);
+
+  // === Walls ===
+  ctx.fillStyle = '#F3F4F6'; ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1.5;
+  ctx.fillRect(margin - 8, stringY0 - ampPx - 20, 8, 2 * ampPx + 40);
+  ctx.strokeRect(margin - 8, stringY0 - ampPx - 20, 8, 2 * ampPx + 40);
+  ctx.fillRect(margin + stringLen, stringY0 - ampPx - 20, 8, 2 * ampPx + 40);
+  ctx.strokeRect(margin + stringLen, stringY0 - ampPx - 20, 8, 2 * ampPx + 40);
+
+  // Equilibrium line
+  ctx.strokeStyle = '#e0e0e0'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+  ctx.beginPath(); ctx.moveTo(margin, stringY0); ctx.lineTo(margin + stringLen, stringY0); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // === Standing wave envelope (dashed) ===
+  ctx.strokeStyle = 'rgba(139,0,41,0.25)'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 3]);
+  ctx.beginPath();
+  for (let px = 0; px <= stringLen; px++) {
+    const xFrac = px / stringLen;
+    const y = 2 * ampPx * Math.sin(p.n * Math.PI * xFrac);
+    const sx = margin + px;
+    const sy = stringY0 - y;
+    if (px === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+  }
+  ctx.stroke();
+  ctx.beginPath();
+  for (let px = 0; px <= stringLen; px++) {
+    const xFrac = px / stringLen;
+    const y = -2 * ampPx * Math.sin(p.n * Math.PI * xFrac);
+    const sx = margin + px;
+    const sy = stringY0 - y;
+    if (px === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // === Standing wave (solid, animated) ===
+  ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  for (let px = 0; px <= stringLen; px++) {
+    const xFrac = px / stringLen;
+    const y = 2 * ampPx * Math.sin(p.n * Math.PI * xFrac) * Math.cos(p.omega * t);
+    const sx = margin + px;
+    const sy = stringY0 - y;
+    if (px === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+  }
+  ctx.stroke();
+
+  // === Nodes and antinodes ===
+  for (let i = 0; i <= p.n; i++) {
+    const nx = margin + i * stringLen / p.n;
+    ctx.fillStyle = '#2563EB';
+    ctx.beginPath(); ctx.arc(nx, stringY0, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#2563EB'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('N', nx, stringY0 + 18);
+  }
+  for (let i = 0; i < p.n; i++) {
+    const ax = margin + (i + 0.5) * stringLen / p.n;
+    ctx.fillStyle = '#8B0029'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('A', ax, stringY0 - ampPx - 8);
+  }
+
+  // L dimension
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1.5;
+  const dimY = stringY0 + 35;
+  ctx.beginPath(); ctx.moveTo(margin, dimY); ctx.lineTo(margin + stringLen, dimY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(margin, dimY - 5); ctx.lineTo(margin, dimY + 5); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(margin + stringLen, dimY - 5); ctx.lineTo(margin + stringLen, dimY + 5); ctx.stroke();
+  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('L = ' + p.L.toFixed(2) + ' m', margin + stringLen / 2, dimY + 18);
+
+  // === Individual traveling waves (below) ===
+  ctx.fillStyle = '#444'; ctx.font = '12px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('구성 파동 (두 진행파의 중첩)', margin, waveY2 - ampPx * 0.7 - 12);
+
+  // Equilibrium
+  ctx.strokeStyle = '#e0e0e0'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+  ctx.beginPath(); ctx.moveTo(margin, waveY2); ctx.lineTo(margin + stringLen, waveY2); ctx.stroke();
+  ctx.setLineDash([]);
+
+  const ampPx2 = ampPx * 0.7;
+
+  // Wave 1: rightward
+  ctx.strokeStyle = '#2563EB'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 3]);
+  ctx.beginPath();
+  for (let px = 0; px <= stringLen; px++) {
+    const xFrac = px / stringLen;
+    const x = xFrac * p.L;
+    const y = ampPx2 * Math.sin(p.k * x - p.omega * t);
+    const sx = margin + px; const sy = waveY2 - y;
+    if (px === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Wave 2: leftward
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1.5; ctx.setLineDash([3, 4]);
+  ctx.beginPath();
+  for (let px = 0; px <= stringLen; px++) {
+    const xFrac = px / stringLen;
+    const x = xFrac * p.L;
+    const y = ampPx2 * Math.sin(p.k * x + p.omega * t);
+    const sx = margin + px; const sy = waveY2 - y;
+    if (px === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Legend
+  ctx.fillStyle = '#2563EB'; ctx.font = '11px sans-serif'; ctx.textAlign = 'left';
+  ctx.setLineDash([5, 3]);
+  ctx.strokeStyle = '#2563EB'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(margin, waveY2 + ampPx2 + 15); ctx.lineTo(margin + 30, waveY2 + ampPx2 + 15); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillText('+x 방향', margin + 35, waveY2 + ampPx2 + 19);
+
+  ctx.setLineDash([3, 4]);
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(margin + 110, waveY2 + ampPx2 + 15); ctx.lineTo(margin + 140, waveY2 + ampPx2 + 15); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#6B7280';
+  ctx.fillText('-x 방향', margin + 145, waveY2 + ampPx2 + 19);
+
+  // Frequency label
+  posLabel(lblFn, CW / 2 - 60, stringY0 - ampPx - 30,
+    '<span style="color:#8B0029;font-weight:bold">' +
+    tex('f_{' + p.n + '} = ' + p.f.toFixed(1) + '\\text{ Hz}') +
+    '</span>');
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML = '정상파: ' + tex("y' = [2y_m \\sin kx]\\cos \\omega t");
+  document.getElementById('theoremBox').innerHTML =
+    '공명 조건<br>' +
+    tex('f_n = n\\dfrac{v}{2L}') + '<br>' +
+    tex('n = 1, 2, 3, \\ldots');
+  updateFormula();
+}
+
+// Harmonic buttons
+document.querySelectorAll('#harmonicBtns button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#harmonicBtns button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    n = parseInt(btn.dataset.n);
+    updateFormula(); updateInfo(); draw();
+  });
+});
+
+[lenSlider, tensionSlider, muSlider].forEach(sl => {
+  sl.addEventListener('input', () => {
+    document.getElementById('lenVal').textContent = parseFloat(lenSlider.value).toFixed(2);
+    document.getElementById('tensionVal').textContent = parseFloat(tensionSlider.value).toFixed(0);
+    document.getElementById('muVal').textContent = parseFloat(muSlider.value).toFixed(2);
+    updateFormula(); updateInfo(); draw();
+  });
+});
+
+playBtn.addEventListener('click', () => { if (running) stop(); else start(); });
+resetBtn.addEventListener('click', reset);
+window.addEventListener('resize', resize);
+
+renderStatic();
+document.getElementById('lenVal').textContent = parseFloat(lenSlider.value).toFixed(2);
+document.getElementById('tensionVal').textContent = parseFloat(tensionSlider.value).toFixed(0);
+document.getElementById('muVal').textContent = parseFloat(muSlider.value).toFixed(2);
+reset();
+resize();
+</script>
+</body>
+</html>

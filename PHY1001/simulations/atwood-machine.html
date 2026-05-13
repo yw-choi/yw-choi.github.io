@@ -39,6 +39,10 @@ button.reset-btn:hover { background: #a3003a; }
 .formula-overlay .formula-line .katex { font-size: 15px; }
 .formula-overlay .formula-line.highlight .katex { font-size: 15px; }
 
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px; }
+
 .canvas-title { position: absolute; top: 8px; left: 20px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
 .canvas-title .katex { font-size: 18px; color: #8B0029; }
 
@@ -53,6 +57,16 @@ button.reset-btn:hover { background: #a3003a; }
 <div class="container">
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="canvasOverlay">
+      <span class="katex-label with-bg" id="lbl-m1" style="color:#8B0029"></span>
+      <span class="katex-label with-bg" id="lbl-m2" style="color:#8B0029"></span>
+      <span class="katex-label with-bg" id="lbl-m1g" style="color:#8B0029"></span>
+      <span class="katex-label with-bg" id="lbl-m2g" style="color:#8B0029"></span>
+      <span class="katex-label with-bg" id="lbl-T1" style="color:#8B0029"></span>
+      <span class="katex-label with-bg" id="lbl-T2" style="color:#8B0029"></span>
+      <span class="katex-label with-bg" id="lbl-v1" style="color:#2563EB"></span>
+      <span class="katex-label with-bg" id="lbl-v2" style="color:#2563EB"></span>
+    </div>
     <div class="canvas-title" id="canvasTitle"></div>
     <div class="formula-overlay" id="formulaOverlay">
       <div class="formula-line" id="formulaEq1"></div>
@@ -100,6 +114,42 @@ button.reset-btn:hover { background: #a3003a; }
 function tex(expr) {
   return katex.renderToString(expr, { throwOnError: false });
 }
+
+function posLabel(el, px, py, html, align) {
+  el.innerHTML = html;
+  el.style.display = '';
+  el.style.top = py + 'px';
+  if (align === 'right') {
+    el.style.left = '';
+    el.style.right = (W - px) + 'px';
+  } else if (align === 'center') {
+    el.style.left = px + 'px';
+    el.style.transform = 'translateX(-50%)';
+  } else {
+    el.style.left = px + 'px';
+    el.style.right = '';
+    el.style.transform = '';
+  }
+}
+
+function hideLabel(el) { el.style.display = 'none'; }
+
+// Pre-rendered KaTeX strings for overlay labels
+const katexM1 = tex('m_1');
+const katexM2 = tex('m_2');
+const katexM1g = tex('m_1 g');
+const katexM2g = tex('m_2 g');
+const katexT = tex('T');
+const katexV = tex('v');
+
+const lblM1 = document.getElementById('lbl-m1');
+const lblM2 = document.getElementById('lbl-m2');
+const lblM1g = document.getElementById('lbl-m1g');
+const lblM2g = document.getElementById('lbl-m2g');
+const lblT1 = document.getElementById('lbl-T1');
+const lblT2 = document.getElementById('lbl-T2');
+const lblV1 = document.getElementById('lbl-v1');
+const lblV2 = document.getElementById('lbl-v2');
 
 function renderStaticKaTeX() {
   document.getElementById('theoremEq').innerHTML = tex('a = \\frac{(m_1 - m_2)g}{m_1 + m_2}');
@@ -287,10 +337,8 @@ function draw() {
   ctx.fillText('kg', leftX, m1Top + blockH / 2 + 8);
   ctx.textBaseline = 'alphabetic';
 
-  // m1 label
-  ctx.fillStyle = '#8B0029';
-  ctx.font = 'bold 14px sans-serif';
-  ctx.fillText('m\u2081', leftX, m1Top + blockH + 18);
+  // m1 label (KaTeX overlay)
+  posLabel(lblM1, leftX, m1Top + blockH + 8, katexM1, 'center');
 
   // Mass 2 (right)
   const m2Top = m2Y;
@@ -309,10 +357,8 @@ function draw() {
   ctx.fillText('kg', rightX, m2Top + blockH / 2 + 8);
   ctx.textBaseline = 'alphabetic';
 
-  // m2 label
-  ctx.fillStyle = '#8B0029';
-  ctx.font = 'bold 14px sans-serif';
-  ctx.fillText('m\u2082', rightX, m2Top + blockH + 18);
+  // m2 label (KaTeX overlay)
+  posLabel(lblM2, rightX, m2Top + blockH + 8, katexM2, 'center');
 
   // Force arrows on masses (FBD overlay)
   const arrowScale = 1.2;
@@ -323,26 +369,20 @@ function draw() {
   const m1gLen = m1 * g * arrowScale;
   // T up
   drawArrow(leftX - blockW / 2 - 15, m1Center, leftX - blockW / 2 - 15, m1Center - Math.min(TLen, 80), '#8B0029', 2.5);
-  ctx.fillStyle = '#8B0029';
-  ctx.font = 'bold 12px sans-serif';
-  ctx.textAlign = 'right';
-  ctx.fillText('T', leftX - blockW / 2 - 18, m1Center - Math.min(TLen, 80) + 4);
+  posLabel(lblT1, leftX - blockW / 2 - 20, m1Center - Math.min(TLen, 80) - 4, katexT, 'right');
   // m1g down
   drawArrow(leftX - blockW / 2 - 15, m1Center, leftX - blockW / 2 - 15, m1Center + Math.min(m1gLen, 80), '#8B0029', 2.5);
-  ctx.fillText('m\u2081g', leftX - blockW / 2 - 18, m1Center + Math.min(m1gLen, 80) + 4);
+  posLabel(lblM1g, leftX - blockW / 2 - 20, m1Center + Math.min(m1gLen, 80) - 4, katexM1g, 'right');
 
   // m2: T up, m2g down
   const m2Center = m2Top + blockH / 2;
   const m2gLen = m2 * g * arrowScale;
   // T up
   drawArrow(rightX + blockW / 2 + 15, m2Center, rightX + blockW / 2 + 15, m2Center - Math.min(TLen, 80), '#8B0029', 2.5);
-  ctx.fillStyle = '#8B0029';
-  ctx.font = 'bold 12px sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('T', rightX + blockW / 2 + 18, m2Center - Math.min(TLen, 80) + 4);
+  posLabel(lblT2, rightX + blockW / 2 + 20, m2Center - Math.min(TLen, 80) - 4, katexT);
   // m2g down
   drawArrow(rightX + blockW / 2 + 15, m2Center, rightX + blockW / 2 + 15, m2Center + Math.min(m2gLen, 80), '#8B0029', 2.5);
-  ctx.fillText('m\u2082g', rightX + blockW / 2 + 18, m2Center + Math.min(m2gLen, 80) + 4);
+  posLabel(lblM2g, rightX + blockW / 2 + 20, m2Center + Math.min(m2gLen, 80) - 4, katexM2g);
 
   // Velocity arrows (blue)
   if (Math.abs(v) > 0.05) {
@@ -353,11 +393,11 @@ function draw() {
     // m2 velocity (up if a > 0)
     drawArrow(rightX - blockW / 2 - 10, m2Center, rightX - blockW / 2 - 10, m2Center - v1Dir * vLen, '#2563EB', 2);
 
-    ctx.fillStyle = '#2563EB';
-    ctx.font = 'bold 12px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('v', leftX + blockW / 2 + 20, m1Center + v1Dir * vLen + v1Dir * 12);
-    ctx.fillText('v', rightX - blockW / 2 - 20, m2Center - v1Dir * vLen - v1Dir * 12 + 10);
+    posLabel(lblV1, leftX + blockW / 2 + 20, m1Center + v1Dir * vLen + v1Dir * 6, katexV, 'center');
+    posLabel(lblV2, rightX - blockW / 2 - 20, m2Center - v1Dir * vLen - v1Dir * 6, katexV, 'center');
+  } else {
+    hideLabel(lblV1);
+    hideLabel(lblV2);
   }
 }
 

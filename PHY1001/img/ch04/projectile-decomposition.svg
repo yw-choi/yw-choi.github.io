@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 450" font-family="sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 480" font-family="sans-serif">
   <defs>
     <marker id="ar-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
       <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
@@ -13,27 +13,27 @@
   <!-- Ground -->
   <rect x="40" y="380" width="680" height="40" fill="#F3F4F6" rx="4"/>
   <!-- Parabolic path -->
-  <path d="M 80 380 Q 220 40, 680 380" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="6 4"/>
+  <path d="M 80 380 Q 220 40, 680 380" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
   <!-- Point 1: launch -->
   <circle cx="80" cy="380" r="5" fill="#8B0029"/>
   <!-- v0 at launch -->
   <line x1="80" y1="380" x2="150" y2="300" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar-red)"/>
   <text x="115" y="310" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">v₀</text>
   <!-- vx component -->
-  <line x1="80" y1="380" x2="150" y2="380" stroke="#2563EB" stroke-width="2" marker-end="url(#ar-blue)"/>
-  <text x="105" y="400" font-size="12" fill="#2563EB" font-style="italic">v₀ₓ</text>
+  <line x1="80" y1="380" x2="150" y2="380" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-blue)"/>
+  <text x="105" y="400" font-size="14" fill="#2563EB" font-style="italic">v₀ₓ</text>
   <!-- vy component -->
-  <line x1="80" y1="380" x2="80" y2="300" stroke="#2563EB" stroke-width="2" marker-end="url(#ar-blue)"/>
-  <text x="55" y="340" font-size="12" fill="#2563EB" font-style="italic">v₀ᵧ</text>
+  <line x1="80" y1="380" x2="80" y2="300" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-blue)"/>
+  <text x="55" y="340" font-size="14" fill="#2563EB" font-style="italic">v₀ᵧ</text>
   <!-- angle -->
   <path d="M 110 380 A 30 30 0 0 0 80 350" fill="none" stroke="#6B7280" stroke-width="1"/>
-  <text x="105" y="365" font-size="13" fill="#6B7280" font-style="italic">θ₀</text>
+  <text x="105" y="365" font-size="14" fill="#6B7280" font-style="italic">θ₀</text>
   <!-- Point 2: ascending -->
   <circle cx="210" cy="195" r="5" fill="#8B0029"/>
   <line x1="210" y1="195" x2="280" y2="165" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar-red)"/>
   <text x="255" y="155" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">v</text>
-  <line x1="210" y1="195" x2="280" y2="195" stroke="#2563EB" stroke-width="2" marker-end="url(#ar-blue)"/>
-  <line x1="210" y1="195" x2="210" y2="165" stroke="#2563EB" stroke-width="2" marker-end="url(#ar-blue)"/>
+  <line x1="210" y1="195" x2="280" y2="195" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-blue)"/>
+  <line x1="210" y1="195" x2="210" y2="165" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-blue)"/>
   <!-- Point 3: top -->
   <circle cx="380" cy="80" r="5" fill="#8B0029"/>
   <line x1="380" y1="80" x2="450" y2="80" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar-red)"/>
@@ -46,15 +46,18 @@
   <circle cx="540" cy="195" r="5" fill="#8B0029"/>
   <line x1="540" y1="195" x2="610" y2="225" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar-red)"/>
   <text x="590" y="218" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">v</text>
-  <line x1="540" y1="195" x2="610" y2="195" stroke="#2563EB" stroke-width="2" marker-end="url(#ar-blue)"/>
-  <line x1="540" y1="195" x2="540" y2="225" stroke="#2563EB" stroke-width="2" marker-end="url(#ar-blue)"/>
+  <line x1="540" y1="195" x2="610" y2="195" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-blue)"/>
+  <line x1="540" y1="195" x2="540" y2="225" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-blue)"/>
   <!-- Point 5: landing -->
   <circle cx="680" cy="380" r="5" fill="#8B0029"/>
-  <line x1="680" y1="380" x2="680" y2="300" stroke="#2563EB" stroke-width="2" marker-end="url(#ar-blue)"/>
-  <line x1="680" y1="380" x2="610" y2="300" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar-red)"/>
-  <line x1="680" y1="380" x2="610" y2="380" stroke="#2563EB" stroke-width="2" marker-end="url(#ar-blue)"/>
+  <!-- vy at landing: points DOWNWARD (projectile descending), below ground line -->
+  <line x1="680" y1="380" x2="680" y2="460" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-blue)"/>
+  <!-- net velocity at landing: rightward and downward -->
+  <line x1="680" y1="380" x2="750" y2="455" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar-red)"/>
+  <!-- vx at landing: points rightward -->
+  <line x1="680" y1="380" x2="750" y2="380" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-blue)"/>
   <!-- Range label -->
-  <line x1="80" y1="410" x2="680" y2="410" stroke="#6B7280" stroke-width="1.5" marker-end="url(#ar-gray)"/>
-  <line x1="680" y1="410" x2="80" y2="410" stroke="#6B7280" stroke-width="1.5" marker-end="url(#ar-gray)"/>
+  <line x1="80" y1="410" x2="680" y2="410" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ar-gray)"/>
+  <line x1="680" y1="410" x2="80" y2="410" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ar-gray)"/>
   <text x="360" y="435" font-size="14" fill="#6B7280" text-anchor="middle" font-style="italic">R (도달거리)</text>
 </svg>

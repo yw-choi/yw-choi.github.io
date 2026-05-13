@@ -39,6 +39,25 @@ button.reset-btn:hover { background: #a3003a; }
 .canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
 .canvas-title .katex { font-size: 18px; color: #8B0029; }
 
+/* KaTeX overlay labels on canvas */
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute;
+  white-space: nowrap;
+  line-height: 1;
+  font-size: 13px;
+  pointer-events: none;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.92em; }
+.canvas-overlay .katex-label.with-bg {
+  background: rgba(255,255,255,0.85);
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+
 @media (max-width: 700px) {
   .container { flex-direction: column; }
   .canvas-area { height: 55vh; }
@@ -50,6 +69,13 @@ button.reset-btn:hover { background: #a3003a; }
 <div class="container">
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-e0" style="color:#8B0029;"></div>
+      <div class="katex-label" id="lbl-eth-bar" style="color:#6B7280;"></div>
+      <div class="katex-label with-bg" id="lbl-friction" style="color:rgba(200,100,0,0.85);"></div>
+      <div class="katex-label with-bg" id="lbl-theta" style="color:#6B7280;"></div>
+      <div class="katex-label with-bg" id="lbl-predict" style="color:#2563EB;font-size:12px;"></div>
+    </div>
     <div class="canvas-title" id="canvasTitle"></div>
   </div>
   <div class="controls">
@@ -98,6 +124,20 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 let dpr = window.devicePixelRatio || 1;
 let CW, CH;
+
+// Overlay label references
+const lblE0 = document.getElementById('lbl-e0');
+const lblEthBar = document.getElementById('lbl-eth-bar');
+const lblFriction = document.getElementById('lbl-friction');
+const lblTheta = document.getElementById('lbl-theta');
+const lblPredict = document.getElementById('lbl-predict');
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
+}
 
 const heightSlider = document.getElementById('heightSlider');
 const massSlider = document.getElementById('massSlider');
@@ -197,8 +237,14 @@ function step(ts) {
   // Acceleration depends on position
   let a;
   if (s < slopeSurfLen) {
-    // On slope
-    a = g * Math.sin(theta) - mu * g * Math.cos(theta);
+    // On slope: check if friction prevents motion (static case)
+    const aSlope = g * Math.sin(theta) - mu * g * Math.cos(theta);
+    if (aSlope <= 0 && v < 0.001) {
+      // Friction too strong, object can't move
+      v = 0;
+      updateInfo(); draw(); stop(); return;
+    }
+    a = aSlope;
   } else {
     // On flat
     a = -mu * g;
@@ -236,6 +282,8 @@ function updateInfo() {
 
   const infoBox = document.getElementById('infoBox');
   let html = '';
+  const thetaDegInfo = Math.atan2(h, slopeLen) * 180 / Math.PI;
+  html += '<span class="label">빗면 각도:</span> <span class="val">' + tex('\\theta = ' + thetaDegInfo.toFixed(1) + '^\\circ') + '</span><br>';
   html += '<span class="label">높이 y:</span> <span class="val">' + yNow.toFixed(2) + ' m</span><br>';
   html += '<span class="label">속력 v:</span> <span class="val">' + v.toFixed(2) + ' m/s</span><br>';
   html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
@@ -266,6 +314,12 @@ function drawArrow(x1, y1, x2, y2, color, lw) {
 
 function draw() {
   ctx.clearRect(0, 0, CW, CH);
+  // Hide all overlay labels (re-shown as needed below)
+  lblE0.style.display = 'none';
+  lblEthBar.style.display = 'none';
+  lblFriction.style.display = 'none';
+  lblTheta.style.display = 'none';
+  lblPredict.style.display = 'none';
   const { h, m, mu, slopeLen } = getParams();
   const slopeSurfLen = Math.sqrt(slopeLen * slopeLen + h * h);
   const flatLen = trackTotalLen - slopeLen;
@@ -315,6 +369,33 @@ function draw() {
   ctx.setLineDash([]);
   ctx.fillStyle = '#6B7280'; ctx.font = '13px sans-serif'; ctx.textAlign = 'right';
   ctx.fillText('h = ' + h.toFixed(1) + ' m', slopeStartPx - 20, (slopeTopY + groundY) / 2 + 4);
+
+  // Angle arc at bottom of slope
+  const thetaDeg = Math.atan2(h, slopeLen) * 180 / Math.PI;
+  const arcR = 35;
+  const slopeAnglePx = Math.atan2(hPx, slopeEndPx - slopeStartPx);
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1.5; ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.arc(slopeEndPx, groundY, arcR, Math.PI, Math.PI - slopeAnglePx, true);
+  ctx.stroke();
+  // θ label via KaTeX overlay — position at midpoint of arc
+  const midAngle = Math.PI - slopeAnglePx / 2;
+  const thetaLabelX = slopeEndPx + (arcR + 12) * Math.cos(midAngle);
+  const thetaLabelY = groundY + (arcR + 12) * Math.sin(midAngle) - 8;
+  posLabel(lblTheta, thetaLabelX, thetaLabelY, tex('\\theta = ' + thetaDeg.toFixed(1) + '^\\circ'));
+  lblTheta.style.transform = 'translateX(-50%)';
+
+  // Predicted bottom speed (no friction)
+  const vPred = Math.sqrt(2 * g * h);
+  const vPredFriction = mu > 0 ? Math.sqrt(Math.max(2 * g * h - 2 * mu * g * Math.cos(Math.atan2(h, slopeLen)) * Math.sqrt(slopeLen * slopeLen + h * h), 0)) : vPred;
+  const predictX = slopeEndPx + 30;
+  const predictY = groundY + 40;
+  if (s < 0.01) {
+    const predLabel = mu > 0
+      ? tex('v_{\\text{pred}} = \\sqrt{2g(h - \\mu_k d\\cos\\theta)} = ' + vPredFriction.toFixed(2) + '\\text{ m/s}')
+      : tex('v_{\\text{bottom}} = \\sqrt{2gh} = ' + vPred.toFixed(2) + '\\text{ m/s}');
+    posLabel(lblPredict, predictX, predictY, predLabel);
+  }
 
   // Ball position
   const yNow = getTrackY(s);
@@ -401,7 +482,15 @@ function draw() {
 
   drawBar(0, K, '#2563EB', 'K');
   drawBar(1, U, '#8B0029', 'U');
-  if (mu > 0) drawBar(2, Eth, '#6B7280', 'E_th');
+  if (mu > 0) drawBar(2, Eth, '#6B7280', '');
+  // E_th bar label via KaTeX overlay
+  if (mu > 0) {
+    const ethBarX = barStartX + 2 * (barW + barGap) + barW / 2;
+    posLabel(lblEthBar, ethBarX, barBaseY + 6, tex('E_{\\text{th}}'));
+    lblEthBar.style.transform = 'translateX(-50%)';
+  } else {
+    lblEthBar.style.display = 'none';
+  }
 
   // Emec line
   const emecBarH = (K + U) * eScale;
@@ -411,13 +500,15 @@ function draw() {
   ctx.lineTo(barStartX + barTotalW + 8, barBaseY - Emec0 * eScale);
   ctx.stroke();
   ctx.setLineDash([]);
-  ctx.fillStyle = '#8B0029'; ctx.font = '11px sans-serif'; ctx.textAlign = 'right';
-  ctx.fillText('E₀ = ' + Emec0.toFixed(1), barStartX - 12, barBaseY - Emec0 * eScale + 4);
+  posLabel(lblE0, barStartX - 14, barBaseY - Emec0 * eScale - 6, tex('E_0 = ' + Emec0.toFixed(1)));
+  lblE0.style.transform = 'translateX(-100%)';
 
-  // Friction indicator
+  // Friction indicator via KaTeX overlay
   if (mu > 0 && v > 0.1 && s >= slopeSurfLen * 0.1) {
-    ctx.fillStyle = 'rgba(200,100,0,0.6)'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('마찰: μk = ' + mu.toFixed(2), ballPxX, ballPxY + ballR + 20);
+    posLabel(lblFriction, ballPxX, ballPxY + ballR + 12, '마찰: ' + tex('\\mu_k = ' + mu.toFixed(2)));
+    lblFriction.style.transform = 'translateX(-50%)';
+  } else {
+    lblFriction.style.display = 'none';
   }
 }
 

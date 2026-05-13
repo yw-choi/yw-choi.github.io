@@ -38,6 +38,25 @@ button.reset-btn:hover { background: #a3003a; }
 .formula-overlay .formula-line.highlight { color: #8B0029; font-weight: 700; }
 .formula-overlay .katex { font-size: 14px; }
 
+/* KaTeX overlay labels on canvas */
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute;
+  white-space: nowrap;
+  font-size: 11px;
+  line-height: 1;
+  pointer-events: none;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.92em; }
+.canvas-overlay .katex-label.with-bg {
+  background: rgba(255,255,255,0.85);
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+
 @media (max-width: 700px) {
   .container { flex-direction: column; }
   .canvas-area { height: 50vh; }
@@ -49,6 +68,15 @@ button.reset-btn:hover { background: #a3003a; }
 <div class="container">
   <div class="canvas-area">
     <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label" id="lbl-m1" style="color:#8B0029;font-weight:bold;"></div>
+      <div class="katex-label" id="lbl-m2" style="color:#2563EB;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lbl-v1" style="color:#8B0029;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lbl-v2" style="color:#2563EB;font-weight:bold;"></div>
+      <div class="katex-label" id="lbl-p1" style="color:#8B0029;"></div>
+      <div class="katex-label" id="lbl-p2" style="color:#2563EB;"></div>
+      <div class="katex-label" id="lbl-ptot" style="color:#444;font-weight:bold;"></div>
+    </div>
     <div class="canvas-title" id="canvasTitle"></div>
     <div class="formula-overlay" id="formulaOverlay">
       <div class="formula-line" id="formulaPx"></div>
@@ -112,6 +140,30 @@ function tex(expr) {
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
+
+// KaTeX overlay label elements
+const lblM1 = document.getElementById('lbl-m1');
+const lblM2 = document.getElementById('lbl-m2');
+const lblV1 = document.getElementById('lbl-v1');
+const lblV2 = document.getElementById('lbl-v2');
+const lblP1 = document.getElementById('lbl-p1');
+const lblP2 = document.getElementById('lbl-p2');
+const lblPtot = document.getElementById('lbl-ptot');
+
+function posLabel(el, px, py, html) {
+  if (el._prevHtml !== html) { el.innerHTML = html; el._prevHtml = html; }
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
+}
+function hideLabel(el) { el.style.display = 'none'; }
+
+// Pre-render static KaTeX strings
+const texM1 = tex('m_1');
+const texM2 = tex('m_2');
+const texP1 = tex('\\vec{p}_1');
+const texP2 = tex('\\vec{p}_2');
+const texPtot = tex('\\vec{p}_1 + \\vec{p}_2');
 
 const m1Slider = document.getElementById('m1Slider');
 const v1iSlider = document.getElementById('v1iSlider');
@@ -408,12 +460,8 @@ function draw() {
   ctx.strokeStyle = '#8B0029';
   ctx.lineWidth = 2;
   ctx.stroke();
-  ctx.fillStyle = '#8B0029';
-  ctx.font = 'bold 12px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('m\u2081', s1x, s1y);
-  ctx.textBaseline = 'alphabetic';
+  // m1 label via KaTeX overlay
+  posLabel(lblM1, s1x - 8, s1y - 7, texM1);
 
   // Ball 2
   const r2px = radius(m2);
@@ -425,12 +473,8 @@ function draw() {
   ctx.strokeStyle = '#2563EB';
   ctx.lineWidth = 2;
   ctx.stroke();
-  ctx.fillStyle = '#2563EB';
-  ctx.font = 'bold 12px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('m\u2082', s2x, s2y);
-  ctx.textBaseline = 'alphabetic';
+  // m2 label via KaTeX overlay
+  posLabel(lblM2, s2x - 8, s2y - 7, texM2);
 
   // Velocity arrows
   const vScale = 12;
@@ -440,7 +484,9 @@ function draw() {
     const endX = s1x + vx1 * vScale;
     const endY = s1y - vy1 * vScale;
     drawArrow(s1x, s1y, endX, endY, '#8B0029', 2.5);
-    drawTextWithBg('v\u2081=' + v1mag.toFixed(1), (s1x + endX) / 2, Math.min(s1y, endY) - 15, 'bold 12px sans-serif', '#8B0029');
+    posLabel(lblV1, (s1x + endX) / 2 - 20, Math.min(s1y, endY) - 22, tex('v_1 = ' + v1mag.toFixed(1)));
+  } else {
+    hideLabel(lblV1);
   }
   // v2
   const v2mag = Math.sqrt(vx2 * vx2 + vy2 * vy2);
@@ -448,7 +494,9 @@ function draw() {
     const endX = s2x + vx2 * vScale;
     const endY = s2y - vy2 * vScale;
     drawArrow(s2x, s2y, endX, endY, '#2563EB', 2.5);
-    drawTextWithBg('v\u2082=' + v2mag.toFixed(1), (s2x + endX) / 2, Math.max(s2y, endY) + 20, 'bold 12px sans-serif', '#2563EB');
+    posLabel(lblV2, (s2x + endX) / 2 - 20, Math.max(s2y, endY) + 8, tex('v_2 = ' + v2mag.toFixed(1)));
+  } else {
+    hideLabel(lblV2);
   }
 
   // Momentum vectors (bottom left)
@@ -469,25 +517,25 @@ function drawMomentumVectors() {
   const p1x = m1 * vx1, p1y = m1 * vy1;
   if (Math.sqrt(p1x * p1x + p1y * p1y) > 0.1) {
     drawArrow(baseX, baseY, baseX + p1x * pScale, baseY - p1y * pScale, '#8B0029', 2);
-    ctx.fillStyle = '#8B0029';
-    ctx.font = '11px sans-serif';
-    ctx.fillText('p\u2081', baseX + p1x * pScale + 5, baseY - p1y * pScale);
+    posLabel(lblP1, baseX + p1x * pScale + 5, baseY - p1y * pScale - 8, texP1);
+  } else {
+    hideLabel(lblP1);
   }
   // p2 vector
   const p2x = m2 * vx2, p2y = m2 * vy2;
   if (Math.sqrt(p2x * p2x + p2y * p2y) > 0.1) {
     drawArrow(baseX, baseY, baseX + p2x * pScale, baseY - p2y * pScale, '#2563EB', 2);
-    ctx.fillStyle = '#2563EB';
-    ctx.font = '11px sans-serif';
-    ctx.fillText('p\u2082', baseX + p2x * pScale + 5, baseY - p2y * pScale);
+    posLabel(lblP2, baseX + p2x * pScale + 5, baseY - p2y * pScale - 8, texP2);
+  } else {
+    hideLabel(lblP2);
   }
   // Total momentum
   const ptx = p1x + p2x, pty = p1y + p2y;
   if (Math.sqrt(ptx * ptx + pty * pty) > 0.1) {
     drawArrow(baseX, baseY, baseX + ptx * pScale, baseY - pty * pScale, '#444', 2.5);
-    ctx.fillStyle = '#444';
-    ctx.font = 'bold 11px sans-serif';
-    ctx.fillText('p\u2081+p\u2082', baseX + ptx * pScale + 5, baseY - pty * pScale - 5);
+    posLabel(lblPtot, baseX + ptx * pScale + 5, baseY - pty * pScale - 14, texPtot);
+  } else {
+    hideLabel(lblPtot);
   }
 
   // Origin dot

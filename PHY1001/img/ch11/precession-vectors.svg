@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 380" font-family="sans-serif">
+  <defs>
+    <marker id="pvR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="pvB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="pvG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="220" y="28" text-anchor="middle" font-size="15" fill="#6B7280">위에서 본 모습 (top view)</text>
+
+  <!-- Precession circle (dashed) -->
+  <circle cx="220" cy="195" r="150" fill="none" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="6 5"/>
+
+  <!-- Center point (vertical axis seen from above) -->
+  <circle cx="220" cy="195" r="4" fill="#6B7280"/>
+  <text x="205" y="218" font-size="14" fill="#6B7280">O</text>
+
+  <!-- L(t) vector: horizontal right, from center to circle edge -->
+  <line x1="220" y1="195" x2="365" y2="195" stroke="#8B0029" stroke-width="2.5" marker-end="url(#pvR)"/>
+
+  <!-- L(t) label below the arrow -->
+  <text x="340" y="225" font-size="17" font-weight="bold" fill="#8B0029">
+    <tspan font-style="italic">L</tspan><tspan font-size="13">(t)</tspan>
+  </text>
+
+  <!-- L(t+dt) vector: 25° counterclockwise from L(t) -->
+  <!-- cos25°=0.906, sin25°=0.423 → endpoint: (220+136, 195-63) = (356, 132) -->
+  <line x1="220" y1="195" x2="352" y2="132" stroke="#8B0029" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#pvR)"/>
+
+  <!-- L(t+dt) label -->
+  <text x="360" y="122" font-size="17" font-weight="bold" fill="#8B0029">
+    <tspan font-style="italic">L</tspan><tspan font-size="13">(t+dt)</tspan>
+  </text>
+
+  <!-- dL vector: from L(t) tip to L(t+dt) tip -->
+  <line x1="370" y1="195" x2="356" y2="135" stroke="#2563EB" stroke-width="2.5" marker-end="url(#pvB)"/>
+
+  <!-- dL label to the right -->
+  <text x="388" y="155" font-size="18" font-weight="bold" fill="#2563EB">
+    <tspan font-style="italic">dL</tspan>
+  </text>
+  <text x="388" y="175" font-size="14" fill="#2563EB">= <tspan font-style="italic" font-weight="bold">τ</tspan> dt</text>
+
+  <!-- dφ angle arc at center, radius 55 -->
+  <!-- From (275, 195) to (220+55·cos25°, 195-55·sin25°) = (270, 172) -->
+  <path d="M 275,195 A 55,55 0 0,0 270,172" fill="none" stroke="#6B7280" stroke-width="1.5"/>
+  <text x="282" y="180" font-size="17" font-style="italic" fill="#6B7280">dφ</text>
+
+  <!-- |L| = |L+dL| annotation: show both have same length -->
+  <!-- Dashed radial lines to emphasize equal lengths -->
+
+  <!-- Precession direction indicator on circle (upper arc) -->
+  <path d="M 320,72 A 150,150 0 0,0 130,72" fill="none" stroke="#6B7280" stroke-width="2" marker-end="url(#pvG)"/>
+  <text x="225" y="60" text-anchor="middle" font-size="14" fill="#6B7280">세차 방향</text>
+
+  <!-- Key relationship at bottom -->
+  <text x="250" y="355" text-anchor="middle" font-size="16" fill="#6B7280">
+    |<tspan font-style="italic">d</tspan><tspan font-style="italic" font-weight="bold">L</tspan>| = <tspan font-style="italic">L</tspan> · <tspan font-style="italic">dφ</tspan> = <tspan font-style="italic">τ</tspan> · d<tspan font-style="italic">t</tspan> = <tspan font-style="italic">Mgr</tspan> · d<tspan font-style="italic">t</tspan>
+  </text>
+</svg>

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 380" font-family="sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 400" font-family="sans-serif">
   <defs>
     <marker id="velArrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
       <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
@@ -9,51 +9,68 @@
   </defs>
 
   <!-- Title: Before -->
-  <text x="190" y="35" font-size="18" fill="#1a1a1a" text-anchor="middle" font-weight="bold">충돌 전</text>
-  <line x1="30" y1="50" x2="370" y2="50" stroke="#eee" stroke-width="1"/>
+  <text x="190" y="35" font-size="14" fill="#000000" text-anchor="middle" font-weight="bold">충돌 전</text>
+  <line x1="30" y1="50" x2="370" y2="50" stroke="#6B7280" stroke-width="1"/>
 
   <!-- Ground before -->
-  <line x1="30" y1="180" x2="370" y2="180" stroke="#bbb" stroke-width="1.5"/>
+  <line x1="30" y1="200" x2="370" y2="200" stroke="#6B7280" stroke-width="1"/>
 
   <!-- Object 1 before -->
-  <rect x="80" y="120" width="60" height="60" rx="4" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
-  <text x="110" y="155" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="bold" font-style="italic">m<tspan font-size="10" dy="3">1</tspan></text>
+  <rect x="80" y="140" width="60" height="60" rx="4" fill="#F3F4F6" stroke="#000000" stroke-width="2"/>
+  <text x="110" y="176" font-size="14" fill="#000000" text-anchor="middle" font-weight="bold">
+    <tspan font-style="italic">m</tspan><tspan font-size="10" baseline-shift="sub">1</tspan>
+  </text>
   <!-- v1i arrow -->
-  <line x1="145" y1="100" x2="210" y2="100" stroke="#2563EB" stroke-width="2.5" marker-end="url(#velArrow)"/>
-  <text x="178" y="92" font-size="14" fill="#2563EB" text-anchor="middle" font-weight="bold" font-style="italic">v<tspan font-size="10" dy="3">1i</tspan></text>
+  <line x1="145" y1="115" x2="215" y2="115" stroke="#2563EB" stroke-width="2.5" marker-end="url(#velArrow)"/>
+  <text x="180" y="107" font-size="14" fill="#2563EB" text-anchor="middle" font-weight="bold">
+    <tspan font-style="italic">v</tspan><tspan font-size="10" baseline-shift="sub">1i</tspan>
+  </text>
 
   <!-- Object 2 before -->
-  <rect x="240" y="110" width="80" height="70" rx="4" fill="#F3F4F6" stroke="#1a1a1a" stroke-width="2"/>
-  <text x="280" y="150" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="bold" font-style="italic">m<tspan font-size="10" dy="3">2</tspan></text>
+  <rect x="240" y="130" width="80" height="70" rx="4" fill="#F3F4F6" stroke="#000000" stroke-width="2"/>
+  <text x="280" y="172" font-size="14" fill="#000000" text-anchor="middle" font-weight="bold">
+    <tspan font-style="italic">m</tspan><tspan font-size="10" baseline-shift="sub">2</tspan>
+  </text>
   <!-- v2i = 0 label -->
-  <text x="280" y="95" font-size="14" fill="#6B7280" text-anchor="middle" font-style="italic">v<tspan font-size="10" dy="3">2i</tspan><tspan dy="-3"> = 0</tspan></text>
+  <text x="280" y="115" font-size="14" fill="#6B7280" text-anchor="middle">
+    <tspan font-style="italic">v</tspan><tspan font-size="10" baseline-shift="sub">2i</tspan> = 0
+  </text>
 
   <!-- Arrow between sections -->
-  <text x="375" y="155" font-size="30" fill="#6B7280" text-anchor="middle">&#x2192;</text>
+  <text x="375" y="165" font-size="24" fill="#6B7280" text-anchor="middle">&#x2192;</text>
 
   <!-- Title: After -->
-  <text x="560" y="35" font-size="18" fill="#1a1a1a" text-anchor="middle" font-weight="bold">충돌 후</text>
-  <line x1="390" y1="50" x2="730" y2="50" stroke="#eee" stroke-width="1"/>
+  <text x="560" y="35" font-size="14" fill="#000000" text-anchor="middle" font-weight="bold">충돌 후</text>
+  <line x1="390" y1="50" x2="730" y2="50" stroke="#6B7280" stroke-width="1"/>
 
   <!-- Ground after -->
-  <line x1="390" y1="180" x2="730" y2="180" stroke="#bbb" stroke-width="1.5"/>
+  <line x1="390" y1="200" x2="730" y2="200" stroke="#6B7280" stroke-width="1"/>
 
   <!-- Combined object after (perfectly inelastic) -->
-  <rect x="480" y="108" width="140" height="72" rx="4" fill="#F3F4F6" stroke="#8B0029" stroke-width="2"/>
-  <text x="530" y="148" font-size="13" fill="#1a1a1a" text-anchor="middle" font-weight="bold" font-style="italic">m<tspan font-size="10" dy="3">1</tspan></text>
-  <text x="560" y="148" font-size="13" fill="#1a1a1a" text-anchor="middle">+</text>
-  <text x="590" y="148" font-size="13" fill="#1a1a1a" text-anchor="middle" font-weight="bold" font-style="italic">m<tspan font-size="10" dy="3">2</tspan></text>
+  <rect x="480" y="128" width="140" height="72" rx="4" fill="#F3F4F6" stroke="#8B0029" stroke-width="2"/>
+  <text x="550" y="170" font-size="14" fill="#000000" text-anchor="middle" font-weight="bold">
+    <tspan font-style="italic">m</tspan><tspan font-size="10" baseline-shift="sub">1</tspan>
+    + <tspan font-style="italic">m</tspan><tspan font-size="10" baseline-shift="sub">2</tspan>
+  </text>
 
   <!-- vf arrow -->
-  <line x1="625" y1="100" x2="690" y2="100" stroke="#8B0029" stroke-width="2.5" marker-end="url(#velArrowRed)"/>
-  <text x="658" y="92" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">v<tspan font-size="10" dy="3">f</tspan></text>
+  <line x1="625" y1="115" x2="695" y2="115" stroke="#8B0029" stroke-width="2.5" marker-end="url(#velArrowRed)"/>
+  <text x="660" y="107" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold">
+    <tspan font-style="italic">v</tspan><tspan font-size="10" baseline-shift="sub">f</tspan>
+  </text>
 
   <!-- Momentum conservation equation -->
-  <rect x="100" y="220" width="550" height="60" rx="8" fill="#f8f0f2" stroke="#e0c0c8" stroke-width="1"/>
-  <text x="375" y="248" font-size="15" fill="#8B0029" text-anchor="middle" font-weight="bold">운동량 보존 (완전 비탄성 충돌)</text>
-  <text x="375" y="270" font-size="14" fill="#8B0029" text-anchor="middle" font-style="italic">m<tspan font-size="10" dy="3">1</tspan><tspan dy="-3">v</tspan><tspan font-size="10" dy="3">1i</tspan><tspan dy="-3"> = (m</tspan><tspan font-size="10" dy="3">1</tspan><tspan dy="-3"> + m</tspan><tspan font-size="10" dy="3">2</tspan><tspan dy="-3">)v</tspan><tspan font-size="10" dy="3">f</tspan></text>
+  <rect x="100" y="235" width="550" height="70" rx="8" fill="#F3F4F6" stroke="#8B0029" stroke-width="1"/>
+  <text x="375" y="260" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold">운동량 보존 (완전 비탄성 충돌)</text>
+  <text x="375" y="285" font-size="14" fill="#8B0029" text-anchor="middle">
+    <tspan font-style="italic">m</tspan><tspan font-size="10" baseline-shift="sub">1</tspan><tspan font-style="italic">v</tspan><tspan font-size="10" baseline-shift="sub">1i</tspan>
+    = (<tspan font-style="italic">m</tspan><tspan font-size="10" baseline-shift="sub">1</tspan>
+    + <tspan font-style="italic">m</tspan><tspan font-size="10" baseline-shift="sub">2</tspan>)<tspan font-style="italic">v</tspan><tspan font-size="10" baseline-shift="sub">f</tspan>
+  </text>
 
   <!-- Label: perfectly inelastic -->
-  <text x="375" y="340" font-size="13" fill="#6B7280" text-anchor="middle">두 물체가 결합하여 함께 움직임 &#x2192; 운동에너지 일부 손실</text>
-  <text x="375" y="362" font-size="13" fill="#6B7280" text-anchor="middle" font-style="italic">&#x394;K &lt; 0</text>
+  <text x="375" y="340" font-size="14" fill="#6B7280" text-anchor="middle">두 물체가 결합하여 함께 움직임 &#x2192; 운동에너지 일부 손실</text>
+  <text x="375" y="365" font-size="14" fill="#6B7280" text-anchor="middle">
+    <tspan font-style="italic">&#x394;K</tspan> &lt; 0
+  </text>
 </svg>

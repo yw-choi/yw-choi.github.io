@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>열역학 과정 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; }
+canvas { width: 100%; height: 100%; display: block; }
+.controls { width: 260px; padding: 14px; background: #faf5f6; border-left: 2px solid rgba(139,0,41,0.15); overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+h2 { color: #8B0029; font-size: 1.05rem; margin-bottom: 2px; }
+.subtitle { color: #888; font-size: 0.72rem; margin-bottom: 4px; }
+label { display: block; font-size: 0.78rem; color: #555; margin-bottom: 2px; }
+.slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.slider-row input[type="range"] { flex: 1; accent-color: #8B0029; }
+.slider-row select { flex: 1; padding: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; }
+.slider-val { font-size: 0.78rem; font-weight: 600; color: #8B0029; min-width: 55px; text-align: right; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 0.74rem; line-height: 1.7; color: #555; }
+.formula-box .katex { font-size: 0.92em; }
+.formula-box b { color: #8B0029; }
+.info-box { background: white; border: 1px solid rgba(139,0,41,0.15); border-radius: 8px; padding: 8px 10px; font-size: 0.74rem; line-height: 1.7; }
+.info-box .lbl { color: #555; }
+.info-box .val { color: #8B0029; font-weight: 700; font-family: ui-monospace, monospace; }
+.info-box .val-blue { color: #2563EB; font-weight: 700; font-family: ui-monospace, monospace; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+button { flex: 1; padding: 7px; border: none; border-radius: 8px; font-size: 0.78rem; font-weight: 600; cursor: pointer; min-width: 60px; }
+.btn-primary { background: #8B0029; color: white; }
+.btn-primary:hover { background: #a3003a; }
+.btn-secondary { background: rgba(139,0,41,0.1); color: #8B0029; }
+.btn-secondary:hover { background: rgba(139,0,41,0.2); }
+.btn-active { background: #8B0029; color: white; }
+.process-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.process-btns button { font-size: 0.72rem; padding: 6px 4px; border: 1.5px solid #8B0029; background: white; color: #8B0029; border-radius: 6px; }
+.process-btns button.active { background: #8B0029; color: white; }
+
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.92); padding: 1px 5px; border-radius: 3px; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { flex: none; height: 55vh; }
+  .controls { width: 100%; border-left: none; border-top: 2px solid rgba(139,0,41,0.15); height: 45vh; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lblTitle" style="color:#8B0029;font-weight:bold;font-size:13px;"></div>
+      <div class="katex-label" id="lblXAxis" style="color:#444;font-weight:bold;"></div>
+      <div class="katex-label" id="lblYAxis" style="color:#444;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lblState" style="color:#8B0029;font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lblWork" style="color:#2563EB;"></div>
+      <div class="katex-label with-bg" id="lblLaw" style="color:#8B0029;font-weight:bold;font-size:12px;"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>열역학 과정</h2>
+      <div class="subtitle">Thermodynamic Processes &mdash; Ch.18.5</div>
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div>
+      <label>과정 선택</label>
+      <div class="process-btns">
+        <button id="btnIsobaric" class="active" onclick="setProcess('isobaric')">등압</button>
+        <button id="btnIsochoric" onclick="setProcess('isochoric')">등적</button>
+        <button id="btnIsothermal" onclick="setProcess('isothermal')">등온</button>
+        <button id="btnAdiabatic" onclick="setProcess('adiabatic')">단열</button>
+      </div>
+    </div>
+
+    <div>
+      <label>초기 압력 <i>p<sub>i</sub></i></label>
+      <div class="slider-row">
+        <input type="range" id="slP" min="50" max="400" step="10" value="200">
+        <span class="slider-val" id="valP">200 kPa</span>
+      </div>
+    </div>
+    <div>
+      <label>초기 부피 <i>V<sub>i</sub></i></label>
+      <div class="slider-row">
+        <input type="range" id="slV" min="1" max="8" step="0.5" value="2">
+        <span class="slider-val" id="valV">2.0 L</span>
+      </div>
+    </div>
+    <div>
+      <label>기체량 <i>n</i></label>
+      <div class="slider-row">
+        <input type="range" id="slN" min="0.01" max="0.20" step="0.01" value="0.05">
+        <span class="slider-val" id="valN">0.05 mol</span>
+      </div>
+    </div>
+    <div>
+      <label>최종 부피 비 V<sub>f</sub>/V<sub>i</sub></label>
+      <div class="slider-row">
+        <input type="range" id="slRatio" min="0.3" max="3.0" step="0.1" value="2.0">
+        <span class="slider-val" id="valRatio">2.0</span>
+      </div>
+    </div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="btn-row">
+      <button class="btn-primary" id="btnAnimate">▶ 애니메이션</button>
+      <button class="btn-secondary" id="btnReset">↻ 초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function kx(tex) { return katex.renderToString(tex, { throwOnError: false, displayMode: false }); }
+function posLabel(el, x, y, html) {
+  if (html !== undefined) el.innerHTML = html;
+  el.style.left = x + 'px'; el.style.top = y + 'px'; el.style.display = 'block';
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const dpr = window.devicePixelRatio || 1;
+
+const R_GAS = 8.314; // J/(mol·K)
+const GAMMA = 5/3; // monatomic ideal gas
+
+let processType = 'isobaric';
+let animProgress = 0; // 0 to 1
+let animating = false;
+let animId = null;
+
+const slP = document.getElementById('slP');
+const slV = document.getElementById('slV');
+const slN = document.getElementById('slN');
+const slRatio = document.getElementById('slRatio');
+const valP = document.getElementById('valP');
+const valV = document.getElementById('valV');
+const valN = document.getElementById('valN');
+const valRatio = document.getElementById('valRatio');
+
+function getParams() {
+  const pi = parseFloat(slP.value) * 1000; // Pa
+  const Vi = parseFloat(slV.value) * 1e-3; // m^3
+  const n = parseFloat(slN.value);
+  const ratio = parseFloat(slRatio.value);
+  const Ti = pi * Vi / (n * R_GAS);
+  return { pi, Vi, n, ratio, Ti };
+}
+
+function computeProcess(t) {
+  // t from 0 to 1, returns {p, V, T} along the process
+  const { pi, Vi, n, ratio, Ti } = getParams();
+  const Vf = Vi * ratio;
+  let p, V, T;
+
+  switch (processType) {
+    case 'isobaric':
+      V = Vi + (Vf - Vi) * t;
+      p = pi;
+      T = p * V / (n * R_GAS);
+      break;
+    case 'isochoric':
+      V = Vi;
+      // Change pressure instead: pf = pi * ratio
+      p = pi + (pi * ratio - pi) * t;
+      T = p * V / (n * R_GAS);
+      break;
+    case 'isothermal':
+      V = Vi + (Vf - Vi) * t;
+      T = Ti;
+      p = n * R_GAS * T / V;
+      break;
+    case 'adiabatic':
+      V = Vi + (Vf - Vi) * t;
+      p = pi * Math.pow(Vi / V, GAMMA);
+      T = p * V / (n * R_GAS);
+      break;
+  }
+  return { p, V, T };
+}
+
+function computeWork() {
+  // Numerical integration of p dV
+  const N = 200;
+  let W = 0;
+  for (let i = 0; i < N; i++) {
+    const t1 = (i / N) * animProgress;
+    const t2 = ((i + 1) / N) * animProgress;
+    const s1 = computeProcess(t1);
+    const s2 = computeProcess(t2);
+    W += 0.5 * (s1.p + s2.p) * (s2.V - s1.V);
+  }
+  return W;
+}
+
+function computeQ() {
+  const { pi, Vi, n, Ti } = getParams();
+  const final = computeProcess(animProgress);
+  const dEint = n * (3/2) * R_GAS * (final.T - Ti); // monatomic
+  const W = computeWork();
+  return dEint + W; // Q = dEint + W
+}
+
+function resize() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  draw();
+}
+
+function draw() {
+  const W = canvas.width / dpr;
+  const H = canvas.height / dpr;
+  ctx.save();
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  // Layout: left half = p-V diagram, right half = gas container
+  const pvLeft = 60, pvRight = W * 0.52, pvTop = 50, pvBottom = H - 50;
+  const pvW = pvRight - pvLeft, pvH = pvBottom - pvTop;
+
+  const gasLeft = W * 0.58, gasRight = W - 30, gasTop = 50, gasBottom = H - 50;
+  const gasW = gasRight - gasLeft, gasH = gasBottom - gasTop;
+
+  // Compute axis ranges
+  const { pi, Vi, n, ratio, Ti } = getParams();
+  let pMax, pMin, VMax, VMin;
+
+  VMin = 0;
+  if (processType === 'isochoric') {
+    VMax = Vi * 1.5;
+    pMin = 0;
+    pMax = Math.max(pi, pi * ratio) * 1.3;
+  } else {
+    const Vf = Vi * ratio;
+    VMin = 0;
+    VMax = Math.max(Vi, Vf) * 1.3;
+    if (processType === 'adiabatic' && ratio > 1) {
+      pMin = 0;
+      pMax = pi * 1.3;
+    } else if (processType === 'adiabatic' && ratio < 1) {
+      pMin = 0;
+      pMax = pi * Math.pow(Vi / (Vi * ratio), GAMMA) * 1.3;
+    } else {
+      pMin = 0;
+      pMax = pi * 1.5;
+      if (processType === 'isothermal' && ratio < 1) {
+        pMax = (n * R_GAS * Ti / (Vi * ratio)) * 1.3;
+      }
+    }
+  }
+
+  function toScreenX(V) { return pvLeft + (V - VMin) / (VMax - VMin) * pvW; }
+  function toScreenY(p) { return pvBottom - (p - pMin) / (pMax - pMin) * pvH; }
+
+  // Draw p-V axes
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(pvLeft, pvTop - 10);
+  ctx.lineTo(pvLeft, pvBottom);
+  ctx.lineTo(pvRight + 10, pvBottom);
+  ctx.stroke();
+
+  // Axis labels
+  posLabel(document.getElementById('lblXAxis'), pvRight - 20, pvBottom + 8,
+    kx('V\\;(\\text{L})'));
+  posLabel(document.getElementById('lblYAxis'), pvLeft - 50, pvTop - 5,
+    kx('p\\;(\\text{kPa})'));
+
+  // Tick marks on V axis
+  ctx.fillStyle = '#666'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+  const vStep = niceStep(VMax * 1000, 5); // in liters
+  for (let v = vStep; v * 1e-3 < VMax; v += vStep) {
+    const sx = toScreenX(v * 1e-3);
+    ctx.beginPath(); ctx.moveTo(sx, pvBottom); ctx.lineTo(sx, pvBottom + 5); ctx.stroke();
+    ctx.fillText(v.toFixed(v < 1 ? 1 : 0), sx, pvBottom + 18);
+  }
+
+  // Tick marks on p axis
+  ctx.textAlign = 'right';
+  const pStep = niceStep(pMax / 1000, 5); // in kPa
+  for (let p = pStep; p * 1000 < pMax; p += pStep) {
+    const sy = toScreenY(p * 1000);
+    ctx.beginPath(); ctx.moveTo(pvLeft - 5, sy); ctx.lineTo(pvLeft, sy); ctx.stroke();
+    ctx.fillText(p.toFixed(0), pvLeft - 8, sy + 4);
+  }
+
+  // Draw shaded area (work) up to animProgress
+  if (animProgress > 0 && processType !== 'isochoric') {
+    ctx.beginPath();
+    const start = computeProcess(0);
+    ctx.moveTo(toScreenX(start.V), pvBottom);
+    const steps = 100;
+    for (let i = 0; i <= steps; i++) {
+      const t = (i / steps) * animProgress;
+      const s = computeProcess(t);
+      ctx.lineTo(toScreenX(s.V), toScreenY(s.p));
+    }
+    const end = computeProcess(animProgress);
+    ctx.lineTo(toScreenX(end.V), pvBottom);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(139,0,41,0.1)';
+    ctx.fill();
+  }
+
+  // Draw process curve
+  ctx.beginPath();
+  ctx.strokeStyle = '#8B0029';
+  ctx.lineWidth = 2.5;
+  const steps = 100;
+  for (let i = 0; i <= steps; i++) {
+    const t = (i / steps) * animProgress;
+    const s = computeProcess(t);
+    const sx = toScreenX(s.V), sy = toScreenY(s.p);
+    if (i === 0) ctx.moveTo(sx, sy);
+    else ctx.lineTo(sx, sy);
+  }
+  ctx.stroke();
+
+  // Draw initial and current points
+  const init = computeProcess(0);
+  const curr = computeProcess(animProgress);
+
+  // Initial point
+  ctx.fillStyle = '#2563EB';
+  ctx.beginPath(); ctx.arc(toScreenX(init.V), toScreenY(init.p), 5, 0, Math.PI * 2); ctx.fill();
+
+  // Current point
+  ctx.fillStyle = '#8B0029';
+  ctx.beginPath(); ctx.arc(toScreenX(curr.V), toScreenY(curr.p), 6, 0, Math.PI * 2); ctx.fill();
+
+  // State label
+  posLabel(document.getElementById('lblState'),
+    toScreenX(curr.V) + 10, toScreenY(curr.p) - 15,
+    kx(`(${(curr.V*1000).toFixed(1)}\\text{ L},\\;${(curr.p/1000).toFixed(0)}\\text{ kPa})`));
+
+  // ===== Gas container visualization =====
+  const containerX = gasLeft + 20;
+  const containerW = gasW - 40;
+  const containerY = gasTop + 40;
+  const containerH = gasH - 80;
+
+  // Piston position based on volume ratio
+  const volFrac = curr.V / (VMax * 1.1);
+  const pistonY = containerY + containerH * (1 - volFrac);
+
+  // Temperature color
+  const Tmin = 200, Tmax = 1500;
+  const tFrac = Math.max(0, Math.min(1, (curr.T - Tmin) / (Tmax - Tmin)));
+  const r = Math.round(50 + 205 * tFrac);
+  const g = Math.round(100 + 50 * (1 - tFrac));
+  const b = Math.round(220 - 180 * tFrac);
+  const gasColor = `rgb(${r},${g},${b})`;
+
+  // Gas
+  ctx.fillStyle = gasColor;
+  ctx.globalAlpha = 0.3;
+  ctx.fillRect(containerX, pistonY, containerW, containerY + containerH - pistonY);
+  ctx.globalAlpha = 1;
+
+  // Container walls
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(containerX, containerY);
+  ctx.lineTo(containerX, containerY + containerH);
+  ctx.lineTo(containerX + containerW, containerY + containerH);
+  ctx.lineTo(containerX + containerW, containerY);
+  ctx.stroke();
+
+  // Piston
+  ctx.fillStyle = '#555';
+  ctx.fillRect(containerX - 5, pistonY - 6, containerW + 10, 12);
+  ctx.fillStyle = '#888';
+  ctx.fillRect(containerX + containerW / 2 - 4, pistonY - 40, 8, 40);
+
+  // Weight/arrow on piston
+  ctx.fillStyle = '#8B0029';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('W', containerX + containerW / 2, pistonY - 44);
+
+  // Temperature text in gas
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  const gasMidY = (pistonY + containerY + containerH) / 2;
+  ctx.fillText(`T = ${curr.T.toFixed(0)} K`, containerX + containerW / 2, gasMidY);
+  ctx.font = '12px sans-serif';
+  ctx.fillStyle = '#555';
+  ctx.fillText(`(${(curr.T - 273.15).toFixed(0)}°C)`, containerX + containerW / 2, gasMidY + 18);
+
+  // Molecular motion dots
+  const numDots = Math.round(10 + 20 * tFrac);
+  ctx.fillStyle = gasColor;
+  ctx.globalAlpha = 0.6;
+  const rng = mulberry32(42 + Math.floor(animProgress * 100));
+  for (let i = 0; i < numDots; i++) {
+    const dx = containerX + 10 + rng() * (containerW - 20);
+    const dy = pistonY + 15 + rng() * (containerY + containerH - pistonY - 25);
+    if (dy < containerY + containerH - 5) {
+      ctx.beginPath(); ctx.arc(dx, dy, 2 + rng() * 2, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  ctx.globalAlpha = 1;
+
+  // Container label
+  ctx.fillStyle = '#6B7280';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('이상 기체 (단원자)', containerX + containerW / 2, containerY + containerH + 20);
+
+  // Work label on p-V diagram
+  const W_val = computeWork();
+  const Q_val = computeQ();
+  const dEint = Q_val - W_val;
+
+  if (animProgress > 0.01) {
+    const workLabelX = (toScreenX(init.V) + toScreenX(curr.V)) / 2;
+    const workLabelY = pvBottom - 20;
+    posLabel(document.getElementById('lblWork'), workLabelX - 20, workLabelY,
+      kx(`W = ${(W_val).toFixed(1)}\\text{ J}`));
+  }
+
+  // Title
+  const processNames = {
+    isobaric: '등압 과정 (Isobaric)',
+    isochoric: '등적 과정 (Isochoric)',
+    isothermal: '등온 과정 (Isothermal)',
+    adiabatic: '단열 과정 (Adiabatic)'
+  };
+  posLabel(document.getElementById('lblTitle'), pvLeft, pvTop - 35, processNames[processType]);
+
+  // First law label
+  posLabel(document.getElementById('lblLaw'), gasLeft, gasBottom + 5,
+    kx(`\\Delta E_{\\text{int}} = Q - W`));
+
+  // Update info box
+  updateInfo(curr, W_val, Q_val, dEint);
+
+  ctx.restore();
+}
+
+function updateInfo(state, W, Q, dEint) {
+  const box = document.getElementById('infoBox');
+  box.innerHTML =
+    `<span class="lbl">상태:</span> <span class="val">${(state.p/1000).toFixed(1)} kPa, ${(state.V*1000).toFixed(2)} L, ${state.T.toFixed(0)} K</span><br>` +
+    `<span class="lbl">일 W:</span> <span class="val">${W.toFixed(1)} J</span><br>` +
+    `<span class="lbl">열 Q:</span> <span class="val-blue">${Q.toFixed(1)} J</span><br>` +
+    `<span class="lbl">${kx('\\Delta E_{\\text{int}}')}</span> <span class="val">${dEint.toFixed(1)} J</span>`;
+}
+
+function updateFormula() {
+  const box = document.getElementById('formulaBox');
+  const formulas = {
+    isobaric: `<b>등압 과정</b><br>${kx('p = \\text{const}')}<br>${kx('W = p\\Delta V = p(V_f - V_i)')}<br>${kx('Q = nC_p\\Delta T')}`,
+    isochoric: `<b>등적 과정</b><br>${kx('V = \\text{const}')}<br>${kx('W = 0')}<br>${kx('\\Delta E_{\\text{int}} = Q = nC_V\\Delta T')}`,
+    isothermal: `<b>등온 과정</b><br>${kx('T = \\text{const}')}<br>${kx('W = nRT\\ln(V_f/V_i)')}<br>${kx('\\Delta E_{\\text{int}} = 0,\\; Q = W')}`,
+    adiabatic: `<b>단열 과정</b><br>${kx('Q = 0')}<br>${kx('pV^\\gamma = \\text{const}')}<br>${kx('\\Delta E_{\\text{int}} = -W')}`
+  };
+  box.innerHTML = formulas[processType];
+}
+
+function setProcess(type) {
+  processType = type;
+  animProgress = 0;
+  stopAnim();
+  document.querySelectorAll('.process-btns button').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('active');
+  // Adjust ratio slider for isochoric
+  if (type === 'isochoric') {
+    slRatio.min = 0.3; slRatio.max = 3.0;
+    document.querySelector('label[for="slRatio"]')?.remove();
+  }
+  updateFormula();
+  draw();
+}
+
+function stopAnim() {
+  animating = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  document.getElementById('btnAnimate').textContent = '▶ 애니메이션';
+}
+
+function startAnim() {
+  animating = true;
+  animProgress = 0;
+  document.getElementById('btnAnimate').textContent = '⏸ 정지';
+  const startTime = performance.now();
+  const duration = 2000;
+  function step(now) {
+    const elapsed = now - startTime;
+    animProgress = Math.min(1, elapsed / duration);
+    draw();
+    if (animProgress < 1 && animating) {
+      animId = requestAnimationFrame(step);
+    } else {
+      animProgress = 1;
+      draw();
+      stopAnim();
+    }
+  }
+  animId = requestAnimationFrame(step);
+}
+
+document.getElementById('btnAnimate').addEventListener('click', () => {
+  if (animating) stopAnim();
+  else startAnim();
+});
+
+document.getElementById('btnReset').addEventListener('click', () => {
+  stopAnim();
+  animProgress = 0;
+  draw();
+});
+
+[slP, slV, slN, slRatio].forEach(sl => {
+  sl.addEventListener('input', () => {
+    valP.textContent = slP.value + ' kPa';
+    valV.textContent = parseFloat(slV.value).toFixed(1) + ' L';
+    valN.textContent = parseFloat(slN.value).toFixed(2) + ' mol';
+    valRatio.textContent = parseFloat(slRatio.value).toFixed(1);
+    draw();
+  });
+});
+
+function niceStep(range, maxTicks) {
+  const rough = range / maxTicks;
+  const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+  const norm = rough / mag;
+  let step;
+  if (norm < 1.5) step = 1;
+  else if (norm < 3) step = 2;
+  else if (norm < 7) step = 5;
+  else step = 10;
+  return step * mag;
+}
+
+function mulberry32(a) {
+  return function() {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    var t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+}
+
+window.addEventListener('resize', resize);
+resize();
+updateFormula();
+valP.textContent = slP.value + ' kPa';
+valV.textContent = parseFloat(slV.value).toFixed(1) + ' L';
+valN.textContent = parseFloat(slN.value).toFixed(2) + ' mol';
+valRatio.textContent = parseFloat(slRatio.value).toFixed(1);
+</script>
+</body>
+</html>

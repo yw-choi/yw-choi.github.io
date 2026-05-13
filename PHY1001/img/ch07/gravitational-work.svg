@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 450" width="750" height="450" font-family="sans-serif">
+  <defs>
+    <marker id="arrowR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
+    </marker>
+    <marker id="arrowB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
+    </marker>
+    <marker id="arrowG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- Separator line -->
+  <line x1="375" y1="30" x2="375" y2="420" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- ===== LEFT: Going UP ===== -->
+  <text x="185" y="40" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">&#xC62C;&#xB77C;&#xAC08; &#xB54C;</text>
+
+  <!-- Block at bottom -->
+  <rect x="155" y="300" width="60" height="60" fill="#F3F4F6" stroke="#000000" stroke-width="2" rx="3"/>
+  <text x="185" y="337" text-anchor="middle" font-size="14" font-weight="bold" fill="#000000">m</text>
+
+  <!-- Ghost block at top (destination) -->
+  <rect x="155" y="100" width="60" height="60" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3" rx="3"/>
+
+  <!-- Displacement vector d (upward) -->
+  <line x1="130" y1="330" x2="130" y2="130" stroke="#6B7280" stroke-width="2.5" marker-end="url(#arrowG)"/>
+  <text x="110" y="230" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B7280" font-style="italic">d</text>
+
+  <!-- Gravity Fg (downward from block) -->
+  <line x1="185" y1="360" x2="185" y2="420" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
+  <text x="210" y="415" font-size="14" font-weight="bold" fill="#8B0029">
+    <tspan font-style="italic">F</tspan><tspan font-size="11" dy="3">g</tspan><tspan dy="-3"> = m</tspan><tspan font-style="italic">g</tspan>
+  </text>
+
+  <!-- Angle label -->
+  <text x="145" y="370" font-size="14" font-style="italic" fill="#8B0029">φ = 180°</text>
+
+  <!-- Result -->
+  <text x="185" y="65" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">
+    <tspan font-style="italic">W</tspan><tspan font-size="11" dy="3">g</tspan><tspan dy="-3"> = −mgd</tspan>
+  </text>
+  <text x="185" y="85" text-anchor="middle" font-size="14" fill="#6B7280">(&#xC74C;&#xC758; &#xC77C;: &#xAC10;&#xC18D;)</text>
+
+  <!-- ===== RIGHT: Going DOWN ===== -->
+  <text x="565" y="40" text-anchor="middle" font-size="14" font-weight="bold" fill="#2563EB">&#xB0B4;&#xB824;&#xAC08; &#xB54C;</text>
+
+  <!-- Ghost block at top (start) -->
+  <rect x="535" y="100" width="60" height="60" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3" rx="3"/>
+
+  <!-- Block at bottom -->
+  <rect x="535" y="300" width="60" height="60" fill="#F3F4F6" stroke="#000000" stroke-width="2" rx="3"/>
+  <text x="565" y="337" text-anchor="middle" font-size="14" font-weight="bold" fill="#000000">m</text>
+
+  <!-- Displacement vector d (downward) -->
+  <line x1="510" y1="130" x2="510" y2="330" stroke="#6B7280" stroke-width="2.5" marker-end="url(#arrowG)"/>
+  <text x="490" y="230" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B7280" font-style="italic">d</text>
+
+  <!-- Gravity Fg (downward from block) -->
+  <line x1="565" y1="360" x2="565" y2="420" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowR)"/>
+  <text x="590" y="415" font-size="14" font-weight="bold" fill="#8B0029">
+    <tspan font-style="italic">F</tspan><tspan font-size="11" dy="3">g</tspan><tspan dy="-3"> = m</tspan><tspan font-style="italic">g</tspan>
+  </text>
+
+  <!-- Angle label -->
+  <text x="530" y="370" font-size="14" font-style="italic" fill="#2563EB">φ = 0°</text>
+
+  <!-- Result -->
+  <text x="565" y="65" text-anchor="middle" font-size="14" fill="#2563EB" font-weight="bold">
+    <tspan font-style="italic">W</tspan><tspan font-size="11" dy="3">g</tspan><tspan dy="-3"> = +mgd</tspan>
+  </text>
+  <text x="565" y="85" text-anchor="middle" font-size="14" fill="#6B7280">(&#xC591;&#xC758; &#xC77C;: &#xAC00;&#xC18D;)</text>
+</svg>

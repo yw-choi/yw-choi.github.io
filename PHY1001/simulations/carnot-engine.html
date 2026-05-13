@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>카르노 기관 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; display: flex; flex-direction: column; }
+.canvas-row { display: flex; flex: 1; min-height: 0; }
+.canvas-half { flex: 1; position: relative; min-width: 0; }
+canvas { width: 100%; height: 100%; display: block; }
+.controls { width: 260px; padding: 14px; background: #faf5f6; border-left: 2px solid rgba(139,0,41,0.15); overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+h2 { color: #8B0029; font-size: 1.05rem; margin-bottom: 2px; }
+.subtitle { color: #888; font-size: 0.72rem; margin-bottom: 4px; }
+label { display: block; font-size: 0.78rem; color: #555; margin-bottom: 2px; }
+.slider-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+.slider-row input[type="range"] { flex: 1; accent-color: #8B0029; }
+.slider-val { font-size: 0.78rem; font-weight: 600; color: #8B0029; min-width: 55px; text-align: right; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 0.74rem; line-height: 1.7; color: #555; }
+.formula-box .katex { font-size: 0.92em; }
+.formula-box b { color: #8B0029; }
+.info-box { background: white; border: 1px solid rgba(139,0,41,0.15); border-radius: 8px; padding: 8px 10px; font-size: 0.74rem; line-height: 1.7; }
+.info-box .lbl { color: #555; }
+.info-box .val { color: #8B0029; font-weight: 700; font-family: ui-monospace, monospace; }
+.btn-row { display: flex; gap: 5px; }
+button { flex: 1; padding: 7px; border: none; border-radius: 8px; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+.btn-primary { background: #8B0029; color: white; }
+.btn-primary:hover { background: #a3003a; }
+.btn-secondary { background: rgba(139,0,41,0.1); color: #8B0029; }
+.btn-secondary:hover { background: rgba(139,0,41,0.2); }
+.stage-name { text-align: center; font-size: 0.85rem; font-weight: 700; padding: 4px 0; min-height: 1.4em; background: rgba(139,0,41,0.05); }
+.stage-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; margin-top: 4px; }
+.stage-table th, .stage-table td { padding: 3px 4px; border: 1px solid #dde; text-align: center; }
+.stage-table th { background: #8B0029; color: #fff; font-weight: 600; }
+.stage-table tr.hl { background: #fff8f0; }
+
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 11px; line-height: 1; pointer-events: none; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.92); padding: 1px 5px; border-radius: 3px; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { flex: none; height: 60vh; }
+  .canvas-row { flex-direction: column; }
+  .controls { width: 100%; border-left: none; border-top: 2px solid rgba(139,0,41,0.15); height: 40vh; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <div class="stage-name" id="stageName">정지 — ▶ 재생을 누르세요</div>
+    <div class="canvas-row">
+      <div class="canvas-half">
+        <canvas id="pvCanvas"></canvas>
+        <div class="canvas-overlay" id="pvOverlay"></div>
+      </div>
+      <div class="canvas-half">
+        <canvas id="tsCanvas"></canvas>
+        <div class="canvas-overlay" id="tsOverlay"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div>
+      <h2>카르노 기관</h2>
+      <div class="subtitle">Carnot Engine — Ch.20</div>
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div>
+      <label>고온 열원 T<sub>H</sub></label>
+      <div class="slider-row">
+        <input type="range" id="slTh" min="400" max="1200" step="10" value="800">
+        <span class="slider-val" id="valTh">800 K</span>
+      </div>
+    </div>
+    <div>
+      <label>저온 열원 T<sub>L</sub></label>
+      <div class="slider-row">
+        <input type="range" id="slTl" min="200" max="500" step="10" value="300">
+        <span class="slider-val" id="valTl">300 K</span>
+      </div>
+    </div>
+    <div>
+      <label>기체 몰수 n</label>
+      <div class="slider-row">
+        <input type="range" id="slN" min="0.5" max="3.0" step="0.1" value="1.0">
+        <span class="slider-val" id="valN">1.0 mol</span>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-primary" id="btnPlay" onclick="togglePlay()">▶ 재생</button>
+      <button class="btn-secondary" onclick="stepForward()">⏭ 단계</button>
+      <button class="btn-secondary" onclick="resetSim()">↺ 초기화</button>
+    </div>
+
+    <div class="info-box" id="infoBox">
+      <div><span class="lbl">카르노 효율: </span><span class="val" id="dispEff">—</span></div>
+      <div><span class="lbl">|Q<sub>H</sub>|: </span><span class="val" id="dispQh">—</span></div>
+      <div><span class="lbl">|Q<sub>L</sub>|: </span><span class="val" id="dispQl">—</span></div>
+      <div><span class="lbl">W (알짜 일): </span><span class="val" id="dispW">—</span></div>
+      <div><span class="lbl">ΔS (순환): </span><span class="val" id="dispDS">0 J/K</span></div>
+    </div>
+
+    <div>
+      <div style="font-size:0.72rem;color:#888;margin-bottom:2px;">각 과정 열역학량</div>
+      <table class="stage-table">
+        <thead><tr><th>과정</th><th>Q (J)</th><th>W (J)</th><th>ΔS (J/K)</th></tr></thead>
+        <tbody id="stageBody"></tbody>
+        <tfoot><tr style="font-weight:700;background:#f5f0f1;"><td>합계</td><td id="totQ">—</td><td id="totW">—</td><td id="totS">0</td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+// === Constants ===
+const Rgas = 8.314;
+const GAM = 5/3; // monatomic ideal gas
+const CV = 1.5 * Rgas; // (3/2)R per mol
+
+// === State ===
+let Th = 800, Tl = 300, nMol = 1.0;
+let playing = false, animId = null, t = 0; // t in [0,4)
+const speed = 0.008;
+
+// Cycle vertices
+let Va, Vb, Vc, Vd, Pa, Pb, Pc, Pd;
+
+function computeCycle() {
+  Va = 0.005 * nMol;
+  const expRatio = 3.0;
+  Vb = Va * expRatio;
+  Pa = nMol * Rgas * Th / Va;
+  Pb = nMol * Rgas * Th / Vb;
+  Vc = Vb * Math.pow(Th / Tl, 1 / (GAM - 1));
+  Pc = nMol * Rgas * Tl / Vc;
+  Vd = Va * Math.pow(Th / Tl, 1 / (GAM - 1));
+  Pd = nMol * Rgas * Tl / Vd;
+}
+
+function stageThermo() {
+  const Qh = nMol * Rgas * Th * Math.log(Vb / Va);
+  const Ql = nMol * Rgas * Tl * Math.log(Vc / Vd);
+  const W2 = nMol * CV * (Th - Tl);
+  const W4 = -nMol * CV * (Th - Tl);
+  return [
+    { name: '등온팽창', Q: Qh, W: Qh, dS: Qh / Th, color: '#8B0029' },
+    { name: '단열팽창', Q: 0, W: W2, dS: 0, color: '#6B7280' },
+    { name: '등온압축', Q: -Ql, W: -Ql, dS: -Ql / Tl, color: '#2563EB' },
+    { name: '단열압축', Q: 0, W: W4, dS: 0, color: '#6B7280' },
+  ];
+}
+
+function cyclePoint(tt) {
+  let stage = Math.floor(tt) % 4;
+  let f = tt - Math.floor(tt);
+  let P, V, T;
+  if (stage === 0) {
+    let lnV = Math.log(Va) + f * (Math.log(Vb) - Math.log(Va));
+    V = Math.exp(lnV); T = Th; P = nMol * Rgas * T / V;
+  } else if (stage === 1) {
+    let lnV = Math.log(Vb) + f * (Math.log(Vc) - Math.log(Vb));
+    V = Math.exp(lnV); T = Th * Math.pow(Vb / V, GAM - 1); P = nMol * Rgas * T / V;
+  } else if (stage === 2) {
+    let lnV = Math.log(Vc) + f * (Math.log(Vd) - Math.log(Vc));
+    V = Math.exp(lnV); T = Tl; P = nMol * Rgas * T / V;
+  } else {
+    let lnV = Math.log(Vd) + f * (Math.log(Va) - Math.log(Vd));
+    V = Math.exp(lnV); T = Tl * Math.pow(Vd / V, GAM - 1); P = nMol * Rgas * T / V;
+  }
+  return { P, V, T, stage };
+}
+
+function entropyAt(tt) {
+  let stage = Math.floor(tt) % 4;
+  let f = tt - Math.floor(tt);
+  let S0 = nMol * Rgas * Math.log(Va) + nMol * CV * Math.log(Th); // ref at a
+  let cp = cyclePoint(tt);
+  return nMol * Rgas * Math.log(cp.V) + nMol * CV * Math.log(cp.T) - S0;
+}
+
+// === Canvas ===
+const pvCanvas = document.getElementById('pvCanvas');
+const tsCanvas = document.getElementById('tsCanvas');
+const pvCtx = pvCanvas.getContext('2d');
+const tsCtx = tsCanvas.getContext('2d');
+
+function resizeCanvases() {
+  const dpr = window.devicePixelRatio || 1;
+  [pvCanvas, tsCanvas].forEach(c => {
+    const rect = c.parentElement.getBoundingClientRect();
+    c.width = rect.width * dpr;
+    c.height = rect.height * dpr;
+    c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.style.width = rect.width + 'px';
+    c.style.height = rect.height + 'px';
+  });
+}
+
+// === Drawing ===
+function drawPV() {
+  const ctx = pvCtx;
+  const W = pvCanvas.width / (window.devicePixelRatio || 1);
+  const H = pvCanvas.height / (window.devicePixelRatio || 1);
+  ctx.clearRect(0, 0, W, H);
+
+  const margin = { l: 60, r: 25, t: 35, b: 45 };
+  const pw = W - margin.l - margin.r;
+  const ph = H - margin.t - margin.b;
+
+  // Ranges
+  const Vmin = 0, Vmax = Vc * 1.15;
+  const Pmin = 0, Pmax = Pa * 1.15;
+
+  function toX(v) { return margin.l + (v - Vmin) / (Vmax - Vmin) * pw; }
+  function toY(p) { return margin.t + (1 - (p - Pmin) / (Pmax - Pmin)) * ph; }
+
+  // Grid
+  ctx.strokeStyle = '#eee'; ctx.lineWidth = 1;
+  for (let i = 0; i <= 5; i++) {
+    let y = margin.t + i * ph / 5;
+    ctx.beginPath(); ctx.moveTo(margin.l, y); ctx.lineTo(W - margin.r, y); ctx.stroke();
+    let x = margin.l + i * pw / 5;
+    ctx.beginPath(); ctx.moveTo(x, margin.t); ctx.lineTo(x, H - margin.b); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(margin.l, margin.t); ctx.lineTo(margin.l, H - margin.b); ctx.lineTo(W - margin.r, H - margin.b); ctx.stroke();
+
+  ctx.fillStyle = '#6B7280'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('V (L)', W / 2, H - 5);
+  ctx.save(); ctx.translate(14, H / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('p (kPa)', 0, 0); ctx.restore();
+  ctx.fillStyle = '#8B0029'; ctx.font = 'bold 13px sans-serif'; ctx.fillText('p-V 다이어그램', W / 2, 18);
+
+  // Tick labels
+  ctx.fillStyle = '#999'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+  for (let i = 1; i <= 5; i++) {
+    let v = Vmin + i * (Vmax - Vmin) / 5;
+    ctx.fillText((v * 1000).toFixed(1), toX(v), H - margin.b + 14);
+  }
+  ctx.textAlign = 'right';
+  for (let i = 1; i <= 5; i++) {
+    let p = Pmin + i * (Pmax - Pmin) / 5;
+    ctx.fillText((p / 1000).toFixed(0), margin.l - 6, toY(p) + 4);
+  }
+
+  // Draw cycle path
+  const N = 200;
+  // Full cycle for shading
+  ctx.beginPath();
+  for (let i = 0; i <= N; i++) {
+    let cp = cyclePoint(i / N * 4);
+    let x = toX(cp.V), y = toY(cp.P);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(139,0,41,0.06)';
+  ctx.fill();
+
+  // Draw each stage
+  const stageColors = ['#8B0029', '#6B7280', '#2563EB', '#6B7280'];
+  const stageDash = [[], [6, 4], [], [6, 4]];
+  for (let s = 0; s < 4; s++) {
+    ctx.strokeStyle = stageColors[s];
+    ctx.lineWidth = 2;
+    ctx.setLineDash(stageDash[s]);
+    ctx.beginPath();
+    for (let i = 0; i <= 50; i++) {
+      let cp = cyclePoint(s + i / 50);
+      let x = toX(cp.V), y = toY(cp.P);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // State labels
+  const pts = [
+    { v: Va, p: Pa, label: 'a', color: '#8B0029', dx: -12, dy: -8 },
+    { v: Vb, p: Pb, label: 'b', color: '#8B0029', dx: 8, dy: -8 },
+    { v: Vc, p: Pc, label: 'c', color: '#2563EB', dx: 8, dy: 14 },
+    { v: Vd, p: Pd, label: 'd', color: '#2563EB', dx: -12, dy: 14 },
+  ];
+  pts.forEach(pt => {
+    ctx.fillStyle = pt.color;
+    ctx.beginPath(); ctx.arc(toX(pt.v), toY(pt.p), 4, 0, 2 * Math.PI); ctx.fill();
+    ctx.font = 'bold italic 14px sans-serif';
+    ctx.fillText(pt.label, toX(pt.v) + pt.dx, toY(pt.p) + pt.dy);
+  });
+
+  // Current point
+  if (t > 0 || playing) {
+    let cp = cyclePoint(t);
+    ctx.fillStyle = '#8B0029';
+    ctx.beginPath(); ctx.arc(toX(cp.V), toY(cp.P), 6, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(toX(cp.V), toY(cp.P), 6, 0, 2 * Math.PI); ctx.stroke();
+
+    // Trace
+    ctx.strokeStyle = 'rgba(139,0,41,0.5)'; ctx.lineWidth = 3; ctx.setLineDash([]);
+    ctx.beginPath();
+    let steps = Math.floor(t / 4 * N);
+    for (let i = 0; i <= Math.min(steps, N); i++) {
+      let cpi = cyclePoint(i / N * 4);
+      let x = toX(cpi.V), y = toY(cpi.P);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  // Isotherm labels
+  ctx.fillStyle = '#8B0029'; ctx.font = '11px sans-serif'; ctx.textAlign = 'left';
+  let midAB = cyclePoint(0.5);
+  ctx.fillText('T_H = ' + Th + ' K', toX(midAB.V) + 5, toY(midAB.P) - 10);
+  ctx.fillStyle = '#2563EB';
+  let midCD = cyclePoint(2.5);
+  ctx.fillText('T_L = ' + Tl + ' K', toX(midCD.V) + 5, toY(midCD.P) + 18);
+}
+
+function drawTS() {
+  const ctx = tsCtx;
+  const W = tsCanvas.width / (window.devicePixelRatio || 1);
+  const H = tsCanvas.height / (window.devicePixelRatio || 1);
+  ctx.clearRect(0, 0, W, H);
+
+  const margin = { l: 55, r: 25, t: 35, b: 45 };
+  const pw = W - margin.l - margin.r;
+  const ph = H - margin.t - margin.b;
+
+  // Compute S range
+  let Sa = 0;
+  let Sb = nMol * Rgas * Math.log(Vb / Va); // isothermal at Th
+  let Smin = -Sb * 0.2, Smax = Sb * 1.3;
+  let Tmin = Tl * 0.8, Tmax = Th * 1.15;
+
+  function toX(s) { return margin.l + (s - Smin) / (Smax - Smin) * pw; }
+  function toY(temp) { return margin.t + (1 - (temp - Tmin) / (Tmax - Tmin)) * ph; }
+
+  // Grid
+  ctx.strokeStyle = '#eee'; ctx.lineWidth = 1;
+  for (let i = 0; i <= 5; i++) {
+    let y = margin.t + i * ph / 5;
+    ctx.beginPath(); ctx.moveTo(margin.l, y); ctx.lineTo(W - margin.r, y); ctx.stroke();
+    let x = margin.l + i * pw / 5;
+    ctx.beginPath(); ctx.moveTo(x, margin.t); ctx.lineTo(x, H - margin.b); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(margin.l, margin.t); ctx.lineTo(margin.l, H - margin.b); ctx.lineTo(W - margin.r, H - margin.b); ctx.stroke();
+
+  ctx.fillStyle = '#6B7280'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('S (J/K)', W / 2, H - 5);
+  ctx.save(); ctx.translate(14, H / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('T (K)', 0, 0); ctx.restore();
+  ctx.fillStyle = '#8B0029'; ctx.font = 'bold 13px sans-serif'; ctx.fillText('T-S 다이어그램', W / 2, 18);
+
+  // Carnot cycle on T-S: rectangle!
+  // a: (Sa, Th), b: (Sb, Th), c: (Sb, Tl), d: (Sa, Tl)
+  let ax = toX(Sa), ay = toY(Th);
+  let bx = toX(Sb), by = toY(Th);
+  let cx = toX(Sb), cy = toY(Tl);
+  let dx = toX(Sa), dy = toY(Tl);
+
+  // Shaded area = W = Q_H - Q_L
+  ctx.fillStyle = 'rgba(139,0,41,0.08)';
+  ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.lineTo(cx, cy); ctx.lineTo(dx, dy); ctx.closePath(); ctx.fill();
+
+  // Sides
+  // a→b: isothermal at Th (top, red)
+  ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
+  // b→c: adiabatic (right, gray dashed)
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]);
+  ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(cx, cy); ctx.stroke();
+  ctx.setLineDash([]);
+  // c→d: isothermal at Tl (bottom, blue)
+  ctx.strokeStyle = '#2563EB'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(dx, dy); ctx.stroke();
+  // d→a: adiabatic (left, gray dashed)
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]);
+  ctx.beginPath(); ctx.moveTo(dx, dy); ctx.lineTo(ax, ay); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Labels
+  ctx.font = 'bold italic 14px sans-serif';
+  ctx.fillStyle = '#8B0029'; ctx.textAlign = 'left';
+  ctx.fillText('a', ax - 14, ay - 6);
+  ctx.fillText('b', bx + 4, by - 6);
+  ctx.fillStyle = '#2563EB';
+  ctx.fillText('c', cx + 4, cy + 16);
+  ctx.fillText('d', dx - 14, dy + 16);
+
+  // Q_H, Q_L labels
+  ctx.fillStyle = '#8B0029'; ctx.textAlign = 'center'; ctx.font = 'bold 12px sans-serif';
+  ctx.fillText('Q_H 흡수 →', (ax + bx) / 2, ay - 10);
+  ctx.fillStyle = '#2563EB';
+  ctx.fillText('← Q_L 방출', (cx + dx) / 2, cy + 26);
+
+  // W label in center
+  ctx.fillStyle = '#8B0029'; ctx.font = 'bold 14px sans-serif';
+  ctx.fillText('W', (ax + cx) / 2, (ay + cy) / 2 + 5);
+
+  // Current point
+  if (t > 0 || playing) {
+    let cp = cyclePoint(t);
+    let ds = entropyAt(t);
+    let px = toX(ds), py = toY(cp.T);
+    ctx.fillStyle = '#8B0029';
+    ctx.beginPath(); ctx.arc(px, py, 6, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(px, py, 6, 0, 2 * Math.PI); ctx.stroke();
+  }
+
+  // Tick labels
+  ctx.fillStyle = '#999'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+  for (let i = 1; i <= 5; i++) {
+    let s = Smin + i * (Smax - Smin) / 5;
+    ctx.fillText(s.toFixed(1), toX(s), H - margin.b + 14);
+  }
+  ctx.textAlign = 'right';
+  for (let i = 1; i <= 5; i++) {
+    let temp = Tmin + i * (Tmax - Tmin) / 5;
+    ctx.fillText(temp.toFixed(0), margin.l - 6, toY(temp) + 4);
+  }
+}
+
+function updateInfo() {
+  const eff = 1 - Tl / Th;
+  const stages = stageThermo();
+  const Qh = stages[0].Q;
+  const Ql = -stages[2].Q;
+  const Wnet = Qh - Ql;
+
+  document.getElementById('dispEff').textContent = (eff * 100).toFixed(1) + '%';
+  document.getElementById('dispQh').textContent = Qh.toFixed(1) + ' J';
+  document.getElementById('dispQl').textContent = Ql.toFixed(1) + ' J';
+  document.getElementById('dispW').textContent = Wnet.toFixed(1) + ' J';
+  document.getElementById('dispDS').textContent = '0 J/K';
+
+  const stageNames = ['등온팽창', '단열팽창', '등온압축', '단열압축'];
+  const body = document.getElementById('stageBody');
+  let html = '';
+  let totQ = 0, totW = 0, totS = 0;
+  const curStage = Math.floor(t) % 4;
+  stages.forEach((s, i) => {
+    let cls = (i === curStage && (playing || t > 0)) ? ' class="hl"' : '';
+    html += `<tr${cls}><td style="color:${s.color};font-weight:600">${s.name}</td><td>${s.Q.toFixed(1)}</td><td>${s.W.toFixed(1)}</td><td>${s.dS.toFixed(2)}</td></tr>`;
+    totQ += s.Q; totW += s.W; totS += s.dS;
+  });
+  body.innerHTML = html;
+  document.getElementById('totQ').textContent = totQ.toFixed(1);
+  document.getElementById('totW').textContent = totW.toFixed(1);
+  document.getElementById('totS').textContent = totS.toFixed(3);
+
+  // Stage name
+  const stageLabels = [
+    { name: '① 등온팽창 (a→b)', color: '#8B0029' },
+    { name: '② 단열팽창 (b→c)', color: '#6B7280' },
+    { name: '③ 등온압축 (c→d)', color: '#2563EB' },
+    { name: '④ 단열압축 (d→a)', color: '#6B7280' },
+  ];
+  const sn = document.getElementById('stageName');
+  if (playing || t > 0) {
+    let sl = stageLabels[curStage];
+    sn.textContent = sl.name;
+    sn.style.color = sl.color;
+  }
+}
+
+function updateFormula() {
+  const box = document.getElementById('formulaBox');
+  const eff = 1 - Tl / Th;
+  box.innerHTML = '<b>카르노 효율</b><br>' +
+    katex.renderToString(`\\varepsilon_C = 1 - \\frac{T_L}{T_H} = 1 - \\frac{${Tl}}{${Th}} = ${(eff * 100).toFixed(1)}\\%`, { throwOnError: false });
+}
+
+// === Controls ===
+function onParamChange() {
+  Th = +document.getElementById('slTh').value;
+  Tl = +document.getElementById('slTl').value;
+  nMol = +document.getElementById('slN').value;
+  if (Tl >= Th) { Tl = Th - 10; document.getElementById('slTl').value = Tl; }
+  document.getElementById('valTh').textContent = Th + ' K';
+  document.getElementById('valTl').textContent = Tl + ' K';
+  document.getElementById('valN').textContent = nMol.toFixed(1) + ' mol';
+  computeCycle();
+  updateFormula();
+  updateInfo();
+  draw();
+}
+document.getElementById('slTh').addEventListener('input', onParamChange);
+document.getElementById('slTl').addEventListener('input', onParamChange);
+document.getElementById('slN').addEventListener('input', onParamChange);
+
+function togglePlay() {
+  playing = !playing;
+  document.getElementById('btnPlay').textContent = playing ? '⏸ 일시정지' : '▶ 재생';
+  if (playing) animate();
+  else cancelAnimationFrame(animId);
+}
+
+function stepForward() {
+  if (playing) { togglePlay(); }
+  let curStage = Math.floor(t);
+  t = (curStage + 1) % 4;
+  if (t === 0 && curStage === 3) t = 0;
+  draw();
+  updateInfo();
+}
+
+function resetSim() {
+  playing = false;
+  t = 0;
+  document.getElementById('btnPlay').textContent = '▶ 재생';
+  document.getElementById('stageName').textContent = '정지 — ▶ 재생을 누르세요';
+  document.getElementById('stageName').style.color = '#888';
+  cancelAnimationFrame(animId);
+  draw();
+  updateInfo();
+}
+
+function draw() {
+  drawPV();
+  drawTS();
+}
+
+function animate() {
+  if (!playing) return;
+  t += speed;
+  if (t >= 4) t -= 4;
+  draw();
+  updateInfo();
+  animId = requestAnimationFrame(animate);
+}
+
+// === Init ===
+window.addEventListener('resize', () => { resizeCanvases(); draw(); });
+resizeCanvases();
+computeCycle();
+updateFormula();
+updateInfo();
+draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 450" font-family="sans-serif">
+  <defs>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
+    </marker>
+    <marker id="arrowGray" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- Box -->
+  <rect x="100" y="60" width="320" height="320" fill="#F3F4F6" stroke="#6B7280" stroke-width="2" rx="2"/>
+
+  <!-- Shaded wall (right) -->
+  <rect x="415" y="60" width="10" height="320" fill="#8B0029" opacity="0.3"/>
+
+  <!-- L labels -->
+  <line x1="100" y1="400" x2="420" y2="400" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="100" y1="395" x2="100" y2="405" stroke="#6B7280" stroke-width="1"/>
+  <line x1="420" y1="395" x2="420" y2="405" stroke="#6B7280" stroke-width="1"/>
+  <text x="260" y="418" text-anchor="middle" font-size="14" font-style="italic" fill="#6B7280">L</text>
+
+  <line x1="440" y1="60" x2="440" y2="380" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="435" y1="60" x2="445" y2="60" stroke="#6B7280" stroke-width="1"/>
+  <line x1="435" y1="380" x2="445" y2="380" stroke="#6B7280" stroke-width="1"/>
+  <text x="458" y="225" text-anchor="middle" font-size="14" font-style="italic" fill="#6B7280">L</text>
+
+  <!-- Molecule approaching wall -->
+  <circle cx="300" cy="200" r="10" fill="#2563EB" opacity="0.8"/>
+  <text x="300" y="204" text-anchor="middle" font-size="10" fill="white" font-weight="bold">m</text>
+
+  <!-- Velocity vector (toward wall) -->
+  <line x1="315" y1="200" x2="380" y2="200" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <text x="355" y="190" text-anchor="middle" font-size="14" font-style="italic" fill="#2563EB">v</text>
+  <text x="365" y="194" text-anchor="middle" font-size="10" font-style="italic" fill="#2563EB">x</text>
+
+  <!-- Bounced molecule (ghost) -->
+  <circle cx="300" cy="200" r="10" fill="none" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+
+  <!-- Reflected velocity vector -->
+  <line x1="285" y1="200" x2="220" y2="200" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+  <text x="245" y="190" text-anchor="middle" font-size="14" font-style="italic" fill="#8B0029">-v</text>
+  <text x="260" y="194" text-anchor="middle" font-size="10" font-style="italic" fill="#8B0029">x</text>
+
+  <!-- Normal to wall -->
+  <line x1="420" y1="140" x2="470" y2="140" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrowGray)"/>
+  <text x="480" y="144" text-anchor="start" font-size="12" fill="#6B7280">Normal</text>
+
+  <!-- Other molecules (background) -->
+  <circle cx="150" cy="120" r="6" fill="#6B7280" opacity="0.3"/>
+  <circle cx="200" cy="300" r="6" fill="#6B7280" opacity="0.3"/>
+  <circle cx="350" cy="100" r="6" fill="#6B7280" opacity="0.3"/>
+  <circle cx="180" cy="220" r="6" fill="#6B7280" opacity="0.3"/>
+  <circle cx="370" cy="300" r="6" fill="#6B7280" opacity="0.3"/>
+  <circle cx="280" cy="330" r="6" fill="#6B7280" opacity="0.3"/>
+  <circle cx="140" cy="350" r="6" fill="#6B7280" opacity="0.3"/>
+  <circle cx="330" cy="160" r="6" fill="#6B7280" opacity="0.3"/>
+
+  <!-- Momentum change equation -->
+  <text x="540" y="180" text-anchor="start" font-size="14" fill="#6B7280">
+    <tspan font-weight="bold">벽 충돌:</tspan>
+  </text>
+  <text x="540" y="210" text-anchor="start" font-size="14" font-style="italic" fill="#8B0029">
+    <tspan>&#916;p = 2mv</tspan><tspan font-size="10" baseline-shift="sub">x</tspan>
+  </text>
+  <text x="540" y="245" text-anchor="start" font-size="13" fill="#6B7280">왕복 시간:</text>
+  <text x="540" y="270" text-anchor="start" font-size="14" font-style="italic" fill="#2563EB">
+    <tspan>&#916;t = 2L/v</tspan><tspan font-size="10" baseline-shift="sub">x</tspan>
+  </text>
+
+  <!-- Title -->
+  <text x="260" y="40" text-anchor="middle" font-size="16" font-weight="bold" fill="#8B0029">기체 분자의 벽 충돌 (탄성 충돌)</text>
+</svg>

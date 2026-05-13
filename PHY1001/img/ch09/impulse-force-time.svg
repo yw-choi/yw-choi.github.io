@@ -1,19 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" font-family="sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 420" font-family="sans-serif">
   <defs>
     <marker id="axisArrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/>
+      <polygon points="0 0, 10 3.5, 0 7" fill="#000000"/>
     </marker>
   </defs>
 
   <!-- Axes -->
-  <line x1="80" y1="320" x2="650" y2="320" stroke="#6B7280" stroke-width="1.5" marker-end="url(#axisArrow)"/>
-  <line x1="80" y1="320" x2="80" y2="40" stroke="#6B7280" stroke-width="1.5" marker-end="url(#axisArrow)"/>
+  <line x1="80" y1="320" x2="650" y2="320" stroke="#000000" stroke-width="2" marker-end="url(#axisArrow)"/>
+  <line x1="80" y1="320" x2="80" y2="40" stroke="#000000" stroke-width="2" marker-end="url(#axisArrow)"/>
   <text x="660" y="325" font-size="14" fill="#6B7280" font-style="italic">t</text>
-  <text x="75" y="35" font-size="14" fill="#6B7280" font-style="italic">F(t)</text>
+  <text x="60" y="35" font-size="14" fill="#6B7280">
+    <tspan font-style="italic">F</tspan>(<tspan font-style="italic">t</tspan>)
+  </text>
 
   <!-- Shaded area under curve (impulse) -->
   <path d="M 120,320 Q 150,310 200,250 Q 260,120 320,80 Q 380,120 440,200 Q 500,280 560,310 L 560,320 Z"
-        fill="rgba(139,0,41,0.15)" stroke="none"/>
+        fill="#F3F4F6" stroke="none"/>
 
   <!-- Force curve -->
   <path d="M 120,320 Q 150,310 200,250 Q 260,120 320,80 Q 380,120 440,200 Q 500,280 560,310"
@@ -21,30 +23,43 @@
 
   <!-- Peak dashed line -->
   <line x1="80" y1="80" x2="320" y2="80" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <text x="65" y="85" font-size="13" fill="#6B7280" text-anchor="middle" font-style="italic">F<tspan font-size="10" dy="3">max</tspan></text>
+  <text x="60" y="85" font-size="14" fill="#6B7280" text-anchor="middle">
+    <tspan font-style="italic">F</tspan><tspan font-size="10" baseline-shift="sub">max</tspan>
+  </text>
 
   <!-- t_i and t_f labels -->
-  <line x1="120" y1="320" x2="120" y2="330" stroke="#6B7280" stroke-width="1"/>
-  <text x="120" y="345" font-size="13" fill="#6B7280" text-anchor="middle" font-style="italic">t<tspan font-size="10" dy="3">i</tspan></text>
+  <line x1="120" y1="320" x2="120" y2="335" stroke="#6B7280" stroke-width="1"/>
+  <text x="120" y="350" font-size="14" fill="#6B7280" text-anchor="middle">
+    <tspan font-style="italic">t</tspan><tspan font-size="10" baseline-shift="sub">i</tspan>
+  </text>
 
-  <line x1="560" y1="320" x2="560" y2="330" stroke="#6B7280" stroke-width="1"/>
-  <text x="560" y="345" font-size="13" fill="#6B7280" text-anchor="middle" font-style="italic">t<tspan font-size="10" dy="3">f</tspan></text>
+  <line x1="560" y1="320" x2="560" y2="335" stroke="#6B7280" stroke-width="1"/>
+  <text x="560" y="350" font-size="14" fill="#6B7280" text-anchor="middle">
+    <tspan font-style="italic">t</tspan><tspan font-size="10" baseline-shift="sub">f</tspan>
+  </text>
 
-  <!-- "J = Area" label -->
-  <text x="340" y="230" font-size="18" fill="#8B0029" text-anchor="middle" font-weight="bold">충격량 J = 넓이</text>
-  <text x="340" y="260" font-size="15" fill="#8B0029" text-anchor="middle" font-style="italic">J = </text>
-  <text x="365" y="260" font-size="15" fill="#8B0029" font-style="italic">&#x222B; F(t) dt</text>
+  <!-- "J = Area" label in shaded region -->
+  <text x="340" y="225" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold">충격량 J = 넓이</text>
+  <text x="340" y="250" font-size="14" fill="#8B0029" text-anchor="middle">
+    <tspan font-style="italic">J</tspan> = ∫ <tspan font-style="italic">F</tspan>(<tspan font-style="italic">t</tspan>) <tspan font-style="italic">dt</tspan>
+  </text>
 
   <!-- Average force line -->
-  <line x1="120" y1="190" x2="560" y2="190" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="6 4"/>
-  <text x="590" y="195" font-size="13" fill="#2563EB" font-style="italic">F<tspan font-size="10" dy="3">avg</tspan></text>
+  <line x1="120" y1="190" x2="560" y2="190" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="575" y="185" font-size="14" fill="#2563EB">
+    <tspan font-style="italic">F</tspan><tspan font-size="10" baseline-shift="sub">avg</tspan>
+  </text>
 
   <!-- Average force annotation -->
-  <text x="590" y="215" font-size="12" fill="#2563EB">J = F<tspan font-size="9" dy="2">avg</tspan><tspan dy="-2"> </tspan><tspan font-style="italic">&#x394;t</tspan></text>
+  <text x="575" y="205" font-size="13" fill="#2563EB">
+    <tspan font-style="italic">J</tspan> = <tspan font-style="italic">F</tspan><tspan font-size="9" baseline-shift="sub">avg</tspan> <tspan font-style="italic">&#x394;t</tspan>
+  </text>
 
   <!-- Delta t bracket -->
-  <line x1="120" y1="365" x2="560" y2="365" stroke="#6B7280" stroke-width="1"/>
-  <line x1="120" y1="360" x2="120" y2="370" stroke="#6B7280" stroke-width="1"/>
-  <line x1="560" y1="360" x2="560" y2="370" stroke="#6B7280" stroke-width="1"/>
-  <text x="340" y="382" font-size="13" fill="#6B7280" text-anchor="middle" font-style="italic">&#x394;t = t<tspan font-size="10" dy="3">f</tspan><tspan dy="-3"> - t</tspan><tspan font-size="10" dy="3">i</tspan></text>
+  <line x1="120" y1="375" x2="560" y2="375" stroke="#6B7280" stroke-width="1"/>
+  <line x1="120" y1="370" x2="120" y2="380" stroke="#6B7280" stroke-width="1"/>
+  <line x1="560" y1="370" x2="560" y2="380" stroke="#6B7280" stroke-width="1"/>
+  <text x="340" y="398" font-size="14" fill="#6B7280" text-anchor="middle">
+    <tspan font-style="italic">&#x394;t</tspan> = <tspan font-style="italic">t</tspan><tspan font-size="10" baseline-shift="sub">f</tspan> &#x2212; <tspan font-style="italic">t</tspan><tspan font-size="10" baseline-shift="sub">i</tspan>
+  </text>
 </svg>

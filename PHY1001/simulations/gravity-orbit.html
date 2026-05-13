@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>중력 궤도 시뮬레이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+:root {
+  --sg-red: #8B0029;
+  --sg-red-2: #a3003a;
+  --blue: #2563EB;
+  --gray: #6B7280;
+  --panel: #f8f9fb;
+  --line: #e5e7eb;
+  --ink: #1a1a1a;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #fff;
+  color: var(--ink);
+  overflow: hidden;
+  height: 100vh;
+}
+.container { display: flex; height: 100vh; }
+.canvas-area {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  background: #080914;
+}
+canvas { display: block; width: 100%; height: 100%; }
+.canvas-overlay {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  display: grid;
+  gap: 8px;
+  color: #fff;
+  pointer-events: none;
+  max-width: min(420px, calc(100% - 28px));
+}
+.concept {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 8px;
+  background: rgba(139, 0, 41, 0.9);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 8px;
+  padding: 7px 11px;
+  font-weight: 700;
+  font-size: 13px;
+}
+.values {
+  width: fit-content;
+  min-width: 220px;
+  background: rgba(8, 9, 20, 0.82);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 9px 11px;
+  font-size: 12px;
+  line-height: 1.75;
+}
+.values .row { display: flex; justify-content: space-between; gap: 18px; }
+.values .label { color: rgba(255,255,255,0.68); }
+.values .val { color: #fff; font-weight: 700; }
+.controls {
+  width: 302px;
+  flex: 0 0 302px;
+  background: var(--panel);
+  border-left: 1px solid var(--line);
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.title h2 {
+  color: var(--sg-red);
+  font-size: 16px;
+  line-height: 1.2;
+}
+.title .sub {
+  margin-top: 3px;
+  color: var(--gray);
+  font-size: 11px;
+}
+.section {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+}
+.section-title {
+  margin-bottom: 8px;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 800;
+}
+.ctrl-group { display: grid; gap: 4px; margin-bottom: 8px; }
+.ctrl-group:last-child { margin-bottom: 0; }
+.ctrl-group label {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: #4b5563;
+  font-size: 12px;
+  font-weight: 650;
+}
+.val-display { color: var(--ink); font-weight: 800; white-space: nowrap; }
+input[type=range] { width: 100%; accent-color: var(--sg-red); }
+.btn-row { display: flex; gap: 7px; }
+.btn {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  border-radius: 7px;
+  padding: 9px 8px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.btn-play { background: var(--sg-red); color: #fff; }
+.btn-play:hover { background: var(--sg-red-2); }
+.btn-pause { background: var(--blue); color: #fff; }
+.btn-pause:hover { background: #1d4ed8; }
+.btn-reset { background: var(--gray); color: #fff; }
+.btn-reset:hover { background: #4b5563; }
+.preset-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+.btn-preset {
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  padding: 7px 6px;
+  color: #374151;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-preset:hover { border-color: var(--sg-red); color: var(--sg-red); }
+.btn-preset.active { background: var(--sg-red); color: #fff; border-color: var(--sg-red); }
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+.metric {
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fff;
+  padding: 7px;
+}
+.metric .lbl { color: var(--gray); font-size: 10.5px; font-weight: 700; }
+.metric .vl {
+  margin-top: 3px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+.metric.energy-k .vl { color: var(--blue); }
+.metric.energy-u .vl { color: var(--sg-red); }
+.metric.energy-e .vl.bound { color: var(--sg-red); }
+.metric.energy-e .vl.escape { color: var(--blue); }
+.info-section {
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+}
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid #f1f1f1;
+  padding-bottom: 3px;
+}
+.info-row:last-child { border-bottom: 0; padding-bottom: 0; }
+.info-row .lbl { color: var(--gray); }
+.info-row .vl { font-weight: 800; text-align: right; }
+.check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 8px; }
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.check-row input { accent-color: var(--sg-red); }
+.formula-box {
+  color: #374151;
+  font-size: 12px;
+  line-height: 1.85;
+}
+.formula-box .katex { font-size: 0.98em; }
+.status {
+  border-radius: 7px;
+  padding: 8px 9px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+  font-size: 12px;
+  line-height: 1.55;
+}
+@media (max-width: 760px) {
+  body { overflow: auto; }
+  .container { min-height: 100vh; height: auto; flex-direction: column; }
+  .canvas-area { height: 58vh; min-height: 360px; }
+  .controls {
+    width: 100%;
+    flex-basis: auto;
+    max-height: none;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="cv"></canvas>
+    <div class="canvas-overlay">
+      <div class="concept" id="conceptLabel"></div>
+      <div class="values" id="valuesPanel"></div>
+    </div>
+  </div>
+  <aside class="controls">
+    <div class="title">
+      <h2>중력 궤도 시뮬레이션</h2>
+      <div class="sub">초기 조건을 바꾸며 케플러 법칙과 보존량을 확인</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">초기 조건</div>
+      <div class="ctrl-group">
+        <label>초기 속력 <span class="val-display" id="vlV">1.00 v<sub>c</sub></span></label>
+        <input type="range" id="slV" min="0.30" max="1.80" step="0.001" value="1.00">
+      </div>
+      <div class="ctrl-group">
+        <label>방사 방향 기준 각도 <span class="val-display" id="vlAngle">90°</span></label>
+        <input type="range" id="slAngle" min="0" max="180" step="1" value="90">
+      </div>
+      <div class="ctrl-group">
+        <label>중심 질량 <span class="val-display" id="vlM">1.0 M<sub>0</sub></span></label>
+        <input type="range" id="slM" min="0.3" max="3.0" step="0.1" value="1.0">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-play" id="btnPlay">시작</button>
+      <button class="btn btn-pause" id="btnPause">일시정지</button>
+      <button class="btn btn-reset" id="btnReset">초기화</button>
+    </div>
+
+    <div class="section">
+      <div class="section-title">프리셋</div>
+      <div class="preset-row">
+        <button class="btn-preset active" data-v="1.00" data-a="90" data-m="1.0">원궤도</button>
+        <button class="btn-preset" data-v="0.70" data-a="90" data-m="1.0">타원(작은 근지점)</button>
+        <button class="btn-preset" data-v="1.20" data-a="90" data-m="1.0">타원(큰 원지점)</button>
+        <button class="btn-preset" data-v="1.414213562" data-a="90" data-m="1.0">탈출 경계</button>
+        <button class="btn-preset" data-v="1.55" data-a="90" data-m="1.0">쌍곡선 탈출</button>
+        <button class="btn-preset" data-v="0.85" data-a="45" data-m="1.0">비스듬히</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">단위질량당 에너지</div>
+      <div class="metrics">
+        <div class="metric energy-k"><div class="lbl">K</div><div class="vl" id="eK">0</div></div>
+        <div class="metric energy-u"><div class="lbl">U</div><div class="vl" id="eU">0</div></div>
+        <div class="metric energy-e"><div class="lbl">E = K + U</div><div class="vl" id="eT">0</div></div>
+        <div class="metric"><div class="lbl">ΔE / |E₀|</div><div class="vl" id="energyErr">0%</div></div>
+      </div>
+    </div>
+
+    <div class="section info-section">
+      <div class="info-row"><span class="lbl">궤도 종류</span><span class="vl" id="orbitType">—</span></div>
+      <div class="info-row"><span class="lbl">이심률 e</span><span class="vl" id="eccVal">—</span></div>
+      <div class="info-row"><span class="lbl">긴반지름 a</span><span class="vl" id="semiMajorVal">—</span></div>
+      <div class="info-row"><span class="lbl">주기 T</span><span class="vl" id="periodVal">—</span></div>
+      <div class="info-row"><span class="lbl">h = L/m</span><span class="vl" id="angMomVal">—</span></div>
+      <div class="info-row"><span class="lbl">dA/dt = |h|/2</span><span class="vl" id="areaRateVal">—</span></div>
+      <div class="info-row"><span class="lbl">경과 시간</span><span class="vl" id="timeVal">0.0</span></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">표시</div>
+      <div class="check-grid">
+        <label class="check-row"><input type="checkbox" id="chkTrail" checked> 궤적</label>
+        <label class="check-row"><input type="checkbox" id="chkVectors" checked> 벡터</label>
+        <label class="check-row"><input type="checkbox" id="chkArea" checked> 면적</label>
+        <label class="check-row"><input type="checkbox" id="chkGuide" checked> 예측 궤도</label>
+      </div>
+    </div>
+
+    <div class="section formula-box" id="formulaBox"></div>
+    <div class="status" id="statusBox">90°는 접선 방향 발사입니다. 0°는 바깥쪽, 180°는 중심 방향입니다.</div>
+  </aside>
+</div>
+
+<script>
+function tex(expr) {
+  return katex.renderToString(expr, { throwOnError: false });
+}
+
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let W = 0, H = 0, cx = 0, cy = 0, scale = 1;
+
+const slV = document.getElementById('slV');
+const slAngle = document.getElementById('slAngle');
+const slM = document.getElementById('slM');
+const vlV = document.getElementById('vlV');
+const vlAngle = document.getElementById('vlAngle');
+const vlM = document.getElementById('vlM');
+const btnPlay = document.getElementById('btnPlay');
+const btnPause = document.getElementById('btnPause');
+const btnReset = document.getElementById('btnReset');
+const eK = document.getElementById('eK');
+const eU = document.getElementById('eU');
+const eT = document.getElementById('eT');
+const energyErr = document.getElementById('energyErr');
+const orbitType = document.getElementById('orbitType');
+const eccVal = document.getElementById('eccVal');
+const semiMajorVal = document.getElementById('semiMajorVal');
+const periodVal = document.getElementById('periodVal');
+const angMomVal = document.getElementById('angMomVal');
+const areaRateVal = document.getElementById('areaRateVal');
+const timeVal = document.getElementById('timeVal');
+const valuesPanel = document.getElementById('valuesPanel');
+const formulaBox = document.getElementById('formulaBox');
+const statusBox = document.getElementById('statusBox');
+const conceptLabel = document.getElementById('conceptLabel');
+const chkTrail = document.getElementById('chkTrail');
+const chkVectors = document.getElementById('chkVectors');
+const chkArea = document.getElementById('chkArea');
+const chkGuide = document.getElementById('chkGuide');
+
+const MU0 = 5000;
+const INIT_R = 200;
+const COLLISION_R = 25;
+const AREA_INTERVAL = 8.0;
+const MAX_TRAIL = 7000;
+const FRAME_DT = 0.075;
+const SUBSTEPS = 8;
+const ENERGY_EPS = 0.02;
+
+let running = false;
+let animId = null;
+let px = INIT_R, py = 0, vx = 0, vy = 0;
+let simTime = 0;
+let trail = [];
+let sectors = [];
+let sectorStart = null;
+let areaTimer = 0;
+let initialE = null;
+let initialH = null;
+let statusMessage = '';
+
+function getParams() {
+  return {
+    vFrac: parseFloat(slV.value),
+    angle: parseFloat(slAngle.value),
+    mFrac: parseFloat(slM.value)
+  };
+}
+
+function mu() { return MU0 * getParams().mFrac; }
+function circularSpeed(MU, r) { return Math.sqrt(MU / r); }
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function fmt(v, digits = 2) {
+  if (!Number.isFinite(v)) return '—';
+  if (Math.abs(v) >= 1000) return v.toExponential(2);
+  return v.toFixed(digits);
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = cv.parentElement.getBoundingClientRect();
+  W = Math.max(320, rect.width);
+  H = Math.max(260, rect.height);
+  cv.width = W * dpr;
+  cv.height = H * dpr;
+  cv.style.width = W + 'px';
+  cv.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function energy() {
+  const MU = mu();
+  const r = Math.hypot(px, py);
+  const v2 = vx * vx + vy * vy;
+  const K = 0.5 * v2;
+  const U = -MU / r;
+  return { K, U, E: K + U, r, v: Math.sqrt(v2) };
+}
+
+function angularMomentum() {
+  return px * vy - py * vx;
+}
+
+function orbitalElements() {
+  const MU = mu();
+  const en = energy();
+  const h = angularMomentum();
+  const rv = px * vx + py * vy;
+  const factor = en.v * en.v - MU / en.r;
+  const ex = (factor * px - rv * vx) / MU;
+  const ey = (factor * py - rv * vy) / MU;
+  const e = Math.hypot(ex, ey);
+  const eps = ENERGY_EPS;
+  let a = Infinity;
+  let b = Infinity;
+  let period = Infinity;
+  let type = '쌍곡선 탈출';
+
+  if (en.E < -eps) {
+    a = -MU / (2 * en.E);
+    b = a * Math.sqrt(Math.max(0, 1 - e * e));
+    period = 2 * Math.PI * Math.sqrt(a * a * a / MU);
+    type = e < 0.015 ? '원궤도' : '타원 궤도';
+  } else if (Math.abs(en.E) <= eps) {
+    type = '포물선 탈출 경계';
+  }
+
+  return { ...en, h, areaRate: Math.abs(h) / 2, ex, ey, e, a, b, period, type };
+}
+
+function updateView(elem) {
+  let viewRadius = INIT_R * 1.35;
+  if (elem.E < 0 && Number.isFinite(elem.a)) {
+    viewRadius = Math.max(viewRadius, elem.a * (1 + elem.e) * 1.10, elem.r * 1.20);
+  } else {
+    viewRadius = Math.max(viewRadius, elem.r * 1.08);
+  }
+  cx = W * 0.50;
+  cy = H * 0.52;
+  scale = Math.min(W, H) * 0.43 / viewRadius;
+}
+
+function toScreen(x, y) {
+  return [cx + x * scale, cy + y * scale];
+}
+
+function resetSim() {
+  const { vFrac, angle } = getParams();
+  const MU = mu();
+  const vc = circularSpeed(MU, INIT_R);
+  const v0 = vFrac * vc;
+  const theta = angle * Math.PI / 180;
+
+  px = INIT_R;
+  py = 0;
+  vx = v0 * Math.cos(theta);
+  vy = -v0 * Math.sin(theta);
+  simTime = 0;
+  areaTimer = 0;
+  trail = [{ x: px, y: py }];
+  sectors = [];
+  sectorStart = { x: px, y: py };
+  initialE = energy().E;
+  initialH = angularMomentum();
+  statusMessage = '초기 조건이 설정되었습니다.';
+  running = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  updateSliderDisplays();
+  updateDisplays();
+  draw();
+}
+
+function updateSliderDisplays() {
+  const { vFrac, angle, mFrac } = getParams();
+  vlV.innerHTML = vFrac.toFixed(3) + ' v<sub>c</sub>';
+  vlAngle.textContent = angle.toFixed(0) + '°';
+  vlM.innerHTML = mFrac.toFixed(1) + ' M<sub>0</sub>';
+}
+
+function step() {
+  const MU = mu();
+  const hdt = FRAME_DT / SUBSTEPS;
+
+  for (let i = 0; i < SUBSTEPS; i++) {
+    const r2 = px * px + py * py;
+    const r = Math.sqrt(r2);
+    if (r <= COLLISION_R) {
+      statusMessage = '중심 천체와 충돌했습니다. 속력을 높이거나 발사 각도를 바꿔 보세요.';
+      stop();
+      return;
+    }
+
+    const r3 = r2 * r;
+    const ax = -MU * px / r3;
+    const ay = -MU * py / r3;
+    const vxHalf = vx + 0.5 * ax * hdt;
+    const vyHalf = vy + 0.5 * ay * hdt;
+
+    px += vxHalf * hdt;
+    py += vyHalf * hdt;
+
+    const r2n = px * px + py * py;
+    const rn = Math.sqrt(r2n);
+    const r3n = r2n * rn;
+    const axn = -MU * px / r3n;
+    const ayn = -MU * py / r3n;
+    vx = vxHalf + 0.5 * axn * hdt;
+    vy = vyHalf + 0.5 * ayn * hdt;
+    simTime += hdt;
+    areaTimer += hdt;
+
+    if (areaTimer >= AREA_INTERVAL && sectorStart) {
+      const area = 0.5 * Math.abs(sectorStart.x * py - sectorStart.y * px);
+      sectors.push({ x1: sectorStart.x, y1: sectorStart.y, x2: px, y2: py, area });
+      if (sectors.length > 16) sectors.shift();
+      sectorStart = { x: px, y: py };
+      areaTimer = 0;
+    }
+  }
+
+  const last = trail[trail.length - 1];
+  if (!last || Math.hypot(px - last.x, py - last.y) > 1.0) {
+    trail.push({ x: px, y: py });
+    if (trail.length > MAX_TRAIL) trail.shift();
+  }
+
+  const elem = orbitalElements();
+  if (elem.E >= 0 && elem.r > INIT_R * 8) {
+    statusMessage = '탈출 궤도입니다. 물체가 충분히 멀어져 계산을 멈췄습니다.';
+    stop();
+  }
+}
+
+function updateDisplays() {
+  const elem = orbitalElements();
+  const dE = initialE === null ? 0 : (elem.E - initialE) / Math.max(1, Math.abs(initialE)) * 100;
+  const dH = initialH === null ? 0 : (elem.h - initialH) / Math.max(1, Math.abs(initialH)) * 100;
+
+  eK.textContent = fmt(elem.K, 2);
+  eU.textContent = fmt(elem.U, 2);
+  eT.textContent = fmt(elem.E, 2);
+  eT.className = 'vl ' + (elem.E < 0 ? 'bound' : 'escape');
+  energyErr.textContent = dE.toFixed(3) + '%';
+
+  orbitType.textContent = elem.type;
+  eccVal.textContent = fmt(elem.e, 3);
+  semiMajorVal.textContent = Number.isFinite(elem.a) ? fmt(elem.a, 1) : '∞';
+  periodVal.textContent = Number.isFinite(elem.period) ? fmt(elem.period, 1) : '∞';
+  angMomVal.textContent = fmt(elem.h, 1) + ' (' + dH.toFixed(3) + '%)';
+  areaRateVal.textContent = fmt(elem.areaRate, 1);
+  timeVal.textContent = fmt(simTime, 1);
+
+  const vcLocal = circularSpeed(mu(), elem.r);
+  valuesPanel.innerHTML =
+    '<div class="row"><span class="label">거리 r</span><span class="val">' + fmt(elem.r, 1) + '</span></div>' +
+    '<div class="row"><span class="label">속력 v/v_c(r)</span><span class="val">' + fmt(elem.v / vcLocal, 3) + '</span></div>' +
+    '<div class="row"><span class="label">에너지 E</span><span class="val">' + fmt(elem.E, 2) + '</span></div>' +
+    '<div class="row"><span class="label">이심률 e</span><span class="val">' + fmt(elem.e, 3) + '</span></div>' +
+    '<div class="row"><span class="label">면적속도</span><span class="val">' + fmt(elem.areaRate, 1) + '</span></div>';
+
+  renderFormulas(elem);
+  statusBox.textContent = statusMessage || '90°는 접선 방향 발사입니다. 0°는 바깥쪽, 180°는 중심 방향입니다.';
+}
+
+function renderFormulas(elem = orbitalElements()) {
+  const vescFrac = Math.sqrt(2);
+  const typeText = elem.E < -ENERGY_EPS ? '속박 궤도 (E < 0)' : (Math.abs(elem.E) <= ENERGY_EPS ? '탈출 경계 (E = 0)' : '탈출 궤도 (E > 0)');
+  formulaBox.innerHTML =
+    '<b>판정:</b> ' + typeText + '<br>' +
+    tex('F=G\\frac{Mm}{r^2}') + '<br>' +
+    tex('\\varepsilon=\\frac{v^2}{2}-\\frac{GM}{r}') + '<br>' +
+    tex('h=rv_\\perp,\\quad \\frac{dA}{dt}=\\frac{|h|}{2}') + '<br>' +
+    '<span style="color:#6B7280">참고: </span>' + tex('v_{esc}=\\sqrt{2}\\,v_c\\approx ' + vescFrac.toFixed(3) + 'v_c');
+}
+
+function drawGrid() {
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 6]);
+  for (const rr of [100, 200, 400, 800, 1200]) {
+    const rp = rr * scale;
+    if (rp > 18 && rp < Math.max(W, H)) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, rp, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+function drawPredictedOrbit(elem) {
+  if (!chkGuide.checked || elem.E >= 0 || !Number.isFinite(elem.a) || elem.e >= 1) return;
+  const e = elem.e;
+  let ex = elem.ex, ey = elem.ey;
+  if (e < 1e-4) { ex = 1; ey = 0; }
+  const angle = Math.atan2(ey, ex);
+  const centerX = -elem.a * e * Math.cos(angle);
+  const centerY = -elem.a * e * Math.sin(angle);
+  const [sx, sy] = toScreen(centerX, centerY);
+
+  ctx.save();
+  ctx.translate(sx, sy);
+  ctx.rotate(angle);
+  ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([7, 6]);
+  ctx.beginPath();
+  ctx.ellipse(0, 0, elem.a * scale, elem.b * scale, 0, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawTrail() {
+  if (!chkTrail.checked || trail.length < 2) return;
+  ctx.save();
+  ctx.strokeStyle = 'rgba(37,99,235,0.68)';
+  ctx.lineWidth = 1.7;
+  ctx.beginPath();
+  let [x0, y0] = toScreen(trail[0].x, trail[0].y);
+  ctx.moveTo(x0, y0);
+  for (let i = 1; i < trail.length; i++) {
+    const [x, y] = toScreen(trail[i].x, trail[i].y);
+    ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawSectors() {
+  if (!chkArea.checked || sectors.length === 0) return;
+  const latestStart = Math.max(0, sectors.length - 8);
+  for (let i = latestStart; i < sectors.length; i++) {
+    const s = sectors[i];
+    const [x1, y1] = toScreen(s.x1, s.y1);
+    const [x2, y2] = toScreen(s.x2, s.y2);
+    const alpha = 0.10 + (i - latestStart) * 0.015;
+    ctx.fillStyle = i % 2 === 0 ? `rgba(139,0,41,${alpha})` : `rgba(37,99,235,${alpha})`;
+    ctx.strokeStyle = i % 2 === 0 ? 'rgba(139,0,41,0.34)' : 'rgba(37,99,235,0.34)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw = 2.5) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const len = Math.hypot(dx, dy);
+  if (len < 4) return;
+  const ux = dx / len;
+  const uy = dy / len;
+  const head = Math.min(11, len * 0.35);
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = lw;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - head * ux + head * 0.42 * uy, y2 - head * uy - head * 0.42 * ux);
+  ctx.lineTo(x2 - head * ux - head * 0.42 * uy, y2 - head * uy + head * 0.42 * ux);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawTextWithBg(text, x, y, color) {
+  ctx.save();
+  ctx.font = 'bold 12px sans-serif';
+  const m = ctx.measureText(text);
+  ctx.fillStyle = 'rgba(8,9,20,0.82)';
+  ctx.fillRect(x - 4, y - 14, m.width + 8, 18);
+  ctx.fillStyle = color;
+  ctx.textAlign = 'left';
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
+function drawVectors(elem, sx, sy) {
+  if (!chkVectors.checked) return;
+  const vcLocal = circularSpeed(mu(), elem.r);
+  const vLen = clamp(elem.v / vcLocal * 44, 16, 76);
+  const aMag = mu() / (elem.r * elem.r);
+  const aBase = mu() / (INIT_R * INIT_R);
+  const aLen = clamp(aMag / aBase * 34, 12, 72);
+
+  const vEndX = sx + (vx / elem.v) * vLen;
+  const vEndY = sy + (vy / elem.v) * vLen;
+  drawArrow(sx, sy, vEndX, vEndY, '#2563EB', 2.5);
+
+  const aEndX = sx - (px / elem.r) * aLen;
+  const aEndY = sy - (py / elem.r) * aLen;
+  drawArrow(sx, sy, aEndX, aEndY, '#8B0029', 2.5);
+
+  let vLbl = { x: vEndX + 8, y: vEndY - 5 };
+  let aLbl = { x: aEndX + 8, y: aEndY + 12 };
+  if (Math.hypot(vLbl.x - aLbl.x, vLbl.y - aLbl.y) < 28) {
+    vLbl.y -= 12;
+    aLbl.y += 14;
+  }
+  drawTextWithBg('v', vLbl.x, vLbl.y, '#93c5fd');
+  drawTextWithBg('a_g', aLbl.x, aLbl.y, '#fda4af');
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  const bg = ctx.createRadialGradient(W * 0.5, H * 0.5, 40, W * 0.5, H * 0.5, Math.max(W, H));
+  bg.addColorStop(0, '#111827');
+  bg.addColorStop(1, '#050613');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  for (let i = 0; i < 90; i++) {
+    const sx = (Math.sin(i * 127.1 + 19.7) * 0.5 + 0.5) * W;
+    const sy = (Math.sin(i * 269.5 + 91.3) * 0.5 + 0.5) * H;
+    ctx.fillStyle = i % 7 === 0 ? 'rgba(255,255,255,0.48)' : 'rgba(255,255,255,0.24)';
+    ctx.beginPath();
+    ctx.arc(sx, sy, i % 7 === 0 ? 1.2 : 0.75, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  const elem = orbitalElements();
+  updateView(elem);
+  drawGrid();
+  drawPredictedOrbit(elem);
+  drawSectors();
+  drawTrail();
+
+  const planetR = clamp(COLLISION_R * scale, 12, 30);
+  const grad = ctx.createRadialGradient(cx - planetR * 0.35, cy - planetR * 0.35, 3, cx, cy, planetR);
+  grad.addColorStop(0, '#fde68a');
+  grad.addColorStop(0.55, '#f59e0b');
+  grad.addColorStop(1, '#8B0029');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, planetR, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.36)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('M', cx, cy);
+  ctx.textBaseline = 'alphabetic';
+
+  const [sx, sy] = toScreen(px, py);
+  ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+  ctx.setLineDash([5, 5]);
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(sx, sy);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle = '#f9fafb';
+  ctx.strokeStyle = '#2563EB';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(sx, sy, 6, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  drawVectors(elem, sx, sy);
+}
+
+function animate() {
+  if (!running) return;
+  step();
+  updateDisplays();
+  draw();
+  animId = requestAnimationFrame(animate);
+}
+
+function start() {
+  if (running) return;
+  running = true;
+  statusMessage = '시뮬레이션 실행 중입니다.';
+  animId = requestAnimationFrame(animate);
+}
+
+function stop() {
+  running = false;
+  if (animId) cancelAnimationFrame(animId);
+  animId = null;
+  updateDisplays();
+  draw();
+}
+
+btnPlay.addEventListener('click', start);
+btnPause.addEventListener('click', () => {
+  statusMessage = '일시정지했습니다.';
+  stop();
+});
+btnReset.addEventListener('click', resetSim);
+
+document.querySelectorAll('.btn-preset').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    slV.value = btn.dataset.v;
+    slAngle.value = btn.dataset.a;
+    slM.value = btn.dataset.m;
+    resetSim();
+  });
+});
+
+[slV, slAngle, slM].forEach(sl => {
+  sl.addEventListener('input', () => {
+    document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('active'));
+    resetSim();
+  });
+});
+[chkTrail, chkVectors, chkArea, chkGuide].forEach(c => c.addEventListener('change', draw));
+window.addEventListener('resize', resize);
+
+conceptLabel.innerHTML = '만유인력 ' + tex('F=GMm/r^2') + ' → 궤도 운동';
+resize();
+resetSim();
+</script>
+</body>
+</html>

@@ -80,6 +80,8 @@ button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.8
       <div class="graph-title" id="lbl-graph-title"></div>
       <div class="katex-label" id="lbl-graph-fline" style="color:#8B0029;"></div>
       <div class="katex-label with-bg" id="lbl-graph-work" style="font-weight:bold;"></div>
+      <div class="katex-label with-bg" id="lbl-xi-scene" style="color:#2563EB;"></div>
+      <div class="katex-label" id="lbl-xi-graph" style="color:#2563EB;font-size:10px;"></div>
     </div>
   </div>
   <div class="controls">
@@ -123,6 +125,13 @@ button { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.8
 // --- KaTeX helper ---
 function kx(tex) {
   return katex.renderToString(tex, { throwOnError: false });
+}
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
 }
 
 // --- Init KaTeX-rendered static content ---
@@ -173,6 +182,8 @@ const lblForce = document.getElementById('lbl-force');
 const lblGraphTitle = document.getElementById('lbl-graph-title');
 const lblGraphFLine = document.getElementById('lbl-graph-fline');
 const lblGraphWork = document.getElementById('lbl-graph-work');
+const lblXiScene = document.getElementById('lbl-xi-scene');
+const lblXiGraph = document.getElementById('lbl-xi-graph');
 
 // Physics constants
 const mass = 1.0;
@@ -420,10 +431,12 @@ function drawScene(ox, oy, w, h) {
     const xiLabelY = groundY - 56;
     // If they're far enough, show normally; otherwise offset vertically
     if (Math.abs(xiLabelX - eqLabelX) > 35) {
-      drawTextWithBg('xᵢ', xiLabelX, xiLabelY, '11px sans-serif', '#2563EB', 'center');
+      posLabel(lblXiScene, ox + xiLabelX - 8, oy + xiLabelY - 12, kx('x_i'));
     } else {
-      drawTextWithBg('xᵢ', xiLabelX, xiLabelY - 14, '11px sans-serif', '#2563EB', 'center');
+      posLabel(lblXiScene, ox + xiLabelX - 8, oy + xiLabelY - 26, kx('x_i'));
     }
+  } else {
+    lblXiScene.style.display = 'none';
   }
 
   // Force arrow on block
@@ -670,13 +683,14 @@ function drawGraph(ox, oy, w, h) {
   // x_i label (only if |xi| > 0.03 to avoid overlap with origin)
   const showGraphXi = Math.abs(xi) >= 0.03;
   if (showGraphXi) {
-    ctx.fillStyle = '#2563EB';
     if (!showBothGraphLabels && running) {
       // Too close — only show x_i with combined label
-      drawTextWithBg('xᵢ / x', xiPxGraph, graphLabelY, '10px sans-serif', '#2563EB', 'center');
+      posLabel(lblXiGraph, ox + xiPxGraph - 15, oy + graphLabelY - 12, kx('x_i') + ' / x');
     } else {
-      drawTextWithBg('xᵢ', xiPxGraph, graphLabelY, '10px sans-serif', '#2563EB', 'center');
+      posLabel(lblXiGraph, ox + xiPxGraph - 8, oy + graphLabelY - 12, kx('x_i'));
     }
+  } else {
+    lblXiGraph.style.display = 'none';
   }
 
   // Current x marker on graph

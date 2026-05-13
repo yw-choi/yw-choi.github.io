@@ -7,29 +7,29 @@
   <!-- Ground -->
   <rect x="40" y="360" width="680" height="30" fill="#F3F4F6" rx="4"/>
   <!-- Axes hint -->
-  <line x1="60" y1="360" x2="720" y2="360" stroke="#6B7280" stroke-width="1.5" marker-end="url(#a-gray)"/>
-  <line x1="60" y1="360" x2="60" y2="30" stroke="#6B7280" stroke-width="1.5" marker-end="url(#a-gray)"/>
+  <line x1="60" y1="360" x2="720" y2="360" stroke="#6B7280" stroke-width="2" marker-end="url(#a-gray)"/>
+  <line x1="60" y1="360" x2="60" y2="30" stroke="#6B7280" stroke-width="2" marker-end="url(#a-gray)"/>
   <text x="710" y="385" font-size="14" fill="#6B7280" font-style="italic">x</text>
   <text x="38" y="40" font-size="14" fill="#6B7280" font-style="italic">y</text>
   <!-- 15 degrees - short range (same as 75) -->
-  <path d="M 60 360 Q 140 300, 260 360" fill="none" stroke="#6B7280" stroke-width="1.5"/>
-  <text x="155" y="320" font-size="13" fill="#6B7280">15°</text>
+  <path d="M 60 360 Q 140 300, 260 360" fill="none" stroke="#6B7280" stroke-width="2"/>
+  <text x="155" y="320" font-size="14" fill="#6B7280">15°</text>
   <!-- 30 degrees -->
-  <path d="M 60 360 Q 220 180, 480 360" fill="none" stroke="#2563EB" stroke-width="1.5"/>
-  <text x="255" y="228" font-size="13" fill="#2563EB">30°</text>
+  <path d="M 60 360 Q 220 180, 480 360" fill="none" stroke="#2563EB" stroke-width="2"/>
+  <text x="255" y="228" font-size="14" fill="#2563EB">30°</text>
   <!-- 45 degrees - maximum -->
   <path d="M 60 360 Q 330 20, 660 360" fill="none" stroke="#8B0029" stroke-width="2.5"/>
-  <text x="340" y="120" font-size="15" fill="#8B0029" font-weight="bold">45°</text>
-  <text x="335" y="100" font-size="13" fill="#8B0029">(최대 도달거리)</text>
+  <text x="340" y="120" font-size="14" fill="#8B0029" font-weight="bold">45°</text>
+  <text x="335" y="100" font-size="14" fill="#8B0029">(최대 도달거리)</text>
   <!-- 60 degrees (same range as 30) -->
-  <path d="M 60 360 Q 180 60, 480 360" fill="none" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="6 3"/>
-  <text x="120" y="145" font-size="13" fill="#2563EB">60°</text>
+  <path d="M 60 360 Q 180 60, 480 360" fill="none" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="120" y="145" font-size="14" fill="#2563EB">60°</text>
   <!-- 75 degrees (same range as 15) -->
-  <path d="M 60 360 Q 100 100, 260 360" fill="none" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="6 3"/>
-  <text x="75" y="180" font-size="13" fill="#6B7280">75°</text>
+  <path d="M 60 360 Q 100 100, 260 360" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="75" y="180" font-size="14" fill="#6B7280">75°</text>
   <!-- Annotation box -->
   <rect x="490" y="50" width="220" height="85" rx="6" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
   <text x="505" y="75" font-size="14" fill="#1a1a1a">같은 도달거리:</text>
-  <text x="505" y="100" font-size="13" fill="#2563EB">30° 와 60° (보각 관계)</text>
-  <text x="505" y="122" font-size="13" fill="#6B7280">15° 와 75° (보각 관계)</text>
+  <text x="505" y="100" font-size="14" fill="#2563EB">30° 와 60° (보각 관계)</text>
+  <text x="505" y="122" font-size="14" fill="#6B7280">15° 와 75° (보각 관계)</text>
 </svg>
