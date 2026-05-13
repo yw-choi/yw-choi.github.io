@@ -1,0 +1,83 @@
+{
+  "generated_at": "2026-05-12T22:48:42+0900",
+  "openai_model": "gpt-image-2",
+  "ai_assets": [
+    {
+      "path": "images/ai/01_pes_bridge.webp",
+      "status": "cached",
+      "title": "PES bridge from DFT to long-time MD"
+    },
+    {
+      "path": "images/ai/02_equivariant_message.webp",
+      "status": "cached",
+      "title": "Equivariant message passing intuition"
+    },
+    {
+      "path": "images/ai/03_mace_many_body.webp",
+      "status": "cached",
+      "title": "MACE many-body features"
+    },
+    {
+      "path": "images/ai/04_foundation_models.webp",
+      "status": "cached",
+      "title": "Foundation potential ecosystem"
+    },
+    {
+      "path": "images/ai/05_active_learning_loop.webp",
+      "status": "cached",
+      "title": "Active learning loop"
+    },
+    {
+      "path": "images/ai/06_production_md.webp",
+      "status": "cached",
+      "title": "Production MD at scale"
+    }
+  ],
+  "diagram_assets": [
+    {
+      "path": "images/diagrams/local_environment.png",
+      "status": "generated",
+      "title": "local environment"
+    },
+    {
+      "path": "images/diagrams/nequip_message.png",
+      "status": "generated",
+      "title": "nequip message"
+    },
+    {
+      "path": "images/diagrams/mace_body_order.png",
+      "status": "generated",
+      "title": "mace body order"
+    },
+    {
+      "path": "images/diagrams/sevennet_domain.png",
+      "status": "generated",
+      "title": "sevennet domain"
+    },
+    {
+      "path": "images/diagrams/mattersim_tp.png",
+      "status": "generated",
+      "title": "mattersim tp"
+    },
+    {
+      "path": "images/diagrams/ecosystem_map.png",
+      "status": "generated",
+      "title": "ecosystem map"
+    },
+    {
+      "path": "images/diagrams/si_supercell.png",
+      "status": "generated",
+      "title": "si supercell"
+    },
+    {
+      "path": "images/diagrams/eos_concept.png",
+      "status": "generated",
+      "title": "eos concept"
+    },
+    {
+      "path": "images/diagrams/md_thermostat.png",
+      "status": "generated",
+      "title": "md thermostat"
+    }
+  ]
+}
