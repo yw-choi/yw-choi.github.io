@@ -201,8 +201,11 @@ function updateUI() {
     fb.innerHTML = katex.renderToString('y = y_m \\sin(kx - \\omega t)', {throwOnError:false}) +
       '<br>' + katex.renderToString('v = \\lambda f = ' + p.v1.toFixed(2) + '\\;\\text{m/s}', {throwOnError:false});
   } else if (mode==='super') {
+    const ampFormula = Math.abs(p.A1 - p.A2) < 0.01
+      ? "y'_m = \\left|2y_m\\cos\\frac{\\phi}{2}\\right|"
+      : "y'_m = \\sqrt{y_{m1}^2 + y_{m2}^2 + 2y_{m1}y_{m2}\\cos\\phi}";
     fb.innerHTML = katex.renderToString("y' = y_1 + y_2", {throwOnError:false}) +
-      '<br>' + katex.renderToString("y'_m = |2y_m\\cos(\\phi/2)|", {throwOnError:false});
+      '<br>' + katex.renderToString(ampFormula, {throwOnError:false});
   } else {
     fb.innerHTML = katex.renderToString("y' = [2y_m \\sin kx]\\cos\\omega t", {throwOnError:false}) +
       '<br>' + katex.renderToString('f_n = n\\frac{v}{2L},\\; n=' + p.n, {throwOnError:false});
@@ -215,7 +218,7 @@ function updateUI() {
       '<span class="lbl">&omega;</span> = <span class="val">' + p.w1.toFixed(2) + ' rad/s</span><br>' +
       '<span class="lbl">T</span> = <span class="val">' + (1/p.f1).toFixed(3) + ' s</span>';
   } else if (mode==='super') {
-    const ym = Math.abs(2*p.A1*Math.cos(p.phi/2));
+    const ym = Math.sqrt(p.A1*p.A1 + p.A2*p.A2 + 2*p.A1*p.A2*Math.cos(p.phi));
     const type = p.phi < 0.05 ? '완전 보강' : Math.abs(p.phi - Math.PI) < 0.05 ? '완전 상쇄' : '중간 간섭';
     ib.innerHTML = '<span class="lbl">&phi;</span> = <span class="val">' + (p.phi/Math.PI).toFixed(2) + '&pi; rad</span><br>' +
       '<span class="lbl">합성 진폭</span> = <span class="val">' + ym.toFixed(2) + '</span><br>' +
@@ -413,8 +416,8 @@ function draw() {
     lParams.style.left = '10px'; lParams.style.top = '30px';
     lMode.innerHTML = ''; lMode.style.display = 'none';
   } else if (mode === 'super') {
-    const ym = Math.abs(2*p.A1*Math.cos(p.phi/2));
-    lEq.innerHTML = katex.renderToString("y'_m = |2y_m\\cos(\\phi/2)| = " + ym.toFixed(2), {throwOnError:false});
+    const ym = Math.sqrt(p.A1*p.A1 + p.A2*p.A2 + 2*p.A1*p.A2*Math.cos(p.phi));
+    lEq.innerHTML = katex.renderToString("y'_m = " + ym.toFixed(2), {throwOnError:false});
     lEq.style.left = '10px'; lEq.style.top = '10px';
     const type = p.phi < 0.05 ? '완전 보강' : Math.abs(p.phi - Math.PI) < 0.05 ? '완전 상쇄' : '중간 간섭';
     lParams.innerHTML = katex.renderToString('\\phi = ' + (p.phi/Math.PI).toFixed(2) + '\\pi', {throwOnError:false});

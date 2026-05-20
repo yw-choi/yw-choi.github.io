@@ -43,7 +43,7 @@
   <!-- Node labels -->
   <text x="80" y="75" text-anchor="middle" font-size="10" fill="#2563EB" font-weight="bold">N</text>
   <text x="620" y="75" text-anchor="middle" font-size="10" fill="#2563EB" font-weight="bold">N</text>
-  <text x="350" y="35" text-anchor="middle" font-size="10" fill="#8B0029" font-weight="bold">A</text>
+  <text x="350" y="58" text-anchor="middle" font-size="10" fill="#8B0029" font-weight="bold">A</text>
   <!-- L = lambda/2 -->
   <text x="680" y="90" font-size="13" fill="#6B7280" font-style="italic">L = &#x3BB;&#x2081;/2</text>
 
