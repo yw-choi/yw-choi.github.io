@@ -1,59 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 450" font-family="sans-serif">
   <defs>
-    <marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
-    </marker>
-    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
-    </marker>
-    <marker id="arrow-gray" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#6B7280"/>
-    </marker>
+    <marker id="apR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/></marker>
+    <marker id="apB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/></marker>
+    <marker id="apG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/></marker>
   </defs>
-
-  <!-- Circle (rotating body) -->
+  <rect width="100%" height="100%" fill="white"/>
   <circle cx="300" cy="225" r="160" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
-
-  <!-- Center point -->
-  <circle cx="300" cy="225" r="4" fill="#000000"/>
-  <text x="285" y="250" font-size="14" fill="#000000" font-weight="bold">O</text>
-
-  <!-- x-axis (reference line) -->
-  <line x1="300" y1="225" x2="470" y2="225" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <circle cx="300" cy="225" r="4" fill="#1a1a1a" stroke="#1a1a1a" stroke-width="0"/>
+  <text x="285" y="250" font-size="14" fill="#1a1a1a" font-weight="bold">O</text>
+  <line x1="300" y1="225" x2="470" y2="225" stroke="#6B7280" stroke-width="1" fill="none" stroke-dasharray="4 3"/>
   <text x="475" y="230" font-size="14" fill="#6B7280">기준선</text>
-
-  <!-- Radius to point P (at angle ~40 degrees) -->
-  <line x1="300" y1="225" x2="422" y2="122" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrow-red)"/>
-
-  <!-- Point P -->
-  <circle cx="422" cy="122" r="6" fill="#8B0029"/>
-  <text x="435" y="118" font-size="14" fill="#8B0029" font-weight="bold">P</text>
-
-  <!-- Radius label r -->
-  <text x="370" y="165" font-size="14" fill="#8B0029" font-style="italic" font-weight="bold">r</text>
-
-  <!-- Angle arc θ (40.2° matching P position) -->
-  <path d="M 350 225 A 50 50 0 0 0 338 193" fill="none" stroke="#8B0029" stroke-width="2"/>
-  <text x="355" y="203" font-size="14" fill="#8B0029" font-style="italic" font-weight="bold">&#x3B8;</text>
-
-  <!-- Arc length s -->
-  <path d="M 460 225 A 160 160 0 0 0 422 122" fill="none" stroke="#2563EB" stroke-width="2.5"/>
+  <line x1="300" y1="225" x2="422.2" y2="121.7" stroke="#8B0029" stroke-width="2.5" fill="none" marker-end="url(#apR)"/>
+  <circle cx="422.2" cy="121.7" r="6" fill="#8B0029" stroke="#8B0029" stroke-width="0"/>
+  <text x="435.2" y="117.7" font-size="14" fill="#8B0029" font-weight="bold">P</text>
+  <text x="370" y="165" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">r</text>
+  <path d="M 350,225 A 50,50 0 0,0 338.2,192.7" fill="none" stroke="#8B0029" stroke-width="2" data-angle-origin="300,225" data-angle-radius="50" data-angle-start="0" data-angle-end="40.2"/>
+  <text x="362" y="207.3" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">θ</text>
+  <path d="M 460,225 A 160,160 0 0,0 422.2,121.7" fill="none" stroke="#2563EB" stroke-width="2.5" data-angle-origin="300,225" data-angle-radius="160" data-angle-start="0" data-angle-end="40.2"/>
   <text x="460" y="165" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">s</text>
-
-  <!-- Formula box -->
   <rect x="40" y="370" width="280" height="55" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
-  <text x="180" y="395" text-anchor="middle" font-size="16" fill="#8B0029" font-weight="bold">
-    <tspan font-style="italic">&#x3B8;</tspan> = <tspan font-style="italic">s</tspan> / <tspan font-style="italic">r</tspan>  (rad)
-  </text>
-  <text x="180" y="415" text-anchor="middle" font-size="14" fill="#6B7280">
-    1 rev = 2&#x3C0; rad = 360°
-  </text>
-
-  <!-- Positive direction indicator -->
-  <path d="M 340 280 A 50 50 0 0 0 260 280" fill="none" stroke="#6B7280" stroke-width="1" marker-end="url(#arrow-gray)"/>
+  <text x="180" y="395" font-size="16" fill="#8B0029" text-anchor="middle" font-weight="bold">θ = s / r  (rad)</text>
+  <text x="180" y="415" font-size="14" fill="#6B7280" text-anchor="middle">1 rev = 2π rad = 360°</text>
+  <path d="M 267.9,263.3 A 50,50 0 0,0 332.1,263.3" fill="none" stroke="#6B7280" stroke-width="1.2" data-angle-origin="300,225" data-angle-radius="50" data-angle-start="230" data-angle-end="310"/>
   <text x="275" y="310" font-size="14" fill="#6B7280">+ 방향 (반시계)</text>
-
-  <!-- Rotation axis indicator -->
-  <text x="300" y="55" text-anchor="middle" font-size="14" fill="#6B7280">회전축 (지면에 수직)</text>
+  <text x="300" y="55" font-size="14" fill="#6B7280" text-anchor="middle">회전축 (지면에 수직)</text>
   <circle cx="300" cy="225" r="8" fill="none" stroke="#6B7280" stroke-width="1"/>
 </svg>

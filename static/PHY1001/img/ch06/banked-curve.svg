@@ -1,71 +1,37 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 450" font-family="sans-serif">
   <defs>
-    <marker id="ar-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
-    </marker>
-    <marker id="ar-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
-    </marker>
-    <marker id="ar-gray" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#6B7280"/>
-    </marker>
+    <marker id="bcR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/></marker>
+    <marker id="bcB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/></marker>
+    <marker id="bcG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/></marker>
   </defs>
-
-  <!-- Left: Physical picture -->
+  <rect width="100%" height="100%" fill="white"/>
   <text x="180" y="30" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="bold">경사 곡선 (Banked Curve)</text>
-
-  <!-- Banked road cross-section -->
   <polygon points="40,340 330,340 330,160" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
-
-  <!-- Angle arc -->
-  <path d="M 285 340 A 45 45 0 0 0 318 310" fill="none" stroke="#6B7280" stroke-width="1"/>
-  <text x="296" y="324" font-size="14" fill="#6B7280" font-style="italic">θ</text>
-
-  <!-- Car on slope -->
-  <g transform="translate(240, 235) rotate(-31.3)">
-    <rect x="-28" y="-20" width="56" height="40" fill="#FFFFFF" stroke="#1a1a1a" stroke-width="2" rx="4"/>
-    <text x="0" y="5" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="bold">차량</text>
+  <path d="M 285,340 A 45,45 0 0,1 291.8,316.3" fill="none" stroke="#6B7280" stroke-width="1.3" data-angle-origin="330,340" data-angle-radius="45" data-angle-start="180" data-angle-end="148.2"/>
+  <text x="271.3" y="328.3" font-size="14" fill="#6B7280" text-anchor="middle" font-weight="bold" font-style="italic">θ</text>
+  <g transform="translate(240,235) rotate(-31.8)">
+  <rect x="-28" y="-20" width="56" height="40" rx="4" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
+  <text x="0" y="5" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="bold">차량</text>
   </g>
-
-  <!-- Center of circular path indicator -->
-  <line x1="40" y1="235" x2="80" y2="235" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3"/>
-  <text x="40" y="215" font-size="14" fill="#8B0029" text-anchor="start">← 원 중심</text>
-
-  <!-- Right: Force Body Diagram -->
+  <line x1="40" y1="235" x2="80" y2="235" stroke="#8B0029" stroke-width="1" fill="none" stroke-dasharray="4 3"/>
+  <text x="40" y="215" font-size="14" fill="#8B0029">← 원 중심</text>
   <text x="540" y="30" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="bold">힘 분석 (마찰 없음)</text>
-
-  <!-- FBD origin point -->
-  <rect x="515" y="230" width="50" height="40" fill="#FFFFFF" stroke="#1a1a1a" stroke-width="2" rx="3"/>
+  <rect x="515" y="230" width="50" height="40" rx="3" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
   <text x="540" y="255" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
-
-  <!-- Weight mg - straight down -->
-  <line x1="540" y1="272" x2="540" y2="390" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ar-red)"/>
+  <line x1="540" y1="272" x2="540" y2="390" stroke="#8B0029" stroke-width="2.5" fill="none" marker-end="url(#bcR)"/>
   <text x="555" y="380" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">mg</text>
-
-  <!-- Normal force N - perpendicular to banked surface (tilted) -->
-  <!-- Angle ~31 degrees from vertical -->
-  <line x1="540" y1="228" x2="490" y2="110" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar-blue)"/>
+  <line x1="540" y1="228" x2="472.5" y2="119.2" stroke="#2563EB" stroke-width="2.5" fill="none" marker-end="url(#bcB)"/>
   <text x="472" y="108" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">N</text>
-
-  <!-- N vertical component: N cos θ (dashed upward) -->
-  <line x1="540" y1="228" x2="540" y2="110" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ar-gray)"/>
+  <line x1="540" y1="228" x2="540" y2="110" stroke="#6B7280" stroke-width="1" fill="none" marker-end="url(#bcG)" stroke-dasharray="4 3"/>
   <text x="555" y="118" font-size="14" fill="#6B7280" font-style="italic">N cos θ</text>
-
-  <!-- Dashed line connecting N tip to vertical component -->
-  <line x1="490" y1="110" x2="540" y2="110" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-
-  <!-- N horizontal component: N sin θ (dashed leftward) -->
-  <line x1="540" y1="228" x2="490" y2="228" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ar-gray)"/>
+  <line x1="540" y1="228" x2="485" y2="228" stroke="#6B7280" stroke-width="1" fill="none" marker-end="url(#bcG)" stroke-dasharray="4 3"/>
   <text x="482" y="220" font-size="14" fill="#6B7280" font-style="italic">N sin θ</text>
-
-  <!-- Dashed line connecting N tip to horizontal component -->
-  <line x1="490" y1="110" x2="490" y2="228" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-
-  <!-- "← 원 중심" label -->
+  <line x1="472.5" y1="119.2" x2="540" y2="119.2" stroke="#6B7280" stroke-width="1" fill="none" stroke-dasharray="4 3"/>
+  <line x1="472.5" y1="119.2" x2="472.5" y2="228" stroke="#6B7280" stroke-width="1" fill="none" stroke-dasharray="4 3"/>
+  <path d="M 540,190 A 38,38 0 0,0 520,195.7" fill="none" stroke="#6B7280" stroke-width="1.3" data-angle-origin="540,228" data-angle-radius="38" data-angle-start="90" data-angle-end="121.8"/>
+  <text x="525.2" y="181.1" font-size="14" fill="#6B7280" text-anchor="middle" font-weight="bold" font-style="italic">θ</text>
   <text x="440" y="242" font-size="14" fill="#8B0029" font-weight="bold">← 원 중심</text>
-
-  <!-- Equations at bottom -->
-  <rect x="120" y="360" width="480" height="70" fill="#F3F4F6" rx="8"/>
+  <rect x="120" y="360" width="480" height="70" rx="8" fill="#F3F4F6" stroke="none" stroke-width="0"/>
   <text x="360" y="382" font-size="14" fill="#1a1a1a" text-anchor="middle">수직 방향: N cos θ = mg</text>
   <text x="360" y="402" font-size="14" fill="#1a1a1a" text-anchor="middle">수평 방향 (구심): N sin θ = mv²/R</text>
   <text x="360" y="422" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold">→  tan θ = v² / (Rg)</text>

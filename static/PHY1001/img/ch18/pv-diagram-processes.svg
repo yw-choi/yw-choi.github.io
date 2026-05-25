@@ -1,108 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 460" font-family="sans-serif">
   <defs>
-    <marker id="arr-r" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#8B0029"/>
+    <marker id="pdR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
+      <polygon points="0 0, 10 3.5, 0 7"/>
     </marker>
-    <marker id="arr-b" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#2563EB"/>
+    <marker id="pdB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
+      <polygon points="0 0, 10 3.5, 0 7"/>
     </marker>
-    <marker id="arr-g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#6B7280"/>
+    <marker id="pdG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
+      <polygon points="0 0, 10 3.5, 0 7"/>
     </marker>
-    <marker id="arr-k" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#1a1a1a"/>
+    <marker id="pdK" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#1a1a1a">
+      <polygon points="0 0, 10 3.5, 0 7"/>
     </marker>
   </defs>
-
   <text x="390" y="25" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a1a">PV 다이어그램: 열역학 과정</text>
-
-  <!-- ISOBARIC (top-left) -->
-  <g transform="translate(30,40)">
-    <text x="85" y="15" text-anchor="middle" font-size="13" font-weight="bold" fill="#8B0029">등압 과정 (Isobaric)</text>
-    <!-- Axes -->
-    <line x1="30" y1="170" x2="30" y2="30" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arr-k)"/>
-    <line x1="30" y1="170" x2="170" y2="170" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arr-k)"/>
-    <text x="15" y="95" font-size="12" fill="#1a1a1a" font-style="italic">P</text>
-    <text x="170" y="188" font-size="12" fill="#1a1a1a" font-style="italic">V</text>
-    <!-- Horizontal line at constant P -->
-    <line x1="50" y1="90" x2="145" y2="90" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arr-r)"/>
-    <!-- Shaded area -->
-    <rect x="50" y="90" width="95" height="80" fill="#8B0029" opacity="0.1"/>
-    <circle cx="50" cy="90" r="4" fill="#8B0029"/>
-    <text x="42" y="82" font-size="11" fill="#8B0029" font-weight="bold">i</text>
-    <text x="150" y="82" font-size="11" fill="#8B0029" font-weight="bold">f</text>
-    <text x="97" y="145" text-anchor="middle" font-size="11" fill="#8B0029" font-style="italic">W = PΔV</text>
-  </g>
-
-  <!-- ISOCHORIC (top-right) -->
-  <g transform="translate(210,40)">
-    <text x="85" y="15" text-anchor="middle" font-size="13" font-weight="bold" fill="#2563EB">등적 과정 (Isochoric)</text>
-    <line x1="30" y1="170" x2="30" y2="30" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arr-k)"/>
-    <line x1="30" y1="170" x2="170" y2="170" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arr-k)"/>
-    <text x="15" y="95" font-size="12" fill="#1a1a1a" font-style="italic">P</text>
-    <text x="170" y="188" font-size="12" fill="#1a1a1a" font-style="italic">V</text>
-    <!-- Vertical line at constant V -->
-    <line x1="90" y1="140" x2="90" y2="60" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arr-b)"/>
-    <circle cx="90" cy="140" r="4" fill="#2563EB"/>
-    <text x="82" y="155" font-size="11" fill="#2563EB" font-weight="bold">i</text>
-    <text x="82" y="55" font-size="11" fill="#2563EB" font-weight="bold">f</text>
-    <text x="90" y="188" text-anchor="middle" font-size="11" fill="#2563EB" font-style="italic">W = 0</text>
-  </g>
-
-  <!-- ISOTHERMAL (bottom-left) -->
-  <g transform="translate(30,240)">
-    <text x="85" y="15" text-anchor="middle" font-size="13" font-weight="bold" fill="#6B7280">등온 과정 (Isothermal)</text>
-    <line x1="30" y1="170" x2="30" y2="30" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arr-k)"/>
-    <line x1="30" y1="170" x2="170" y2="170" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arr-k)"/>
-    <text x="15" y="95" font-size="12" fill="#1a1a1a" font-style="italic">P</text>
-    <text x="170" y="188" font-size="12" fill="#1a1a1a" font-style="italic">V</text>
-    <!-- Hyperbolic curve PV=const -->
-    <path d="M 50,60 Q 80,80 90,100 Q 100,120 145,140" stroke="#6B7280" stroke-width="2.5" fill="none" marker-end="url(#arr-g)"/>
-    <!-- Shaded area under curve -->
-    <path d="M 50,60 Q 80,80 90,100 Q 100,120 145,140 L 145,170 L 50,170 Z" fill="#6B7280" opacity="0.1"/>
-    <circle cx="50" cy="60" r="4" fill="#6B7280"/>
-    <text x="42" y="52" font-size="11" fill="#6B7280" font-weight="bold">i</text>
-    <text x="150" y="135" font-size="11" fill="#6B7280" font-weight="bold">f</text>
-    <text x="97" y="188" text-anchor="middle" font-size="11" fill="#6B7280" font-style="italic">T = const</text>
-  </g>
-
-  <!-- ADIABATIC (bottom-right) -->
-  <g transform="translate(210,240)">
-    <text x="85" y="15" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a1a">단열 과정 (Adiabatic)</text>
-    <line x1="30" y1="170" x2="30" y2="30" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arr-k)"/>
-    <line x1="30" y1="170" x2="170" y2="170" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arr-k)"/>
-    <text x="15" y="95" font-size="12" fill="#1a1a1a" font-style="italic">P</text>
-    <text x="170" y="188" font-size="12" fill="#1a1a1a" font-style="italic">V</text>
-    <!-- Steeper curve than isothermal -->
-    <path d="M 50,55 Q 70,75 85,105 Q 95,130 145,150" stroke="#1a1a1a" stroke-width="2.5" fill="none" marker-end="url(#arr-k)"/>
-    <!-- Shaded area -->
-    <path d="M 50,55 Q 70,75 85,105 Q 95,130 145,150 L 145,170 L 50,170 Z" fill="#1a1a1a" opacity="0.08"/>
-    <circle cx="50" cy="55" r="4" fill="#1a1a1a"/>
-    <text x="42" y="47" font-size="11" fill="#1a1a1a" font-weight="bold">i</text>
-    <text x="150" y="145" font-size="11" fill="#1a1a1a" font-weight="bold">f</text>
-    <text x="97" y="188" text-anchor="middle" font-size="11" fill="#1a1a1a" font-style="italic">Q = 0</text>
-  </g>
-
-  <!-- Summary table on right side -->
-  <g transform="translate(420,55)">
-    <rect x="0" y="0" width="320" height="350" rx="10" fill="rgba(139,0,41,0.06)" stroke="#8B0029" stroke-width="2"/>
-    <text x="160" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">열역학 제1법칙 특수 경우</text>
-    <text x="160" y="48" text-anchor="middle" font-size="13" font-style="italic" fill="#1a1a1a">ΔE_int = Q - W</text>
-    <line x1="20" y1="60" x2="300" y2="60" stroke="#8B0029" stroke-width="1"/>
-
-    <text x="30" y="90" font-size="13" font-weight="bold" fill="#8B0029">등압 (Isobaric):</text>
-    <text x="30" y="110" font-size="12" fill="#1a1a1a" font-style="italic">W = PΔV, ΔE_int = Q - PΔV</text>
-
-    <text x="30" y="145" font-size="13" font-weight="bold" fill="#2563EB">등적 (Isochoric):</text>
-    <text x="30" y="165" font-size="12" fill="#1a1a1a" font-style="italic">W = 0, ΔE_int = Q</text>
-
-    <text x="30" y="200" font-size="13" font-weight="bold" fill="#6B7280">등온 (Isothermal):</text>
-    <text x="30" y="220" font-size="12" fill="#1a1a1a" font-style="italic">ΔE_int = 0, Q = W (이상기체)</text>
-
-    <text x="30" y="255" font-size="13" font-weight="bold" fill="#1a1a1a">단열 (Adiabatic):</text>
-    <text x="30" y="275" font-size="12" fill="#1a1a1a" font-style="italic">Q = 0, ΔE_int = -W</text>
-
-    <text x="30" y="310" font-size="13" font-weight="bold" fill="#6B7280">자유팽창 (Free Expansion):</text>
-    <text x="30" y="330" font-size="12" fill="#1a1a1a" font-style="italic">Q = W = 0, ΔE_int = 0</text>
-  </g>
+  <g transform="translate(30,40)"><text x="85" y="15" text-anchor="middle" font-size="13" font-weight="bold" fill="#8B0029">등압 과정 (Isobaric)</text><line x1="30" y1="170" x2="30" y2="30" stroke="#1a1a1a" stroke-width="2" marker-end="url(#pdK)"/><line x1="30" y1="170" x2="170" y2="170" stroke="#1a1a1a" stroke-width="2" marker-end="url(#pdK)"/><text x="15" y="95" font-size="12" fill="#1a1a1a" font-style="italic">P</text><text x="170" y="188" font-size="12" fill="#1a1a1a" font-style="italic">V</text><line x1="50" y1="90" x2="145" y2="90" stroke="#8B0029" stroke-width="2.5" marker-end="url(#pdR)"/><rect x="50" y="90" width="95" height="80" fill="#8B0029" opacity="0.1"/><circle cx="50" cy="90" r="4" fill="#8B0029"/><text x="42" y="82" font-size="11" fill="#8B0029" font-weight="bold">i</text><text x="150" y="82" font-size="11" fill="#8B0029" font-weight="bold">f</text><text x="97" y="145" text-anchor="middle" font-size="11" fill="#8B0029" font-style="italic">W = PΔV</text></g>
+  <g transform="translate(210,40)"><text x="85" y="15" text-anchor="middle" font-size="13" font-weight="bold" fill="#2563EB">등적 과정 (Isochoric)</text><line x1="30" y1="170" x2="30" y2="30" stroke="#1a1a1a" stroke-width="2" marker-end="url(#pdK)"/><line x1="30" y1="170" x2="170" y2="170" stroke="#1a1a1a" stroke-width="2" marker-end="url(#pdK)"/><text x="15" y="95" font-size="12" fill="#1a1a1a" font-style="italic">P</text><text x="170" y="188" font-size="12" fill="#1a1a1a" font-style="italic">V</text><line x1="90" y1="140" x2="90" y2="60" stroke="#2563EB" stroke-width="2.5" marker-end="url(#pdB)"/><circle cx="90" cy="140" r="4" fill="#2563EB"/><text x="82" y="155" font-size="11" fill="#2563EB" font-weight="bold">i</text><text x="82" y="55" font-size="11" fill="#2563EB" font-weight="bold">f</text><text x="90" y="188" text-anchor="middle" font-size="11" fill="#2563EB" font-style="italic">W = 0</text></g>
+  <g transform="translate(30,240)"><text x="85" y="15" text-anchor="middle" font-size="13" font-weight="bold" fill="#6B7280">등온 과정 (Isothermal)</text><line x1="30" y1="170" x2="30" y2="30" stroke="#1a1a1a" stroke-width="2" marker-end="url(#pdK)"/><line x1="30" y1="170" x2="170" y2="170" stroke="#1a1a1a" stroke-width="2" marker-end="url(#pdK)"/><text x="15" y="95" font-size="12" fill="#1a1a1a" font-style="italic">P</text><text x="170" y="188" font-size="12" fill="#1a1a1a" font-style="italic">V</text><path d="M 30.0,55.0 L 31.1,59.1 L 32.3,62.9 L 33.5,66.5 L 34.6,69.9 L 35.8,73.2 L 36.9,76.3 L 38.0,79.2 L 39.2,82.0 L 40.3,84.6 L 41.5,87.2 L 42.7,89.6 L 43.8,91.9 L 45.0,94.1 L 46.1,96.2 L 47.2,98.3 L 48.4,100.2 L 49.5,102.1 L 50.7,103.9 L 51.8,105.6 L 53.0,107.3 L 54.1,108.9 L 55.3,110.4 L 56.5,111.9 L 57.6,113.4 L 58.8,114.7 L 59.9,116.1 L 61.0,117.4 L 62.2,118.6 L 63.3,119.9 L 64.5,121.0 L 65.7,122.2 L 66.8,123.3 L 68.0,124.3 L 69.1,125.4 L 70.2,126.4 L 71.4,127.4 L 72.6,128.3 L 73.7,129.3 L 74.8,130.2 L 76.0,131.0 L 77.2,131.9 L 78.3,132.7 L 79.4,133.5 L 80.6,134.3 L 81.8,135.1 L 82.9,135.8 L 84.1,136.6 L 85.2,137.3 L 86.3,138.0 L 87.5,138.6 L 88.7,139.3 L 89.8,139.9 L 90.9,140.6 L 92.1,141.2 L 93.2,141.8 L 94.4,142.4 L 95.5,143.0 L 96.7,143.5 L 97.8,144.1 L 99.0,144.6 L 100.1,145.1 L 101.3,145.7 L 102.4,146.2 L 103.6,146.7 L 104.8,147.1 L 105.9,147.6 L 107.1,148.1 L 108.2,148.5 L 109.3,149.0 L 110.5,149.4 L 111.6,149.9 L 112.8,150.3 L 113.9,150.7 L 115.1,151.1 L 116.2,151.5 L 117.4,151.9 L 118.6,152.3 L 119.7,152.7 L 120.9,153.0 L 122.0,153.4 L 123.2,153.8 L 124.3,154.1 L 125.4,154.5 L 126.6,154.8 L 127.8,155.1 L 128.9,155.5 L 130.1,155.8 L 131.2,156.1 L 132.4,156.4 L 133.5,156.7 L 134.7,157.0 L 135.8,157.3 L 136.9,157.6 L 138.1,157.9 L 139.2,158.2 L 140.4,158.5 L 141.6,158.7 L 142.7,159.0 L 143.9,159.3 L 145.0,159.5" stroke="#6B7280" stroke-width="2.5" fill="none" marker-end="url(#pdG)"/><path d="M 30.0,55.0 L 31.1,59.1 L 32.3,62.9 L 33.5,66.5 L 34.6,69.9 L 35.8,73.2 L 36.9,76.3 L 38.0,79.2 L 39.2,82.0 L 40.3,84.6 L 41.5,87.2 L 42.7,89.6 L 43.8,91.9 L 45.0,94.1 L 46.1,96.2 L 47.2,98.3 L 48.4,100.2 L 49.5,102.1 L 50.7,103.9 L 51.8,105.6 L 53.0,107.3 L 54.1,108.9 L 55.3,110.4 L 56.5,111.9 L 57.6,113.4 L 58.8,114.7 L 59.9,116.1 L 61.0,117.4 L 62.2,118.6 L 63.3,119.9 L 64.5,121.0 L 65.7,122.2 L 66.8,123.3 L 68.0,124.3 L 69.1,125.4 L 70.2,126.4 L 71.4,127.4 L 72.6,128.3 L 73.7,129.3 L 74.8,130.2 L 76.0,131.0 L 77.2,131.9 L 78.3,132.7 L 79.4,133.5 L 80.6,134.3 L 81.8,135.1 L 82.9,135.8 L 84.1,136.6 L 85.2,137.3 L 86.3,138.0 L 87.5,138.6 L 88.7,139.3 L 89.8,139.9 L 90.9,140.6 L 92.1,141.2 L 93.2,141.8 L 94.4,142.4 L 95.5,143.0 L 96.7,143.5 L 97.8,144.1 L 99.0,144.6 L 100.1,145.1 L 101.3,145.7 L 102.4,146.2 L 103.6,146.7 L 104.8,147.1 L 105.9,147.6 L 107.1,148.1 L 108.2,148.5 L 109.3,149.0 L 110.5,149.4 L 111.6,149.9 L 112.8,150.3 L 113.9,150.7 L 115.1,151.1 L 116.2,151.5 L 117.4,151.9 L 118.6,152.3 L 119.7,152.7 L 120.9,153.0 L 122.0,153.4 L 123.2,153.8 L 124.3,154.1 L 125.4,154.5 L 126.6,154.8 L 127.8,155.1 L 128.9,155.5 L 130.1,155.8 L 131.2,156.1 L 132.4,156.4 L 133.5,156.7 L 134.7,157.0 L 135.8,157.3 L 136.9,157.6 L 138.1,157.9 L 139.2,158.2 L 140.4,158.5 L 141.6,158.7 L 142.7,159.0 L 143.9,159.3 L 145.0,159.5 L 145.0,170.0 L 50.0,170.0" fill="#6B7280" opacity="0.1"/><circle cx="50" cy="60" r="4" fill="#6B7280"/><text x="42" y="52" font-size="11" fill="#6B7280" font-weight="bold">i</text><text x="150" y="135" font-size="11" fill="#6B7280" font-weight="bold">f</text><text x="97" y="188" text-anchor="middle" font-size="11" fill="#6B7280" font-style="italic">T = const</text></g>
+  <g transform="translate(210,240)"><text x="85" y="15" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a1a">단열 과정 (Adiabatic)</text><line x1="30" y1="170" x2="30" y2="30" stroke="#1a1a1a" stroke-width="2" marker-end="url(#pdK)"/><line x1="30" y1="170" x2="170" y2="170" stroke="#1a1a1a" stroke-width="2" marker-end="url(#pdK)"/><text x="15" y="95" font-size="12" fill="#1a1a1a" font-style="italic">P</text><text x="170" y="188" font-size="12" fill="#1a1a1a" font-style="italic">V</text><path d="M 30.0,55.0 L 31.2,60.7 L 32.3,65.9 L 33.4,70.8 L 34.6,75.5 L 35.8,79.8 L 36.9,83.8 L 38.1,87.6 L 39.2,91.2 L 40.3,94.6 L 41.5,97.9 L 42.7,100.9 L 43.8,103.8 L 44.9,106.5 L 46.1,109.1 L 47.2,111.5 L 48.4,113.9 L 49.6,116.1 L 50.7,118.2 L 51.9,120.3 L 53.0,122.2 L 54.1,124.1 L 55.3,125.8 L 56.4,127.5 L 57.6,129.2 L 58.8,130.7 L 59.9,132.2 L 61.1,133.7 L 62.2,135.0 L 63.4,136.4 L 64.5,137.6 L 65.6,138.9 L 66.8,140.1 L 67.9,141.2 L 69.1,142.3 L 70.2,143.4 L 71.4,144.4 L 72.6,145.4 L 73.7,146.3 L 74.9,147.3 L 76.0,148.2 L 77.1,149.0 L 78.3,149.9 L 79.4,150.7 L 80.6,151.5 L 81.8,152.2 L 82.9,153.0 L 84.1,153.7 L 85.2,154.4 L 86.4,155.1 L 87.5,155.7 L 88.7,156.4 L 89.8,157.0 L 90.9,157.6 L 92.1,158.2 L 93.2,158.8 L 94.4,159.3 L 95.6,159.9 L 96.7,160.4 L 97.9,160.9 L 99.0,161.4 L 100.1,161.9 L 101.3,162.4 L 102.4,162.8 L 103.6,163.3 L 104.8,163.7 L 105.9,164.2 L 107.1,164.6 L 108.2,165.0 L 109.4,165.4 L 110.5,165.8 L 111.6,166.2 L 112.8,166.6 L 113.9,166.9 L 115.1,167.3 L 116.2,167.6 L 117.4,168.0 L 118.6,168.3 L 119.7,168.6 L 120.9,169.0 L 122.0,169.3 L 123.1,169.6 L 124.3,169.9 L 125.4,170.2 L 126.6,170.5 L 127.8,170.7 L 128.9,171.0 L 130.1,171.3 L 131.2,171.6 L 132.4,171.8 L 133.5,172.1 L 134.6,172.3 L 135.8,172.6 L 136.9,172.8 L 138.1,173.0 L 139.2,173.3 L 140.4,173.5 L 141.6,173.7 L 142.7,174.0 L 143.9,174.2 L 145.0,174.4" stroke="#1a1a1a" stroke-width="2.5" fill="none" marker-end="url(#pdK)"/><path d="M 30.0,55.0 L 31.2,60.7 L 32.3,65.9 L 33.4,70.8 L 34.6,75.5 L 35.8,79.8 L 36.9,83.8 L 38.1,87.6 L 39.2,91.2 L 40.3,94.6 L 41.5,97.9 L 42.7,100.9 L 43.8,103.8 L 44.9,106.5 L 46.1,109.1 L 47.2,111.5 L 48.4,113.9 L 49.6,116.1 L 50.7,118.2 L 51.9,120.3 L 53.0,122.2 L 54.1,124.1 L 55.3,125.8 L 56.4,127.5 L 57.6,129.2 L 58.8,130.7 L 59.9,132.2 L 61.1,133.7 L 62.2,135.0 L 63.4,136.4 L 64.5,137.6 L 65.6,138.9 L 66.8,140.1 L 67.9,141.2 L 69.1,142.3 L 70.2,143.4 L 71.4,144.4 L 72.6,145.4 L 73.7,146.3 L 74.9,147.3 L 76.0,148.2 L 77.1,149.0 L 78.3,149.9 L 79.4,150.7 L 80.6,151.5 L 81.8,152.2 L 82.9,153.0 L 84.1,153.7 L 85.2,154.4 L 86.4,155.1 L 87.5,155.7 L 88.7,156.4 L 89.8,157.0 L 90.9,157.6 L 92.1,158.2 L 93.2,158.8 L 94.4,159.3 L 95.6,159.9 L 96.7,160.4 L 97.9,160.9 L 99.0,161.4 L 100.1,161.9 L 101.3,162.4 L 102.4,162.8 L 103.6,163.3 L 104.8,163.7 L 105.9,164.2 L 107.1,164.6 L 108.2,165.0 L 109.4,165.4 L 110.5,165.8 L 111.6,166.2 L 112.8,166.6 L 113.9,166.9 L 115.1,167.3 L 116.2,167.6 L 117.4,168.0 L 118.6,168.3 L 119.7,168.6 L 120.9,169.0 L 122.0,169.3 L 123.1,169.6 L 124.3,169.9 L 125.4,170.2 L 126.6,170.5 L 127.8,170.7 L 128.9,171.0 L 130.1,171.3 L 131.2,171.6 L 132.4,171.8 L 133.5,172.1 L 134.6,172.3 L 135.8,172.6 L 136.9,172.8 L 138.1,173.0 L 139.2,173.3 L 140.4,173.5 L 141.6,173.7 L 142.7,174.0 L 143.9,174.2 L 145.0,174.4 L 145.0,170.0 L 50.0,170.0" fill="#1a1a1a" opacity="0.08"/><circle cx="50" cy="60" r="4" fill="#1a1a1a"/><text x="42" y="52" font-size="11" fill="#1a1a1a" font-weight="bold">i</text><text x="150" y="155" font-size="11" fill="#1a1a1a" font-weight="bold">f</text><text x="97" y="188" text-anchor="middle" font-size="11" fill="#1a1a1a" font-style="italic">Q = 0</text></g>
+  <g transform="translate(420,55)"><rect x="0" y="0" width="320" height="350" rx="10" fill="rgba(139,0,41,0.06)" stroke="#8B0029" stroke-width="2"/><text x="160" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#8B0029">열역학 제1법칙 특수 경우</text><text x="160" y="48" text-anchor="middle" font-size="13" font-style="italic" fill="#1a1a1a">ΔE_int = Q - W</text><line x1="20" y1="60" x2="300" y2="60" stroke="#8B0029" stroke-width="1"/><text x="30" y="90" font-size="13" font-weight="bold" fill="#8B0029">등압 (Isobaric):</text><text x="30" y="110" font-size="12" fill="#1a1a1a" font-style="italic">W = PΔV, ΔE_int = Q - PΔV</text><text x="30" y="145" font-size="13" font-weight="bold" fill="#2563EB">등적 (Isochoric):</text><text x="30" y="165" font-size="12" fill="#1a1a1a" font-style="italic">W = 0, ΔE_int = Q</text><text x="30" y="200" font-size="13" font-weight="bold" fill="#6B7280">등온 (Isothermal):</text><text x="30" y="220" font-size="12" fill="#1a1a1a" font-style="italic">ΔE_int = 0, Q = W (이상기체)</text><text x="30" y="255" font-size="13" font-weight="bold" fill="#1a1a1a">단열 (Adiabatic):</text><text x="30" y="275" font-size="12" fill="#1a1a1a" font-style="italic">Q = 0, ΔE_int = -W</text><text x="30" y="310" font-size="13" font-weight="bold" fill="#6B7280">자유팽창 (Free Expansion):</text><text x="30" y="330" font-size="12" fill="#1a1a1a" font-style="italic">Q = W = 0, ΔE_int = 0</text></g>
 </svg>

@@ -1,73 +1,37 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" font-family="sans-serif">
   <defs>
-    <marker id="arrR2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <path d="M0,0 L8,3 L0,6 Z" fill="#8B0029"/>
-    </marker>
-    <marker id="arrB2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <path d="M0,0 L8,3 L0,6 Z" fill="#2563EB"/>
-    </marker>
-    <marker id="arrG2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <path d="M0,0 L8,3 L0,6 Z" fill="#6B7280"/>
-    </marker>
+    <marker id="wsR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/></marker>
+    <marker id="wsB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/></marker>
+    <marker id="wsG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/></marker>
   </defs>
-
-  <text x="350" y="30" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a1a">줄 위의 펄스 (펄스와 함께 움직이는 기준틀)</text>
-
-  <!-- String with pulse -->
-  <!-- Straight part left -->
-  <line x1="40" y1="220" x2="220" y2="220" stroke="#1a1a1a" stroke-width="2.5"/>
-  <!-- Pulse arc -->
+  <rect width="100%" height="100%" fill="white"/>
+  <text x="350" y="30" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="bold">줄 위의 펄스 (펄스와 함께 움직이는 기준틀)</text>
+  <line x1="40" y1="220" x2="220" y2="220" stroke="#1a1a1a" stroke-width="2.5" fill="none"/>
   <path d="M220,220 Q280,120 340,120 Q400,120 460,220" fill="none" stroke="#1a1a1a" stroke-width="2.5"/>
-  <!-- Straight part right -->
-  <line x1="460" y1="220" x2="640" y2="220" stroke="#1a1a1a" stroke-width="2.5"/>
-
-  <!-- Arc element at top of pulse -->
-  <path d="M305,125 Q340,110 375,125" fill="none" stroke="#8B0029" stroke-width="3"/>
-  <text x="340" y="105" text-anchor="middle" font-size="13" fill="#8B0029" font-weight="bold">&#916;l</text>
-
-  <!-- Center of curvature and radius -->
-  <circle cx="340" cy="250" r="3" fill="#6B7280"/>
+  <line x1="460" y1="220" x2="640" y2="220" stroke="#1a1a1a" stroke-width="2.5" fill="none"/>
+  <path d="M 304.2,125 A 130,130 0 0,1 375.8,125" fill="none" stroke="#8B0029" stroke-width="3" data-angle-origin="340,250" data-angle-radius="130" data-angle-start="106" data-angle-end="74"/>
+  <text x="340" y="105" font-size="13" fill="#8B0029" text-anchor="middle" font-weight="bold">Δl</text>
+  <circle cx="340" cy="250" r="3" fill="#6B7280" stroke="#6B7280" stroke-width="0"/>
   <text x="350" y="265" font-size="12" fill="#6B7280" font-style="italic">O</text>
-
-  <!-- Radius lines -->
-  <line x1="340" y1="250" x2="305" y2="125" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <line x1="340" y1="250" x2="375" y2="125" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <text x="305" y="195" font-size="14" font-style="italic" fill="#6B7280">R</text>
-
-  <!-- Angle theta -->
-  <path d="M340,230 Q330,225 325,218" fill="none" stroke="#6B7280" stroke-width="1"/>
-  <text x="315" y="230" font-size="13" font-style="italic" fill="#6B7280">&#952;</text>
-  <path d="M340,230 Q350,225 355,218" fill="none" stroke="#6B7280" stroke-width="1"/>
-  <text x="358" y="230" font-size="13" font-style="italic" fill="#6B7280">&#952;</text>
-
-  <!-- Tension arrows at element ends -->
-  <line x1="305" y1="125" x2="270" y2="145" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR2)"/>
-  <text x="255" y="155" font-size="14" font-style="italic" fill="#8B0029" font-weight="bold">&#964;</text>
-
-  <line x1="375" y1="125" x2="410" y2="145" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR2)"/>
-  <text x="418" y="155" font-size="14" font-style="italic" fill="#8B0029" font-weight="bold">&#964;</text>
-
-  <!-- Velocity arrows (string moving left in pulse frame) -->
-  <line x1="150" y1="220" x2="100" y2="220" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB2)"/>
-  <text x="125" y="240" text-anchor="middle" font-size="13" font-style="italic" fill="#2563EB" font-weight="bold">v</text>
-
-  <line x1="560" y1="220" x2="510" y2="220" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB2)"/>
-  <text x="535" y="240" text-anchor="middle" font-size="13" font-style="italic" fill="#2563EB" font-weight="bold">v</text>
-
-  <!-- Net force arrow (downward toward center) -->
-  <line x1="340" y1="118" x2="340" y2="165" stroke="#8B0029" stroke-width="2" marker-end="url(#arrR2)" stroke-dasharray="none"/>
+  <line x1="340" y1="250" x2="304.2" y2="125" stroke="#6B7280" stroke-width="1" fill="none" stroke-dasharray="4 3"/>
+  <line x1="340" y1="250" x2="375.8" y2="125" stroke="#6B7280" stroke-width="1" fill="none" stroke-dasharray="4 3"/>
+  <text x="305" y="195" font-size="14" fill="#6B7280" font-style="italic">R</text>
+  <path d="M 340,226 A 24,24 0 0,0 333.4,226.9" fill="none" stroke="#6B7280" stroke-width="1.2" data-angle-origin="340,250" data-angle-radius="24" data-angle-start="90" data-angle-end="106"/>
+  <text x="335.4" y="222.3" font-size="12" fill="#6B7280" text-anchor="middle" font-weight="bold" font-style="italic">θ</text>
+  <path d="M 340,226 A 24,24 0 0,1 346.6,226.9" fill="none" stroke="#6B7280" stroke-width="1.2" data-angle-origin="340,250" data-angle-radius="24" data-angle-start="90" data-angle-end="74"/>
+  <text x="344.6" y="222.3" font-size="12" fill="#6B7280" text-anchor="middle" font-weight="bold" font-style="italic">θ</text>
+  <line x1="304.2" y1="125" x2="270" y2="145" stroke="#8B0029" stroke-width="2.5" fill="none" marker-end="url(#wsR)"/>
+  <text x="255" y="155" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">τ</text>
+  <line x1="375.8" y1="125" x2="410" y2="145" stroke="#8B0029" stroke-width="2.5" fill="none" marker-end="url(#wsR)"/>
+  <text x="418" y="155" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">τ</text>
+  <line x1="150" y1="220" x2="100" y2="220" stroke="#2563EB" stroke-width="2.5" fill="none" marker-end="url(#wsB)"/>
+  <text x="125" y="240" font-size="13" fill="#2563EB" text-anchor="middle" font-weight="bold" font-style="italic">v</text>
+  <line x1="560" y1="220" x2="510" y2="220" stroke="#2563EB" stroke-width="2.5" fill="none" marker-end="url(#wsB)"/>
+  <text x="535" y="240" font-size="13" fill="#2563EB" text-anchor="middle" font-weight="bold" font-style="italic">v</text>
+  <line x1="340" y1="118" x2="340" y2="165" stroke="#8B0029" stroke-width="2" fill="none" marker-end="url(#wsR)"/>
   <text x="355" y="150" font-size="13" fill="#8B0029" font-weight="bold">F</text>
-
-  <!-- Derivation box -->
   <rect x="80" y="290" width="540" height="90" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
-  <text x="350" y="315" text-anchor="middle" font-size="13" fill="#1a1a1a">
-    <tspan font-weight="bold" fill="#8B0029">F = ma :</tspan>
-    <tspan dx="10" font-style="italic">&#964; &#916;l/R = (&#956; &#916;l) v</tspan><tspan font-size="10" dy="-5">2</tspan><tspan dy="5">/R</tspan>
-  </text>
-  <text x="350" y="345" text-anchor="middle" font-size="16" fill="#8B0029" font-weight="bold" font-style="italic">
-    v = &#8730;(&#964;/&#956;)
-  </text>
-  <text x="350" y="370" text-anchor="middle" font-size="12" fill="#6B7280">
-    &#964; : 장력(tension), &#956; : 선밀도(linear density)
-  </text>
+  <text x="350" y="315" font-size="13" fill="#1a1a1a" text-anchor="middle">F = ma :  τ Δl/R = (μ Δl) v²/R</text>
+  <text x="350" y="345" font-size="16" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">v = √(τ/μ)</text>
+  <text x="350" y="370" font-size="12" fill="#6B7280" text-anchor="middle">τ : 장력(tension), μ : 선밀도(linear density)</text>
 </svg>

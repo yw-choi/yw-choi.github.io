@@ -1,82 +1,37 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 450" font-family="sans-serif">
   <defs>
-    <marker id="arr-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/>
-    </marker>
-    <marker id="arr-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
-    </marker>
-    <marker id="arr-gray" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#6B7280"/>
-    </marker>
+    <marker id="laR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/></marker>
+    <marker id="laB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/></marker>
+    <marker id="laG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/></marker>
   </defs>
-
-  <!-- Circle (rotating disk) -->
+  <rect width="100%" height="100%" fill="white"/>
   <circle cx="280" cy="220" r="150" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
-
-  <!-- Center -->
-  <circle cx="280" cy="220" r="4" fill="#000000"/>
-  <text x="265" y="240" font-size="14" fill="#000000" font-weight="bold">O</text>
-
-  <!-- Radius to P at ~35 degrees -->
-  <line x1="280" y1="220" x2="403" y2="134" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <!-- r label -->
+  <circle cx="280" cy="220" r="4" fill="#1a1a1a" stroke="#1a1a1a" stroke-width="0"/>
+  <text x="265" y="240" font-size="14" fill="#1a1a1a" font-weight="bold">O</text>
+  <line x1="280" y1="220" x2="402.9" y2="134" stroke="#6B7280" stroke-width="1" fill="none" stroke-dasharray="4 3"/>
   <text x="330" y="195" font-size="14" fill="#6B7280" font-style="italic">r</text>
-
-  <!-- Point P -->
-  <circle cx="403" cy="134" r="7" fill="#8B0029"/>
-  <text x="415" y="125" font-size="16" fill="#8B0029" font-weight="bold">P</text>
-
-  <!-- Tangential velocity v (perpendicular to radius, tangent) -->
-  <line x1="403" y1="134" x2="350" y2="55" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arr-blue)"/>
-  <text x="340" y="48" font-size="14" fill="#2563EB" font-weight="bold">
-    <tspan font-style="italic">v</tspan> = <tspan font-style="italic">&#x3C9;r</tspan>
-  </text>
-
-  <!-- Tangential acceleration at (same direction as v, offset) -->
-  <line x1="414" y1="145" x2="391" y2="98" stroke="#2563EB" stroke-width="1.5" marker-end="url(#arr-blue)" stroke-dasharray="4 3"/>
-  <text x="412" y="91" font-size="14" fill="#2563EB">
-    <tspan font-style="italic">a</tspan><tspan font-size="9" baseline-shift="sub">t</tspan> = <tspan font-style="italic">&#x3B1;r</tspan>
-  </text>
-
-  <!-- Radial acceleration ar (pointing inward toward center O) -->
-  <line x1="403" y1="134" x2="330" y2="185" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arr-red)"/>
-  <text x="300" y="190" font-size="14" fill="#8B0029">
-    <tspan font-style="italic">a</tspan><tspan font-size="10" baseline-shift="sub">r</tspan> = <tspan font-style="italic">&#x3C9;</tspan>&#xB2;<tspan font-style="italic">r</tspan>
-  </text>
+  <circle cx="402.9" cy="134" r="7" fill="#8B0029" stroke="#8B0029" stroke-width="0"/>
+  <text x="414.9" y="125" font-size="16" fill="#8B0029" font-weight="bold">P</text>
+  <line x1="402.9" y1="134" x2="348.4" y2="56.1" stroke="#2563EB" stroke-width="2.5" fill="none" marker-end="url(#laB)"/>
+  <text x="337.9" y="48" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">v = ωr</text>
+  <line x1="413.9" y1="145" x2="384" y2="102.4" stroke="#2563EB" stroke-width="1.5" fill="none" marker-end="url(#laB)" stroke-dasharray="4 3"/>
+  <text x="410.9" y="91" font-size="14" fill="#2563EB" font-style="italic">aₜ = αr</text>
+  <line x1="402.9" y1="134" x2="330" y2="185" stroke="#8B0029" stroke-width="2.5" fill="none" marker-end="url(#laR)"/>
+  <text x="300" y="190" font-size="14" fill="#8B0029" font-style="italic">aᵣ = ω²r</text>
   <text x="300" y="207" font-size="14" fill="#8B0029">(구심)</text>
-
-  <!-- Angular velocity ω -->
-  <path d="M 320 275 A 50 50 0 0 0 240 275" fill="none" stroke="#8B0029" stroke-width="2" marker-end="url(#arr-red)"/>
-  <text x="265" y="300" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">&#x3C9;</text>
-
-  <!-- Formulas box -->
+  <path d="M 247.9,258.3 A 50,50 0 0,0 312.1,258.3" fill="none" stroke="#8B0029" stroke-width="2" data-angle-origin="280,220" data-angle-radius="50" data-angle-start="230" data-angle-end="310"/>
+  <text x="265" y="300" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">ω</text>
   <rect x="490" y="40" width="240" height="185" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
-  <text x="610" y="68" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">선형-각 관계</text>
-
-  <text x="510" y="98" font-size="14" fill="#000000">호 길이:</text>
-  <text x="640" y="98" font-size="14" fill="#2563EB" font-weight="bold">
-    <tspan font-style="italic">s</tspan> = <tspan font-style="italic">&#x3B8;r</tspan>
-  </text>
-
-  <text x="510" y="125" font-size="14" fill="#000000">접선 속력:</text>
-  <text x="640" y="125" font-size="14" fill="#2563EB" font-weight="bold">
-    <tspan font-style="italic">v</tspan> = <tspan font-style="italic">&#x3C9;r</tspan>
-  </text>
-
-  <text x="510" y="152" font-size="14" fill="#000000">접선 가속도:</text>
-  <text x="648" y="152" font-size="14" fill="#2563EB" font-weight="bold">
-    <tspan font-style="italic">a</tspan><tspan font-size="10" baseline-shift="sub">t</tspan> = <tspan font-style="italic">&#x3B1;r</tspan>
-  </text>
-
-  <text x="510" y="179" font-size="14" fill="#000000">구심 가속도:</text>
-  <text x="648" y="179" font-size="14" fill="#8B0029" font-weight="bold">
-    <tspan font-style="italic">a</tspan><tspan font-size="10" baseline-shift="sub">r</tspan> = <tspan font-style="italic">&#x3C9;</tspan>&#xB2;<tspan font-style="italic">r</tspan>
-  </text>
-
-  <line x1="500" y1="195" x2="720" y2="195" stroke="#6B7280" stroke-width="1"/>
-  <text x="610" y="213" text-anchor="middle" font-size="14" fill="#6B7280">모든 각도는 라디안(rad)</text>
-
-  <!-- Right angle marker at P -->
-  <rect x="393" y="124" width="8" height="8" fill="none" stroke="#6B7280" stroke-width="1" transform="rotate(-55, 403, 134)"/>
+  <text x="610" y="68" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold">선형-각 관계</text>
+  <text x="510" y="98" font-size="14" fill="#1a1a1a">호 길이:</text>
+  <text x="640" y="98" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">s = θr</text>
+  <text x="510" y="125" font-size="14" fill="#1a1a1a">접선 속력:</text>
+  <text x="640" y="125" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">v = ωr</text>
+  <text x="510" y="152" font-size="14" fill="#1a1a1a">접선 가속도:</text>
+  <text x="648" y="152" font-size="14" fill="#2563EB" font-weight="bold" font-style="italic">aₜ = αr</text>
+  <text x="510" y="179" font-size="14" fill="#1a1a1a">구심 가속도:</text>
+  <text x="648" y="179" font-size="14" fill="#8B0029" font-weight="bold" font-style="italic">aᵣ = ω²r</text>
+  <line x1="500" y1="195" x2="720" y2="195" stroke="#6B7280" stroke-width="1" fill="none"/>
+  <text x="610" y="213" font-size="14" fill="#6B7280" text-anchor="middle">모든 각도는 라디안(rad)</text>
+  <rect x="392.9" y="124" width="8" height="8" fill="none" stroke="#6B7280" stroke-width="1" transform="rotate(-55,402.9,134)"/>
 </svg>

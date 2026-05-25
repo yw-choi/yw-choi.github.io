@@ -1,90 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 500" font-family="sans-serif">
   <defs>
-    <marker id="aR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
-      <polygon points="0 0, 10 3.5, 0 7"/>
-    </marker>
-    <marker id="aB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
-      <polygon points="0 0, 10 3.5, 0 7"/>
-    </marker>
-    <marker id="aG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
-      <polygon points="0 0, 10 3.5, 0 7"/>
-    </marker>
+    <marker id="rrR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/></marker>
+    <marker id="rrB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/></marker>
+    <marker id="rrG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/></marker>
   </defs>
-
-  <!-- Incline triangle. Right-angle at bottom-right (660, 430).
-       Hypotenuse from (60, 430) [lower-left] to (660, 130) [upper-right].
-       Bulk fills the bottom-right triangle: (60,430), (660,430), (660,130).
-       Surface direction down-incline: from (660,130) to (60,430) = (-600, 300), unit (-0.894, 0.447). θ = atan(300/600) ≈ 26.57°.
-       Outward normal (away from bulk, toward upper-LEFT): (-sin θ, -cos θ) ≈ (-0.447, -0.894). -->
+  <rect width="100%" height="100%" fill="white"/>
   <polygon points="60,430 660,430 660,130" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
-
-  <!-- Ground hatching below incline -->
-  <line x1="60" y1="430" x2="700" y2="430" stroke="#6B7280" stroke-width="2"/>
-  <g stroke="#6B7280" stroke-width="1.2">
-    <line x1="80" y1="430" x2="65" y2="448"/>
-    <line x1="120" y1="430" x2="105" y2="448"/>
-    <line x1="160" y1="430" x2="145" y2="448"/>
-    <line x1="200" y1="430" x2="185" y2="448"/>
-    <line x1="240" y1="430" x2="225" y2="448"/>
-    <line x1="280" y1="430" x2="265" y2="448"/>
-    <line x1="320" y1="430" x2="305" y2="448"/>
-    <line x1="360" y1="430" x2="345" y2="448"/>
-    <line x1="400" y1="430" x2="385" y2="448"/>
-    <line x1="440" y1="430" x2="425" y2="448"/>
-    <line x1="480" y1="430" x2="465" y2="448"/>
-    <line x1="520" y1="430" x2="505" y2="448"/>
-    <line x1="560" y1="430" x2="545" y2="448"/>
-    <line x1="600" y1="430" x2="585" y2="448"/>
-    <line x1="640" y1="430" x2="625" y2="448"/>
-  </g>
-
-  <!-- Angle θ at bottom-right corner (between ground and hypotenuse going up-left) -->
-  <!-- Ground direction from corner: (-1, 0) → angle π. Hypotenuse direction from corner: (-0.894, -0.447) → angle in 3rd quadrant. -->
-  <path d="M 600,430 A 60,60 0 0,0 606,403" fill="none" stroke="#6B7280" stroke-width="1.5"/>
-  <text x="585" y="418" font-size="22" font-style="italic" fill="#6B7280">&#x3B8;</text>
-
-  <!-- Ball: midpoint of hypotenuse (360, 280). Center offset by 42 in outward normal direction.
-       Center: (360 - 42*0.447, 280 - 42*0.894) = (341.2, 242.5). Round to (341, 243). r=42. -->
+  <line x1="60" y1="430" x2="700" y2="430" stroke="#6B7280" stroke-width="2" fill="none"/>
+  <line x1="80" y1="430" x2="65" y2="448" stroke="#6B7280" stroke-width="1.2" fill="none"/>
+  <line x1="120" y1="430" x2="105" y2="448" stroke="#6B7280" stroke-width="1.2" fill="none"/>
+  <line x1="160" y1="430" x2="145" y2="448" stroke="#6B7280" stroke-width="1.2" fill="none"/>
+  <line x1="200" y1="430" x2="185" y2="448" stroke="#6B7280" stroke-width="1.2" fill="none"/>
+  <line x1="240" y1="430" x2="225" y2="448" stroke="#6B7280" stroke-width="1.2" fill="none"/>
+  <line x1="280" y1="430" x2="265" y2="448" stroke="#6B7280" stroke-width="1.2" fill="none"/>
+  <line x1="320" y1="430" x2="305" y2="448" stroke="#6B7280" stroke-width="1.2" fill="none"/>
+  <line x1="360" y1="430" x2="345" y2="448" stroke="#6B7280" stroke-width="1.2" fill="none"/>
+  <line x1="400" y1="430" x2="385" y2="448" stroke="#6B7280" stroke-width="1.2" fill="none"/>
+  <line x1="440" y1="430" x2="425" y2="448" stroke="#6B7280" stroke-width="1.2" fill="none"/>
+  <line x1="480" y1="430" x2="465" y2="448" stroke="#6B7280" stroke-width="1.2" fill="none"/>
+  <line x1="520" y1="430" x2="505" y2="448" stroke="#6B7280" stroke-width="1.2" fill="none"/>
+  <line x1="560" y1="430" x2="545" y2="448" stroke="#6B7280" stroke-width="1.2" fill="none"/>
+  <line x1="600" y1="430" x2="585" y2="448" stroke="#6B7280" stroke-width="1.2" fill="none"/>
+  <line x1="640" y1="430" x2="625" y2="448" stroke="#6B7280" stroke-width="1.2" fill="none"/>
+  <path d="M 600,430 A 60,60 0 0,1 606.3,403.2" fill="none" stroke="#6B7280" stroke-width="1.5" data-angle-origin="660,430" data-angle-radius="60" data-angle-start="180" data-angle-end="153.4"/>
+  <text x="586" y="417.5" font-size="20" fill="#6B7280" text-anchor="middle" font-weight="bold" font-style="italic">θ</text>
   <circle cx="341" cy="243" r="42" fill="#F3F4F6" stroke="#6B7280" stroke-width="2.5"/>
-  <circle cx="341" cy="243" r="3" fill="#6B7280"/>
-  <text x="341" y="252" text-anchor="middle" font-size="22" font-weight="bold" font-style="italic" fill="#1a1a1a">M</text>
-
-  <!-- Rotation indicator: small curved arrow OUTSIDE the ball (top), with label clear of M -->
-  <path d="M 360,196 A 22,22 0 0,1 322,196" fill="none" stroke="#2563EB" stroke-width="2.5" marker-end="url(#aB)"/>
-  <text x="372" y="204" font-size="20" font-style="italic" fill="#2563EB" font-weight="bold">&#x3C9;</text>
-
-  <!-- Mg force: from ball center straight DOWN, but stop short of the contact point so it doesn't visually penetrate the surface.
-       Contact point in screen: (341 + 42*0.447, 243 + 42*0.894) = (359.8, 280.5).
-       Mg arrow from (341, 285) just below the ball, going down to length ~85. End: (341, 370). -->
-  <line x1="341" y1="287" x2="341" y2="372" stroke="#8B0029" stroke-width="3" marker-end="url(#aR)"/>
-  <text x="356" y="368" font-size="22" font-weight="bold" fill="#8B0029" font-style="italic">Mg</text>
-
-  <!-- Normal force N at contact point (360, 280), perpendicular to surface, outward (-sin θ, -cos θ) ≈ (-0.447, -0.894), length 90 → end (319.8, 199.5) -->
-  <line x1="360" y1="280" x2="320" y2="200" stroke="#2563EB" stroke-width="3" marker-end="url(#aB)"/>
-  <text x="295" y="195" text-anchor="end" font-size="22" font-weight="bold" fill="#2563EB" font-style="italic">N</text>
-
-  <!-- Friction f_s at contact point, up-incline direction (cos θ, -sin θ) ≈ (0.894, -0.447), length 75 → end (427, 246.5) -->
-  <line x1="360" y1="280" x2="427" y2="247" stroke="#8B0029" stroke-width="3" marker-end="url(#aR)"/>
-  <text x="438" y="248" font-size="22" font-weight="bold" fill="#8B0029">
-    <tspan font-style="italic">f</tspan><tspan font-size="16" baseline-shift="sub">s</tspan>
-  </text>
-
-  <!-- Contact point dot -->
-  <circle cx="360" cy="280" r="3.5" fill="#1a1a1a"/>
-
-  <!-- Acceleration a_com (dashed): from ball center, down-incline direction (-cos θ, sin θ) ≈ (-0.894, 0.447), length 80 → end (270, 279) -->
-  <line x1="341" y1="243" x2="271" y2="278" stroke="#6B7280" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#aG)"/>
-  <text x="200" y="276" font-size="20" fill="#6B7280" font-weight="bold">
-    <tspan font-style="italic">a</tspan><tspan font-size="14" baseline-shift="sub">com</tspan>
-  </text>
-
-  <!-- Coordinate axes inset (top-left, well away from the ball)
-       x: down-incline (-0.894, 0.447), y: outward normal (-0.447, -0.894). Length 50 each. Origin at (110, 110). -->
-  <g transform="translate(110, 110)">
-    <line x1="0" y1="0" x2="-44.7" y2="22.4" stroke="#6B7280" stroke-width="2" marker-end="url(#aG)"/>
-    <text x="-58" y="33" font-size="20" font-style="italic" fill="#6B7280" font-weight="bold">x</text>
-    <line x1="0" y1="0" x2="-22.4" y2="-44.7" stroke="#6B7280" stroke-width="2" marker-end="url(#aG)"/>
-    <text x="-32" y="-50" font-size="20" font-style="italic" fill="#6B7280" font-weight="bold">y</text>
-    <circle cx="0" cy="0" r="3" fill="#6B7280"/>
-  </g>
+  <circle cx="341" cy="243" r="3" fill="#6B7280" stroke="#6B7280" stroke-width="0"/>
+  <text x="341" y="252" font-size="22" fill="#1a1a1a" text-anchor="middle" font-weight="bold" font-style="italic">M</text>
+  <path d="M 360.1,200.1 A 47,47 0 0,0 309.6,208.1" fill="none" stroke="#2563EB" stroke-width="2.5" data-angle-origin="341,243" data-angle-radius="47" data-angle-start="66" data-angle-end="132"/>
+  <text x="372" y="204" font-size="20" fill="#2563EB" font-weight="bold" font-style="italic">ω</text>
+  <line x1="341" y1="287" x2="341" y2="372" stroke="#8B0029" stroke-width="3" fill="none" marker-end="url(#rrR)"/>
+  <text x="356" y="368" font-size="22" fill="#8B0029" font-weight="bold" font-style="italic">Mg</text>
+  <line x1="360" y1="280" x2="320" y2="200" stroke="#2563EB" stroke-width="3" fill="none" marker-end="url(#rrB)"/>
+  <text x="295" y="195" font-size="22" fill="#2563EB" text-anchor="end" font-weight="bold" font-style="italic">N</text>
+  <line x1="360" y1="280" x2="427" y2="247" stroke="#8B0029" stroke-width="3" fill="none" marker-end="url(#rrR)"/>
+  <text x="438" y="248" font-size="22" fill="#8B0029" font-weight="bold" font-style="italic">fₛ</text>
+  <circle cx="360" cy="280" r="3.5" fill="#1a1a1a" stroke="#1a1a1a" stroke-width="0"/>
+  <line x1="341" y1="243" x2="271" y2="278" stroke="#6B7280" stroke-width="2.5" fill="none" marker-end="url(#rrG)" stroke-dasharray="6 4"/>
+  <text x="200" y="276" font-size="20" fill="#6B7280" font-weight="bold" font-style="italic">a_com</text>
+  <line x1="110" y1="110" x2="65.3" y2="132.4" stroke="#6B7280" stroke-width="2" fill="none" marker-end="url(#rrG)"/>
+  <text x="52" y="143" font-size="20" fill="#6B7280" font-weight="bold" font-style="italic">x</text>
+  <line x1="110" y1="110" x2="87.6" y2="65.3" stroke="#6B7280" stroke-width="2" fill="none" marker-end="url(#rrG)"/>
+  <text x="78" y="60" font-size="20" fill="#6B7280" font-weight="bold" font-style="italic">y</text>
 </svg>

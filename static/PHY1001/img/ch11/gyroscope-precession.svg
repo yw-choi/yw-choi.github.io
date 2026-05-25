@@ -1,88 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 500" font-family="sans-serif">
   <defs>
-    <marker id="apR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#8B0029">
-      <polygon points="0 0, 10 3.5, 0 7"/>
-    </marker>
-    <marker id="apB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#2563EB">
-      <polygon points="0 0, 10 3.5, 0 7"/>
-    </marker>
-    <marker id="apG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#6B7280">
-      <polygon points="0 0, 10 3.5, 0 7"/>
-    </marker>
+    <marker id="gpR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/></marker>
+    <marker id="gpB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/></marker>
+    <marker id="gpG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/></marker>
   </defs>
-
-  <!-- Ground line with hatching -->
-  <line x1="50" y1="440" x2="530" y2="440" stroke="#6B7280" stroke-width="2"/>
-  <g stroke="#6B7280" stroke-width="1">
-    <line x1="70" y1="440" x2="55" y2="455"/>
-    <line x1="110" y1="440" x2="95" y2="455"/>
-    <line x1="150" y1="440" x2="135" y2="455"/>
-    <line x1="190" y1="440" x2="175" y2="455"/>
-    <line x1="230" y1="440" x2="215" y2="455"/>
-    <line x1="270" y1="440" x2="255" y2="455"/>
-    <line x1="310" y1="440" x2="295" y2="455"/>
-    <line x1="350" y1="440" x2="335" y2="455"/>
-    <line x1="390" y1="440" x2="375" y2="455"/>
-    <line x1="430" y1="440" x2="415" y2="455"/>
-    <line x1="470" y1="440" x2="455" y2="455"/>
-    <line x1="510" y1="440" x2="495" y2="455"/>
-  </g>
-
-  <!-- Support pedestal -->
+  <rect width="100%" height="100%" fill="white"/>
+  <line x1="50" y1="440" x2="530" y2="440" stroke="#6B7280" stroke-width="2" fill="none"/>
+  <line x1="70" y1="440" x2="55" y2="455" stroke="#6B7280" stroke-width="1" fill="none"/>
+  <line x1="110" y1="440" x2="95" y2="455" stroke="#6B7280" stroke-width="1" fill="none"/>
+  <line x1="150" y1="440" x2="135" y2="455" stroke="#6B7280" stroke-width="1" fill="none"/>
+  <line x1="190" y1="440" x2="175" y2="455" stroke="#6B7280" stroke-width="1" fill="none"/>
+  <line x1="230" y1="440" x2="215" y2="455" stroke="#6B7280" stroke-width="1" fill="none"/>
+  <line x1="270" y1="440" x2="255" y2="455" stroke="#6B7280" stroke-width="1" fill="none"/>
+  <line x1="310" y1="440" x2="295" y2="455" stroke="#6B7280" stroke-width="1" fill="none"/>
+  <line x1="350" y1="440" x2="335" y2="455" stroke="#6B7280" stroke-width="1" fill="none"/>
+  <line x1="390" y1="440" x2="375" y2="455" stroke="#6B7280" stroke-width="1" fill="none"/>
+  <line x1="430" y1="440" x2="415" y2="455" stroke="#6B7280" stroke-width="1" fill="none"/>
+  <line x1="470" y1="440" x2="455" y2="455" stroke="#6B7280" stroke-width="1" fill="none"/>
+  <line x1="510" y1="440" x2="495" y2="455" stroke="#6B7280" stroke-width="1" fill="none"/>
   <rect x="240" y="340" width="22" height="100" rx="1" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
   <rect x="222" y="430" width="58" height="10" rx="2" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
-
-  <!-- Vertical z-axis (dashed) -->
-  <line x1="251" y1="335" x2="251" y2="50" stroke="#6B7280" stroke-width="1" stroke-dasharray="5 4"/>
-  <text x="260" y="58" font-size="16" font-style="italic" fill="#6B7280">z</text>
-
-  <!-- Precession ellipse (dashed path of wheel center) -->
+  <line x1="251" y1="335" x2="251" y2="50" stroke="#6B7280" stroke-width="1" fill="none" stroke-dasharray="5 4"/>
+  <text x="260" y="58" font-size="16" fill="#6B7280" font-style="italic">z</text>
   <ellipse cx="251" cy="210" rx="209" ry="65" fill="none" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="6 5"/>
-
-  <!-- Ghost axis position (dashed, 180° opposite) showing precession cone -->
-  <line x1="251" y1="340" x2="42" y2="210" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.4"/>
-  <ellipse cx="42" cy="210" rx="7" ry="40" transform="rotate(32, 42, 210)" fill="none" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.4"/>
-
-  <!-- Pivot point -->
-  <circle cx="251" cy="340" r="4" fill="#1a1a1a"/>
-  <text x="228" y="358" text-anchor="end" font-size="15" fill="#6B7280">O (지지점)</text>
-
-  <!-- Axis rod from pivot to wheel center -->
-  <line x1="251" y1="340" x2="460" y2="210" stroke="#1a1a1a" stroke-width="3"/>
-
-  <!-- θ angle arc between vertical and axis -->
-  <path d="M 251,275 A 65,65 0 0,1 306,306" fill="none" stroke="#6B7280" stroke-width="1.5"/>
-  <text x="275" y="285" font-size="20" font-style="italic" fill="#6B7280">θ</text>
-
-  <!-- Spinning wheel (edge-on disk, perpendicular to axis) -->
-  <ellipse cx="460" cy="210" rx="10" ry="55" transform="rotate(-32, 460, 210)" fill="#F3F4F6" stroke="#6B7280" stroke-width="2.5"/>
-  <!-- Wheel center dot (COM) -->
-  <circle cx="460" cy="210" r="3" fill="#6B7280"/>
-
-  <!-- L vector along axis (offset slightly above the rod) -->
-  <line x1="278" y1="310" x2="436" y2="211" stroke="#8B0029" stroke-width="3" marker-end="url(#apR)"/>
-  <text x="420" y="196" font-size="24" font-weight="bold" font-style="italic" fill="#8B0029">L</text>
-
-  <!-- ω spin vector extending beyond wheel along axis -->
-  <line x1="474" y1="201" x2="535" y2="163" stroke="#2563EB" stroke-width="2.5" marker-end="url(#apB)"/>
-  <text x="543" y="170" font-size="22" font-weight="bold" font-style="italic" fill="#2563EB">ω</text>
-
-  <!-- Mg gravity force (downward from below wheel) -->
-  <line x1="460" y1="265" x2="460" y2="390" stroke="#2563EB" stroke-width="2.5" marker-end="url(#apB)"/>
-  <text x="475" y="382" font-size="20" font-weight="bold" font-style="italic" fill="#2563EB">Mg</text>
-
-  <!-- r label along axis -->
-  <text x="368" y="296" text-anchor="middle" font-size="18" font-style="italic" fill="#6B7280">r</text>
-
-  <!-- Ω precession indicator (curved arrow around z-axis near top) -->
-  <path d="M 290,80 A 42,14 0 0,0 212,80" fill="none" stroke="#8B0029" stroke-width="2.5" marker-end="url(#apR)"/>
-  <text x="251" y="62" text-anchor="middle" font-size="22" font-weight="bold" font-style="italic" fill="#8B0029">Ω</text>
-
-  <!-- τ vector annotation (right side) -->
-  <g transform="translate(600, 260)">
-    <text x="0" y="0" text-anchor="middle" font-size="18" fill="#8B0029">
-      <tspan font-style="italic" font-weight="bold">τ</tspan> = <tspan font-style="italic" font-weight="bold">r</tspan> × <tspan font-style="italic">M</tspan><tspan font-style="italic" font-weight="bold">g</tspan>
-    </text>
-    <text x="0" y="22" text-anchor="middle" font-size="14" fill="#6B7280">수평, <tspan font-style="italic" font-weight="bold">L</tspan>에 ⊥</text>
-  </g>
+  <line x1="251" y1="340" x2="42" y2="210" stroke="#6B7280" stroke-width="1.5" fill="none" stroke-dasharray="5 4" opacity="0.4"/>
+  <circle cx="251" cy="340" r="4" fill="#1a1a1a" stroke="#1a1a1a" stroke-width="0"/>
+  <text x="228" y="358" font-size="15" fill="#6B7280" text-anchor="end">O (지지점)</text>
+  <line x1="251" y1="340" x2="460" y2="210" stroke="#1a1a1a" stroke-width="3" fill="none"/>
+  <path d="M 251,275 A 65,65 0 0,1 306.2,305.7" fill="none" stroke="#6B7280" stroke-width="1.5" data-angle-origin="251,340" data-angle-radius="65" data-angle-start="90" data-angle-end="31.9"/>
+  <text x="290.3" y="274.2" font-size="20" fill="#6B7280" text-anchor="middle" font-weight="bold" font-style="italic">θ</text>
+  <ellipse cx="460" cy="210" rx="10" ry="55" transform="rotate(-32,460,210)" fill="#F3F4F6" stroke="#6B7280" stroke-width="2.5"/>
+  <circle cx="460" cy="210" r="3" fill="#6B7280" stroke="#6B7280" stroke-width="0"/>
+  <line x1="278" y1="310" x2="436" y2="211" stroke="#8B0029" stroke-width="3" fill="none" marker-end="url(#gpR)"/>
+  <text x="420" y="196" font-size="24" fill="#8B0029" font-weight="bold" font-style="italic">L</text>
+  <line x1="474" y1="201" x2="535" y2="163" stroke="#2563EB" stroke-width="2.5" fill="none" marker-end="url(#gpB)"/>
+  <text x="543" y="170" font-size="22" fill="#2563EB" font-weight="bold" font-style="italic">ω</text>
+  <line x1="460" y1="265" x2="460" y2="390" stroke="#2563EB" stroke-width="2.5" fill="none" marker-end="url(#gpB)"/>
+  <text x="475" y="382" font-size="20" fill="#2563EB" font-weight="bold" font-style="italic">Mg</text>
+  <text x="368" y="296" font-size="18" fill="#6B7280" text-anchor="middle" font-style="italic">r</text>
+  <path d="M 290,80 A 42,14 0 0,0 212,80" fill="none" stroke="#8B0029" stroke-width="2.5" marker-end="url(#gpR)"/>
+  <text x="251" y="62" font-size="22" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">Ω</text>
+  <text x="600" y="260" font-size="18" fill="#8B0029" text-anchor="middle">τ = r × Mg</text>
+  <text x="600" y="282" font-size="14" fill="#6B7280" text-anchor="middle">수평, L에 ⊥</text>
 </svg>
