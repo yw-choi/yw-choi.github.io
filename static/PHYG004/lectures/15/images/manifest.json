@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-05-22T02:45:02+0900",
+  "model": "gpt-image-1",
+  "size": "1536x1024",
+  "ai_assets": [
+    {
+      "path": "images/ai/03_boltzmann_generator.webp",
+      "key": "boltzmann-generator",
+      "title": "Boltzmann generator — sample physical configurations in one shot",
+      "prompt_summary": "STRICT REQUIREMENT: ABSOLUTELY NO TEXT, NO LETTERS, NO WORDS, NO CAPTIONS ANYWHERE in the image. Purely visual scientific illustration, like a wordless figure p...",
+      "status": "generated with gpt-image-1",
+      "size_bytes": 26706
+    }
+  ]
+}
