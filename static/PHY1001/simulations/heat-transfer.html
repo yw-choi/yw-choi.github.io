@@ -102,7 +102,7 @@ button { flex: 1; padding: 7px; border: none; border-radius: 8px; font-size: 0.7
       </div>
     </div>
     <div>
-      <label>최종 부피 비 V<sub>f</sub>/V<sub>i</sub></label>
+      <label id="ratioLabel">최종 부피 비 V<sub>f</sub>/V<sub>i</sub></label>
       <div class="slider-row">
         <input type="range" id="slRatio" min="0.3" max="3.0" step="0.1" value="2.0">
         <span class="slider-val" id="valRatio">2.0</span>
@@ -391,17 +391,8 @@ function draw() {
   ctx.textAlign = 'center';
   ctx.fillText('W', containerX + containerW / 2, pistonY - 44);
 
-  // Temperature text in gas
-  ctx.fillStyle = '#1a1a1a';
-  ctx.font = 'bold 14px sans-serif';
-  ctx.textAlign = 'center';
+  // Molecular motion dots (drawn first so the temperature text sits on top)
   const gasMidY = (pistonY + containerY + containerH) / 2;
-  ctx.fillText(`T = ${curr.T.toFixed(0)} K`, containerX + containerW / 2, gasMidY);
-  ctx.font = '12px sans-serif';
-  ctx.fillStyle = '#555';
-  ctx.fillText(`(${(curr.T - 273.15).toFixed(0)}°C)`, containerX + containerW / 2, gasMidY + 18);
-
-  // Molecular motion dots
   const numDots = Math.round(10 + 20 * tFrac);
   ctx.fillStyle = gasColor;
   ctx.globalAlpha = 0.6;
@@ -409,11 +400,21 @@ function draw() {
   for (let i = 0; i < numDots; i++) {
     const dx = containerX + 10 + rng() * (containerW - 20);
     const dy = pistonY + 15 + rng() * (containerY + containerH - pistonY - 25);
-    if (dy < containerY + containerH - 5) {
+    // skip dots within the temperature text band so the labels stay legible
+    if (dy < containerY + containerH - 5 && Math.abs(dy - (gasMidY + 9)) > 16) {
       ctx.beginPath(); ctx.arc(dx, dy, 2 + rng() * 2, 0, Math.PI * 2); ctx.fill();
     }
   }
   ctx.globalAlpha = 1;
+
+  // Temperature text in gas (drawn last so opaque text overlays the dots)
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`T = ${curr.T.toFixed(0)} K`, containerX + containerW / 2, gasMidY);
+  ctx.font = '12px sans-serif';
+  ctx.fillStyle = '#555';
+  ctx.fillText(`(${(curr.T - 273.15).toFixed(0)}°C)`, containerX + containerW / 2, gasMidY + 18);
 
   // Container label
   ctx.fillStyle = '#6B7280';
@@ -478,10 +479,12 @@ function setProcess(type) {
   stopAnim();
   document.querySelectorAll('.process-btns button').forEach(b => b.classList.remove('active'));
   document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('active');
-  // Adjust ratio slider for isochoric
+  // Adjust ratio slider label per process (isochoric reinterprets ratio as p_f/p_i)
   if (type === 'isochoric') {
     slRatio.min = 0.3; slRatio.max = 3.0;
-    document.querySelector('label[for="slRatio"]')?.remove();
+    document.getElementById('ratioLabel').innerHTML = '최종 압력 비 p<sub>f</sub>/p<sub>i</sub>';
+  } else {
+    document.getElementById('ratioLabel').innerHTML = '최종 부피 비 V<sub>f</sub>/V<sub>i</sub>';
   }
   updateFormula();
   draw();

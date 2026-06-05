@@ -65,6 +65,8 @@ button.reset-btn:hover { background: #a3003a; }
     <div class="canvas-overlay" id="overlay">
       <div class="katex-label with-bg" id="lbl-point" style="color:#8B0029;"></div>
       <div class="katex-label with-bg" id="lbl-step" style="color:#2563EB;"></div>
+      <div class="katex-label with-bg" id="lbl-th" style="color:#8B0029;"></div>
+      <div class="katex-label with-bg" id="lbl-tl" style="color:#2563EB;"></div>
     </div>
     <div class="canvas-title" id="canvasTitle"></div>
   </div>
@@ -87,8 +89,8 @@ button.reset-btn:hover { background: #a3003a; }
     </div>
 
     <div class="control-group">
-      <label>초기 부피 V_a = <span id="vaVal">1.0</span> L</label>
-      <input type="range" id="vaSlider" min="0.5" max="3.0" value="1.0" step="0.1">
+      <label>팽창비 V_b/V_a = <span id="ratioVal">3.0</span></label>
+      <input type="range" id="ratioSlider" min="1.5" max="5" value="3" step="0.1">
     </div>
 
     <div class="step-indicator" id="stepIndicator">
@@ -119,6 +121,8 @@ let CW, CH;
 
 const lblPoint = document.getElementById('lbl-point');
 const lblStep = document.getElementById('lbl-step');
+const lblTH = document.getElementById('lbl-th');
+const lblTL = document.getElementById('lbl-tl');
 
 function posLabel(el, px, py, html) {
   el.innerHTML = html;
@@ -129,7 +133,7 @@ function posLabel(el, px, py, html) {
 
 const thSlider = document.getElementById('thSlider');
 const tlSlider = document.getElementById('tlSlider');
-const vaSlider = document.getElementById('vaSlider');
+const ratioSlider = document.getElementById('ratioSlider');
 const playBtn = document.getElementById('playBtn');
 const resetBtn = document.getElementById('resetBtn');
 
@@ -145,17 +149,18 @@ function getParams() {
   const TH = parseFloat(thSlider.value);
   let TL = parseFloat(tlSlider.value);
   if (TL >= TH) TL = TH - 10;
-  const Va = parseFloat(vaSlider.value) * 1e-3; // L to m^3
-  return { TH, TL, Va };
+  const Va = 1e-3; // fixed initial volume: 1 L in m^3
+  const ratio = parseFloat(ratioSlider.value); // Vb/Va expansion ratio
+  return { TH, TL, Va, ratio };
 }
 
 // Calculate the four corner points of the Carnot cycle
-function calcCycle(TH, TL, Va) {
+function calcCycle(TH, TL, Va, ratio) {
   // a: (Va, pa) on TH isotherm
   const pa = n * R * TH / Va;
 
-  // b: isothermal expansion at TH, choose Vb = 3*Va for visual clarity
-  const Vb = 3 * Va;
+  // b: isothermal expansion at TH, Vb = ratio * Va
+  const Vb = ratio * Va;
   const pb = n * R * TH / Vb;
 
   // c: adiabatic from b to TL: T*V^(gamma-1) = const
@@ -265,7 +270,7 @@ function step(ts) {
 
 function updateInfo() {
   const params = getParams();
-  const c = calcCycle(params.TH, params.TL, params.Va);
+  const c = calcCycle(params.TH, params.TL, params.Va, params.ratio);
   const pt = getPointOnCycle(c, cycleProgress);
 
   // Calculate current temperature
@@ -312,9 +317,11 @@ function draw() {
   ctx.clearRect(0, 0, CW, CH);
   lblPoint.style.display = 'none';
   lblStep.style.display = 'none';
+  lblTH.style.display = 'none';
+  lblTL.style.display = 'none';
 
   const params = getParams();
-  const c = calcCycle(params.TH, params.TL, params.Va);
+  const c = calcCycle(params.TH, params.TL, params.Va, params.ratio);
 
   // Determine plot range
   const allV = [c.Va, c.Vb, c.Vc, c.Vd];
@@ -413,25 +420,34 @@ function draw() {
 
   const currentStep = getPointOnCycle(c, cycleProgress).stepIdx;
 
-  // a->b isothermal TH
+  // Color convention (matches carnot-engine.html):
+  //  isothermal (a->b) at TH = red #8B0029 solid
+  //  adiabatic  (b->c, d->a) = gray #6B7280 dashed
+  //  isothermal (c->d) at TL = blue #2563EB solid
+
+  // a->b isothermal TH (red, solid)
   const pAB = V => n * R * c.TH / V;
   drawSegment(c.Va, c.Vb, pAB, currentStep === 0 ? '#8B0029' : '#8B002966', currentStep === 0 ? 3 : 2);
   drawSegmentArrow(c.Va, c.Vb, pAB, currentStep === 0 ? '#8B0029' : '#8B002966');
 
-  // b->c adiabatic
+  // b->c adiabatic (gray, dashed)
   const pBC = V => n * R * (c.TH * Math.pow(c.Vb / V, gamma - 1)) / V;
-  drawSegment(c.Vb, c.Vc, pBC, currentStep === 1 ? '#2563EB' : '#2563EB66', currentStep === 1 ? 3 : 2);
-  drawSegmentArrow(c.Vb, c.Vc, pBC, currentStep === 1 ? '#2563EB' : '#2563EB66');
+  ctx.setLineDash([6, 4]);
+  drawSegment(c.Vb, c.Vc, pBC, currentStep === 1 ? '#6B7280' : '#6B728066', currentStep === 1 ? 3 : 2);
+  ctx.setLineDash([]);
+  drawSegmentArrow(c.Vb, c.Vc, pBC, currentStep === 1 ? '#6B7280' : '#6B728066');
 
-  // c->d isothermal TL
+  // c->d isothermal TL (blue, solid)
   const pCD = V => n * R * c.TL / V;
-  drawSegment(c.Vc, c.Vd, pCD, currentStep === 2 ? '#8B0029' : '#8B002966', currentStep === 2 ? 3 : 2);
-  drawSegmentArrow(c.Vc, c.Vd, pCD, currentStep === 2 ? '#8B0029' : '#8B002966');
+  drawSegment(c.Vc, c.Vd, pCD, currentStep === 2 ? '#2563EB' : '#2563EB66', currentStep === 2 ? 3 : 2);
+  drawSegmentArrow(c.Vc, c.Vd, pCD, currentStep === 2 ? '#2563EB' : '#2563EB66');
 
-  // d->a adiabatic
+  // d->a adiabatic (gray, dashed)
   const pDA = V => n * R * (c.TL * Math.pow(c.Vd / V, gamma - 1)) / V;
-  drawSegment(c.Vd, c.Va, pDA, currentStep === 3 ? '#2563EB' : '#2563EB66', currentStep === 3 ? 3 : 2);
-  drawSegmentArrow(c.Vd, c.Va, pDA, currentStep === 3 ? '#2563EB' : '#2563EB66');
+  ctx.setLineDash([6, 4]);
+  drawSegment(c.Vd, c.Va, pDA, currentStep === 3 ? '#6B7280' : '#6B728066', currentStep === 3 ? 3 : 2);
+  ctx.setLineDash([]);
+  drawSegmentArrow(c.Vd, c.Va, pDA, currentStep === 3 ? '#6B7280' : '#6B728066');
 
   // Corner points
   const corners = [
@@ -449,14 +465,9 @@ function draw() {
   });
   ctx.textBaseline = 'alphabetic';
 
-  // Isotherm labels
-  ctx.font = '12px sans-serif'; ctx.fillStyle = '#8B0029';
-  ctx.textAlign = 'left';
-  const thLblX = toX(c.Vb) + 10, thLblY = toY(c.pb) - 5;
-  ctx.fillText('T_H = ' + c.TH + ' K', thLblX, thLblY);
-  const tlLblX = toX(c.Vc) + 10, tlLblY = toY(c.pc) + 15;
-  ctx.fillStyle = '#2563EB';
-  ctx.fillText('T_L = ' + c.TL + ' K', tlLblX, tlLblY);
+  // Isotherm labels (KaTeX overlay)
+  posLabel(lblTH, toX(c.Vb) + 10, toY(c.pb) - 18, tex('T_H = ' + c.TH + '\\text{ K}'));
+  posLabel(lblTL, toX(c.Vc) + 10, toY(c.pc) + 6, tex('T_L = ' + c.TL + '\\text{ K}'));
 
   // W label
   const wcx = (toX(c.Va) + toX(c.Vc)) / 2;
@@ -472,10 +483,16 @@ function draw() {
   ctx.fillStyle = '#8B0029';
   ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Math.PI * 2); ctx.fill();
 
-  // Step name labels
-  const stepNames = ['등온 팽창 (Q_H 흡수)', '단열 팽창', '등온 압축 (Q_L 방출)', '단열 압축'];
-  posLabel(lblStep, cx + 12, cy - 20,
-    '<span style="color:' + (currentStep % 2 === 0 ? '#8B0029' : '#2563EB') + ';font-weight:bold;font-size:12px">' +
+  // Step name labels (KaTeX for Q_H/Q_L subscripts; fixed position to avoid overlap)
+  const stepNames = [
+    '등온 팽창 (' + tex('Q_H') + ' 흡수)',
+    '단열 팽창',
+    '등온 압축 (' + tex('Q_L') + ' 방출)',
+    '단열 압축'
+  ];
+  const stepColor = currentStep === 0 ? '#8B0029' : (currentStep === 2 ? '#2563EB' : '#6B7280');
+  posLabel(lblStep, margin.left + 12, margin.top + 8,
+    '<span style="color:' + stepColor + ';font-weight:bold;font-size:13px">' +
     stepNames[currentStep] + '</span>');
 }
 
@@ -489,7 +506,7 @@ function renderStatic() {
 
 function updateFormula() {
   const params = getParams();
-  const c = calcCycle(params.TH, params.TL, params.Va);
+  const c = calcCycle(params.TH, params.TL, params.Va, params.ratio);
   const box = document.getElementById('formulaBox');
   box.innerHTML =
     '<b>카르노 효율:</b><br>' +
@@ -497,14 +514,17 @@ function updateFormula() {
     '<b>에너지 수지:</b><br>' +
     tex('Q_H = ' + c.QH.toFixed(1) + '\\text{ J}') + '<br>' +
     tex('|Q_L| = ' + c.QL.toFixed(1) + '\\text{ J}') + '<br>' +
-    tex('W = Q_H - |Q_L| = ' + c.Wnet.toFixed(1) + '\\text{ J}');
+    tex('W = Q_H - |Q_L| = ' + c.Wnet.toFixed(1) + '\\text{ J}') +
+    '<div style="margin-top:5px;font-size:10.5px;color:#6B7280;line-height:1.5">' +
+    '효율은 온도(' + tex('T_H, T_L') + ')에만 의존하고, ' +
+    '흡수·방출열과 일은 팽창비(' + tex('V_b/V_a') + ')에도 의존한다.</div>';
 }
 
-[thSlider, tlSlider, vaSlider].forEach(sl => {
+[thSlider, tlSlider, ratioSlider].forEach(sl => {
   sl.addEventListener('input', () => {
     document.getElementById('thVal').textContent = parseFloat(thSlider.value).toFixed(0);
     document.getElementById('tlVal').textContent = parseFloat(tlSlider.value).toFixed(0);
-    document.getElementById('vaVal').textContent = parseFloat(vaSlider.value).toFixed(1);
+    document.getElementById('ratioVal').textContent = parseFloat(ratioSlider.value).toFixed(1);
     // Ensure TL < TH
     if (parseFloat(tlSlider.value) >= parseFloat(thSlider.value)) {
       tlSlider.value = parseFloat(thSlider.value) - 10;
@@ -521,7 +541,7 @@ window.addEventListener('resize', resize);
 renderStatic();
 document.getElementById('thVal').textContent = parseFloat(thSlider.value).toFixed(0);
 document.getElementById('tlVal').textContent = parseFloat(tlSlider.value).toFixed(0);
-document.getElementById('vaVal').textContent = parseFloat(vaSlider.value).toFixed(1);
+document.getElementById('ratioVal').textContent = parseFloat(ratioSlider.value).toFixed(1);
 reset();
 resize();
 </script>

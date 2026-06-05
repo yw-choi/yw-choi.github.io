@@ -108,7 +108,7 @@ button { flex: 1; padding: 7px; border: none; border-radius: 8px; font-size: 0.7
       <div><span class="lbl">|Q<sub>H</sub>|: </span><span class="val" id="dispQh">—</span></div>
       <div><span class="lbl">|Q<sub>L</sub>|: </span><span class="val" id="dispQl">—</span></div>
       <div><span class="lbl">W (알짜 일): </span><span class="val" id="dispW">—</span></div>
-      <div><span class="lbl">ΔS (순환): </span><span class="val" id="dispDS">0 J/K</span></div>
+      <div title="S는 상태함수 → 한 사이클 후 ΔS_sys = 0 (가역·비가역 공통). 카르노는 가역이므로 ΔS_우주 = 0도 성립."><span class="lbl">ΔS<sub>sys</sub> (한 사이클): </span><span class="val" id="dispDS">—</span></div>
     </div>
 
     <div>
@@ -194,6 +194,23 @@ const pvCanvas = document.getElementById('pvCanvas');
 const tsCanvas = document.getElementById('tsCanvas');
 const pvCtx = pvCanvas.getContext('2d');
 const tsCtx = tsCanvas.getContext('2d');
+const pvOverlay = document.getElementById('pvOverlay');
+const tsOverlay = document.getElementById('tsOverlay');
+
+// Place a KaTeX-rendered math label on an overlay at CSS-pixel (x, y).
+// align: 'left' | 'center' | 'right' (horizontal anchor at x).
+function placeMathLabel(overlay, latex, x, y, color, align) {
+  const el = document.createElement('div');
+  el.className = 'katex-label';
+  el.style.color = color;
+  el.innerHTML = katex.renderToString(latex, { throwOnError: false });
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  if (align === 'center') el.style.transform = 'translate(-50%, -50%)';
+  else if (align === 'right') el.style.transform = 'translate(-100%, -50%)';
+  else el.style.transform = 'translate(0, -50%)';
+  overlay.appendChild(el);
+}
 
 function resizeCanvases() {
   const dpr = window.devicePixelRatio || 1;
@@ -213,6 +230,7 @@ function drawPV() {
   const W = pvCanvas.width / (window.devicePixelRatio || 1);
   const H = pvCanvas.height / (window.devicePixelRatio || 1);
   ctx.clearRect(0, 0, W, H);
+  pvOverlay.innerHTML = '';
 
   const margin = { l: 60, r: 25, t: 35, b: 45 };
   const pw = W - margin.l - margin.r;
@@ -319,13 +337,11 @@ function drawPV() {
     ctx.stroke();
   }
 
-  // Isotherm labels
-  ctx.fillStyle = '#8B0029'; ctx.font = '11px sans-serif'; ctx.textAlign = 'left';
+  // Isotherm labels (KaTeX overlay)
   let midAB = cyclePoint(0.5);
-  ctx.fillText('T_H = ' + Th + ' K', toX(midAB.V) + 5, toY(midAB.P) - 10);
-  ctx.fillStyle = '#2563EB';
+  placeMathLabel(pvOverlay, `T_H = ${Th}\\ \\mathrm{K}`, toX(midAB.V) + 5, toY(midAB.P) - 14, '#8B0029', 'left');
   let midCD = cyclePoint(2.5);
-  ctx.fillText('T_L = ' + Tl + ' K', toX(midCD.V) + 5, toY(midCD.P) + 18);
+  placeMathLabel(pvOverlay, `T_L = ${Tl}\\ \\mathrm{K}`, toX(midCD.V) + 5, toY(midCD.P) + 16, '#2563EB', 'left');
 }
 
 function drawTS() {
@@ -333,6 +349,7 @@ function drawTS() {
   const W = tsCanvas.width / (window.devicePixelRatio || 1);
   const H = tsCanvas.height / (window.devicePixelRatio || 1);
   ctx.clearRect(0, 0, W, H);
+  tsOverlay.innerHTML = '';
 
   const margin = { l: 55, r: 25, t: 35, b: 45 };
   const pw = W - margin.l - margin.r;
@@ -401,15 +418,12 @@ function drawTS() {
   ctx.fillText('c', cx + 4, cy + 16);
   ctx.fillText('d', dx - 14, dy + 16);
 
-  // Q_H, Q_L labels
-  ctx.fillStyle = '#8B0029'; ctx.textAlign = 'center'; ctx.font = 'bold 12px sans-serif';
-  ctx.fillText('Q_H 흡수 →', (ax + bx) / 2, ay - 10);
-  ctx.fillStyle = '#2563EB';
-  ctx.fillText('← Q_L 방출', (cx + dx) / 2, cy + 26);
+  // Q_H, Q_L labels (KaTeX overlay)
+  placeMathLabel(tsOverlay, `Q_H\\ \\text{흡수} \\rightarrow`, (ax + bx) / 2, ay - 12, '#8B0029', 'center');
+  placeMathLabel(tsOverlay, `\\leftarrow Q_L\\ \\text{방출}`, (cx + dx) / 2, cy + 24, '#2563EB', 'center');
 
-  // W label in center
-  ctx.fillStyle = '#8B0029'; ctx.font = 'bold 14px sans-serif';
-  ctx.fillText('W', (ax + cx) / 2, (ay + cy) / 2 + 5);
+  // W label in center (KaTeX overlay)
+  placeMathLabel(tsOverlay, `W`, (ax + cx) / 2, (ay + cy) / 2 + 2, '#8B0029', 'center');
 
   // Current point
   if (t > 0 || playing) {
@@ -446,7 +460,9 @@ function updateInfo() {
   document.getElementById('dispQh').textContent = Qh.toFixed(1) + ' J';
   document.getElementById('dispQl').textContent = Ql.toFixed(1) + ' J';
   document.getElementById('dispW').textContent = Wnet.toFixed(1) + ' J';
-  document.getElementById('dispDS').textContent = '0 J/K';
+  // S is a state function: over one full cycle the two isothermal entropy
+  // changes cancel (adiabats contribute 0), so ΔS_sys = 0.
+  document.getElementById('dispDS').textContent = (stages[0].dS + stages[2].dS).toFixed(3) + ' J/K';
 
   const stageNames = ['등온팽창', '단열팽창', '등온압축', '단열압축'];
   const body = document.getElementById('stageBody');

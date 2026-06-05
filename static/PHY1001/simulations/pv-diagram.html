@@ -159,30 +159,34 @@ function getParams() {
 
 function computeState(t) {
   // t goes from 0 to 1
-  const { P0, V0, T0, Vf, process } = getParams();
+  const { P0, V0, T0, Vf, process, ratio } = getParams();
   const V = V0 + (Vf - V0) * t;
 
   let P, T;
   switch (process) {
-    case 'isobaric':
+    case 'isobaric': {
       P = P0;
       T = P * V / (nMoles * R);
       break;
-    case 'isochoric':
+    }
+    case 'isochoric': {
       // Volume doesn't change; pressure changes
       // We reinterpret ratio as Pf/P0
-      const Pf_iso = P0 * getParams().ratio;
+      const Pf_iso = P0 * ratio;
       P = P0 + (Pf_iso - P0) * t;
       T = P * V0 / (nMoles * R);
       return { P, V: V0, T };
-    case 'isothermal':
+    }
+    case 'isothermal': {
       P = P0 * V0 / V;
       T = T0;
       break;
-    case 'adiabatic':
+    }
+    case 'adiabatic': {
       P = P0 * Math.pow(V0 / V, gamma);
       T = P * V / (nMoles * R);
       break;
+    }
   }
   return { P, V, T };
 }
@@ -390,11 +394,6 @@ function draw() {
     ctx.beginPath();
     const s0 = computeState(0);
     const c0 = pvToCanvas(s0.P, s0.V);
-    const bY = pvToCanvas(0, 0).y; // baseline won't work, use Pmin
-    const baseY = pvToCanvas(r.Pmin, 0).y;
-
-    // Start at bottom of first V
-    const startBottom = pvToCanvas(r.Pmin, s0.V);
     ctx.moveTo(c0.x, pa.bottom);
     ctx.lineTo(c0.x, c0.y);
 

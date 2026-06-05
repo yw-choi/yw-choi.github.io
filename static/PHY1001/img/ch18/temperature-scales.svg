@@ -70,17 +70,17 @@
 
   <!-- Connecting dashed lines between scales -->
   <!-- Freeze -->
-  <line x1="155" y1="202" x2="305" y2="202" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3"/>
-  <line x1="375" y1="202" x2="525" y2="202" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="255" y1="202" x2="305" y2="202" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="475" y1="202" x2="525" y2="202" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3"/>
   <!-- Boil -->
-  <line x1="155" y1="105" x2="305" y2="105" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3"/>
-  <line x1="375" y1="105" x2="525" y2="105" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="255" y1="105" x2="305" y2="105" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="475" y1="105" x2="525" y2="105" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3"/>
   <!-- Absolute zero -->
-  <line x1="155" y1="440" x2="305" y2="440" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
-  <line x1="375" y1="440" x2="525" y2="440" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="255" y1="440" x2="305" y2="440" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="475" y1="440" x2="525" y2="440" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
 
   <!-- Conversion formulas at bottom -->
-  <text x="350" y="460" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">
+  <text x="350" y="475" text-anchor="middle" font-size="14" fill="#6B7280" font-style="italic">
     T(K) = T(°C) + 273.15,     T(°F) = (9/5)T(°C) + 32
   </text>
 </svg>

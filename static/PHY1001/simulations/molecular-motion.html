@@ -112,7 +112,7 @@ function getTemp() { return parseFloat(tempSlider.value); }
 function getNum() { return parseInt(numSlider.value); }
 
 function maxwellSpeed(T) {
-  // Generate Maxwell-distributed speed using Box-Muller for 3D
+  // Generate 2D Maxwell velocity components (Gaussian vx, vy)
   const sigma = Math.sqrt(kB * T / mO2);
   const vx = sigma * gaussRandom();
   const vy = sigma * gaussRandom();
@@ -258,10 +258,10 @@ function updateInfo() {
   const vrms_sim = Math.sqrt(sumV2 / N) / vScale;
   const vavg_sim = (sumV / N) / vScale;
 
-  // Theoretical values
-  const vrms_th = Math.sqrt(3 * R_gas * T / M_O2);
-  const vavg_th = Math.sqrt(8 * R_gas * T / (Math.PI * M_O2));
-  const Kavg = 1.5 * kB * T;
+  // Theoretical values (2D simulation: vx, vy only)
+  const vrms_th = Math.sqrt(2 * R_gas * T / M_O2);
+  const vavg_th = Math.sqrt(Math.PI / 2) * Math.sqrt(R_gas * T / M_O2);
+  const Kavg = kB * T;
 
   // Pressure estimate from wall hits
   let pressureStr = '---';
@@ -279,7 +279,7 @@ function updateInfo() {
   html += ' <span style="color:#6B7280">(이론: ' + vavg_th.toFixed(0) + ')</span><br>';
   html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
   html += '<span class="label">평균 운동에너지:</span><br>';
-  html += tex('K_\\text{avg} = \\tfrac{3}{2}kT = ' + (Kavg * 1e21).toFixed(2) + '\\times 10^{-21}') + ' J<br>';
+  html += tex('K_\\text{avg} = kT = ' + (Kavg * 1e21).toFixed(2) + '\\times 10^{-21}') + ' J<br>';
   html += '<span class="label">벽 충돌률:</span> <span class="val">' + pressureStr + '</span>';
   box.innerHTML = html;
 }
@@ -422,32 +422,31 @@ function drawHistogram(T) {
 }
 
 function renderStatic() {
-  document.getElementById('canvasTitle').innerHTML = '이상기체 분자 운동: ' + tex('K_\\text{avg} = \\tfrac{3}{2}kT');
+  document.getElementById('canvasTitle').innerHTML = '이상기체 분자 운동: ' + tex('K_\\text{avg} = kT') + ' <span style="font-size:12px;color:#6B7280;font-weight:600">(2차원 시뮬레이션)</span>';
   document.getElementById('theoremBox').innerHTML =
-    'Maxwell 속력 분포<br>' +
-    tex('P(v) = 4\\pi\\left(\\frac{M}{2\\pi RT}\\right)^{3/2} v^2 e^{-Mv^2/2RT}');
+    'Maxwell 속력 분포 (2D)<br>' +
+    tex('P(v) = \\frac{M}{RT}\\, v\\, e^{-Mv^2/2RT}');
   updateFormula();
 }
 
 function updateFormula() {
   const T = getTemp();
-  const vrms = Math.sqrt(3 * R_gas * T / M_O2);
-  const vavg = Math.sqrt(8 * R_gas * T / (Math.PI * M_O2));
-  const vp = Math.sqrt(2 * R_gas * T / M_O2);
-  const Kavg = 1.5 * kB * T;
+  const vp = Math.sqrt(R_gas * T / M_O2);
+  const vavg = Math.sqrt(Math.PI / 2) * Math.sqrt(R_gas * T / M_O2);
+  const vrms = Math.sqrt(2 * R_gas * T / M_O2);
+  const Kavg = kB * T;
 
   const box = document.getElementById('formulaBox');
   box.innerHTML =
-    '<b>산소 O&#8322; (M = 32 g/mol), T = ' + T + ' K:</b><br>' +
-    tex('v_p = \\sqrt{\\frac{2RT}{M}} = ' + vp.toFixed(0) + '\\text{ m/s}') + '<br>' +
-    tex('v_\\text{avg} = \\sqrt{\\frac{8RT}{\\pi M}} = ' + vavg.toFixed(0) + '\\text{ m/s}') + '<br>' +
-    tex('v_\\text{rms} = \\sqrt{\\frac{3RT}{M}} = ' + vrms.toFixed(0) + '\\text{ m/s}');
+    '<b>산소 O&#8322; (M = 32 g/mol), T = ' + T + ' K (2D):</b><br>' +
+    tex('v_p = \\sqrt{\\frac{RT}{M}} = ' + vp.toFixed(0) + '\\text{ m/s}') + '<br>' +
+    tex('v_\\text{avg} = \\sqrt{\\frac{\\pi RT}{2M}} = ' + vavg.toFixed(0) + '\\text{ m/s}') + '<br>' +
+    tex('v_\\text{rms} = \\sqrt{\\frac{2RT}{M}} = ' + vrms.toFixed(0) + '\\text{ m/s}');
 }
 
 tempSlider.addEventListener('input', () => {
   document.getElementById('tempVal').textContent = tempSlider.value;
   // Rescale velocities for new temperature
-  const Told = getTemp();
   updateFormula();
   rescaleVelocities();
   speedHistogram.fill(0);
