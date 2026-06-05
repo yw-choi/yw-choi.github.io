@@ -63,3 +63,7 @@ weight = 47
 name = 'Photos'
 pageRef = '/photos'
 weight = 50
+[[menus.main]]
+name = 'Blog'
+pageRef = '/blog'
+weight = 55
