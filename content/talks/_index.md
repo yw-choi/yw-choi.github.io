@@ -17,6 +17,14 @@ title: Talks
 
 <li>
 <span class="talk-title">
+Excitons in 1D Single-Chains and Anisotropic 2D Heterostructures from First Principles
+</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">ISPSA 2026, Haevichi Hotel & Resort Jeju, Korea, Jun 29, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
 Excitons in 1D Single-Chains and Anisotropic 2D Heterostructures from GW-BSE
 </span><br>
 <span class="talk-type">Contributed talk of Byeongchan Lee</span><br>
@@ -326,4 +334,4 @@ Computational studies of electronic structure and many-body interactions in quan
 <span class="talk-type">Poster</span><br>
 <span class="talk-venue">Korean Physical Society Spring Meeting, Daejeon, Korea, Apr 20-22, 2016</span>
 </li>
-</ol>  
+</ol>
