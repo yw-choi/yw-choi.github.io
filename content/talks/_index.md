@@ -20,7 +20,7 @@ title: Talks
 Excitons in 1D Single-Chains and Anisotropic 2D Heterostructures from First Principles
 </span><br>
 <span class="talk-type">Invited talk</span><br>
-<span class="talk-venue">ISPSA 2026, Haevichi Hotel & Resort Jeju, Korea, Jun 29, 2026</span>
+<span class="talk-venue">ISPSA 2026, Jeju, Korea, Jun 29, 2026</span>
 </li>
 
 <li>
