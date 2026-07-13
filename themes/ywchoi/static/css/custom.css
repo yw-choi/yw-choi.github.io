@@ -239,7 +239,11 @@
 
 /* Research interests */
 .research-topic {
-    margin-bottom: 2.75rem;
+    margin-bottom: 2.5rem;
+}
+
+.research-topic:last-child {
+    margin-bottom: 0;
 }
 
 .research-topic-heading {
@@ -262,14 +266,14 @@
 
 .research-papers {
     margin: 0;
-    padding: 0;
+    padding: 0.35rem 0;
     list-style: none;
     border-top: 1px solid #ececef;
+    border-bottom: 1px solid #ececef;
 }
 
 .research-paper {
-    padding: 0.8rem 0;
-    border-bottom: 1px solid #ececef;
+    padding: 0.55rem 0;
 }
 
 .research-paper-authors {
