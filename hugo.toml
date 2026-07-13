@@ -6,7 +6,7 @@ enableRobotsTXT = true
 
 [params]
 google_analytics_tag = "G-4VEF9JDEXP"
-description = "Computational Quantum Materials Physics Lab at Sogang University"
+description = "Computational Quantum Materials Physics Lab at Sogang University: correlated and low-dimensional quantum materials, nanostructures, and first-principles methods"
 
 [outputs]
 home = ["HTML", "RSS"]

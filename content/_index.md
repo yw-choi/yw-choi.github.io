@@ -11,13 +11,26 @@ title: "Home"
 
 <div class="mb-lg-5">
     <p class="fs-6 fw-light">
-        Our group aims to understand and predict quantum materials properties using first-principles computational
-        methods. We apply quantum physics, many-body theory, and high-performance computing to calculate electronic,
-        vibrational, optical, magnetic, and transport properties of materials. Our research covers a broad range of
-        materials including low-dimensional materials, superconductors, and nanostructures.
+        Our group studies emergent phenomena in correlated and low-dimensional quantum materials, designs novel
+        quantum materials and nanostructures, and develops first-principles electronic-structure methods. We combine
+        quantum physics, many-body theory, machine learning, and high-performance computing to understand and predict
+        material properties from the atomic scale upward.
     </p>
 </div>
 
+### Research Interests
+
+<div class="mb-lg-5">
+    <p><strong>Emergent phenomena in correlated and low-dimensional quantum materials</strong><br />
+        Superconductivity, charge-density waves, quasiparticles, and collective excitations</p>
+
+    <p><strong>Design of novel quantum materials and nanostructures</strong><br />
+        Moiré superlattices, one-dimensional single chains, molecular nanomachines, and two-dimensional
+        heterostructures</p>
+
+    <p><strong>Development of first-principles electronic-structure methods</strong><br />
+        Density functional theory, many-body perturbation theory, and machine-learning-based compression</p>
+</div>
 
 
 ### Recent News
