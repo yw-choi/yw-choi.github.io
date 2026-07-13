@@ -34,6 +34,9 @@ title: "Home"
 
 
 ### Recent News
+- **2026/07** Dongsin Kim received an Outstanding Poster Presentation Award at the 2026 KIAS workshop on electronic-structure calculations!
+- **2026/07** Our group participated in the 2nd Electronic Structure Symposium!
+- **2026/07** Byeongchan Lee began a six-month research visit to Prof. Zhenglu Li's group at USC!
 - **2026/03** Dongsin Kim received an award at the G-LAMP Undergraduate Research Presentation!
 - **2026/03** Sreang Sokly joined our group. Welcome!
 - **2026/01** Dr. Sanghyun Ji joined our group. Welcome!

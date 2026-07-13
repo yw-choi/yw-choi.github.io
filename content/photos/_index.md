@@ -5,6 +5,8 @@ layout: list
 # Define gallery items (order matters). You can also omit this list and the layout
 # will try to auto-discover image resources under photos/images/*.
 gallery:
+  - src: "/photos/images/2026_07_electronic_structure_symposium.webp"
+    caption: "2026/07 <br> 2nd Electronic Structure Symposium"
   - src: "/photos/images/2026_06_group_photo.webp"
     caption: "2026/06 <br> Our group photo"
   - slides:
