@@ -18,21 +18,6 @@ title: "Home"
     </p>
 </div>
 
-### Research Interests
-
-<div class="mb-lg-5">
-    <p><strong>Emergent phenomena in correlated and low-dimensional quantum materials</strong><br />
-        Superconductivity, charge-density waves, quasiparticles, and collective excitations</p>
-
-    <p><strong>Design of novel quantum materials and nanostructures</strong><br />
-        Moiré superlattices, one-dimensional single chains, molecular nanomachines, and two-dimensional
-        heterostructures</p>
-
-    <p><strong>Development of first-principles electronic-structure methods</strong><br />
-        Density functional theory, many-body perturbation theory, and machine-learning-based compression</p>
-</div>
-
-
 ### Recent News
 - **2026/07** Dongsin Kim received an Outstanding Poster Presentation Award at the 2026 KIAS workshop on electronic-structure calculations!
 - **2026/07** Our group participated in the 2nd Electronic Structure Symposium!
