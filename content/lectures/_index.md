@@ -16,6 +16,16 @@ title: Lectures
 <ul reversed class="lecture-list">
 <li>
     <span class="lecture-semester">
+    2026 Fall
+    </span>
+    <ul>
+        <li>
+        <a href="/PHY1002/">General Physics II</a> (undergraduate course)
+        </li>
+    </ul>
+</li>
+<li>
+    <span class="lecture-semester">
     2026 Spring
     </span>
     <ul>

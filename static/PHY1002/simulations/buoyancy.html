@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아르키메데스의 원리 — 부력</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-family: 'Courier New', monospace; font-weight: 600; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 14px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.canvas-title { position: absolute; top: 8px; left: 16px; pointer-events: none; font-size: 18px; font-weight: 700; color: #8B0029; }
+.canvas-title .katex { font-size: 18px; color: #8B0029; }
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; line-height: 1; font-size: 13px; pointer-events: none; }
+.canvas-overlay .katex-label .katex { font-size: 0.92em; }
+.canvas-overlay .katex-label.with-bg { background: rgba(255,255,255,0.85); padding: 1px 3px; border-radius: 2px; }
+.status-label { font-size: 13px; font-weight: 700; text-align: center; padding: 6px; border-radius: 6px; }
+
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label with-bg" id="lbl-fb" style="color:#2563EB;"></div>
+      <div class="katex-label with-bg" id="lbl-fg" style="color:#8B0029;"></div>
+      <div class="katex-label with-bg" id="lbl-sub" style="color:#6B7280;"></div>
+    </div>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>아르키메데스의 원리</h2>
+      <div class="subtitle">Archimedes' Principle (Ch.14)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>물체 밀도 ρ_obj = <span id="objDensVal">500</span> kg/m³</label>
+      <input type="range" id="objDensSlider" min="100" max="5000" value="500" step="10">
+    </div>
+
+    <div class="control-group">
+      <label>유체 밀도 ρ_f = <span id="fluidDensVal">1000</span> kg/m³</label>
+      <input type="range" id="fluidDensSlider" min="500" max="3000" value="1000" step="10">
+    </div>
+
+    <div class="control-group">
+      <label>물체 한 변 길이 a = <span id="sizeVal">0.20</span> m</label>
+      <input type="range" id="sizeSlider" min="0.05" max="0.40" value="0.20" step="0.01">
+    </div>
+
+    <div class="status-label" id="statusLabel"></div>
+    <div class="formula-box" id="formulaBox"></div>
+    <div class="info-box" id="infoBox"></div>
+    <button class="reset-btn" id="resetBtn">&#8635; 초기화</button>
+  </div>
+</div>
+
+<script>
+function tex(e) { return katex.renderToString(e, { throwOnError: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const lblFb = document.getElementById('lbl-fb');
+const lblFg = document.getElementById('lbl-fg');
+const lblSub = document.getElementById('lbl-sub');
+
+function posLabel(el, px, py, html) {
+  el.innerHTML = html;
+  el.style.left = px + 'px';
+  el.style.top = py + 'px';
+  el.style.display = 'block';
+}
+
+const objDensSlider = document.getElementById('objDensSlider');
+const fluidDensSlider = document.getElementById('fluidDensSlider');
+const sizeSlider = document.getElementById('sizeSlider');
+const resetBtn = document.getElementById('resetBtn');
+
+const g = 9.8;
+let objY = 0; // vertical position of object center (simulation coords)
+let objVy = 0;
+let animId = null;
+let lastTs = null;
+let settled = false;
+
+function getParams() {
+  return {
+    rhoObj: parseFloat(objDensSlider.value),
+    rhoF: parseFloat(fluidDensSlider.value),
+    a: parseFloat(sizeSlider.value)
+  };
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function reset() {
+  const { rhoObj, rhoF, a } = getParams();
+  // Start object above water
+  objY = -a;
+  objVy = 0;
+  settled = false;
+  lastTs = null;
+  if (!animId) animId = requestAnimationFrame(step);
+}
+
+function step(ts) {
+  if (!lastTs) { lastTs = ts; animId = requestAnimationFrame(step); return; }
+  const dtReal = Math.min((ts - lastTs) / 1000, 0.03);
+  lastTs = ts;
+
+  const { rhoObj, rhoF, a } = getParams();
+  const m = rhoObj * a * a * a;
+  const V = a * a * a;
+
+  // Object top at objY, bottom at objY + a
+  // Water surface at y=0
+  // Submerged depth: how much of the object is below y=0
+  let subDepth = 0;
+  if (objY + a > 0) { // bottom is below surface
+    subDepth = Math.min(objY + a, a); // can't be more than a
+    if (objY > 0) subDepth = a; // fully submerged
+  }
+
+  const Vsub = a * a * subDepth;
+  const Fb = rhoF * Vsub * g;
+  const Fg = m * g;
+
+  // Net force (positive = downward)
+  const Fnet = Fg - Fb;
+  const acc = Fnet / m;
+
+  // Damping to settle
+  const damping = 3.0;
+  objVy += acc * dtReal;
+  objVy *= Math.exp(-damping * dtReal);
+  objY += objVy * dtReal;
+
+  // Check if object sinks to bottom
+  const tankBottom = 2.0; // virtual tank depth in meters
+  if (objY > tankBottom - a) {
+    objY = tankBottom - a;
+    objVy = 0;
+  }
+
+  // Check if settled
+  if (Math.abs(objVy) < 0.001 && Math.abs(acc) < 0.05) {
+    settled = true;
+  }
+
+  updateInfo();
+  draw();
+
+  if (!settled) {
+    animId = requestAnimationFrame(step);
+  } else {
+    animId = null;
+  }
+}
+
+function updateInfo() {
+  const { rhoObj, rhoF, a } = getParams();
+  const m = rhoObj * a * a * a;
+  const V = a * a * a;
+
+  let subDepth = 0;
+  if (objY + a > 0) {
+    subDepth = Math.min(objY + a, a);
+    if (objY > 0) subDepth = a;
+  }
+  const Vsub = a * a * subDepth;
+  const Fb = rhoF * Vsub * g;
+  const Fg = m * g;
+  const frac = subDepth / a;
+
+  const box = document.getElementById('infoBox');
+  let html = '';
+  html += '<span class="label">질량:</span> <span class="val">m = ' + m.toFixed(3) + ' kg</span><br>';
+  html += tex('F_g = mg') + ' = <span class="val">' + Fg.toFixed(2) + ' N</span><br>';
+  html += tex('F_b = \\rho_f V_{\\text{sub}} g') + ' = <span class="val">' + Fb.toFixed(2) + ' N</span><br>';
+  html += '<hr style="border:none;border-top:1px solid #e0c0c8;margin:3px 0">';
+  html += '<span class="label">잠긴 비율:</span> <span class="val">' + (frac * 100).toFixed(1) + '%</span><br>';
+  if (rhoObj < rhoF) {
+    html += '<span style="color:#2e7d32;font-weight:700">' + tex('\\frac{V_{\\text{sub}}}{V} = \\frac{\\rho_{\\text{obj}}}{\\rho_f} = ' + (rhoObj / rhoF).toFixed(3)) + '</span>';
+  }
+  box.innerHTML = html;
+
+  // Status
+  const status = document.getElementById('statusLabel');
+  if (rhoObj < rhoF) {
+    status.textContent = '뜸 (floating): ρ_obj < ρ_f';
+    status.style.background = '#dcfce7'; status.style.color = '#166534';
+  } else if (rhoObj === rhoF) {
+    status.textContent = '중립 부력 (neutral): ρ_obj = ρ_f';
+    status.style.background = '#dbeafe'; status.style.color = '#1e40af';
+  } else {
+    status.textContent = '가라앉음 (sinking): ρ_obj > ρ_f';
+    status.style.background = '#fee2e2'; status.style.color = '#991b1b';
+  }
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 10;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.35), y2 - headLen * Math.sin(angle - 0.35));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.35), y2 - headLen * Math.sin(angle + 0.35));
+  ctx.closePath(); ctx.fill();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  lblFb.style.display = 'none';
+  lblFg.style.display = 'none';
+  lblSub.style.display = 'none';
+
+  const { rhoObj, rhoF, a } = getParams();
+  const m = rhoObj * a * a * a;
+
+  // Layout: water surface at 40% from top
+  const surfaceY = CH * 0.35;
+  const tankLeft = CW * 0.1;
+  const tankRight = CW * 0.7;
+  const tankBottom = CH * 0.9;
+  const ppm = Math.min((tankBottom - surfaceY - 20) / 1.5, 300); // pixels per meter
+
+  // Water
+  ctx.fillStyle = 'rgba(147, 197, 253, 0.25)';
+  ctx.fillRect(tankLeft, surfaceY, tankRight - tankLeft, tankBottom - surfaceY);
+
+  // Water surface line
+  ctx.strokeStyle = '#2563EB'; ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 3]);
+  ctx.beginPath();
+  ctx.moveTo(tankLeft, surfaceY);
+  ctx.lineTo(tankRight, surfaceY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Tank walls
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(tankLeft, surfaceY - 30);
+  ctx.lineTo(tankLeft, tankBottom);
+  ctx.lineTo(tankRight, tankBottom);
+  ctx.lineTo(tankRight, surfaceY - 30);
+  ctx.stroke();
+
+  ctx.fillStyle = '#6B7280'; ctx.font = '12px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('수면', tankRight + 5, surfaceY + 4);
+
+  // Object position
+  const objPxSize = a * ppm;
+  const objCenterX = (tankLeft + tankRight) / 2;
+  const objTopPx = surfaceY + objY * ppm;
+  const objBottomPx = objTopPx + objPxSize;
+
+  // Submerged portion (below surfaceY)
+  let subDepth = 0;
+  if (objY + a > 0) {
+    subDepth = Math.min(objY + a, a);
+    if (objY > 0) subDepth = a;
+  }
+
+  // Draw submerged portion darker
+  if (subDepth > 0) {
+    const subTopPx = Math.max(objTopPx, surfaceY);
+    const subH = subDepth * ppm;
+    ctx.fillStyle = 'rgba(59, 130, 246, 0.15)';
+    ctx.fillRect(objCenterX - objPxSize / 2, subTopPx, objPxSize, Math.min(subH, objBottomPx - subTopPx));
+  }
+
+  // Object
+  ctx.fillStyle = rhoObj < rhoF ? '#fde68a' : (rhoObj > rhoF ? '#9ca3af' : '#bfdbfe');
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 2;
+  ctx.fillRect(objCenterX - objPxSize / 2, objTopPx, objPxSize, objPxSize);
+  ctx.strokeRect(objCenterX - objPxSize / 2, objTopPx, objPxSize, objPxSize);
+
+  // Object label
+  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('ρ=' + rhoObj, objCenterX, objTopPx + objPxSize / 2);
+  ctx.textBaseline = 'alphabetic';
+
+  // Force arrows
+  const Fg = m * g;
+  const Vsub = a * a * subDepth;
+  const Fb = rhoF * Vsub * g;
+  const maxForce = Math.max(Fg, Fb, 0.1);
+  const arrowScale = Math.min(120 / maxForce, 60);
+
+  // Fg arrow (down, from center)
+  const fgLen = Fg * arrowScale;
+  if (fgLen > 5) {
+    const fgStartY = objTopPx + objPxSize / 2;
+    drawArrow(objCenterX + 15, fgStartY, objCenterX + 15, fgStartY + fgLen, '#8B0029', 2.5);
+    posLabel(lblFg, objCenterX + 28, fgStartY + fgLen / 2 - 8,
+      '<span style="color:#8B0029;font-weight:bold">' + tex('F_g = ' + Fg.toFixed(1) + '\\text{ N}') + '</span>');
+  }
+
+  // Fb arrow (up, from center)
+  const fbLen = Fb * arrowScale;
+  if (fbLen > 5) {
+    const fbStartY = objTopPx + objPxSize / 2;
+    drawArrow(objCenterX - 15, fbStartY, objCenterX - 15, fbStartY - fbLen, '#2563EB', 2.5);
+    posLabel(lblFb, objCenterX - 90, fbStartY - fbLen / 2 - 8,
+      '<span style="color:#2563EB;font-weight:bold">' + tex('F_b = ' + Fb.toFixed(1) + '\\text{ N}') + '</span>');
+  }
+
+  // Submerged fraction label
+  if (subDepth > 0 && subDepth < a) {
+    const subPct = (subDepth / a * 100).toFixed(0);
+    posLabel(lblSub, objCenterX + objPxSize / 2 + 10, surfaceY + subDepth * ppm / 2 - 6,
+      '<span style="color:#6B7280">' + subPct + '% 잠김</span>');
+  }
+
+  // Energy bar chart area
+  const barX = CW * 0.76;
+  const barBaseY = tankBottom - 10;
+  const maxBarH = 150;
+  const barW = 36;
+  const barGap = 10;
+  const eScale = maxForce > 0 ? maxBarH / maxForce : 1;
+
+  ctx.fillStyle = '#444'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('힘 (N)', barX + barW + barGap / 2, barBaseY - maxBarH - 12);
+
+  ctx.strokeStyle = '#999'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(barX - 5, barBaseY);
+  ctx.lineTo(barX + 2 * barW + barGap + 5, barBaseY);
+  ctx.stroke();
+
+  function drawBar(idx, val, color, label) {
+    const bx = barX + idx * (barW + barGap);
+    const bh = Math.max(val * eScale, 0);
+    ctx.fillStyle = color + '88';
+    ctx.fillRect(bx, barBaseY - bh, barW, bh);
+    ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+    ctx.strokeRect(bx, barBaseY - bh, barW, Math.max(bh, 1));
+    ctx.fillStyle = color; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(label, bx + barW / 2, barBaseY + 14);
+    ctx.font = '10px sans-serif';
+    ctx.fillText(val.toFixed(1), bx + barW / 2, barBaseY - bh - 4);
+  }
+
+  drawBar(0, Fg, '#8B0029', 'Fg');
+  drawBar(1, Fb, '#2563EB', 'Fb');
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML = '아르키메데스의 원리: ' + tex('F_b = \\rho_f V_{\\text{sub}} g');
+  document.getElementById('theoremBox').innerHTML =
+    '아르키메데스의 원리<br>' +
+    tex('F_b = \\rho_f V_{\\text{sub}}\\, g') + '<br>' +
+    '<span style="font-size:11px;font-weight:400">부력 = 밀어낸 유체의 무게</span>';
+  updateFormula();
+}
+
+function updateFormula() {
+  const { rhoObj, rhoF, a } = getParams();
+  const V = a * a * a;
+  const m = rhoObj * V;
+  const box = document.getElementById('formulaBox');
+  let html = '';
+  html += '<b>물체:</b> ' + tex('V = a^3 = ' + V.toFixed(4) + '\\text{ m}^3') + '<br>';
+  html += tex('m = \\rho_{\\text{obj}} V = ' + m.toFixed(3) + '\\text{ kg}') + '<br>';
+  if (rhoObj <= rhoF) {
+    const frac = rhoObj / rhoF;
+    html += '<b>뜨는 경우:</b><br>';
+    html += tex('\\frac{V_{\\text{sub}}}{V} = \\frac{\\rho_{\\text{obj}}}{\\rho_f} = \\frac{' + rhoObj + '}{' + rhoF + '} = ' + frac.toFixed(3));
+  } else {
+    html += '<b>가라앉는 경우:</b><br>';
+    html += tex('F_g = ' + (m * g).toFixed(2) + '\\text{ N} > F_b = ' + (rhoF * V * g).toFixed(2) + '\\text{ N}');
+  }
+  box.innerHTML = html;
+}
+
+[objDensSlider, fluidDensSlider, sizeSlider].forEach(sl => {
+  sl.addEventListener('input', () => {
+    document.getElementById('objDensVal').textContent = parseFloat(objDensSlider.value).toFixed(0);
+    document.getElementById('fluidDensVal').textContent = parseFloat(fluidDensSlider.value).toFixed(0);
+    document.getElementById('sizeVal').textContent = parseFloat(sizeSlider.value).toFixed(2);
+    updateFormula();
+    reset();
+  });
+});
+
+resetBtn.addEventListener('click', reset);
+window.addEventListener('resize', resize);
+
+renderStatic();
+document.getElementById('objDensVal').textContent = parseFloat(objDensSlider.value).toFixed(0);
+document.getElementById('fluidDensVal').textContent = parseFloat(fluidDensSlider.value).toFixed(0);
+document.getElementById('sizeVal').textContent = parseFloat(sizeSlider.value).toFixed(2);
+reset();
+resize();
+</script>
+</body>
+</html>
