@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 330" font-family="sans-serif">
+  <rect width="100%" height="100%" fill="white"/>
+  <text x="350" y="32" font-size="16" fill="#1a1a1a" text-anchor="middle" font-weight="bold">3차원 방향 표기: 지면에서 나오는/들어가는 벡터</text>
+
+  <!-- ===== Left box: out of page ===== -->
+  <rect x="60" y="60" width="260" height="180" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <!-- grid of circled dots -->
+  <g stroke="#8B0029" stroke-width="2" fill="none">
+    <circle cx="120" cy="105" r="10"/><circle cx="190" cy="105" r="10"/><circle cx="260" cy="105" r="10"/>
+    <circle cx="120" cy="150" r="10"/><circle cx="190" cy="150" r="10"/><circle cx="260" cy="150" r="10"/>
+    <circle cx="120" cy="195" r="10"/><circle cx="190" cy="195" r="10"/><circle cx="260" cy="195" r="10"/>
+  </g>
+  <g fill="#8B0029">
+    <circle cx="120" cy="105" r="2.5"/><circle cx="190" cy="105" r="2.5"/><circle cx="260" cy="105" r="2.5"/>
+    <circle cx="120" cy="150" r="2.5"/><circle cx="190" cy="150" r="2.5"/><circle cx="260" cy="150" r="2.5"/>
+    <circle cx="120" cy="195" r="2.5"/><circle cx="190" cy="195" r="2.5"/><circle cx="260" cy="195" r="2.5"/>
+  </g>
+  <text x="190" y="272" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="bold">&#8857; : 지면에서 나온다</text>
+  <text x="190" y="296" font-size="13" fill="#6B7280" text-anchor="middle">(날아오는 화살의 화살촉)</text>
+
+  <!-- ===== Right box: into page ===== -->
+  <rect x="380" y="60" width="260" height="180" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <g stroke="#2563EB" stroke-width="2">
+    <line x1="433" y1="98" x2="447" y2="112"/><line x1="447" y1="98" x2="433" y2="112"/>
+    <line x1="503" y1="98" x2="517" y2="112"/><line x1="517" y1="98" x2="503" y2="112"/>
+    <line x1="573" y1="98" x2="587" y2="112"/><line x1="587" y1="98" x2="573" y2="112"/>
+    <line x1="433" y1="143" x2="447" y2="157"/><line x1="447" y1="143" x2="433" y2="157"/>
+    <line x1="503" y1="143" x2="517" y2="157"/><line x1="517" y1="143" x2="503" y2="157"/>
+    <line x1="573" y1="143" x2="587" y2="157"/><line x1="587" y1="143" x2="573" y2="157"/>
+    <line x1="433" y1="188" x2="447" y2="202"/><line x1="447" y1="188" x2="433" y2="202"/>
+    <line x1="503" y1="188" x2="517" y2="202"/><line x1="517" y1="188" x2="503" y2="202"/>
+    <line x1="573" y1="188" x2="587" y2="202"/><line x1="587" y1="188" x2="573" y2="202"/>
+  </g>
+  <text x="510" y="272" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="bold">&#215; : 지면으로 들어간다</text>
+  <text x="510" y="296" font-size="13" fill="#6B7280" text-anchor="middle">(멀어지는 화살의 화살 깃)</text>
+</svg>

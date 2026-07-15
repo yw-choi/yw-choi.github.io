@@ -1,0 +1,53 @@
+<svg viewBox="0 0 780 460" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<defs>
+    <marker id="arrRed5" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#8B0029"/>
+    </marker>
+    <marker id="dim5" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#6B7280"/>
+    </marker>
+  </defs>
+<circle cx="200" cy="230" r="140" fill="#F3F4F6" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="128" y="163" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<text x="128" y="211" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<text x="128" y="259" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<text x="128" y="307" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<text x="176" y="163" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<text x="176" y="211" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<text x="176" y="259" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<text x="176" y="307" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<text x="224" y="163" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<text x="224" y="211" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<text x="224" y="259" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<text x="224" y="307" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<text x="272" y="163" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<text x="272" y="211" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<text x="272" y="259" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<text x="272" y="307" font-size="14" fill="#6B7280" text-anchor="middle">&#215;</text>
+<circle cx="200" cy="230" r="55" fill="none" stroke="#8B0029" stroke-width="2"/>
+<path d="M211.4,176.2 A55,55 0 0 0 194.3,175.3" fill="none" stroke="#8B0029" stroke-width="2" marker-end="url(#arrRed5)"/>
+<circle cx="200" cy="230" r="95" fill="none" stroke="#8B0029" stroke-width="2"/>
+<path d="M219.8,137.1 A95,95 0 0 0 190.1,135.5" fill="none" stroke="#8B0029" stroke-width="2" marker-end="url(#arrRed5)"/>
+<circle cx="200" cy="230" r="135" fill="none" stroke="#8B0029" stroke-width="2"/>
+<path d="M228.1,98.0 A135,135 0 0 0 185.9,95.7" fill="none" stroke="#8B0029" stroke-width="2" marker-end="url(#arrRed5)"/>
+<circle cx="200" cy="230" r="178" fill="none" stroke="#8B0029" stroke-width="2"/>
+<path d="M237.0,55.9 A178,178 0 0 0 181.4,53.0" fill="none" stroke="#8B0029" stroke-width="2" marker-end="url(#arrRed5)"/>
+<text x="262" y="172" font-size="14" font-style="italic" fill="#8B0029">E</text>
+<text x="340" y="88" font-size="14" font-style="italic" fill="#8B0029">E</text>
+<line x1="200" y1="230" x2="314.7" y2="310.3" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#dim5)"/>
+<circle cx="200" cy="230" r="3" fill="#6B7280"/>
+<text x="268" y="272" font-size="14" font-style="italic" fill="#6B7280">R</text>
+<text x="200" y="40" font-size="15" font-weight="bold" fill="#1a1a1a" text-anchor="middle">유도 전기장의 전기력선</text>
+<text x="200" y="426" font-size="14" fill="#1a1a1a" text-anchor="middle">B (지면 안쪽)가 증가하는 중</text>
+<text x="200" y="448" font-size="13" fill="#6B7280" text-anchor="middle">전기력선이 시작도 끝도 없는 닫힌 원</text>
+<line x1="470" y1="350" x2="470" y2="100" stroke="#6B7280" stroke-width="1.5" marker-end="url(#dim5)"/>
+<line x1="470" y1="350" x2="740" y2="350" stroke="#6B7280" stroke-width="1.5" marker-end="url(#dim5)"/>
+<text x="456" y="104" font-size="14" font-style="italic" fill="#1a1a1a" text-anchor="middle">E</text>
+<text x="742" y="370" font-size="14" font-style="italic" fill="#1a1a1a" text-anchor="middle">r</text>
+<polyline points="470.0,350.0 472.2,345.7 474.5,341.3 476.8,337.0 479.0,332.7 481.2,328.3 483.5,324.0 485.8,319.7 488.0,315.3 490.2,311.0 492.5,306.7 494.8,302.3 497.0,298.0 499.2,293.7 501.5,289.3 503.8,285.0 506.0,280.7 508.2,276.3 510.5,272.0 512.8,267.7 515.0,263.3 517.2,259.0 519.5,254.7 521.8,250.3 524.0,246.0 526.2,241.7 528.5,237.3 530.8,233.0 533.0,228.7 535.2,224.3 537.5,220.0 539.8,215.7 542.0,211.3 544.2,207.0 546.5,202.7 548.8,198.3 551.0,194.0 553.2,189.7 555.5,185.3 557.8,181.0 560.0,176.7 562.2,172.3 564.5,168.0 566.8,163.7 569.0,159.3 571.2,155.0 573.5,150.7 575.8,153.6 578.0,157.7 580.2,161.6 582.5,165.4 584.8,169.0 587.0,172.5 589.2,175.8 591.5,179.1 593.8,182.2 596.0,185.2 598.2,188.1 600.5,190.8 602.8,193.5 605.0,196.2 607.2,198.7 609.5,201.1 611.8,203.5 614.0,205.8 616.2,208.0 618.5,210.1 620.8,212.2 623.0,214.3 625.2,216.2 627.5,218.1 629.8,220.0 632.0,221.8 634.2,223.6 636.5,225.3 638.8,226.9 641.0,228.5 643.2,230.1 645.5,231.7 647.8,233.2 650.0,234.6 652.2,236.0 654.5,237.4 656.8,238.8 659.0,240.1 661.2,241.4 663.5,242.7 665.8,243.9 668.0,245.1 670.2,246.3 672.5,247.4 674.8,248.6 677.0,249.7 679.2,250.7 681.5,251.8 683.8,252.8 686.0,253.8 688.2,254.8 690.5,255.8 692.8,256.8 695.0,257.7 697.2,258.6 699.5,259.5 701.8,260.4 704.0,261.2 706.2,262.1 708.5,262.9 710.8,263.7 713.0,264.5 715.2,265.3 717.5,266.1 719.8,266.8 722.0,267.6 724.2,268.3 726.5,269.0 728.8,269.7 731.0,270.4 733.2,271.1 735.5,271.8 737.8,272.4 740.0,273.1" fill="none" stroke="#8B0029" stroke-width="2.5"/>
+<line x1="573.8" y1="350" x2="573.8" y2="150" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="573.8" y="370" font-size="14" font-style="italic" fill="#6B7280" text-anchor="middle">R</text>
+<text x="512" y="298" font-size="13" fill="#1a1a1a">내부: E ∝ r</text>
+<text x="642" y="144" font-size="13" fill="#1a1a1a">외부: E ∝ 1/r</text>
+<text x="605.0" y="40" font-size="15" font-weight="bold" fill="#1a1a1a" text-anchor="middle">유도 전기장의 크기 E(r)</text>
+</svg>

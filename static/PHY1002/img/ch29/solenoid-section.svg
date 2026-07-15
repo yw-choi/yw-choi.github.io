@@ -1,0 +1,81 @@
+<svg viewBox="0 0 760 430" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="aR8" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#8B0029"/>
+    </marker>
+    <marker id="aB8" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#2563EB"/>
+    </marker>
+  </defs>
+
+  <!-- title -->
+  <text x="380" y="34" font-size="14.5" font-weight="bold" fill="#1a1a1a" text-anchor="middle">이상 솔레노이드의 단면과 직사각형 암페어 고리</text>
+
+  <!-- top winding row: current OUT of page (dots) at y=130 -->
+  <g stroke="#8B0029" stroke-width="2" fill="#fff">
+    <circle cx="120" cy="130" r="10"/><circle cx="170" cy="130" r="10"/><circle cx="220" cy="130" r="10"/>
+    <circle cx="270" cy="130" r="10"/><circle cx="320" cy="130" r="10"/><circle cx="370" cy="130" r="10"/>
+    <circle cx="420" cy="130" r="10"/><circle cx="470" cy="130" r="10"/><circle cx="520" cy="130" r="10"/>
+    <circle cx="570" cy="130" r="10"/><circle cx="620" cy="130" r="10"/><circle cx="670" cy="130" r="10"/>
+  </g>
+  <g fill="#8B0029">
+    <circle cx="120" cy="130" r="3"/><circle cx="170" cy="130" r="3"/><circle cx="220" cy="130" r="3"/>
+    <circle cx="270" cy="130" r="3"/><circle cx="320" cy="130" r="3"/><circle cx="370" cy="130" r="3"/>
+    <circle cx="420" cy="130" r="3"/><circle cx="470" cy="130" r="3"/><circle cx="520" cy="130" r="3"/>
+    <circle cx="570" cy="130" r="3"/><circle cx="620" cy="130" r="3"/><circle cx="670" cy="130" r="3"/>
+  </g>
+  <text x="700" y="122" font-size="13" fill="#8B0029">&#8857; i</text>
+
+  <!-- bottom winding row: current INTO page (crosses) at y=330 -->
+  <g stroke="#8B0029" stroke-width="2" fill="#fff">
+    <circle cx="120" cy="330" r="10"/><circle cx="170" cy="330" r="10"/><circle cx="220" cy="330" r="10"/>
+    <circle cx="270" cy="330" r="10"/><circle cx="320" cy="330" r="10"/><circle cx="370" cy="330" r="10"/>
+    <circle cx="420" cy="330" r="10"/><circle cx="470" cy="330" r="10"/><circle cx="520" cy="330" r="10"/>
+    <circle cx="570" cy="330" r="10"/><circle cx="620" cy="330" r="10"/><circle cx="670" cy="330" r="10"/>
+  </g>
+  <g stroke="#8B0029" stroke-width="1.8">
+    <line x1="113" y1="323" x2="127" y2="337"/><line x1="127" y1="323" x2="113" y2="337"/>
+    <line x1="163" y1="323" x2="177" y2="337"/><line x1="177" y1="323" x2="163" y2="337"/>
+    <line x1="213" y1="323" x2="227" y2="337"/><line x1="227" y1="323" x2="213" y2="337"/>
+    <line x1="263" y1="323" x2="277" y2="337"/><line x1="277" y1="323" x2="263" y2="337"/>
+    <line x1="313" y1="323" x2="327" y2="337"/><line x1="327" y1="323" x2="313" y2="337"/>
+    <line x1="363" y1="323" x2="377" y2="337"/><line x1="377" y1="323" x2="363" y2="337"/>
+    <line x1="413" y1="323" x2="427" y2="337"/><line x1="427" y1="323" x2="413" y2="337"/>
+    <line x1="463" y1="323" x2="477" y2="337"/><line x1="477" y1="323" x2="463" y2="337"/>
+    <line x1="513" y1="323" x2="527" y2="337"/><line x1="527" y1="323" x2="513" y2="337"/>
+    <line x1="563" y1="323" x2="577" y2="337"/><line x1="577" y1="323" x2="563" y2="337"/>
+    <line x1="613" y1="323" x2="627" y2="337"/><line x1="627" y1="323" x2="613" y2="337"/>
+    <line x1="663" y1="323" x2="677" y2="337"/><line x1="677" y1="323" x2="663" y2="337"/>
+  </g>
+  <text x="700" y="338" font-size="13" fill="#8B0029">&#8855; i</text>
+
+  <!-- uniform field lines inside (pointing right) -->
+  <line x1="110" y1="205" x2="480" y2="205" stroke="#2563EB" stroke-width="2" marker-end="url(#aB8)"/>
+  <line x1="110" y1="235" x2="680" y2="235" stroke="#2563EB" stroke-width="2" marker-end="url(#aB8)"/>
+  <line x1="110" y1="265" x2="680" y2="265" stroke="#2563EB" stroke-width="2" marker-end="url(#aB8)"/>
+  <line x1="110" y1="295" x2="680" y2="295" stroke="#2563EB" stroke-width="2" marker-end="url(#aB8)"/>
+  <text x="86" y="240" font-size="15" font-style="italic" font-weight="bold" fill="#2563EB">B</text>
+  <text x="530" y="200" font-size="12" fill="#2563EB">내부: 균일한 장</text>
+
+  <!-- outside note -->
+  <text x="530" y="75" font-size="12" fill="#6B7280">외부: B &#8776; 0 (이상 솔레노이드)</text>
+
+  <!-- rectangular Amperian loop a-b-c-d: a(200,205)... use a(200,205) inside? put ab on inner line y=205 -->
+  <rect x="200" y="80" width="240" height="140" fill="none" stroke="#8B0029" stroke-width="2"/>
+  <!-- corner labels: a bottom-left, b bottom-right, c top-right, d top-left -->
+  <text x="184" y="237" font-size="14" font-style="italic" fill="#8B0029">a</text>
+  <text x="446" y="237" font-size="14" font-style="italic" fill="#8B0029">b</text>
+  <text x="446" y="76" font-size="14" font-style="italic" fill="#8B0029">c</text>
+  <text x="185" y="76" font-size="14" font-style="italic" fill="#8B0029">d</text>
+  <!-- integration direction arrows: a->b right (bottom), b->c up (right), c->d left (top), d->a down (left) -->
+  <line x1="300" y1="220" x2="345" y2="220" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aR8)"/>
+  <line x1="440" y1="160" x2="440" y2="125" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aR8)"/>
+  <line x1="340" y1="80" x2="295" y2="80" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aR8)"/>
+  <line x1="200" y1="125" x2="200" y2="160" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aR8)"/>
+  <!-- h dimension on segment ab -->
+  <text x="316" y="212" font-size="14" font-style="italic" fill="#8B0029">h</text>
+
+  <!-- caption -->
+  <text x="380" y="392" font-size="13.5" fill="#1a1a1a" text-anchor="middle">a&#8594;b 구간만 Bh 기여 (b&#8594;c, d&#8594;a 는 B &#8869; ds, c&#8594;d 는 B = 0)</text>
+  <text x="380" y="415" font-size="13.5" fill="#1a1a1a" text-anchor="middle">감싼 전류 = i&#183;(nh) &#8594; Bh = &#956;&#8320; i n h &#8594; B = &#956;&#8320; i n</text>
+</svg>

@@ -1,0 +1,65 @@
+<svg viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="aR3" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#8B0029"/>
+    </marker>
+    <marker id="aB3" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#2563EB"/>
+    </marker>
+    <marker id="aG3" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- infinite straight wire along vertical line x=190 -->
+  <line x1="190" y1="410" x2="190" y2="30" stroke="#8B0029" stroke-width="2"/>
+  <!-- current direction arrow (upward) -->
+  <line x1="190" y1="400" x2="190" y2="365" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aR3)"/>
+  <text x="168" y="392" font-size="15" font-style="italic" fill="#8B0029">i</text>
+
+  <!-- current element i ds at height s -->
+  <line x1="190" y1="168" x2="190" y2="128" stroke="#8B0029" stroke-width="4" marker-end="url(#aR3)"/>
+  <text x="120" y="152" font-size="15" font-style="italic" font-weight="bold" fill="#8B0029">i&#160;ds</text>
+
+  <!-- foot point O on wire (perpendicular foot from P) -->
+  <circle cx="190" cy="330" r="3.5" fill="#6B7280"/>
+  <text x="168" y="352" font-size="14" fill="#6B7280">O</text>
+
+  <!-- point P -->
+  <circle cx="500" cy="330" r="4" fill="#1a1a1a"/>
+  <text x="496" y="356" font-size="15" font-style="italic" fill="#1a1a1a">P</text>
+
+  <!-- R dimension (O to P) -->
+  <line x1="190" y1="330" x2="500" y2="330" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="340" y="322" font-size="15" font-style="italic" fill="#6B7280">R</text>
+
+  <!-- s dimension (O up to element) : bracket to the left of wire -->
+  <line x1="150" y1="330" x2="150" y2="148" stroke="#6B7280" stroke-width="1"/>
+  <line x1="144" y1="330" x2="156" y2="330" stroke="#6B7280" stroke-width="1"/>
+  <line x1="144" y1="148" x2="156" y2="148" stroke="#6B7280" stroke-width="1"/>
+  <text x="128" y="245" font-size="15" font-style="italic" fill="#6B7280">s</text>
+
+  <!-- r line from element to P -->
+  <line x1="190" y1="148" x2="500" y2="330" stroke="#6B7280" stroke-width="1"/>
+  <text x="352" y="222" font-size="15" font-style="italic" fill="#6B7280">r</text>
+
+  <!-- theta angle at the element, between +s direction (up) and r direction (down-right) -->
+  <path d="M 190 103 A 45 45 0 0 1 229 171" fill="none" stroke="#6B7280" stroke-width="1"/>
+  <text x="232" y="120" font-size="15" font-style="italic" fill="#1a1a1a">&#952;</text>
+
+  <!-- dB at P: into the page -->
+  <circle cx="556" cy="330" r="13" fill="none" stroke="#2563EB" stroke-width="2"/>
+  <line x1="547" y1="321" x2="565" y2="339" stroke="#2563EB" stroke-width="2"/>
+  <line x1="565" y1="321" x2="547" y2="339" stroke="#2563EB" stroke-width="2"/>
+  <text x="578" y="325" font-size="15" font-style="italic" font-weight="bold" fill="#2563EB">dB</text>
+  <text x="578" y="345" font-size="12.5" fill="#2563EB">(지면 안으로)</text>
+
+  <!-- geometry relations box -->
+  <rect x="400" y="60" width="270" height="118" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
+  <text x="418" y="92" font-size="15" font-style="italic" fill="#1a1a1a">r = &#8730;(s&#178; + R&#178;)</text>
+  <text x="418" y="124" font-size="15" font-style="italic" fill="#1a1a1a">sin &#952; = R / &#8730;(s&#178; + R&#178;)</text>
+  <text x="418" y="158" font-size="13" fill="#6B7280">모든 요소의 dB 는 같은 방향(&#8855;)</text>
+
+  <!-- caption -->
+  <text x="60" y="435" font-size="13.5" fill="#1a1a1a">무한 직선 도선: 위쪽 절반의 기여를 적분한 뒤 대칭으로 2배</text>
+</svg>

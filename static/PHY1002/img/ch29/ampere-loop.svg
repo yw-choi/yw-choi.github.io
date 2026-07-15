@@ -1,0 +1,67 @@
+<svg viewBox="0 0 700 440" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="aR6" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#8B0029"/>
+    </marker>
+    <marker id="aB6" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#2563EB"/>
+    </marker>
+    <marker id="aG6" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- Amperian loop: smooth closed blob (red) -->
+  <path d="M 340 70
+           C 460 55, 560 120, 555 210
+           C 550 300, 460 355, 350 350
+           C 230 345, 140 300, 145 205
+           C 150 115, 230 84, 340 70 Z"
+        fill="none" stroke="#8B0029" stroke-width="2"/>
+  <text x="106" y="112" font-size="13.5" fill="#8B0029">암페어 고리</text>
+  <text x="112" y="130" font-size="12" fill="#8B0029">(Amperian loop)</text>
+
+  <!-- integration direction arrows (counterclockwise) -->
+  <line x1="380" y1="66" x2="330" y2="70" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aR6)"/>
+  <line x1="310" y1="352" x2="365" y2="352" stroke="#8B0029" stroke-width="2.5" marker-end="url(#aR6)"/>
+  <text x="300" y="385" font-size="12.5" fill="#8B0029">적분 방향</text>
+
+  <!-- enclosed current i1 (out of page) -->
+  <circle cx="300" cy="180" r="13" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+  <circle cx="300" cy="180" r="4" fill="#1a1a1a"/>
+  <text x="322" y="172" font-size="14" font-style="italic" fill="#1a1a1a">i&#8321;</text>
+
+  <!-- enclosed current i2 (into page) -->
+  <circle cx="420" cy="265" r="13" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+  <line x1="411" y1="256" x2="429" y2="274" stroke="#1a1a1a" stroke-width="2"/>
+  <line x1="429" y1="256" x2="411" y2="274" stroke="#1a1a1a" stroke-width="2"/>
+  <text x="442" y="257" font-size="14" font-style="italic" fill="#1a1a1a">i&#8322;</text>
+
+  <!-- outside current i3 (into page) -->
+  <circle cx="625" cy="110" r="13" fill="#fff" stroke="#6B7280" stroke-width="2"/>
+  <line x1="616" y1="101" x2="634" y2="119" stroke="#6B7280" stroke-width="2"/>
+  <line x1="634" y1="101" x2="616" y2="119" stroke="#6B7280" stroke-width="2"/>
+  <text x="647" y="102" font-size="14" font-style="italic" fill="#6B7280">i&#8323;</text>
+  <text x="586" y="150" font-size="12" fill="#6B7280">(고리 밖 &#8594; 제외)</text>
+
+  <!-- ds element on the loop (right side, pointing up along CCW) -->
+  <line x1="554" y1="235" x2="559" y2="185" stroke="#8B0029" stroke-width="4" marker-end="url(#aR6)"/>
+  <text x="572" y="215" font-size="14" font-style="italic" font-weight="bold" fill="#8B0029">ds</text>
+
+  <!-- B vector at the ds element, at angle theta to ds -->
+  <line x1="556" y1="212" x2="612" y2="176" stroke="#2563EB" stroke-width="2.5" marker-end="url(#aB6)"/>
+  <text x="618" y="170" font-size="14" font-style="italic" font-weight="bold" fill="#2563EB">B</text>
+  <path d="M 561 191 A 22 22 0 0 1 575 200" fill="none" stroke="#6B7280" stroke-width="1"/>
+  <text x="577" y="188" font-size="13" font-style="italic" fill="#1a1a1a">&#952;</text>
+
+  <!-- formula box -->
+  <rect x="40" y="200" width="88" height="0" fill="none"/>
+  <rect x="30" y="255" width="180" height="120" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
+  <text x="46" y="285" font-size="14.5" font-style="italic" fill="#1a1a1a">&#8750; B·ds = &#956;&#8320; i<tspan font-size="10.5" dy="3">enc</tspan></text>
+  <text x="46" y="316" font-size="14.5" font-style="italic" fill="#1a1a1a">i<tspan font-size="10.5" dy="3">enc</tspan><tspan dy="-3"> = i&#8321; &#8722; i&#8322;</tspan></text>
+  <text x="46" y="352" font-size="12" fill="#6B7280">(적분 방향 기준 오른손</text>
+  <text x="46" y="368" font-size="12" fill="#6B7280">규칙: &#8857; +, &#8855; &#8722;)</text>
+
+  <!-- caption -->
+  <text x="350" y="425" font-size="13.5" fill="#1a1a1a" text-anchor="middle">고리가 감싸는 알짜 전류만 우변에 들어간다 (i&#8323;은 B 에는 기여하지만 적분값에는 상쇄)</text>
+</svg>

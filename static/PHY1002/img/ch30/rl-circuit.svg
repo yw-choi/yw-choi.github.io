@@ -1,0 +1,53 @@
+<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrDark7" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#1a1a1a"/>
+    </marker>
+  </defs>
+
+  <text x="350" y="36" font-size="15" font-weight="bold" fill="#1a1a1a" text-anchor="middle">RL 회로: 전지 ℰ + 저항 R + 인덕터 L</text>
+
+  <!-- wires (rectangle loop) -->
+  <!-- top wire: from battery top (120,100) to switch, resistor, to right corner -->
+  <line x1="120" y1="100" x2="185" y2="100" stroke="#1a1a1a" stroke-width="2"/>
+  <!-- switch S: gap 185-245, lever open-ish -->
+  <circle cx="185" cy="100" r="3.5" fill="#1a1a1a"/>
+  <circle cx="245" cy="100" r="3.5" fill="#1a1a1a"/>
+  <line x1="185" y1="100" x2="240" y2="76" stroke="#1a1a1a" stroke-width="2"/>
+  <text x="215" y="60" font-size="14" font-weight="bold" fill="#1a1a1a" text-anchor="middle">S</text>
+  <!-- wire to resistor -->
+  <line x1="245" y1="100" x2="320" y2="100" stroke="#1a1a1a" stroke-width="2"/>
+  <!-- resistor zigzag 320..440 -->
+  <path d="M320,100 L332,84 L352,116 L372,84 L392,116 L412,84 L428,100" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+  <text x="375" y="66" font-size="15" font-style="italic" fill="#1a1a1a" text-anchor="middle">R</text>
+  <!-- wire to right corner and down -->
+  <line x1="428" y1="100" x2="560" y2="100" stroke="#1a1a1a" stroke-width="2"/>
+  <line x1="560" y1="100" x2="560" y2="150" stroke="#1a1a1a" stroke-width="2"/>
+  <!-- inductor on right side (vertical coil bumps) 150..270 -->
+  <path d="M560,150 A12,10 0 0 1 560,174 A12,10 0 0 1 560,198 A12,10 0 0 1 560,222 A12,10 0 0 1 560,246 A12,10 0 0 1 560,270" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+  <text x="600" y="215" font-size="15" font-style="italic" fill="#1a1a1a">L</text>
+  <!-- down and bottom wire -->
+  <line x1="560" y1="270" x2="560" y2="310" stroke="#1a1a1a" stroke-width="2"/>
+  <line x1="560" y1="310" x2="120" y2="310" stroke="#1a1a1a" stroke-width="2"/>
+  <!-- left side: battery -->
+  <line x1="120" y1="310" x2="120" y2="216" stroke="#1a1a1a" stroke-width="2"/>
+  <line x1="120" y1="196" x2="120" y2="100" stroke="#1a1a1a" stroke-width="2"/>
+  <!-- battery symbol: long line (+) top, short line (-) bottom -->
+  <line x1="92" y1="196" x2="148" y2="196" stroke="#1a1a1a" stroke-width="2.5"/>
+  <line x1="104" y1="216" x2="136" y2="216" stroke="#1a1a1a" stroke-width="5"/>
+  <text x="74" y="196" font-size="14" fill="#1a1a1a">+</text>
+  <text x="76" y="222" font-size="14" fill="#1a1a1a">−</text>
+  <text x="56" y="212" font-size="16" font-style="italic" fill="#8B0029">ℰ</text>
+
+  <!-- current direction arrow -->
+  <line x1="270" y1="310" x2="220" y2="310" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrDark7)"/>
+  <text x="245" y="336" font-size="14" font-style="italic" fill="#1a1a1a" text-anchor="middle">i</text>
+
+  <!-- self-induced emf annotation next to inductor -->
+  <line x1="522" y1="255" x2="522" y2="180" stroke="#8B0029" stroke-width="2" marker-end="url(#arrDark7)" opacity="0"/>
+  <text x="475" y="180" font-size="13" fill="#8B0029" text-anchor="middle">전류가 변하면</text>
+  <text x="475" y="200" font-size="13" fill="#8B0029" text-anchor="middle">자체 유도 기전력</text>
+  <text x="475" y="222" font-size="14" font-style="italic" fill="#8B0029" text-anchor="middle">ℰ<tspan font-size="10" dy="3">L</tspan><tspan dy="-3"> = −L di/dt</tspan></text>
+
+  <text x="350" y="366" font-size="14" fill="#6B7280" text-anchor="middle">스위치 S를 닫으면 전류가 0에서 ℰ/R 까지 서서히 올라간다</text>
+</svg>

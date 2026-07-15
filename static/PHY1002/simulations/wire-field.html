@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>직선 도선의 자기장</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; touch-action: none; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.mode-row, .dir-row { display: flex; gap: 6px; }
+.mode-btn, .dir-btn {
+  flex: 1; border: 1.5px solid #d6b4bf; background: #fff; color: #8B0029;
+  border-radius: 6px; padding: 6px 4px; font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.mode-btn.active, .dir-btn.active { background: #8B0029; color: #fff; border-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-weight: 700; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 14px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+.relation-box { background: #eef3fe; border: 1px solid #c3d4f5; border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 1.8; color: #2b4a8b; }
+.relation-box .katex { font-size: 12px; }
+.relation-box b { color: #1a3a7a; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.canvas-title { position: absolute; top: 8px; left: 16px; right: 16px; pointer-events: none; font-size: 14px; font-weight: 700; color: #8B0029; line-height: 1.4; }
+.canvas-title .katex { font-size: 13px; }
+.hint { position: absolute; bottom: 8px; left: 16px; pointer-events: none; font-size: 11px; color: #6B7280; }
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute; white-space: nowrap; font-size: 13px; line-height: 1;
+  pointer-events: none; transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.87); padding: 1px 5px; border-radius: 4px;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.95em; }
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label" id="lblB" style="color:#2563EB;font-weight:bold;"></div>
+      <div class="katex-label" id="lblF" style="color:#8B0029;font-weight:bold;"></div>
+    </div>
+    <div class="canvas-title" id="canvasTitle"></div>
+    <div class="hint">도선(&#8857;/&#8855;)을 끌어 옮기고, 마우스를 움직여 탐침으로 B를 재보세요</div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>직선 도선의 자기장</h2>
+      <div class="subtitle">Magnetic Field of Straight Wires (Ch.29)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>도선 개수</label>
+      <div class="mode-row">
+        <button class="mode-btn active" id="mode1Btn">도선 1개</button>
+        <button class="mode-btn" id="mode2Btn">도선 2개</button>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label>도선 1 전류 i<sub>1</sub> = <span id="i1Val">8.0</span> A</label>
+      <input type="range" id="i1Slider" min="1" max="20" value="8" step="0.5">
+      <div class="dir-row">
+        <button class="dir-btn active" id="dir1Out">&#8857; 나옴</button>
+        <button class="dir-btn" id="dir1In">&#8855; 들어감</button>
+      </div>
+    </div>
+
+    <div class="control-group" id="wire2Group" style="display:none;">
+      <label>도선 2 전류 i<sub>2</sub> = <span id="i2Val">8.0</span> A</label>
+      <input type="range" id="i2Slider" min="1" max="20" value="8" step="0.5">
+      <div class="dir-row">
+        <button class="dir-btn active" id="dir2Out">&#8857; 나옴</button>
+        <button class="dir-btn" id="dir2In">&#8855; 들어감</button>
+      </div>
+    </div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="relation-box" id="relationBox" style="display:none;"></div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <button class="reset-btn" id="resetBtn">&#8635; 기본값 복원</button>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false, displayMode: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW = 0, CH = 0;
+
+// ---- physics constants ----
+const MU0 = 4 * Math.PI * 1e-7;   // T·m/A (exactly 4pi x 10^-7 in this course)
+const M_PER_PX = 0.0005;          // 1 px = 0.5 mm  => 200 px = 10 cm
+
+// ---- state: wire positions stored as LOGICAL FRACTIONS of the canvas ----
+// (never absolute pixels, so the sim lays out correctly at any load-time
+//  canvas size, inside an iframe, and re-scales proportionally on resize)
+const DEFAULTS = {
+  mode: 1,
+  wires: [
+    { fx: 0.50, fy: 0.50, I: 8, dir: +1 },   // dir +1 = out of page (⊙), -1 = into page (⊗)
+    { fx: 0.70, fy: 0.50, I: 8, dir: +1 },
+  ],
+  probe: { fx: 0.72, fy: 0.28 },
+};
+let mode = DEFAULTS.mode;
+const wires = DEFAULTS.wires.map(w => ({ ...w }));
+const probe = { ...DEFAULTS.probe };
+
+const WIRE_R = 16;   // wire cross-section radius in px
+let dragIdx = -1;
+
+// ---- coordinate helpers ----
+function wpx(w) { return { x: w.fx * CW, y: w.fy * CH }; }
+function activeWires() { return mode === 1 ? [wires[0]] : wires; }
+
+// signed current (A): + means out of the page (+z)
+function signedI(w) { return w.dir * w.I; }
+
+// B field (screen components, Tesla) at screen point (x, y)
+// physics: B = (mu0 I / 2 pi r) (z-hat x r-hat); screen y is flipped
+function fieldAt(x, y) {
+  let bx = 0, by = 0;
+  for (const w of activeWires()) {
+    const p = wpx(w);
+    const dx = x - p.x, dy = y - p.y;          // screen offsets
+    const rpx = Math.hypot(dx, dy);
+    const r = Math.max(rpx * M_PER_PX, 1e-4);  // metres, avoid r -> 0
+    const mag = MU0 * signedI(w) / (2 * Math.PI * r);
+    if (rpx < 1e-6) continue;
+    // screen direction of z-hat x r-hat: ( dy, -dx ) / rpx
+    bx += mag * (dy / rpx);
+    by += mag * (-dx / rpx);
+  }
+  return { bx, by, mag: Math.hypot(bx, by) };
+}
+
+// force per unit length between the two wires (N/m), >0 attractive
+function forcePerLength() {
+  const p1 = wpx(wires[0]), p2 = wpx(wires[1]);
+  const dpx = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+  const d = Math.max(dpx * M_PER_PX, 1e-4);
+  const FL = MU0 * wires[0].I * wires[1].I / (2 * Math.PI * d);
+  const attract = signedI(wires[0]) * signedI(wires[1]) > 0;
+  return { FL, d, dpx, attract };
+}
+
+// ---- drawing ----
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw, headLen) {
+  const hl = headLen || 9;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2 - (hl - 2) * Math.cos(angle), y2 - (hl - 2) * Math.sin(angle));
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - hl * Math.cos(angle - 0.42), y2 - hl * Math.sin(angle - 0.42));
+  ctx.lineTo(x2 - hl * Math.cos(angle + 0.42), y2 - hl * Math.sin(angle + 0.42));
+  ctx.closePath(); ctx.fill();
+}
+
+function drawWire(w, name) {
+  const p = wpx(w);
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.arc(p.x, p.y, WIRE_R, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(p.x, p.y, WIRE_R, 0, Math.PI * 2); ctx.stroke();
+  if (w.dir > 0) {           // out of page: dot
+    ctx.fillStyle = '#8B0029';
+    ctx.beginPath(); ctx.arc(p.x, p.y, 4.5, 0, Math.PI * 2); ctx.fill();
+  } else {                   // into page: cross
+    ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 2.5;
+    const s = WIRE_R * 0.62;
+    ctx.beginPath();
+    ctx.moveTo(p.x - s, p.y - s); ctx.lineTo(p.x + s, p.y + s);
+    ctx.moveTo(p.x + s, p.y - s); ctx.lineTo(p.x - s, p.y + s);
+    ctx.stroke();
+  }
+  ctx.fillStyle = '#1a1a1a';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText(name, p.x, p.y + WIRE_R + 6);
+  ctx.textBaseline = 'alphabetic';
+}
+
+// map |B| (T) to arrow length & opacity (log scale)
+function arrowScale(B) {
+  if (B < 1e-6) return null;
+  const t = Math.log10(B / 1e-6);          // 0 at 1 uT
+  const len = Math.min(6 + 6.5 * t, 27);
+  const op = Math.min(0.30 + 0.28 * t, 1);
+  return { len, op };
+}
+
+function draw() {
+  if (CW <= 0 || CH <= 0) return;
+  ctx.clearRect(0, 0, CW, CH);
+
+  const act = activeWires();
+
+  // faint concentric field-line circles around each wire
+  ctx.setLineDash([5, 5]);
+  for (const w of act) {
+    const p = wpx(w);
+    ctx.strokeStyle = 'rgba(37,99,235,0.16)';
+    ctx.lineWidth = 1;
+    for (let R = 45; R <= 225; R += 45) {
+      ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, Math.PI * 2); ctx.stroke();
+    }
+  }
+  ctx.setLineDash([]);
+
+  // vector field on a grid
+  const step = 46;
+  const x0 = (CW % step) / 2, y0 = (CH % step) / 2;
+  for (let gx = x0 + step / 2; gx < CW; gx += step) {
+    for (let gy = y0 + step / 2; gy < CH; gy += step) {
+      let tooClose = false;
+      for (const w of act) {
+        const p = wpx(w);
+        if (Math.hypot(gx - p.x, gy - p.y) < WIRE_R + 16) { tooClose = true; break; }
+      }
+      if (tooClose) continue;
+      const f = fieldAt(gx, gy);
+      const sc = arrowScale(f.mag);
+      if (!sc) continue;
+      const ux = f.bx / f.mag, uy = f.by / f.mag;
+      const x1 = gx - ux * sc.len / 2, y1 = gy - uy * sc.len / 2;
+      const x2 = gx + ux * sc.len / 2, y2 = gy + uy * sc.len / 2;
+      drawArrow(x1, y1, x2, y2, 'rgba(37,99,235,' + sc.op.toFixed(2) + ')', 1.8, 7);
+    }
+  }
+
+  // force arrows between the two wires
+  let forceInfo = null;
+  if (mode === 2) {
+    forceInfo = forcePerLength();
+    const p1 = wpx(wires[0]), p2 = wpx(wires[1]);
+    if (forceInfo.dpx > 2 * WIRE_R + 14) {
+      const ux = (p2.x - p1.x) / forceInfo.dpx, uy = (p2.y - p1.y) / forceInfo.dpx;
+      const sgn = forceInfo.attract ? +1 : -1;   // on wire1: toward wire2 if attractive
+      const len = Math.min(34 + 10 * Math.log10(1 + forceInfo.FL / 1e-5), 70);
+      // wire 1
+      let sx = p1.x + sgn * ux * (WIRE_R + 3), sy = p1.y + sgn * uy * (WIRE_R + 3);
+      drawArrow(sx, sy, sx + sgn * ux * len, sy + sgn * uy * len, '#8B0029', 3, 10);
+      // wire 2 (opposite)
+      sx = p2.x - sgn * ux * (WIRE_R + 3); sy = p2.y - sgn * uy * (WIRE_R + 3);
+      drawArrow(sx, sy, sx - sgn * ux * len, sy - sgn * uy * len, '#8B0029', 3, 10);
+      // separation line
+      ctx.strokeStyle = 'rgba(107,114,128,0.5)'; ctx.lineWidth = 1;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  // wires on top
+  drawWire(wires[0], mode === 1 ? 'i' : 'i₁');
+  if (mode === 2) drawWire(wires[1], 'i₂');
+
+  // probe: crosshair + B vector at probe
+  const pp = { x: probe.fx * CW, y: probe.fy * CH };
+  const pf = fieldAt(pp.x, pp.y);
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pp.x - 9, pp.y); ctx.lineTo(pp.x + 9, pp.y);
+  ctx.moveTo(pp.x, pp.y - 9); ctx.lineTo(pp.x, pp.y + 9);
+  ctx.stroke();
+  ctx.strokeStyle = '#6B7280';
+  ctx.beginPath(); ctx.arc(pp.x, pp.y, 5.5, 0, Math.PI * 2); ctx.stroke();
+  let probeArrow = null;
+  if (pf.mag > 1e-9) {
+    const ux = pf.bx / pf.mag, uy = pf.by / pf.mag;
+    const len = Math.min(30 + 8 * Math.log10(1 + pf.mag / 1e-6), 64);
+    const x2 = pp.x + ux * len, y2 = pp.y + uy * len;
+    drawArrow(pp.x + ux * 8, pp.y + uy * 8, x2, y2, '#2563EB', 3, 10);
+    probeArrow = { x2, y2, ux, uy };
+  }
+
+  positionLabels(pp, pf, probeArrow, forceInfo);
+  updateInfo(pf, forceInfo);
+}
+
+// ---- overlay labels (KaTeX), with overlap avoidance ----
+function fmtB(B) {
+  if (B < 1e-9) return '0';
+  if (B >= 1e-3) return (B * 1e3).toFixed(2) + '\\,\\text{mT}';
+  if (B >= 1e-6) return (B * 1e6).toFixed(1) + '\\,\\mu\\text{T}';
+  return (B * 1e9).toFixed(0) + '\\,\\text{nT}';
+}
+function fmtFL(FL) {
+  if (FL >= 1e-3) return (FL * 1e3).toFixed(2) + '\\times10^{-3}\\,\\text{N/m}';
+  if (FL >= 1e-6) return (FL * 1e6).toFixed(1) + '\\times10^{-6}\\,\\text{N/m}';
+  return (FL * 1e9).toFixed(1) + '\\times10^{-9}\\,\\text{N/m}';
+}
+
+function positionLabels(pp, pf, probeArrow, forceInfo) {
+  const lblB = document.getElementById('lblB');
+  const lblF = document.getElementById('lblF');
+
+  // probe B label just beyond arrow tip (or above probe if no field)
+  let bx, by;
+  if (probeArrow) {
+    bx = probeArrow.x2 + probeArrow.ux * 14;
+    by = probeArrow.y2 + probeArrow.uy * 14 - 12;
+  } else {
+    bx = pp.x; by = pp.y - 22;
+  }
+  bx = Math.max(58, Math.min(CW - 58, bx));
+  by = Math.max(30, Math.min(CH - 16, by));
+  lblB.style.display = 'block';
+  lblB.style.left = bx + 'px';
+  lblB.style.top = by + 'px';
+  lblB.innerHTML = tex('B = ' + fmtB(pf.mag));
+
+  // force label at midpoint between wires
+  if (mode === 2 && forceInfo) {
+    const p1 = wpx(wires[0]), p2 = wpx(wires[1]);
+    let fx = (p1.x + p2.x) / 2, fy = (p1.y + p2.y) / 2 - 26;
+    fx = Math.max(80, Math.min(CW - 80, fx));
+    fy = Math.max(30, Math.min(CH - 16, fy));
+    // avoid overlap with probe label
+    if (Math.hypot(fx - bx, fy - by) < 90) fy = by + 30 <= CH - 16 ? by + 30 : by - 30;
+    lblF.style.display = 'block';
+    lblF.style.left = fx + 'px';
+    lblF.style.top = fy + 'px';
+    lblF.innerHTML = tex('F/L = ' + fmtFL(forceInfo.FL)) +
+      ' <span style="font-size:11px;">(' + (forceInfo.attract ? '인력' : '척력') + ')</span>';
+  } else {
+    lblF.style.display = 'none';
+  }
+}
+
+function updateInfo(pf, forceInfo) {
+  const box = document.getElementById('infoBox');
+  const pp = { x: probe.fx * CW, y: probe.fy * CH };
+  let html = '';
+  const p1 = wpx(wires[0]);
+  const r1 = Math.hypot(pp.x - p1.x, pp.y - p1.y) * M_PER_PX;
+  html += '<span class="label">탐침&#8211;도선1 거리</span> <span class="val">r&#8321; = ' + (r1 * 100).toFixed(1) + ' cm</span><br>';
+  if (mode === 2) {
+    const p2 = wpx(wires[1]);
+    const r2 = Math.hypot(pp.x - p2.x, pp.y - p2.y) * M_PER_PX;
+    html += '<span class="label">탐침&#8211;도선2 거리</span> <span class="val">r&#8322; = ' + (r2 * 100).toFixed(1) + ' cm</span><br>';
+  }
+  html += '<span class="label">탐침의 자기장</span> <span class="val">|B| = ' + plainB(pf.mag) + '</span><br>';
+  if (mode === 2 && forceInfo) {
+    html += '<span class="label">도선 간격</span> <span class="val">d = ' + (forceInfo.d * 100).toFixed(1) + ' cm</span><br>';
+    html += '<span class="label">단위길이당 힘</span> <span class="val">' + plainFL(forceInfo.FL) + '</span><br>';
+    html += '<span class="label">종류</span> <span class="val" style="color:' +
+      (forceInfo.attract ? '#2563EB' : '#8B0029') + '">' +
+      (forceInfo.attract ? '인력 (같은 방향 전류)' : '척력 (반대 방향 전류)') + '</span>';
+  } else {
+    html += '<span style="font-size:11px;color:#6B7280">장은 도선을 감싸는 동심원: 가까울수록 강하다 (B &#8733; 1/r)</span>';
+  }
+  box.innerHTML = html;
+}
+function plainB(B) {
+  if (B < 1e-9) return '0';
+  if (B >= 1e-3) return (B * 1e3).toFixed(2) + ' mT';
+  if (B >= 1e-6) return (B * 1e6).toFixed(1) + ' μT';
+  return (B * 1e9).toFixed(0) + ' nT';
+}
+function plainFL(FL) {
+  if (FL >= 1e-3) return (FL * 1e3).toFixed(2) + '×10⁻³ N/m';
+  if (FL >= 1e-6) return (FL * 1e6).toFixed(1) + '×10⁻⁶ N/m';
+  return (FL * 1e9).toFixed(1) + '×10⁻⁹ N/m';
+}
+
+// ---- static panel content ----
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML =
+    '전류가 만드는 자기장 ' + tex('B = \\mu_0 i / 2\\pi r') +
+    ' &mdash; 오른손 엄지 = 전류, 감은 손가락 = <span style="color:#2563EB">' + tex('\\vec{B}') + '</span>';
+
+  document.getElementById('theoremBox').innerHTML =
+    '긴 직선 도선의 자기장<br>' +
+    tex('B = \\dfrac{\\mu_0 i}{2\\pi r}') + '<br>' +
+    '<span style="font-size:11px;font-weight:400">' + tex('\\mu_0 = 4\\pi\\times10^{-7}\\ \\mathrm{T\\cdot m/A}') + '</span>';
+
+  document.getElementById('formulaBox').innerHTML =
+    '<b>파란 화살표:</b> 자기장 ' + tex('\\vec{B}') + ' (동심원의 접선)<br>' +
+    '<b>빨간 화살표:</b> 도선이 받는 힘<br>' +
+    '<b>&#8857;</b> 지면에서 나오는 전류, <b>&#8855;</b> 들어가는 전류';
+}
+
+function renderRelation() {
+  const box = document.getElementById('relationBox');
+  if (mode !== 2) { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  box.innerHTML =
+    '<b>평행 전류 사이의 힘</b><br>' +
+    tex('\\dfrac{F}{L} = \\dfrac{\\mu_0 i_1 i_2}{2\\pi d}') + '<br>' +
+    '같은 방향 &#8594; <b>인력</b>, 반대 방향 &#8594; <b>척력</b>';
+}
+
+// ---- interaction ----
+function eventToCanvas(e) {
+  const rect = canvas.getBoundingClientRect();
+  const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+  return { x: cx, y: cy };
+}
+function hitTest(x, y) {
+  const act = activeWires();
+  for (let i = act.length - 1; i >= 0; i--) {
+    const p = wpx(act[i]);
+    if (Math.hypot(x - p.x, y - p.y) <= WIRE_R + 8) return i;
+  }
+  return -1;
+}
+function clampFrac(v) { return Math.max(0.05, Math.min(0.95, v)); }
+
+function onDown(e) {
+  const p = eventToCanvas(e);
+  const idx = hitTest(p.x, p.y);
+  if (idx >= 0) {
+    dragIdx = idx;
+    canvas.style.cursor = 'grabbing';
+    e.preventDefault();
+  }
+}
+function onMove(e) {
+  const p = eventToCanvas(e);
+  if (dragIdx >= 0) {
+    wires[dragIdx].fx = clampFrac(p.x / CW);
+    wires[dragIdx].fy = clampFrac(p.y / CH);
+    draw();
+    e.preventDefault();
+  } else {
+    if (p.x >= 0 && p.x <= CW && p.y >= 0 && p.y <= CH) {
+      probe.fx = p.x / CW; probe.fy = p.y / CH;
+      canvas.style.cursor = hitTest(p.x, p.y) >= 0 ? 'grab' : 'crosshair';
+      draw();
+    }
+  }
+}
+function onUp() { dragIdx = -1; canvas.style.cursor = 'crosshair'; }
+
+canvas.addEventListener('mousedown', onDown);
+window.addEventListener('mousemove', onMove);
+window.addEventListener('mouseup', onUp);
+canvas.addEventListener('touchstart', onDown, { passive: false });
+canvas.addEventListener('touchmove', onMove, { passive: false });
+canvas.addEventListener('touchend', onUp);
+
+// ---- controls ----
+const i1Slider = document.getElementById('i1Slider');
+const i2Slider = document.getElementById('i2Slider');
+i1Slider.addEventListener('input', () => {
+  wires[0].I = parseFloat(i1Slider.value);
+  document.getElementById('i1Val').textContent = wires[0].I.toFixed(1);
+  draw();
+});
+i2Slider.addEventListener('input', () => {
+  wires[1].I = parseFloat(i2Slider.value);
+  document.getElementById('i2Val').textContent = wires[1].I.toFixed(1);
+  draw();
+});
+
+function setDir(idx, dir) {
+  wires[idx].dir = dir;
+  document.getElementById(idx === 0 ? 'dir1Out' : 'dir2Out').classList.toggle('active', dir > 0);
+  document.getElementById(idx === 0 ? 'dir1In' : 'dir2In').classList.toggle('active', dir < 0);
+  draw();
+}
+document.getElementById('dir1Out').addEventListener('click', () => setDir(0, +1));
+document.getElementById('dir1In').addEventListener('click', () => setDir(0, -1));
+document.getElementById('dir2Out').addEventListener('click', () => setDir(1, +1));
+document.getElementById('dir2In').addEventListener('click', () => setDir(1, -1));
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('mode1Btn').classList.toggle('active', m === 1);
+  document.getElementById('mode2Btn').classList.toggle('active', m === 2);
+  document.getElementById('wire2Group').style.display = m === 2 ? 'flex' : 'none';
+  if (m === 2) {
+    // keep the two wires apart if they overlap
+    if (Math.abs(wires[0].fx - wires[1].fx) < 0.08 && Math.abs(wires[0].fy - wires[1].fy) < 0.08) {
+      wires[0].fx = clampFrac(wires[0].fx - 0.1);
+      wires[1].fx = clampFrac(wires[1].fx + 0.1);
+    }
+    // single-wire mode may have left wire1 centred; spread for clarity
+    if (mode === 2 && wires[0].fx === 0.5 && wires[1].fx === 0.5) {
+      wires[0].fx = 0.35; wires[1].fx = 0.65;
+    }
+  }
+  renderRelation();
+  draw();
+}
+document.getElementById('mode1Btn').addEventListener('click', () => setMode(1));
+document.getElementById('mode2Btn').addEventListener('click', () => setMode(2));
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  mode = DEFAULTS.mode;
+  for (let k = 0; k < 2; k++) Object.assign(wires[k], DEFAULTS.wires[k]);
+  Object.assign(probe, DEFAULTS.probe);
+  i1Slider.value = wires[0].I; i2Slider.value = wires[1].I;
+  document.getElementById('i1Val').textContent = wires[0].I.toFixed(1);
+  document.getElementById('i2Val').textContent = wires[1].I.toFixed(1);
+  setDir(0, wires[0].dir); setDir(1, wires[1].dir);
+  setMode(mode);
+});
+
+window.addEventListener('resize', resize);
+
+renderStatic();
+renderRelation();
+resize();
+</script>
+</body>
+</html>

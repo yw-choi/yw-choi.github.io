@@ -1,0 +1,81 @@
+<svg viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="aB10" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#2563EB"/>
+    </marker>
+    <marker id="aBl10" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#93b4f5"/>
+    </marker>
+  </defs>
+
+  <!-- current loop seen edge-on (plane of loop perpendicular to the page) -->
+  <line x1="150" y1="370" x2="550" y2="370" stroke="#1a1a1a" stroke-width="3"/>
+
+  <!-- left end: ds out of page -->
+  <circle cx="150" cy="370" r="10" fill="#fff" stroke="#8B0029" stroke-width="2"/>
+  <circle cx="150" cy="370" r="3" fill="#8B0029"/>
+  <text x="108" y="352" font-size="14" font-style="italic" font-weight="bold" fill="#8B0029">ds</text>
+
+  <!-- right end: current into page -->
+  <circle cx="550" cy="370" r="10" fill="#fff" stroke="#8B0029" stroke-width="2"/>
+  <line x1="543" y1="363" x2="557" y2="377" stroke="#8B0029" stroke-width="2"/>
+  <line x1="557" y1="363" x2="543" y2="377" stroke="#8B0029" stroke-width="2"/>
+  <text x="568" y="352" font-size="14" font-style="italic" font-weight="bold" fill="#8B0029">ds&#8242;</text>
+
+  <!-- central axis (z-axis), dashed -->
+  <line x1="350" y1="370" x2="350" y2="100" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="358" y="245" font-size="15" font-style="italic" fill="#6B7280">z</text>
+
+  <!-- center O -->
+  <circle cx="350" cy="370" r="3.5" fill="#1a1a1a"/>
+  <text x="357" y="388" font-size="14" fill="#1a1a1a">O</text>
+
+  <!-- R dimension under left half -->
+  <line x1="150" y1="395" x2="350" y2="395" stroke="#6B7280" stroke-width="1"/>
+  <line x1="150" y1="389" x2="150" y2="401" stroke="#6B7280" stroke-width="1"/>
+  <line x1="350" y1="389" x2="350" y2="401" stroke="#6B7280" stroke-width="1"/>
+  <text x="243" y="416" font-size="15" font-style="italic" fill="#6B7280">R</text>
+
+  <!-- point P on axis -->
+  <circle cx="350" cy="100" r="4" fill="#1a1a1a"/>
+  <text x="368" y="112" font-size="15" font-style="italic" fill="#1a1a1a">P</text>
+
+  <!-- r line from ds to P -->
+  <line x1="150" y1="370" x2="350" y2="100" stroke="#6B7280" stroke-width="1"/>
+  <text x="228" y="228" font-size="15" font-style="italic" fill="#6B7280">r</text>
+
+  <!-- alpha at ds between horizontal and r -->
+  <path d="M 190 370 A 40 40 0 0 0 173.8 337.9" fill="none" stroke="#6B7280" stroke-width="1"/>
+  <text x="197" y="352" font-size="15" font-style="italic" fill="#1a1a1a">&#945;</text>
+
+  <!-- dB at P (perpendicular to r, up-left) -->
+  <line x1="350" y1="100" x2="277.7" y2="46.4" stroke="#2563EB" stroke-width="2.5" marker-end="url(#aB10)"/>
+  <text x="243" y="42" font-size="15" font-style="italic" font-weight="bold" fill="#2563EB">dB</text>
+
+  <!-- components: parallel (up along axis) and perpendicular (left) -->
+  <line x1="350" y1="100" x2="350" y2="46.4" stroke="#2563EB" stroke-width="2" marker-end="url(#aB10)"/>
+  <text x="358" y="56" font-size="13.5" font-style="italic" font-weight="bold" fill="#2563EB">dB<tspan font-size="10" dy="3">&#8741;</tspan></text>
+  <line x1="350" y1="100" x2="277.7" y2="100" stroke="#2563EB" stroke-width="2" marker-end="url(#aB10)"/>
+  <text x="240" y="93" font-size="13.5" font-style="italic" font-weight="bold" fill="#2563EB">dB<tspan font-size="10" dy="3">&#8869;</tspan></text>
+  <!-- projection guides -->
+  <line x1="277.7" y1="46.4" x2="350" y2="46.4" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="277.7" y1="46.4" x2="277.7" y2="100" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- alpha at P between dB and the axis -->
+  <path d="M 350 64 A 36 36 0 0 0 321.1 78.6" fill="none" stroke="#6B7280" stroke-width="1"/>
+  <text x="325" y="62" font-size="15" font-style="italic" fill="#1a1a1a">&#945;</text>
+
+  <!-- mirror element contribution dB' (lighter, up-right) -->
+  <line x1="350" y1="100" x2="422.3" y2="46.4" stroke="#93b4f5" stroke-width="2.5" marker-end="url(#aBl10)"/>
+  <text x="430" y="42" font-size="15" font-style="italic" font-weight="bold" fill="#93b4f5">dB&#8242;</text>
+  <line x1="550" y1="370" x2="350" y2="100" stroke="#d1d5db" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- formula box -->
+  <rect x="470" y="120" width="212" height="122" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
+  <text x="486" y="150" font-size="14.5" font-style="italic" fill="#1a1a1a">r = &#8730;(R&#178; + z&#178;)</text>
+  <text x="486" y="182" font-size="14.5" font-style="italic" fill="#1a1a1a">cos &#945; = R / r</text>
+  <text x="486" y="214" font-size="13" fill="#6B7280">dB<tspan font-size="10" dy="3">&#8741;</tspan><tspan dy="-3"> = dB cos &#945;</tspan></text>
+
+  <!-- caption -->
+  <text x="350" y="448" font-size="13.5" fill="#1a1a1a" text-anchor="middle">마주 보는 두 요소의 수직 성분 dB&#8869;는 상쇄 &#8594; 축 방향 성분 dB&#8741;만 살아남는다</text>
+</svg>

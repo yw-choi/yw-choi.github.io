@@ -1,0 +1,73 @@
+<svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrRed9" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#8B0029"/>
+    </marker>
+    <marker id="arrBlue9" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#2563EB"/>
+    </marker>
+  </defs>
+
+  <!-- ============ left: capacitor ============ -->
+  <text x="190" y="40" font-size="15" font-weight="bold" fill="#2563EB" text-anchor="middle">축전기: 전기장에 에너지 저장</text>
+
+  <!-- field region between plates -->
+  <rect x="120" y="100" width="140" height="150" fill="#F3F4F6"/>
+  <!-- plates -->
+  <rect x="108" y="95" width="12" height="160" fill="#1a1a1a"/>
+  <rect x="260" y="95" width="12" height="160" fill="#1a1a1a"/>
+  <text x="114" y="82" font-size="15" fill="#1a1a1a" text-anchor="middle">+q</text>
+  <text x="266" y="82" font-size="15" fill="#1a1a1a" text-anchor="middle">−q</text>
+
+  <!-- E field arrows -->
+  <line x1="128" y1="125" x2="252" y2="125" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrBlue9)"/>
+  <line x1="128" y1="175" x2="252" y2="175" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrBlue9)"/>
+  <line x1="128" y1="225" x2="252" y2="225" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrBlue9)"/>
+  <text x="190" y="155" font-size="15" font-style="italic" fill="#2563EB" text-anchor="middle">E</text>
+
+  <text x="190" y="296" font-size="15" font-style="italic" fill="#1a1a1a" text-anchor="middle">u<tspan font-size="11" dy="3">E</tspan><tspan dy="-3"> = ½ε₀E²</tspan></text>
+  <text x="190" y="322" font-size="14" fill="#6B7280" text-anchor="middle">에너지 밀도 ∝ E²</text>
+
+  <!-- divider -->
+  <line x1="380" y1="60" x2="380" y2="330" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- ============ right: inductor (solenoid) ============ -->
+  <text x="570" y="40" font-size="15" font-weight="bold" fill="#8B0029" text-anchor="middle">인덕터: 자기장에 에너지 저장</text>
+
+  <!-- interior region -->
+  <rect x="450" y="110" width="240" height="130" fill="#F3F4F6"/>
+
+  <!-- top windings (x) -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#fff">
+    <circle cx="465" cy="110" r="9"/><circle cx="495" cy="110" r="9"/><circle cx="525" cy="110" r="9"/>
+    <circle cx="555" cy="110" r="9"/><circle cx="585" cy="110" r="9"/><circle cx="615" cy="110" r="9"/>
+    <circle cx="645" cy="110" r="9"/><circle cx="675" cy="110" r="9"/>
+  </g>
+  <g fill="#1a1a1a" font-size="11" text-anchor="middle">
+    <text x="465" y="114">×</text><text x="495" y="114">×</text><text x="525" y="114">×</text>
+    <text x="555" y="114">×</text><text x="585" y="114">×</text><text x="615" y="114">×</text>
+    <text x="645" y="114">×</text><text x="675" y="114">×</text>
+  </g>
+  <!-- bottom windings (dot) -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#fff">
+    <circle cx="465" cy="240" r="9"/><circle cx="495" cy="240" r="9"/><circle cx="525" cy="240" r="9"/>
+    <circle cx="555" cy="240" r="9"/><circle cx="585" cy="240" r="9"/><circle cx="615" cy="240" r="9"/>
+    <circle cx="645" cy="240" r="9"/><circle cx="675" cy="240" r="9"/>
+  </g>
+  <g fill="#1a1a1a">
+    <circle cx="465" cy="240" r="2.5"/><circle cx="495" cy="240" r="2.5"/><circle cx="525" cy="240" r="2.5"/>
+    <circle cx="555" cy="240" r="2.5"/><circle cx="585" cy="240" r="2.5"/><circle cx="615" cy="240" r="2.5"/>
+    <circle cx="645" cy="240" r="2.5"/><circle cx="675" cy="240" r="2.5"/>
+  </g>
+
+  <!-- B arrows -->
+  <line x1="475" y1="150" x2="655" y2="150" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRed9)"/>
+  <line x1="475" y1="200" x2="655" y2="200" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRed9)"/>
+  <text x="570" y="182" font-size="15" font-style="italic" fill="#8B0029" text-anchor="middle">B</text>
+
+  <text x="570" y="296" font-size="15" font-style="italic" fill="#1a1a1a" text-anchor="middle">u<tspan font-size="11" dy="3">B</tspan><tspan dy="-3"> = B²/2μ₀</tspan></text>
+  <text x="570" y="322" font-size="14" fill="#6B7280" text-anchor="middle">에너지 밀도 ∝ B²</text>
+
+  <!-- bottom note -->
+  <text x="380" y="362" font-size="14" font-weight="bold" fill="#1a1a1a" text-anchor="middle">에너지는 "장(field)" 자체에 저장된다</text>
+</svg>
