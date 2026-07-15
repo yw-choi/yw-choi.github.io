@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 430" font-family="sans-serif">
+  <rect width="100%" height="100%" fill="white"/>
+  <text x="390" y="30" font-size="16" fill="#1a1a1a" text-anchor="middle" font-weight="bold">유전체 삽입: 배터리 연결 여부에 따라 달라지는 결과</text>
+
+  <!-- ===== panel (a): battery connected ===== -->
+  <text x="220" y="70" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="bold">(a) 배터리 연결 유지 — V 고정</text>
+
+  <!-- battery + wires -->
+  <line x1="110" y1="118" x2="70" y2="118" stroke="#1a1a1a" stroke-width="2"/>
+  <line x1="70" y1="118" x2="70" y2="175" stroke="#1a1a1a" stroke-width="2"/>
+  <line x1="55" y1="175" x2="85" y2="175" stroke="#1a1a1a" stroke-width="2.5"/>
+  <line x1="62" y1="192" x2="78" y2="192" stroke="#1a1a1a" stroke-width="4"/>
+  <line x1="70" y1="192" x2="70" y2="258" stroke="#1a1a1a" stroke-width="2"/>
+  <line x1="70" y1="258" x2="110" y2="258" stroke="#1a1a1a" stroke-width="2"/>
+  <text x="43" y="172" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="43" y="201" font-size="13" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+
+  <!-- plates -->
+  <rect x="110" y="110" width="220" height="16" fill="white" stroke="#6B7280" stroke-width="2"/>
+  <rect x="110" y="250" width="220" height="16" fill="white" stroke="#6B7280" stroke-width="2"/>
+  <!-- dielectric slab -->
+  <rect x="110" y="130" width="220" height="116" fill="#F3F4F6" stroke="#6B7280" stroke-width="1.5"/>
+  <text x="220" y="198" font-size="24" fill="#6B7280" text-anchor="middle" font-style="italic">κ</text>
+
+  <!-- plate charges (many: q increased) -->
+  <text x="125" y="123" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="151" y="123" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="177" y="123" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="203" y="123" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="229" y="123" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="255" y="123" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="281" y="123" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="307" y="123" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="125" y="263" font-size="13" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="151" y="263" font-size="13" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="177" y="263" font-size="13" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="203" y="263" font-size="13" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="229" y="263" font-size="13" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="255" y="263" font-size="13" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="281" y="263" font-size="13" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="307" y="263" font-size="13" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <!-- induced surface charges -->
+  <text x="150" y="146" font-size="12" fill="#2563EB" text-anchor="middle">−</text>
+  <text x="196" y="146" font-size="12" fill="#2563EB" text-anchor="middle">−</text>
+  <text x="242" y="146" font-size="12" fill="#2563EB" text-anchor="middle">−</text>
+  <text x="288" y="146" font-size="12" fill="#2563EB" text-anchor="middle">−</text>
+  <text x="150" y="241" font-size="12" fill="#8B0029" text-anchor="middle">+</text>
+  <text x="196" y="241" font-size="12" fill="#8B0029" text-anchor="middle">+</text>
+  <text x="242" y="241" font-size="12" fill="#8B0029" text-anchor="middle">+</text>
+  <text x="288" y="241" font-size="12" fill="#8B0029" text-anchor="middle">+</text>
+
+  <text x="220" y="305" font-size="15" fill="#8B0029" text-anchor="middle" font-weight="bold">전하 증가: q = κq₀</text>
+  <text x="220" y="328" font-size="13" fill="#6B7280" text-anchor="middle">배터리가 추가 전하를 공급한다</text>
+
+  <!-- ===== panel (b): battery disconnected ===== -->
+  <text x="590" y="70" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="bold">(b) 배터리 분리 — q 고정</text>
+
+  <!-- plates -->
+  <rect x="480" y="110" width="220" height="16" fill="white" stroke="#6B7280" stroke-width="2"/>
+  <rect x="480" y="250" width="220" height="16" fill="white" stroke="#6B7280" stroke-width="2"/>
+  <!-- dielectric slab -->
+  <rect x="480" y="130" width="220" height="116" fill="#F3F4F6" stroke="#6B7280" stroke-width="1.5"/>
+  <text x="590" y="198" font-size="24" fill="#6B7280" text-anchor="middle" font-style="italic">κ</text>
+
+  <!-- plate charges (fixed: fewer) -->
+  <text x="505" y="123" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="547" y="123" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="589" y="123" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="631" y="123" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="673" y="123" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="505" y="263" font-size="13" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="547" y="263" font-size="13" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="589" y="263" font-size="13" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="631" y="263" font-size="13" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="673" y="263" font-size="13" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <!-- induced surface charges -->
+  <text x="526" y="146" font-size="12" fill="#2563EB" text-anchor="middle">−</text>
+  <text x="568" y="146" font-size="12" fill="#2563EB" text-anchor="middle">−</text>
+  <text x="610" y="146" font-size="12" fill="#2563EB" text-anchor="middle">−</text>
+  <text x="652" y="146" font-size="12" fill="#2563EB" text-anchor="middle">−</text>
+  <text x="526" y="241" font-size="12" fill="#8B0029" text-anchor="middle">+</text>
+  <text x="568" y="241" font-size="12" fill="#8B0029" text-anchor="middle">+</text>
+  <text x="610" y="241" font-size="12" fill="#8B0029" text-anchor="middle">+</text>
+  <text x="652" y="241" font-size="12" fill="#8B0029" text-anchor="middle">+</text>
+
+  <text x="590" y="305" font-size="15" fill="#2563EB" text-anchor="middle" font-weight="bold">전위차 감소: V = V₀/κ</text>
+  <text x="590" y="328" font-size="13" fill="#6B7280" text-anchor="middle">전하가 이동할 길이 없어 q는 그대로</text>
+
+  <!-- common caption -->
+  <text x="390" y="380" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="bold">어느 경우든 C = q/V 는 κ배로 커진다: C = κC₀</text>
+  <text x="390" y="406" font-size="13" fill="#6B7280" text-anchor="middle">작은 − , + 기호: 유전체 표면에 생기는 유도 전하 (분극의 결과)</text>
+</svg>

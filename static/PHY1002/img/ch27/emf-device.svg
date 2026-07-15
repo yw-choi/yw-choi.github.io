@@ -1,0 +1,57 @@
+<svg viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrRed" markerWidth="12" markerHeight="10" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#8B0029"/>
+    </marker>
+    <marker id="arrBlue" markerWidth="12" markerHeight="10" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2563EB"/>
+    </marker>
+    <marker id="arrGray" markerWidth="10" markerHeight="8" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <text x="360" y="32" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a1a">기전력 장치: 전하 펌프</text>
+
+  <!-- circuit wires -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="none">
+    <line x1="170" y1="70" x2="560" y2="70"/>
+    <line x1="560" y1="70" x2="560" y2="150"/>
+    <line x1="560" y1="210" x2="560" y2="330"/>
+    <line x1="560" y1="330" x2="170" y2="330"/>
+    <line x1="170" y1="330" x2="170" y2="262"/>
+    <line x1="170" y1="138" x2="170" y2="70"/>
+  </g>
+
+  <!-- emf device box -->
+  <rect x="128" y="138" width="84" height="124" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <line x1="170" y1="240" x2="170" y2="166" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRed)"/>
+  <circle cx="170" cy="246" r="3" fill="none" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="148" y="210" text-anchor="middle" font-size="18" font-style="italic" fill="#8B0029">ℰ</text>
+  <text x="192" y="168" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a1a">+</text>
+  <text x="192" y="251" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a1a">−</text>
+  <text x="222" y="150" text-anchor="start" font-size="12.5" fill="#6B7280">높은 전위</text>
+  <text x="222" y="262" text-anchor="start" font-size="12.5" fill="#6B7280">낮은 전위</text>
+
+  <!-- resistor (right branch) -->
+  <path d="M 560 150 l -9 5 l 18 10 l -18 10 l 18 10 l -18 10 l 18 10 l -9 5" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+  <text x="585" y="185" text-anchor="start" font-size="16" font-style="italic" fill="#1a1a1a">R</text>
+
+  <!-- current arrows -->
+  <g stroke="#2563EB" stroke-width="2.5">
+    <line x1="330" y1="70" x2="400" y2="70" marker-end="url(#arrBlue)"/>
+    <line x1="560" y1="95" x2="560" y2="132" marker-end="url(#arrBlue)"/>
+    <line x1="400" y1="330" x2="330" y2="330" marker-end="url(#arrBlue)"/>
+    <line x1="170" y1="305" x2="170" y2="278" marker-end="url(#arrBlue)"/>
+  </g>
+  <text x="365" y="55" text-anchor="middle" font-size="15" font-style="italic" fill="#2563EB">i</text>
+  <text x="580" y="120" text-anchor="start" font-size="15" font-style="italic" fill="#2563EB">i</text>
+  <text x="365" y="355" text-anchor="middle" font-size="15" font-style="italic" fill="#2563EB">i</text>
+  <text x="150" y="297" text-anchor="middle" font-size="15" font-style="italic" fill="#2563EB">i</text>
+
+  <!-- annotations -->
+  <text x="170" y="370" text-anchor="middle" font-size="12.5" fill="#6B7280">전하를 저전위 → 고전위로 퍼올린다</text>
+  <text x="170" y="388" text-anchor="middle" font-size="12.5" fill="#6B7280">(하는 일 dW = ℰ dq)</text>
+  <text x="560" y="370" text-anchor="middle" font-size="12.5" fill="#6B7280">저항: 전기 에너지가</text>
+  <text x="560" y="388" text-anchor="middle" font-size="12.5" fill="#6B7280">열로 소산된다</text>
+</svg>

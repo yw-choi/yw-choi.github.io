@@ -1,0 +1,76 @@
+<svg viewBox="0 0 760 410" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrRed4" markerWidth="12" markerHeight="10" refX="8" refY="3.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,3.5 L0,7 Z" fill="#8B0029"/>
+    </marker>
+    <marker id="arrBlue4" markerWidth="12" markerHeight="10" refX="8" refY="3.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,3.5 L0,7 Z" fill="#2563EB"/>
+    </marker>
+    <marker id="arrGray4a" markerWidth="10" markerHeight="8" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#6B7280"/>
+    </marker>
+    <marker id="arrGray4b" markerWidth="10" markerHeight="8" refX="1" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M8,0 L0,3 L8,6 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <text x="380" y="32" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a1a">전류의 미시적 모형 — 길이 <tspan font-style="italic">L</tspan> 속의 운반자가 모두 지나가는 시간</text>
+
+  <!-- current density direction arrow above -->
+  <line x1="310" y1="112" x2="450" y2="112" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRed4)"/>
+  <text x="466" y="117" font-size="15" font-style="italic" fill="#8B0029">J, i</text>
+
+  <!-- cylinder -->
+  <rect x="140" y="155" width="460" height="110" fill="#F3F4F6"/>
+  <line x1="140" y1="155" x2="600" y2="155" stroke="#6B7280" stroke-width="2"/>
+  <line x1="140" y1="265" x2="600" y2="265" stroke="#6B7280" stroke-width="2"/>
+  <ellipse cx="600" cy="210" rx="16" ry="55" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <ellipse cx="140" cy="210" rx="16" ry="55" fill="#8B0029" fill-opacity="0.15" stroke="#8B0029" stroke-width="2"/>
+
+  <!-- area label -->
+  <text x="66" y="130" font-size="14" fill="#1a1a1a">단면적 <tspan font-style="italic">A</tspan></text>
+  <line x1="95" y1="138" x2="128" y2="168" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- carriers with drift velocity arrows -->
+  <g>
+    <circle cx="210" cy="185" r="9" fill="#8B0029"/>
+    <text x="210" y="189.5" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">+</text>
+    <line x1="222" y1="185" x2="252" y2="185" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrBlue4)"/>
+  </g>
+  <g>
+    <circle cx="262" cy="240" r="9" fill="#8B0029"/>
+    <text x="262" y="244.5" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">+</text>
+    <line x1="274" y1="240" x2="304" y2="240" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrBlue4)"/>
+  </g>
+  <g>
+    <circle cx="330" cy="200" r="9" fill="#8B0029"/>
+    <text x="330" y="204.5" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">+</text>
+    <line x1="342" y1="200" x2="372" y2="200" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrBlue4)"/>
+  </g>
+  <g>
+    <circle cx="392" cy="235" r="9" fill="#8B0029"/>
+    <text x="392" y="239.5" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">+</text>
+    <line x1="404" y1="235" x2="434" y2="235" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrBlue4)"/>
+  </g>
+  <g>
+    <circle cx="455" cy="182" r="9" fill="#8B0029"/>
+    <text x="455" y="186.5" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">+</text>
+    <line x1="467" y1="182" x2="497" y2="182" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrBlue4)"/>
+  </g>
+  <g>
+    <circle cx="515" cy="228" r="9" fill="#8B0029"/>
+    <text x="515" y="232.5" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">+</text>
+    <line x1="527" y1="228" x2="557" y2="228" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrBlue4)"/>
+  </g>
+  <text x="252" y="168" font-size="14" font-style="italic" fill="#2563EB">v<tspan font-size="11" dy="3">d</tspan></text>
+
+  <!-- L dimension -->
+  <line x1="140" y1="272" x2="140" y2="308" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="600" y1="272" x2="600" y2="308" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="146" y1="303" x2="594" y2="303" stroke="#6B7280" stroke-width="1" marker-start="url(#arrGray4b)" marker-end="url(#arrGray4a)"/>
+  <text x="370" y="326" text-anchor="middle" font-size="15" font-style="italic" fill="#1a1a1a">L</text>
+
+  <!-- annotation -->
+  <text x="380" y="362" text-anchor="middle" font-size="14" fill="#1a1a1a">부피 <tspan font-style="italic">AL</tspan> 속의 운반자 수 = <tspan font-style="italic">nAL</tspan>,&#160;&#160;총 전하 <tspan font-style="italic">q = (nAL)e</tspan></text>
+  <text x="380" y="390" text-anchor="middle" font-size="14" fill="#8B0029">모두 지나가는 시간 <tspan font-style="italic">t = L/v</tspan><tspan font-size="11" dy="3" font-style="italic">d</tspan><tspan dy="-3">&#160;&#160;→&#160;&#160;</tspan><tspan font-style="italic">i = q/t = nAev</tspan><tspan font-size="11" dy="3" font-style="italic">d</tspan></text>
+</svg>

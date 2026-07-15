@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440" font-family="sans-serif">
+  <defs>
+    <marker id="spB" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0, 9 3.5, 0 7" fill="#2563EB"/></marker>
+    <marker id="spG" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0, 9 3.5, 0 7" fill="#6B7280"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="white"/>
+  <text x="360" y="32" font-size="16" fill="#1a1a1a" text-anchor="middle" font-weight="bold">구형 축전기 (중심을 지나는 단면)</text>
+
+  <!-- outer shell (annulus) -->
+  <circle cx="250" cy="240" r="150" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <circle cx="250" cy="240" r="126" fill="white" stroke="#6B7280" stroke-width="2"/>
+  <!-- minus charges on inner surface of outer shell -->
+  <text x="250" y="131" font-size="14" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="333" y="166" font-size="14" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="368" y="245" font-size="14" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="333" y="324" font-size="14" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="250" y="359" font-size="14" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="167" y="324" font-size="14" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="132" y="245" font-size="14" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+  <text x="167" y="166" font-size="14" fill="#2563EB" font-weight="bold" text-anchor="middle">−</text>
+
+  <!-- Gaussian sphere -->
+  <circle cx="250" cy="240" r="92" fill="none" stroke="#8B0029" stroke-width="1.5" stroke-dasharray="6 4"/>
+
+  <!-- inner sphere -->
+  <circle cx="250" cy="240" r="46" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <!-- plus charges on surface of inner sphere -->
+  <text x="250" y="212" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="277" y="230" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="277" y="260" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="250" y="278" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="223" y="260" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+  <text x="223" y="230" font-size="13" fill="#8B0029" font-weight="bold" text-anchor="middle">+</text>
+
+  <!-- E field arrows (radial, outward) -->
+  <line x1="250" y1="186" x2="250" y2="156" stroke="#2563EB" stroke-width="2.5" marker-end="url(#spB)"/>
+  <line x1="304" y1="240" x2="334" y2="240" stroke="#2563EB" stroke-width="2.5" marker-end="url(#spB)"/>
+  <line x1="250" y1="294" x2="250" y2="324" stroke="#2563EB" stroke-width="2.5" marker-end="url(#spB)"/>
+  <line x1="196" y1="240" x2="166" y2="240" stroke="#2563EB" stroke-width="2.5" marker-end="url(#spB)"/>
+  <text x="264" y="152" font-size="14" fill="#2563EB" font-style="italic" font-weight="bold">E</text>
+
+  <!-- radius arrows -->
+  <line x1="250" y1="240" x2="281" y2="206" stroke="#6B7280" stroke-width="1.5" marker-end="url(#spG)"/>
+  <text x="276" y="199" font-size="14" fill="#6B7280" font-style="italic">a</text>
+  <line x1="250" y1="240" x2="314" y2="176" stroke="#8B0029" stroke-width="1.5"/>
+  <circle cx="315" cy="175" r="3" fill="#8B0029"/>
+  <text x="328" y="170" font-size="14" fill="#8B0029" font-style="italic" font-weight="bold">r</text>
+  <line x1="250" y1="240" x2="156" y2="134" stroke="#6B7280" stroke-width="1.5" marker-end="url(#spG)"/>
+  <text x="144" y="126" font-size="14" fill="#6B7280" font-style="italic">b</text>
+
+  <!-- legend on right -->
+  <text x="455" y="150" font-size="14" fill="#1a1a1a">동심(concentric) 구 껍질 두 개</text>
+  <text x="455" y="182" font-size="14" fill="#8B0029">안쪽 껍질(반지름 a): 전하 +q</text>
+  <text x="455" y="214" font-size="14" fill="#2563EB">바깥 껍질(반지름 b): 전하 −q</text>
+  <text x="455" y="246" font-size="14" fill="#8B0029">빨강 점선: 반지름 r인 구형</text>
+  <text x="455" y="266" font-size="14" fill="#8B0029">가우스면 (a &lt; r &lt; b)</text>
+  <text x="455" y="298" font-size="14" fill="#2563EB">전기장은 지름 방향, 구 대칭</text>
+
+  <!-- caption -->
+  <text x="360" y="422" font-size="14" fill="#1a1a1a" text-anchor="middle">가우스 법칙: q = ε₀E(4πr²)  →  E = q / (4πε₀r²)</text>
+</svg>
