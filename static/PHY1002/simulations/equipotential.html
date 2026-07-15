@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>등퍼텐셜선과 전기장</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; touch-action: none; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.check-row { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: #444; }
+.check-row input { accent-color: #8B0029; }
+.preset-row { display: flex; gap: 6px; }
+.preset-row button { flex: 1; background: #fff; color: #8B0029; border: 1.5px solid #8B0029; border-radius: 6px; padding: 7px 2px; font-size: 11.5px; cursor: pointer; font-weight: 600; }
+.preset-row button:hover { background: #f8f0f2; }
+.preset-row button.active { background: #8B0029; color: #fff; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-weight: 700; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.7; }
+.theorem-box .katex { color: #fff; font-size: 13px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+.relation-box { background: #eef3fe; border: 1px solid #c3d4f5; border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 1.8; color: #2b4a8b; }
+.relation-box .katex { font-size: 12px; }
+.relation-box b { color: #1a3a7a; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.canvas-title { position: absolute; top: 8px; left: 16px; right: 16px; pointer-events: none; font-size: 14px; font-weight: 700; color: #8B0029; line-height: 1.4; }
+.hint { position: absolute; bottom: 8px; left: 16px; pointer-events: none; font-size: 11px; color: #6B7280; }
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute; white-space: nowrap; font-size: 13px; line-height: 1;
+  pointer-events: none; transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.88); padding: 2px 6px; border-radius: 4px;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.95em; }
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label" id="lblCursor" style="color:#1a1a1a; display:none;"></div>
+    </div>
+    <div class="canvas-title" id="canvasTitle"></div>
+    <div class="hint">전하를 드래그해 옮기고, 캔버스 위에서 마우스를 움직여 보세요</div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>등퍼텐셜선과 전기장</h2>
+      <div class="subtitle">Equipotential Surfaces (Ch.24)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>배치 (프리셋)</label>
+      <div class="preset-row">
+        <button id="pSingle">단일 전하</button>
+        <button id="pDipole" class="active">쌍극자</button>
+        <button id="pTwoPos">두 양전하</button>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label>전하 크기 |q| = <span id="qVal">5.0</span> nC</label>
+      <input type="range" id="qSlider" min="1" max="10" value="5" step="0.5">
+    </div>
+
+    <div class="check-row">
+      <input type="checkbox" id="showE" checked>
+      <label for="showE">전기장 벡터 표시</label>
+    </div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="relation-box" id="relationBox"></div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <button class="reset-btn" id="resetBtn">&#8635; 기본값 복원</button>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false, displayMode: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW = 0, CH = 0;
+
+// ---------- physics ----------
+const k = 8.99e9;            // N·m²/C²
+const NANO = 1e-9;           // nC -> C
+const M_PER_PX = 0.005;      // 1 px = 5 mm  (200 px = 1 m)
+
+let qMag = 5.0;              // |q| in nC
+let preset = 'dipole';
+let charges = [];            // {fx, fy (fraction of canvas), sign}
+let showEField = true;
+
+function presetCharges(name) {
+  if (name === 'single') return [ { fx: 0.5,  fy: 0.5, sign: +1 } ];
+  if (name === 'twopos') return [ { fx: 0.35, fy: 0.5, sign: +1 }, { fx: 0.65, fy: 0.5, sign: +1 } ];
+  return [ { fx: 0.35, fy: 0.5, sign: +1 }, { fx: 0.65, fy: 0.5, sign: -1 } ];   // dipole
+}
+
+function applyPreset(name) {
+  preset = name;
+  charges = presetCharges(name).map(c => ({ x: c.fx * CW, y: c.fy * CH, sign: c.sign }));
+  document.getElementById('pSingle').classList.toggle('active', name === 'single');
+  document.getElementById('pDipole').classList.toggle('active', name === 'dipole');
+  document.getElementById('pTwoPos').classList.toggle('active', name === 'twopos');
+  draw();
+}
+
+function chargeQ(c) { return c.sign * qMag * NANO; }   // coulombs
+const CHARGE_R = 15;
+
+// potential (V) at canvas point
+function potentialAt(x, y) {
+  let V = 0;
+  for (const c of charges) {
+    const r = Math.max(Math.hypot(x - c.x, y - c.y) * M_PER_PX, 1e-4);
+    V += k * chargeQ(c) / r;
+  }
+  return V;
+}
+
+// E field (V/m) at canvas point; returns {Ex, Ey, mag} (y in screen coords, +y down)
+function fieldAt(x, y) {
+  let Ex = 0, Ey = 0;
+  for (const c of charges) {
+    const dxp = (x - c.x) * M_PER_PX, dyp = (y - c.y) * M_PER_PX;
+    const r2 = Math.max(dxp * dxp + dyp * dyp, 1e-8);
+    const r = Math.sqrt(r2);
+    const s = k * chargeQ(c) / (r2 * r);   // kq/r³
+    Ex += s * dxp; Ey += s * dyp;
+  }
+  return { Ex, Ey, mag: Math.hypot(Ex, Ey) };
+}
+
+// ---------- resize ----------
+let positionsInit = false;
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const oldW = CW, oldH = CH;
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (CW < 1 || CH < 1) return;   // layout not ready yet (e.g. hidden iframe) — retry later
+  if (!positionsInit) {
+    charges = presetCharges(preset).map(c => ({ x: c.fx * CW, y: c.fy * CH, sign: c.sign }));
+    positionsInit = true;
+  } else if (oldW > 0 && oldH > 0) {
+    for (const c of charges) { c.x *= CW / oldW; c.y *= CH / oldH; }
+  }
+  clampInside();
+  draw();
+}
+function clampInside() {
+  for (const c of charges) {
+    c.x = Math.max(CHARGE_R + 6, Math.min(CW - CHARGE_R - 6, c.x));
+    c.y = Math.max(CHARGE_R + 6, Math.min(CH - CHARGE_R - 6, c.y));
+  }
+}
+
+// ---------- equipotential contours (marching squares) ----------
+const LEVELS_BASE = [15, 30, 60, 120, 240, 480, 960];   // volts (for |q| = 5 nC scale feel)
+
+function contourLevels() {
+  // scale levels with |q| so the picture stays informative for any slider value
+  const s = qMag / 5.0;
+  return LEVELS_BASE.map(L => L * s);
+}
+
+function drawContours() {
+  const step = 8;
+  const nx = Math.ceil(CW / step) + 1;
+  const ny = Math.ceil(CH / step) + 1;
+  const grid = new Float64Array(nx * ny);
+  for (let j = 0; j < ny; j++)
+    for (let i = 0; i < nx; i++)
+      grid[j * nx + i] = potentialAt(i * step, j * step);
+
+  const hasPos = charges.some(c => c.sign > 0);
+  const hasNeg = charges.some(c => c.sign < 0);
+
+  const levels = [];
+  for (const L of contourLevels()) {
+    if (hasPos) levels.push(L);
+    if (hasNeg) levels.push(-L);
+  }
+  if (hasPos && hasNeg) levels.push(0);
+
+  for (const L of levels) {
+    if (L > 0)      { ctx.strokeStyle = 'rgba(139,0,41,0.55)';  ctx.setLineDash([]); }
+    else if (L < 0) { ctx.strokeStyle = 'rgba(37,99,235,0.55)'; ctx.setLineDash([]); }
+    else            { ctx.strokeStyle = 'rgba(107,114,128,0.8)'; ctx.setLineDash([5, 4]); }
+    ctx.lineWidth = L === 0 ? 1.5 : 1.6;
+    ctx.beginPath();
+    for (let j = 0; j < ny - 1; j++) {
+      for (let i = 0; i < nx - 1; i++) {
+        const v00 = grid[j * nx + i],       v10 = grid[j * nx + i + 1];
+        const v01 = grid[(j + 1) * nx + i], v11 = grid[(j + 1) * nx + i + 1];
+        const x0 = i * step, y0 = j * step, x1 = x0 + step, y1 = y0 + step;
+        const pts = [];
+        // top edge
+        if ((v00 > L) !== (v10 > L)) pts.push([x0 + step * (L - v00) / (v10 - v00), y0]);
+        // right edge
+        if ((v10 > L) !== (v11 > L)) pts.push([x1, y0 + step * (L - v10) / (v11 - v10)]);
+        // bottom edge
+        if ((v01 > L) !== (v11 > L)) pts.push([x0 + step * (L - v01) / (v11 - v01), y1]);
+        // left edge
+        if ((v00 > L) !== (v01 > L)) pts.push([x0, y0 + step * (L - v00) / (v01 - v00)]);
+        if (pts.length === 2) {
+          ctx.moveTo(pts[0][0], pts[0][1]); ctx.lineTo(pts[1][0], pts[1][1]);
+        } else if (pts.length === 4) {
+          ctx.moveTo(pts[0][0], pts[0][1]); ctx.lineTo(pts[1][0], pts[1][1]);
+          ctx.moveTo(pts[2][0], pts[2][1]); ctx.lineTo(pts[3][0], pts[3][1]);
+        }
+      }
+    }
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+}
+
+// ---------- E-field vector grid ----------
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 7;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2 - (headLen - 2) * Math.cos(angle), y2 - (headLen - 2) * Math.sin(angle));
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.45), y2 - headLen * Math.sin(angle - 0.45));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.45), y2 - headLen * Math.sin(angle + 0.45));
+  ctx.closePath(); ctx.fill();
+}
+
+function drawFieldVectors() {
+  const gap = 46;
+  for (let y = gap / 2; y < CH; y += gap) {
+    for (let x = gap / 2; x < CW; x += gap) {
+      let tooClose = false;
+      for (const c of charges) if (Math.hypot(x - c.x, y - c.y) < 34) { tooClose = true; break; }
+      if (tooClose) continue;
+      const { Ex, Ey, mag } = fieldAt(x, y);
+      if (mag < 1) continue;
+      // length scales gently (log) with field strength
+      const len = Math.min(9 + 5 * Math.log10(1 + mag / 30), 21);
+      const ux = Ex / mag, uy = Ey / mag;
+      drawArrow(x - ux * len / 2, y - uy * len / 2, x + ux * len / 2, y + uy * len / 2,
+                'rgba(107,114,128,0.75)', 1.3);
+    }
+  }
+}
+
+// ---------- charges ----------
+function drawCharge(c, idx) {
+  const isPos = c.sign > 0;
+  const grad = ctx.createRadialGradient(c.x, c.y, CHARGE_R * 0.2, c.x, c.y, CHARGE_R);
+  if (isPos) { grad.addColorStop(0, '#c4234f'); grad.addColorStop(1, '#8B0029'); }
+  else       { grad.addColorStop(0, '#5b8cf5'); grad.addColorStop(1, '#2563EB'); }
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.arc(c.x, c.y, CHARGE_R, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.18)'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 18px sans-serif';
+  ctx.fillText(isPos ? '+' : '−', c.x, c.y + 1);
+  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 12px sans-serif'; ctx.textBaseline = 'top';
+  ctx.fillText('q' + String.fromCharCode(0x2080 + idx + 1), c.x, c.y + CHARGE_R + 4);
+  ctx.textBaseline = 'alphabetic';
+}
+
+// ---------- cursor probe ----------
+let cursor = null;   // {x, y} in canvas coords, or null
+
+function drawCursorProbe() {
+  const lbl = document.getElementById('lblCursor');
+  if (!cursor) { lbl.style.display = 'none'; return; }
+  const { x, y } = cursor;
+  let onCharge = false;
+  for (const c of charges) if (Math.hypot(x - c.x, y - c.y) < CHARGE_R + 4) onCharge = true;
+
+  const V = potentialAt(x, y);
+  const { Ex, Ey, mag } = fieldAt(x, y);
+
+  // cross mark at cursor
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(x - 6, y); ctx.lineTo(x + 6, y);
+  ctx.moveTo(x, y - 6); ctx.lineTo(x, y + 6);
+  ctx.stroke();
+
+  // local E arrow (red): direction of steepest potential DECREASE
+  if (!onCharge && mag > 1) {
+    const ux = Ex / mag, uy = Ey / mag;
+    drawArrow(x + ux * 8, y + uy * 8, x + ux * 52, y + uy * 52, '#8B0029', 2.5);
+  }
+
+  // overlay label with V and E values, kept on screen and away from the arrow
+  lbl.style.display = 'block';
+  let lx = x, ly = y - 34;
+  if (ly < 46) ly = y + 34;
+  lx = Math.max(90, Math.min(CW - 90, lx));
+  lbl.style.left = lx + 'px';
+  lbl.style.top = ly + 'px';
+  lbl.innerHTML = tex('V = ' + fmtSci(V) + '\\,\\text{V}, \\;\\; E = ' + fmtSci(mag) + '\\,\\text{V/m}');
+  updateInfo(V, mag);
+}
+
+// ---------- main draw ----------
+function draw() {
+  if (!positionsInit) return;
+  ctx.clearRect(0, 0, CW, CH);
+  drawContours();
+  if (showEField) drawFieldVectors();
+  charges.forEach((c, i) => drawCharge(c, i));
+  drawCursorProbe();
+}
+
+// ---------- number formatting ----------
+function fmtSci(v) {
+  const a = Math.abs(v);
+  if (a < 1e-9) return '0';
+  if (a >= 0.1 && a < 10000) {
+    return v.toFixed(a < 10 ? 2 : (a < 1000 ? 1 : 0));
+  }
+  const exp = Math.floor(Math.log10(a));
+  const mant = (v / Math.pow(10, exp)).toFixed(2);
+  return mant + '\\times 10^{' + exp + '}';
+}
+function fmtPlain(v) {
+  const a = Math.abs(v);
+  if (a < 1e-9) return '0';
+  if (a >= 0.1 && a < 10000) return v.toFixed(a < 10 ? 2 : (a < 1000 ? 1 : 0));
+  const exp = Math.floor(Math.log10(a));
+  return (v / Math.pow(10, exp)).toFixed(2) + '×10' + sup(exp);
+}
+function sup(n) {
+  const map = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴',
+                '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  return String(n).split('').map(c => map[c] || c).join('');
+}
+
+// ---------- panel content ----------
+function updateInfo(V, Emag) {
+  const box = document.getElementById('infoBox');
+  let html = '<span class="label">커서 위치의 물리량</span><br>';
+  if (V === null) {
+    html += '<span style="color:#6B7280">캔버스 위에서 마우스를 움직여 보세요</span>';
+  } else {
+    html += '<span class="label">퍼텐셜</span> <span class="val">V = ' + fmtPlain(V) + ' V</span><br>';
+    html += '<span class="label">전기장</span> <span class="val">|E| = ' + fmtPlain(Emag) + ' V/m</span><br>';
+    html += '<span style="font-size:10.5px;color:#6B7280">빨간 화살표 = 그 점의 전기장 방향 (등퍼텐셜선에 수직)</span>';
+  }
+  box.innerHTML = html;
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML =
+    '등퍼텐셜면 ⊥ 전기력선 &mdash; <span style="color:#6B7280;font-weight:400">전기장은 퍼텐셜이 가장 빨리 낮아지는 방향을 가리킨다</span>';
+
+  document.getElementById('theoremBox').innerHTML =
+    '중첩 원리 (스칼라 합)<br>' +
+    tex('V = \\dfrac{1}{4\\pi\\varepsilon_0}\\sum_i \\dfrac{q_i}{r_i}') + '<br>' +
+    '<span style="font-size:11px;font-weight:400">전기장은 퍼텐셜의 변화율: ' + tex('E_s = -\\partial V/\\partial s') + '</span>';
+
+  document.getElementById('formulaBox').innerHTML =
+    '<b>빨강 실선:</b> V &gt; 0 등퍼텐셜선<br>' +
+    '<b style="color:#2563EB">파랑 실선:</b> V &lt; 0 등퍼텐셜선<br>' +
+    '<b style="color:#6B7280">회색 점선:</b> V = 0 &nbsp;/&nbsp; <b style="color:#6B7280">회색 화살표:</b> ' + tex('\\vec{E}') + '<br>' +
+    '레벨: ±15, 30, 60, 120, 240, 480, 960 V 스케일';
+
+  document.getElementById('relationBox').innerHTML =
+    '<b>관찰 포인트</b><br>' +
+    '① 등퍼텐셜선을 따라 움직이면 ' + tex('W = q\\,\\Delta V = 0') + '<br>' +
+    '② 등퍼텐셜선이 조밀한 곳일수록 ' + tex('E') + '가 강하다<br>' +
+    '③ ' + tex('\\vec{E}') + '는 어디서나 등퍼텐셜선과 수직';
+
+  updateInfo(null, null);
+}
+
+// ---------- interaction ----------
+let dragIdx = -1;
+function eventToCanvas(e) {
+  const rect = canvas.getBoundingClientRect();
+  const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+  return { x: cx, y: cy };
+}
+function hitTest(x, y) {
+  for (let i = charges.length - 1; i >= 0; i--) {
+    if (Math.hypot(x - charges[i].x, y - charges[i].y) <= CHARGE_R + 8) return i;
+  }
+  return -1;
+}
+function onDown(e) {
+  const p = eventToCanvas(e);
+  const idx = hitTest(p.x, p.y);
+  if (idx >= 0) {
+    dragIdx = idx;
+    canvas.style.cursor = 'grabbing';
+    e.preventDefault();
+  }
+}
+function onMove(e) {
+  const p = eventToCanvas(e);
+  const inside = p.x >= 0 && p.x <= CW && p.y >= 0 && p.y <= CH;
+  cursor = inside ? p : null;
+  if (dragIdx >= 0) {
+    charges[dragIdx].x = p.x;
+    charges[dragIdx].y = p.y;
+    clampInside();
+    e.preventDefault();
+  } else {
+    canvas.style.cursor = hitTest(p.x, p.y) >= 0 ? 'grab' : 'crosshair';
+  }
+  draw();
+}
+function onUp() { dragIdx = -1; canvas.style.cursor = 'crosshair'; }
+
+canvas.addEventListener('mousedown', onDown);
+window.addEventListener('mousemove', onMove);
+window.addEventListener('mouseup', onUp);
+canvas.addEventListener('touchstart', (e) => { onDown(e); onMove(e); }, { passive: false });
+canvas.addEventListener('touchmove', onMove, { passive: false });
+canvas.addEventListener('touchend', () => { onUp(); cursor = null; draw(); });
+canvas.addEventListener('mouseleave', () => { if (dragIdx < 0) { cursor = null; draw(); updateInfo(null, null); } });
+
+// ---------- controls ----------
+document.getElementById('qSlider').addEventListener('input', (e) => {
+  qMag = parseFloat(e.target.value);
+  document.getElementById('qVal').textContent = qMag.toFixed(1);
+  draw();
+});
+document.getElementById('showE').addEventListener('change', (e) => {
+  showEField = e.target.checked;
+  draw();
+});
+document.getElementById('pSingle').addEventListener('click', () => applyPreset('single'));
+document.getElementById('pDipole').addEventListener('click', () => applyPreset('dipole'));
+document.getElementById('pTwoPos').addEventListener('click', () => applyPreset('twopos'));
+document.getElementById('resetBtn').addEventListener('click', () => {
+  qMag = 5.0;
+  document.getElementById('qSlider').value = 5;
+  document.getElementById('qVal').textContent = '5.0';
+  showEField = true;
+  document.getElementById('showE').checked = true;
+  applyPreset('dipole');
+});
+
+window.addEventListener('resize', resize);
+
+renderStatic();
+// Lazy init: in an iframe the canvas may have zero layout size when the script
+// runs (or while the iframe is display:none). Retry every frame until it is
+// laid out, then resize() performs the initial placement exactly once.
+(function initWhenVisible() {
+  resize();
+  if (!positionsInit) requestAnimationFrame(initWhenVisible);
+})();
+</script>
+</body>
+</html>

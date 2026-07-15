@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 460" font-family="sans-serif">
+  <defs>
+    <marker id="asR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/></marker>
+    <marker id="asB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/></marker>
+    <marker id="asG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="white"/>
+  <text x="350" y="32" font-size="16" fill="#1a1a1a" text-anchor="middle" font-weight="bold">원자의 구조: 양성자, 중성자, 전자</text>
+
+  <!-- electron orbits (gray dashed) -->
+  <ellipse cx="350" cy="215" rx="170" ry="110" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <ellipse cx="350" cy="215" rx="110" ry="150" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- nucleus: 3 protons (red +) + 3 neutrons (gray 0) -->
+  <circle cx="350" cy="195" r="15" fill="#8B0029" stroke="#8B0029" stroke-width="2"/>
+  <text x="350" y="201" font-size="15" fill="white" text-anchor="middle" font-weight="bold">+</text>
+  <circle cx="330" cy="222" r="15" fill="#8B0029" stroke="#8B0029" stroke-width="2"/>
+  <text x="330" y="228" font-size="15" fill="white" text-anchor="middle" font-weight="bold">+</text>
+  <circle cx="375" cy="228" r="15" fill="#8B0029" stroke="#8B0029" stroke-width="2"/>
+  <text x="375" y="234" font-size="15" fill="white" text-anchor="middle" font-weight="bold">+</text>
+  <circle cx="352" cy="228" r="15" fill="#6B7280" stroke="#6B7280" stroke-width="2"/>
+  <text x="352" y="234" font-size="13" fill="white" text-anchor="middle" font-weight="bold">0</text>
+  <circle cx="328" cy="195" r="15" fill="#6B7280" stroke="#6B7280" stroke-width="2"/>
+  <text x="328" y="201" font-size="13" fill="white" text-anchor="middle" font-weight="bold">0</text>
+  <circle cx="373" cy="198" r="15" fill="#6B7280" stroke="#6B7280" stroke-width="2"/>
+  <text x="373" y="204" font-size="13" fill="white" text-anchor="middle" font-weight="bold">0</text>
+
+  <!-- electrons (blue -) on orbits -->
+  <circle cx="520" cy="215" r="13" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
+  <text x="520" y="221" font-size="16" fill="white" text-anchor="middle" font-weight="bold">−</text>
+  <circle cx="350" cy="65" r="13" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
+  <text x="350" y="71" font-size="16" fill="white" text-anchor="middle" font-weight="bold">−</text>
+  <circle cx="230" cy="293" r="13" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
+  <text x="230" y="299" font-size="16" fill="white" text-anchor="middle" font-weight="bold">−</text>
+
+  <!-- legend -->
+  <rect x="40" y="378" width="620" height="60" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="1"/>
+  <circle cx="80" cy="408" r="13" fill="#8B0029" stroke="#8B0029" stroke-width="2"/>
+  <text x="80" y="414" font-size="14" fill="white" text-anchor="middle" font-weight="bold">+</text>
+  <text x="102" y="413" font-size="14" fill="#1a1a1a">양성자 (proton)  +e</text>
+  <circle cx="300" cy="408" r="13" fill="#6B7280" stroke="#6B7280" stroke-width="2"/>
+  <text x="300" y="413" font-size="12" fill="white" text-anchor="middle" font-weight="bold">0</text>
+  <text x="322" y="413" font-size="14" fill="#1a1a1a">중성자 (neutron)  0</text>
+  <circle cx="520" cy="408" r="13" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
+  <text x="520" y="414" font-size="15" fill="white" text-anchor="middle" font-weight="bold">−</text>
+  <text x="542" y="413" font-size="14" fill="#1a1a1a">전자 (electron)  −e</text>
+</svg>

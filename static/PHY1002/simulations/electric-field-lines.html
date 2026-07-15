@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전기력선 놀이터</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; touch-action: none; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.preset-row { display: flex; gap: 6px; }
+.preset-row button {
+  flex: 1; background: #fff; color: #8B0029; border: 1.5px solid #8B0029;
+  border-radius: 6px; padding: 6px 2px; font-size: 11.5px; cursor: pointer; font-weight: 600;
+}
+.preset-row button.active, .preset-row button:hover { background: #8B0029; color: #fff; }
+.check-row { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #444; font-weight: 600; }
+.check-row input { accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-weight: 700; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.7; }
+.theorem-box .katex { color: #fff; font-size: 13px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 1.9; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+.relation-box { background: #eef3fe; border: 1px solid #c3d4f5; border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 1.8; color: #2b4a8b; }
+.relation-box b { color: #1a3a7a; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.canvas-title { position: absolute; top: 8px; left: 16px; right: 16px; pointer-events: none; font-size: 14px; font-weight: 700; color: #8B0029; line-height: 1.4; }
+.hint { position: absolute; bottom: 8px; left: 16px; pointer-events: none; font-size: 11px; color: #6B7280; }
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute; white-space: nowrap; font-size: 13px; line-height: 1;
+  pointer-events: none; transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.85); padding: 1px 5px; border-radius: 4px;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.95em; }
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label" id="lblE" style="color:#2563EB;font-weight:bold;"></div>
+    </div>
+    <div class="canvas-title" id="canvasTitle"></div>
+    <div class="hint">전하와 측정점 P를 드래그해 보세요</div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>전기력선 놀이터</h2>
+      <div class="subtitle">Electric Field Lines (Ch.22)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>프리셋</label>
+      <div class="preset-row">
+        <button id="presetSingle">단일 전하</button>
+        <button id="presetDipole" class="active">쌍극자</button>
+        <button id="presetLike">같은 부호</button>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label>전하 q<sub>1</sub> = <span id="q1Val">+3.0</span> μC</label>
+      <input type="range" id="q1Slider" min="-5" max="5" value="3" step="0.5">
+    </div>
+
+    <div class="control-group">
+      <label>전하 q<sub>2</sub> = <span id="q2Val">-3.0</span> μC</label>
+      <input type="range" id="q2Slider" min="-5" max="5" value="-3" step="0.5">
+    </div>
+
+    <div class="check-row"><input type="checkbox" id="chkLines" checked><label for="chkLines">전기력선 표시</label></div>
+    <div class="check-row"><input type="checkbox" id="chkVectors" checked><label for="chkVectors">벡터장 표시</label></div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="relation-box" id="relationBox"></div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <button class="reset-btn" id="resetBtn">&#8635; 기본값 복원</button>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false, displayMode: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const q1Slider = document.getElementById('q1Slider');
+const q2Slider = document.getElementById('q2Slider');
+
+// Physics constants
+const k = 8.99e9;          // N·m²/C²
+const MICRO = 1e-6;        // μC -> C
+const M_PER_PX = 0.005;    // 1 canvas px = 5 mm  => 200 px = 1 m
+
+const charge = [
+  { x: 0, y: 0, q: parseFloat(q1Slider.value) },
+  { x: 0, y: 0, q: parseFloat(q2Slider.value) },
+];
+const probe = { x: 0, y: 0 };   // field measurement point P
+
+let dragIdx = -1;      // 0,1 = charges, 2 = probe
+let positionsInit = false;
+
+function chargeRadius(q) { return 15 + Math.abs(q) * 2.4; }
+
+function applyPreset(name) {
+  if (name === 'single') { charge[0].q = 3; charge[1].q = 0; }
+  if (name === 'dipole') { charge[0].q = 3; charge[1].q = -3; }
+  if (name === 'like')   { charge[0].q = 3; charge[1].q = 3; }
+  charge[0].x = CW * 0.36; charge[0].y = CH * 0.5;
+  charge[1].x = CW * 0.64; charge[1].y = CH * 0.5;
+  probe.x = CW * 0.5; probe.y = CH * 0.24;
+  q1Slider.value = charge[0].q; q2Slider.value = charge[1].q;
+  updateSliderLabels();
+  ['presetSingle','presetDipole','presetLike'].forEach(id => document.getElementById(id).classList.remove('active'));
+  const map = { single: 'presetSingle', dipole: 'presetDipole', like: 'presetLike' };
+  document.getElementById(map[name]).classList.add('active');
+  clampInside();
+  draw();
+}
+
+function clampInside() {
+  for (const c of charge) {
+    const r = chargeRadius(c.q);
+    c.x = Math.max(r + 6, Math.min(CW - r - 6, c.x));
+    c.y = Math.max(r + 6, Math.min(CH - r - 6, c.y));
+  }
+  probe.x = Math.max(14, Math.min(CW - 14, probe.x));
+  probe.y = Math.max(14, Math.min(CH - 14, probe.y));
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const oldW = CW, oldH = CH;
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (CW < 1 || CH < 1) return;   // layout not ready yet (e.g. hidden iframe) — retry later
+  if (!positionsInit) {
+    positionsInit = true;
+    const h = (location.hash || '').replace('#', '');
+    applyPreset(['single', 'like', 'dipole'].includes(h) ? h : 'dipole');
+    return;   // applyPreset already clamps and draws
+  }
+  if (oldW > 0 && oldH > 0 && (oldW !== CW || oldH !== CH)) {
+    // keep relative placement so charges never leave the canvas
+    for (const c of charge) { c.x *= CW / oldW; c.y *= CH / oldH; }
+    probe.x *= CW / oldW; probe.y *= CH / oldH;
+  }
+  clampInside();
+  draw();
+}
+
+// E field (N/C) at canvas point (px). Superposition of point-charge fields.
+function fieldAt(x, y) {
+  let Ex = 0, Ey = 0;
+  for (const c of charge) {
+    if (Math.abs(c.q) < 1e-9) continue;
+    const dx = (x - c.x) * M_PER_PX;
+    const dy = (y - c.y) * M_PER_PX;
+    const r2 = dx * dx + dy * dy;
+    if (r2 < 1e-8) continue;
+    const r = Math.sqrt(r2);
+    const E = k * c.q * MICRO / r2;   // signed magnitude
+    Ex += E * dx / r;
+    Ey += E * dy / r;
+  }
+  return { Ex, Ey, mag: Math.hypot(Ex, Ey) };
+}
+
+function drawArrowHead(x, y, ang, size, color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x - size * Math.cos(ang - 0.42), y - size * Math.sin(ang - 0.42));
+  ctx.lineTo(x - size * Math.cos(ang + 0.42), y - size * Math.sin(ang + 0.42));
+  ctx.closePath(); ctx.fill();
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = 9;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2 - (headLen - 2) * Math.cos(angle), y2 - (headLen - 2) * Math.sin(angle));
+  ctx.stroke();
+  drawArrowHead(x2, y2, angle, headLen, color);
+}
+
+// ---------- field line tracing ----------
+function traceFieldLine(x0, y0, dir) {
+  // dir = +1: follow E (from + charge), -1: follow -E (backward from - charge)
+  const pts = [[x0, y0]];
+  const heads = [];
+  let x = x0, y = y0, s = 0, sinceHead = 45;
+  const h = 3;
+  for (let i = 0; i < 1500; i++) {
+    const f1 = fieldAt(x, y);
+    if (f1.mag < 1e-6) break;
+    const u1x = dir * f1.Ex / f1.mag, u1y = dir * f1.Ey / f1.mag;
+    const mx = x + u1x * h * 0.5, my = y + u1y * h * 0.5;
+    const f2 = fieldAt(mx, my);
+    if (f2.mag < 1e-6) break;
+    const u2x = dir * f2.Ex / f2.mag, u2y = dir * f2.Ey / f2.mag;
+    x += u2x * h; y += u2y * h;
+    s += h; sinceHead += h;
+    pts.push([x, y]);
+    if (sinceHead >= 110) {
+      heads.push([x, y, Math.atan2(dir > 0 ? u2y : -u2y, dir > 0 ? u2x : -u2x)]);
+      sinceHead = 0;
+    }
+    // stop: out of canvas
+    if (x < -30 || x > CW + 30 || y < -30 || y > CH + 30) break;
+    // stop: entered a charge disk
+    let stopped = false;
+    for (const c of charge) {
+      if (Math.abs(c.q) < 1e-9) continue;
+      if (Math.hypot(x - c.x, y - c.y) < chargeRadius(c.q) + 2) { stopped = true; break; }
+    }
+    if (stopped) break;
+  }
+  return { pts, heads };
+}
+
+function drawFieldLines() {
+  const havePos = charge.some(c => c.q > 1e-9);
+  const lines = [];
+  for (const c of charge) {
+    const seedFromPositive = c.q > 1e-9;
+    const seedFromNegative = c.q < -1e-9 && !havePos;   // only if no + charge exists
+    if (!seedFromPositive && !seedFromNegative) continue;
+    const n = Math.max(8, Math.min(20, Math.round(4 * Math.abs(c.q))));
+    const r0 = chargeRadius(c.q) + 3;
+    for (let j = 0; j < n; j++) {
+      const a = (2 * Math.PI * j) / n + 0.12;
+      const x0 = c.x + r0 * Math.cos(a);
+      const y0 = c.y + r0 * Math.sin(a);
+      lines.push(traceFieldLine(x0, y0, seedFromPositive ? 1 : -1));
+    }
+  }
+  ctx.strokeStyle = '#2563EB';
+  ctx.lineWidth = 1.4;
+  for (const ln of lines) {
+    ctx.beginPath();
+    ctx.moveTo(ln.pts[0][0], ln.pts[0][1]);
+    for (let i = 1; i < ln.pts.length; i++) ctx.lineTo(ln.pts[i][0], ln.pts[i][1]);
+    ctx.stroke();
+    for (const [hx, hy, ha] of ln.heads) drawArrowHead(hx, hy, ha, 8, '#2563EB');
+  }
+}
+
+function drawVectorField() {
+  const step = 48;
+  for (let gx = step / 2; gx < CW; gx += step) {
+    for (let gy = step / 2; gy < CH; gy += step) {
+      let tooClose = false;
+      for (const c of charge) {
+        if (Math.hypot(gx - c.x, gy - c.y) < chargeRadius(c.q) + 16) { tooClose = true; break; }
+      }
+      if (Math.hypot(gx - probe.x, gy - probe.y) < 26) tooClose = true;
+      if (tooClose) continue;
+      const f = fieldAt(gx, gy);
+      if (f.mag < 1) continue;
+      const len = Math.max(6, Math.min(20, 5 * Math.log10(1 + f.mag / 50)));
+      const ux = f.Ex / f.mag, uy = f.Ey / f.mag;
+      drawArrow(gx - ux * len / 2, gy - uy * len / 2, gx + ux * len / 2, gy + uy * len / 2, 'rgba(107,114,128,0.55)', 1.3);
+    }
+  }
+}
+
+function drawCharge(c, name) {
+  const r = chargeRadius(c.q);
+  const isPos = c.q > 1e-6, isNeg = c.q < -1e-6;
+  const grad = ctx.createRadialGradient(c.x, c.y, r * 0.2, c.x, c.y, r);
+  if (isPos) { grad.addColorStop(0, '#c4234f'); grad.addColorStop(1, '#8B0029'); }
+  else if (isNeg) { grad.addColorStop(0, '#5b8cf5'); grad.addColorStop(1, '#2563EB'); }
+  else { grad.addColorStop(0, '#d1d5db'); grad.addColorStop(1, '#9ca3af'); }
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.arc(c.x, c.y, r, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.18)'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold ' + Math.round(r * 1.2) + 'px sans-serif';
+  ctx.fillText(isPos ? '+' : (isNeg ? '−' : '0'), c.x, c.y + 1);
+  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 13px sans-serif'; ctx.textBaseline = 'top';
+  ctx.fillText(name, c.x, c.y + r + 5);
+  ctx.textBaseline = 'alphabetic';
+}
+
+function drawProbe() {
+  const f = fieldAt(probe.x, probe.y);
+  // E arrow at probe
+  let tip = null;
+  if (f.mag > 1) {
+    const len = Math.max(18, Math.min(80, 26 * Math.log10(1 + f.mag / 100)));
+    const ux = f.Ex / f.mag, uy = f.Ey / f.mag;
+    tip = { x: probe.x + ux * len, y: probe.y + uy * len, ux, uy };
+    drawArrow(probe.x, probe.y, tip.x, tip.y, '#2563EB', 3);
+  }
+  // probe marker (crosshair dot)
+  ctx.fillStyle = '#1a1a1a';
+  ctx.beginPath(); ctx.arc(probe.x, probe.y, 5, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText('P', probe.x, probe.y + 9);
+  ctx.textBaseline = 'alphabetic';
+  return { f, tip };
+}
+
+function fmtE(E) {
+  if (E === 0) return '0';
+  const exp = Math.floor(Math.log10(E));
+  const mant = (E / Math.pow(10, exp)).toFixed(2);
+  return mant + '\\times 10^{' + exp + '}';
+}
+
+function draw() {
+  if (!positionsInit) return;
+  ctx.clearRect(0, 0, CW, CH);
+
+  if (document.getElementById('chkVectors').checked) drawVectorField();
+  if (document.getElementById('chkLines').checked) drawFieldLines();
+
+  drawCharge(charge[0], 'q₁');
+  drawCharge(charge[1], 'q₂');
+  const { f, tip } = drawProbe();
+
+  // KaTeX overlay label near probe arrow tip
+  const lblE = document.getElementById('lblE');
+  if (tip) {
+    let lx = tip.x + tip.ux * 22, ly = tip.y + tip.uy * 22;
+    lx = Math.max(70, Math.min(CW - 70, lx));
+    ly = Math.max(16, Math.min(CH - 16, ly));
+    // avoid covering the probe itself
+    if (Math.hypot(lx - probe.x, ly - probe.y) < 30) ly = probe.y - 30;
+    lblE.style.display = 'block';
+    lblE.style.left = lx + 'px';
+    lblE.style.top = ly + 'px';
+    lblE.innerHTML = tex('E_P = ' + fmtE(f.mag) + '\\,\\text{N/C}');
+  } else {
+    lblE.style.display = 'none';
+  }
+
+  updateInfo(f);
+}
+
+function updateInfo(f) {
+  const box = document.getElementById('infoBox');
+  // angle in physics convention (y up)
+  const ang = f.mag > 1 ? (Math.atan2(-f.Ey, f.Ex) * 180 / Math.PI) : null;
+  let html = '';
+  html += '<span class="label">측정점 P의 전기장</span><br>';
+  html += '<span class="val">|E| = ' + sciN(f.mag) + ' N/C</span><br>';
+  html += '<span class="label">방향</span> <span class="val">' +
+          (ang === null ? '—' : ang.toFixed(0) + '° (+x축 기준)') + '</span><br>';
+  html += '<span style="font-size:11px;color:#6B7280">P를 움직이면 알짜 장 ' +
+          tex('\\vec{E} = \\vec{E}_1 + \\vec{E}_2') + ' 이 실시간으로 갱신됩니다</span>';
+  box.innerHTML = html;
+}
+
+function sciN(v) {
+  if (v === 0) return '0';
+  if (v >= 1e-2 && v < 1e4) return v >= 1 ? v.toFixed(1) : v.toFixed(3);
+  const exp = Math.floor(Math.log10(v));
+  const mant = (v / Math.pow(10, exp)).toFixed(2);
+  return mant + '×10' + superscript(exp);
+}
+function superscript(n) {
+  const map = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³',
+                '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  return String(n).split('').map(c => map[c] || c).join('');
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML =
+    '전기장의 중첩: 전기력선은 <span style="color:#8B0029">양전하에서 나와</span> <span style="color:#2563EB">음전하에서 끝난다</span>';
+
+  document.getElementById('theoremBox').innerHTML =
+    '점전하의 전기장<br>' +
+    tex('E = \\dfrac{1}{4\\pi\\varepsilon_0}\\dfrac{|q|}{r^2}') + '<br>' +
+    '<span style="font-size:11px;font-weight:400">정의: ' + tex('\\vec{E} = \\vec{F}/q_0') + ' (단위 N/C)</span>';
+
+  document.getElementById('relationBox').innerHTML =
+    '<b>전기력선 규칙</b><br>' +
+    '① 각 점에서 선의 접선 = ' + tex('\\vec{E}') + ' 방향<br>' +
+    '② 선이 빽빽할수록 장이 강하다<br>' +
+    '③ (+)에서 나와 (−)에서 끝난다';
+
+  document.getElementById('formulaBox').innerHTML =
+    '<b>파란 곡선:</b> 전기력선<br>' +
+    '<b>회색 화살표:</b> 각 점의 장 벡터 ' + tex('\\vec{E}') + '<br>' +
+    '<b>파란 굵은 화살표:</b> 측정점 P의 알짜 장';
+}
+
+// ---------- dragging ----------
+function eventToCanvas(e) {
+  const rect = canvas.getBoundingClientRect();
+  const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+  return { x: cx, y: cy };
+}
+
+function hitTest(x, y) {
+  if (Math.hypot(x - probe.x, y - probe.y) <= 16) return 2;
+  for (let i = charge.length - 1; i >= 0; i--) {
+    if (Math.hypot(x - charge[i].x, y - charge[i].y) <= chargeRadius(charge[i].q) + 6) return i;
+  }
+  return -1;
+}
+
+function onDown(e) {
+  const p = eventToCanvas(e);
+  const idx = hitTest(p.x, p.y);
+  if (idx >= 0) { dragIdx = idx; canvas.style.cursor = 'grabbing'; e.preventDefault(); }
+}
+function onMove(e) {
+  const p = eventToCanvas(e);
+  if (dragIdx >= 0) {
+    if (dragIdx === 2) { probe.x = p.x; probe.y = p.y; }
+    else { charge[dragIdx].x = p.x; charge[dragIdx].y = p.y; }
+    clampInside();
+    draw();
+    e.preventDefault();
+  } else {
+    canvas.style.cursor = hitTest(p.x, p.y) >= 0 ? 'grab' : 'default';
+  }
+}
+function onUp() { dragIdx = -1; canvas.style.cursor = 'default'; }
+
+canvas.addEventListener('mousedown', onDown);
+window.addEventListener('mousemove', onMove);
+window.addEventListener('mouseup', onUp);
+canvas.addEventListener('touchstart', onDown, { passive: false });
+canvas.addEventListener('touchmove', onMove, { passive: false });
+canvas.addEventListener('touchend', onUp);
+
+// ---------- controls ----------
+function fmtCharge(v) { return (v >= 0 ? '+' : '') + v.toFixed(1); }
+function updateSliderLabels() {
+  document.getElementById('q1Val').textContent = fmtCharge(parseFloat(q1Slider.value));
+  document.getElementById('q2Val').textContent = fmtCharge(parseFloat(q2Slider.value));
+}
+
+q1Slider.addEventListener('input', () => { charge[0].q = parseFloat(q1Slider.value); updateSliderLabels(); clampInside(); draw(); });
+q2Slider.addEventListener('input', () => { charge[1].q = parseFloat(q2Slider.value); updateSliderLabels(); clampInside(); draw(); });
+document.getElementById('chkLines').addEventListener('change', draw);
+document.getElementById('chkVectors').addEventListener('change', draw);
+document.getElementById('presetSingle').addEventListener('click', () => applyPreset('single'));
+document.getElementById('presetDipole').addEventListener('click', () => applyPreset('dipole'));
+document.getElementById('presetLike').addEventListener('click', () => applyPreset('like'));
+document.getElementById('resetBtn').addEventListener('click', () => applyPreset('dipole'));
+
+window.addEventListener('resize', resize);
+
+renderStatic();
+updateSliderLabels();
+// Lazy init: in an iframe the canvas may have zero layout size when the script
+// runs (or while the iframe is display:none). Retry every frame until it is
+// laid out, then resize() performs the initial placement exactly once.
+(function initWhenVisible() {
+  resize();
+  if (!positionsInit) requestAnimationFrame(initWhenVisible);
+})();
+</script>
+</body>
+</html>

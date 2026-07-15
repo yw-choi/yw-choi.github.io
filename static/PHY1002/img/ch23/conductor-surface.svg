@@ -1,0 +1,56 @@
+<svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <!-- ===== Panel (a): solid conductor ===== -->
+  <ellipse cx="190" cy="190" rx="125" ry="95" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <!-- surface charges -->
+  <g fill="#8B0029" font-size="15" font-weight="bold" text-anchor="middle">
+    <text x="303" y="195">+</text>
+    <text x="287.8" y="153.5">+</text>
+    <text x="246.5" y="123.1">+</text>
+    <text x="190" y="112">+</text>
+    <text x="133.5" y="123.1">+</text>
+    <text x="92.2" y="153.5">+</text>
+    <text x="77" y="195">+</text>
+    <text x="92.2" y="236.5">+</text>
+    <text x="133.5" y="266.9">+</text>
+    <text x="190" y="278">+</text>
+    <text x="246.5" y="266.9">+</text>
+    <text x="287.8" y="236.5">+</text>
+  </g>
+  <!-- Gaussian surface just inside -->
+  <ellipse cx="190" cy="190" rx="98" ry="68" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="190" y="185" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a1a"><tspan font-style="italic">E</tspan> = 0</text>
+  <text x="190" y="208" text-anchor="middle" font-size="12" fill="#6B7280">(내부 어디서나)</text>
+  <!-- label for Gaussian surface -->
+  <text x="30" y="52" font-size="13" fill="#6B7280">가우스면</text>
+  <text x="30" y="70" font-size="13" fill="#6B7280">(표면 바로 안쪽)</text>
+  <line x1="100" y1="76" x2="128" y2="132" stroke="#6B7280" stroke-width="1"/>
+  <text x="190" y="352" text-anchor="middle" font-size="14" fill="#1a1a1a">(a) 잉여 전하는 모두 <tspan font-weight="bold" fill="#8B0029">표면</tspan>에</text>
+
+  <!-- ===== Panel (b): conductor with cavity ===== -->
+  <ellipse cx="565" cy="190" rx="125" ry="95" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <g fill="#8B0029" font-size="15" font-weight="bold" text-anchor="middle">
+    <text x="678" y="195">+</text>
+    <text x="662.8" y="153.5">+</text>
+    <text x="621.5" y="123.1">+</text>
+    <text x="565" y="112">+</text>
+    <text x="508.5" y="123.1">+</text>
+    <text x="467.2" y="153.5">+</text>
+    <text x="452" y="195">+</text>
+    <text x="467.2" y="236.5">+</text>
+    <text x="508.5" y="266.9">+</text>
+    <text x="565" y="278">+</text>
+    <text x="621.5" y="266.9">+</text>
+    <text x="662.8" y="236.5">+</text>
+  </g>
+  <!-- cavity -->
+  <ellipse cx="565" cy="185" rx="48" ry="36" fill="#fff" stroke="#6B7280" stroke-width="2"/>
+  <!-- Gaussian surface around cavity -->
+  <ellipse cx="565" cy="185" rx="65" ry="51" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="565" y="190" text-anchor="middle" font-size="13" fill="#1a1a1a">공동</text>
+  <text x="565" y="258" text-anchor="middle" font-size="12" fill="#1a1a1a">공동 벽에는 전하 0</text>
+  <!-- cavity label -->
+  <text x="655" y="52" font-size="13" fill="#6B7280">가우스면</text>
+  <text x="655" y="70" font-size="13" fill="#6B7280">(공동을 둘러쌈)</text>
+  <line x1="666" y1="76" x2="614" y2="146" stroke="#6B7280" stroke-width="1"/>
+  <text x="565" y="352" text-anchor="middle" font-size="14" fill="#1a1a1a">(b) 빈 공동이 있어도 마찬가지</text>
+</svg>

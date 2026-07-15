@@ -1,0 +1,76 @@
+<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrRed10" markerWidth="12" markerHeight="10" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#8B0029"/>
+    </marker>
+  </defs>
+
+  <text x="350" y="30" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a1a">도체 표면의 전하는 뾰족한 곳에 몰린다</text>
+
+  <!-- corona glow -->
+  <ellipse cx="585" cy="195" rx="34" ry="30" fill="#8B0029" opacity="0.08"/>
+
+  <!-- conductor -->
+  <path d="M 560 195 C 505 140, 430 115, 320 115 C 210 115, 135 150, 135 195 C 135 240, 210 275, 320 275 C 430 275, 505 250, 560 195 Z"
+        fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+
+  <!-- surface charges: sparse on blunt side -->
+  <g fill="#8B0029" font-size="13" font-weight="bold" text-anchor="middle">
+    <text x="152" y="187">+</text>
+    <text x="152" y="215">+</text>
+    <text x="172" y="158">+</text>
+    <text x="172" y="244">+</text>
+    <text x="212" y="138">+</text>
+    <text x="212" y="264">+</text>
+    <text x="272" y="128">+</text>
+    <text x="272" y="274">+</text>
+    <text x="340" y="130">+</text>
+    <text x="340" y="272">+</text>
+    <text x="410" y="140">+</text>
+    <text x="410" y="262">+</text>
+    <!-- dense near tip -->
+    <text x="545" y="199">+</text>
+    <text x="531" y="186">+</text>
+    <text x="531" y="212">+</text>
+    <text x="516" y="176">+</text>
+    <text x="516" y="222">+</text>
+    <text x="500" y="168">+</text>
+    <text x="500" y="230">+</text>
+    <text x="484" y="160">+</text>
+    <text x="484" y="238">+</text>
+  </g>
+
+  <!-- field lines -->
+  <g stroke="#8B0029" stroke-width="2">
+    <!-- blunt left: short -->
+    <line x1="128" y1="195" x2="82" y2="195" marker-end="url(#arrRed10)"/>
+    <line x1="143" y1="157" x2="108" y2="127" marker-end="url(#arrRed10)"/>
+    <line x1="143" y1="233" x2="108" y2="263" marker-end="url(#arrRed10)"/>
+    <!-- top / bottom middle -->
+    <line x1="330" y1="110" x2="330" y2="74" marker-end="url(#arrRed10)"/>
+    <line x1="330" y1="280" x2="330" y2="316" marker-end="url(#arrRed10)"/>
+    <line x1="460" y1="136" x2="484" y2="98" marker-end="url(#arrRed10)"/>
+    <line x1="460" y1="254" x2="484" y2="292" marker-end="url(#arrRed10)"/>
+    <!-- tip: long, dense -->
+    <line x1="563" y1="195" x2="650" y2="195" marker-end="url(#arrRed10)"/>
+    <line x1="553" y1="178" x2="624" y2="134" marker-end="url(#arrRed10)"/>
+    <line x1="553" y1="212" x2="624" y2="256" marker-end="url(#arrRed10)"/>
+    <line x1="538" y1="164" x2="594" y2="110" marker-end="url(#arrRed10)"/>
+    <line x1="538" y1="226" x2="594" y2="280" marker-end="url(#arrRed10)"/>
+  </g>
+
+  <!-- corona sparks -->
+  <g stroke="#8B0029" stroke-width="1.2" fill="none" opacity="0.7">
+    <polyline points="596,168 604,176 598,182 608,190"/>
+    <polyline points="600,208 594,215 602,221 596,229"/>
+  </g>
+
+  <!-- annotations -->
+  <text x="150" y="80" text-anchor="middle" font-size="13" fill="#6B7280">완만한 면: σ 작음, E 약함</text>
+  <text x="580" y="78" text-anchor="middle" font-size="13" fill="#8B0029">뾰족한 끝: σ 큼, E 강함</text>
+  <line x1="622" y1="310" x2="610" y2="262" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="590" y="330" text-anchor="middle" font-size="13" fill="#1a1a1a">코로나 방전 (공기 이온화)</text>
+
+  <!-- bottom note -->
+  <text x="350" y="362" text-anchor="middle" font-size="14" fill="#6B7280">곡률이 클수록(뾰족할수록) 표면 전하 밀도 σ와 <tspan font-style="italic">E</tspan>가 커져 공기의 절연이 깨질 수 있다</text>
+</svg>

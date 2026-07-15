@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 350" font-family="sans-serif">
+  <defs>
+    <marker id="flB" markerWidth="9" markerHeight="6.3" refX="9" refY="3.15" orient="auto"><polygon points="0 0, 9 3.15, 0 6.3" fill="#2563EB"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="white"/>
+  <text x="400" y="30" font-size="16" fill="#1a1a1a" text-anchor="middle" font-weight="bold">전기력선 (electric field lines)</text>
+
+  <!-- ===== (a) positive point charge, center (140,185) ===== -->
+  <text x="140" y="62" font-size="14" fill="#6B7280" text-anchor="middle">(a) 양의 점전하</text>
+  <g stroke="#2563EB" stroke-width="1.8" marker-end="url(#flB)">
+    <line x1="158" y1="185" x2="235" y2="185"/>
+    <line x1="152.7" y1="172.3" x2="207.2" y2="117.8"/>
+    <line x1="140" y1="167" x2="140" y2="90"/>
+    <line x1="127.3" y1="172.3" x2="72.8" y2="117.8"/>
+    <line x1="122" y1="185" x2="45" y2="185"/>
+    <line x1="127.3" y1="197.7" x2="72.8" y2="252.2"/>
+    <line x1="140" y1="203" x2="140" y2="280"/>
+    <line x1="152.7" y1="197.7" x2="207.2" y2="252.2"/>
+  </g>
+  <circle cx="140" cy="185" r="15" fill="#8B0029" stroke="#8B0029" stroke-width="2"/>
+  <text x="140" y="191" font-size="16" fill="white" text-anchor="middle" font-weight="bold">+</text>
+
+  <!-- ===== (b) electric dipole, +q (350,190), -q (470,190) ===== -->
+  <text x="410" y="62" font-size="14" fill="#6B7280" text-anchor="middle">(b) 전기 쌍극자</text>
+  <g stroke="#2563EB" stroke-width="1.8" fill="none">
+    <path d="M 350,176 C 370,120 450,120 470,176"/>
+    <path d="M 344,182 C 290,70 530,70 476,182"/>
+    <path d="M 350,204 C 370,260 450,260 470,204"/>
+    <path d="M 344,198 C 290,310 530,310 476,198"/>
+  </g>
+  <!-- manual arrowheads on loops (pointing +x at apex) -->
+  <polygon points="405,129.5 416,134 405,138.5" fill="#2563EB"/>
+  <polygon points="405,93.5 416,98 405,102.5" fill="#2563EB"/>
+  <polygon points="405,241.5 416,246 405,250.5" fill="#2563EB"/>
+  <polygon points="405,277.5 416,282 405,286.5" fill="#2563EB"/>
+  <!-- axis line + outward lines -->
+  <g stroke="#2563EB" stroke-width="1.8">
+    <line x1="364" y1="190" x2="413" y2="190" marker-end="url(#flB)"/>
+    <line x1="413" y1="190" x2="454" y2="190"/>
+    <line x1="336" y1="190" x2="298" y2="190" marker-end="url(#flB)"/>
+    <line x1="530" y1="190" x2="486" y2="190" marker-end="url(#flB)"/>
+  </g>
+  <circle cx="350" cy="190" r="14" fill="#8B0029" stroke="#8B0029" stroke-width="2"/>
+  <text x="350" y="196" font-size="15" fill="white" text-anchor="middle" font-weight="bold">+</text>
+  <circle cx="470" cy="190" r="14" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
+  <text x="470" y="196" font-size="15" fill="white" text-anchor="middle" font-weight="bold">−</text>
+
+  <!-- ===== (c) parallel plates, uniform field ===== -->
+  <text x="672" y="62" font-size="14" fill="#6B7280" text-anchor="middle">(c) 평행판 — 균일한 장</text>
+  <rect x="596" y="95" width="12" height="190" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <rect x="736" y="95" width="12" height="190" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <g fill="#8B0029" font-size="14" font-weight="bold" text-anchor="middle">
+    <text x="585" y="120">+</text><text x="585" y="160">+</text><text x="585" y="200">+</text>
+    <text x="585" y="240">+</text><text x="585" y="280">+</text>
+  </g>
+  <g fill="#2563EB" font-size="14" font-weight="bold" text-anchor="middle">
+    <text x="760" y="120">−</text><text x="760" y="160">−</text><text x="760" y="200">−</text>
+    <text x="760" y="240">−</text><text x="760" y="280">−</text>
+  </g>
+  <g stroke="#2563EB" stroke-width="1.8" marker-end="url(#flB)">
+    <line x1="612" y1="115" x2="732" y2="115"/>
+    <line x1="612" y1="155" x2="732" y2="155"/>
+    <line x1="612" y1="195" x2="732" y2="195"/>
+    <line x1="612" y1="235" x2="732" y2="235"/>
+    <line x1="612" y1="275" x2="732" y2="275"/>
+  </g>
+
+  <text x="400" y="332" font-size="14" fill="#1a1a1a" text-anchor="middle">전기력선은 양전하에서 <tspan font-weight="bold">나와서</tspan> 음전하에서 <tspan font-weight="bold">끝난다</tspan> — 선이 빽빽할수록 장이 강하다</text>
+</svg>

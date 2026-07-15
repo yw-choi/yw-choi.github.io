@@ -1,0 +1,46 @@
+<svg viewBox="0 0 720 460" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrGray9" markerWidth="10" markerHeight="8" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <text x="360" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a1a">대전된 도체 구 껍질(전하 <tspan font-style="italic">q</tspan>, 반지름 <tspan font-style="italic">R</tspan>)의 <tspan font-style="italic">V</tspan>(<tspan font-style="italic">r</tspan>)와 <tspan font-style="italic">E</tspan>(<tspan font-style="italic">r</tspan>)</text>
+
+  <!-- ===== left: V(r) ===== -->
+  <line x1="80" y1="390" x2="80" y2="62" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrGray9)"/>
+  <line x1="74" y1="380" x2="346" y2="380" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrGray9)"/>
+  <text x="64" y="74" text-anchor="middle" font-size="15" font-style="italic" fill="#1a1a1a">V</text>
+  <text x="358" y="385" text-anchor="start" font-size="15" font-style="italic" fill="#1a1a1a">r</text>
+
+  <!-- plateau + 1/r decay -->
+  <line x1="80" y1="150" x2="180" y2="150" stroke="#8B0029" stroke-width="2.5"/>
+  <polyline fill="none" stroke="#8B0029" stroke-width="2.5" points="
+    180,150 190,170.9 200,188.3 212,205.9 226,222.5 242,238.0 260,252.2 280,265.0
+    302,276.4 326,286.5 330,288.0"/>
+  <line x1="180" y1="380" x2="180" y2="150" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="180" y="402" text-anchor="middle" font-size="14" font-style="italic" fill="#1a1a1a">R</text>
+  <text x="76" y="144" text-anchor="end" font-size="12" fill="#8B0029"><tspan font-style="italic">kq</tspan>/<tspan font-style="italic">R</tspan></text>
+  <text x="140" y="122" text-anchor="middle" font-size="12.5" fill="#1a1a1a">내부: <tspan font-style="italic">V</tspan> 일정</text>
+  <text x="272" y="230" text-anchor="middle" font-size="13" fill="#8B0029"><tspan font-style="italic">V</tspan> = <tspan font-style="italic">kq</tspan>/<tspan font-style="italic">r</tspan></text>
+
+  <!-- ===== right: E(r) ===== -->
+  <line x1="440" y1="390" x2="440" y2="62" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrGray9)"/>
+  <line x1="434" y1="380" x2="686" y2="380" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrGray9)"/>
+  <text x="424" y="74" text-anchor="middle" font-size="15" font-style="italic" fill="#1a1a1a">E</text>
+  <text x="697" y="385" text-anchor="start" font-size="15" font-style="italic" fill="#1a1a1a">r</text>
+
+  <!-- inside E=0, jump at R, 1/r^2 decay -->
+  <line x1="440" y1="379" x2="540" y2="379" stroke="#8B0029" stroke-width="2.5"/>
+  <line x1="540" y1="380" x2="540" y2="152" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <polyline fill="none" stroke="#8B0029" stroke-width="2.5" points="
+    540,150 550,189.9 560,220.3 572,248.0 586,272.1 602,292.4 620,309.0 640,322.5
+    662,333.3 680,340.1"/>
+  <text x="540" y="402" text-anchor="middle" font-size="14" font-style="italic" fill="#1a1a1a">R</text>
+  <text x="536" y="144" text-anchor="end" font-size="12" fill="#8B0029"><tspan font-style="italic">kq</tspan>/<tspan font-style="italic">R</tspan>²</text>
+  <text x="490" y="356" text-anchor="middle" font-size="12.5" fill="#1a1a1a">내부: <tspan font-style="italic">E</tspan> = 0</text>
+  <text x="636" y="290" text-anchor="middle" font-size="13" fill="#8B0029"><tspan font-style="italic">E</tspan> = <tspan font-style="italic">kq</tspan>/<tspan font-style="italic">r</tspan>²</text>
+
+  <!-- bottom note -->
+  <text x="360" y="440" text-anchor="middle" font-size="14" fill="#6B7280">내부에서 <tspan font-style="italic">E</tspan> = 0 이므로 퍼텐셜은 표면값 그대로 일정하다 (도체 전체 = 등퍼텐셜)</text>
+</svg>

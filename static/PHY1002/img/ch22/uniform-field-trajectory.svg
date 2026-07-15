@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" font-family="sans-serif">
+  <defs>
+    <marker id="ufR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#8B0029"/></marker>
+    <marker id="ufB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="white"/>
+  <text x="380" y="34" font-size="16" fill="#1a1a1a" text-anchor="middle" font-weight="bold">균일 전기장 속의 하전 입자 — 잉크젯 프린터의 편향판</text>
+
+  <!-- plates -->
+  <rect x="180" y="110" width="340" height="14" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <rect x="180" y="300" width="340" height="14" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <text x="556" y="122" font-size="13" fill="#6B7280">편향판</text>
+  <text x="556" y="312" font-size="13" fill="#6B7280">편향판</text>
+  <!-- plate charges -->
+  <g fill="#8B0029" font-size="14" font-weight="bold" text-anchor="middle">
+    <text x="210" y="141">+</text><text x="270" y="141">+</text><text x="330" y="141">+</text>
+    <text x="390" y="141">+</text><text x="450" y="141">+</text><text x="510" y="141">+</text>
+  </g>
+  <g fill="#2563EB" font-size="14" font-weight="bold" text-anchor="middle">
+    <text x="210" y="296">−</text><text x="270" y="296">−</text><text x="330" y="296">−</text>
+    <text x="390" y="296">−</text><text x="450" y="296">−</text><text x="510" y="296">−</text>
+  </g>
+
+  <!-- E field arrows (downward) -->
+  <g stroke="#2563EB" stroke-width="2" marker-end="url(#ufB)">
+    <line x1="230" y1="148" x2="230" y2="188"/>
+    <line x1="320" y1="148" x2="320" y2="188"/>
+  </g>
+  <text x="214" y="172" font-size="15" fill="#2563EB" font-style="italic" text-anchor="end" font-weight="bold">E</text>
+
+  <!-- center reference line -->
+  <line x1="130" y1="240" x2="660" y2="240" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- trajectory -->
+  <path d="M 130,240 L 180,240 Q 350,240 520,170 L 660,112.4" fill="none" stroke="#8B0029" stroke-width="2.5"/>
+
+  <!-- paper -->
+  <line x1="660" y1="60" x2="660" y2="300" stroke="#6B7280" stroke-width="3"/>
+  <text x="676" y="186" font-size="13" fill="#6B7280">종이</text>
+  <circle cx="660" cy="112.4" r="5" fill="#8B0029"/>
+
+  <!-- drop at entry -->
+  <circle cx="140" cy="240" r="9" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
+  <text x="140" y="245" font-size="12" fill="white" text-anchor="middle" font-weight="bold">−</text>
+  <text x="140" y="275" font-size="13" fill="#1a1a1a" text-anchor="middle">잉크 방울 (전하 −<tspan font-style="italic">Q</tspan>)</text>
+
+  <!-- drop mid-flight with F and v -->
+  <circle cx="350" cy="222.5" r="9" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
+  <text x="350" y="227.5" font-size="12" fill="white" text-anchor="middle" font-weight="bold">−</text>
+  <line x1="350" y1="211" x2="350" y2="166" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ufR)"/>
+  <text x="362" y="180" font-size="14" fill="#8B0029" font-style="italic" font-weight="bold">F = QE</text>
+  <line x1="358.8" y1="220.7" x2="403.8" y2="211.2" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ufB)"/>
+  <text x="414" y="216" font-size="14" fill="#2563EB" font-style="italic" font-weight="bold">v</text>
+
+  <!-- deflection dimension -->
+  <line x1="535" y1="170" x2="535" y2="240" stroke="#6B7280" stroke-width="1.6"/>
+  <line x1="529" y1="170" x2="541" y2="170" stroke="#6B7280" stroke-width="1.6"/>
+  <line x1="529" y1="240" x2="541" y2="240" stroke="#6B7280" stroke-width="1.6"/>
+  <text x="547" y="210" font-size="14" fill="#6B7280" font-style="italic">y</text>
+
+  <!-- caption -->
+  <text x="380" y="360" font-size="14" fill="#1a1a1a" text-anchor="middle">음전하는 <tspan font-style="italic" fill="#2563EB">E</tspan> 와 반대 방향의 힘을 받는다 → 수평 등속 + 수직 등가속 = 포물선 궤적</text>
+  <text x="380" y="388" font-size="13" fill="#6B7280" text-anchor="middle">1학기의 포물체 운동과 수학적으로 완전히 같다 (중력 가속도 → <tspan font-style="italic">QE/m</tspan>)</text>
+</svg>

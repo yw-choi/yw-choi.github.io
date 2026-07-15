@@ -1,0 +1,59 @@
+<svg viewBox="0 0 640 470" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="aR" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="10" markerHeight="9" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#8B0029"/>
+    </marker>
+    <marker id="aG" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="8" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- charged line (rod) -->
+  <line x1="320" y1="35" x2="320" y2="435" stroke="#8B0029" stroke-width="2.5"/>
+  <g fill="#8B0029" font-size="13" font-weight="bold" text-anchor="middle" stroke="#fff" stroke-width="3" paint-order="stroke">
+    <text x="320" y="62">+</text>
+    <text x="320" y="107">+</text>
+    <text x="320" y="197">+</text>
+    <text x="320" y="248">+</text>
+    <text x="320" y="292">+</text>
+    <text x="320" y="382">+</text>
+    <text x="320" y="422">+</text>
+  </g>
+  <text x="336" y="46" font-size="14" fill="#8B0029">무한 선전하 <tspan font-style="italic">λ</tspan></text>
+
+  <!-- Gaussian cylinder -->
+  <ellipse cx="320" cy="150" rx="115" ry="28" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="6 4"/>
+  <ellipse cx="320" cy="340" rx="115" ry="28" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="6 4"/>
+  <line x1="205" y1="150" x2="205" y2="340" stroke="#6B7280" stroke-width="2" stroke-dasharray="6 4"/>
+  <line x1="435" y1="150" x2="435" y2="340" stroke="#6B7280" stroke-width="2" stroke-dasharray="6 4"/>
+
+  <!-- h dimension -->
+  <line x1="160" y1="154" x2="160" y2="336" stroke="#6B7280" stroke-width="1" marker-start="url(#aG)" marker-end="url(#aG)"/>
+  <text x="144" y="250" font-size="14" font-style="italic" fill="#1a1a1a">h</text>
+
+  <!-- r radius on the top cap -->
+  <line x1="320" y1="150" x2="431" y2="150" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="376" y="140" font-size="14" font-style="italic" fill="#1a1a1a">r</text>
+
+  <!-- E arrows: radial, through curved surface -->
+  <g stroke="#8B0029" stroke-width="2.5">
+    <line x1="437" y1="205" x2="510" y2="205" marker-end="url(#aR)"/>
+    <line x1="437" y1="285" x2="510" y2="285" marker-end="url(#aR)"/>
+    <line x1="203" y1="205" x2="130" y2="205" marker-end="url(#aR)"/>
+    <line x1="203" y1="285" x2="130" y2="285" marker-end="url(#aR)"/>
+  </g>
+  <text x="518" y="210" fill="#8B0029" font-size="14" font-style="italic">E</text>
+  <text x="518" y="290" fill="#8B0029" font-size="14" font-style="italic">E</text>
+
+  <!-- cap note -->
+  <text x="452" y="92" font-size="12.5" fill="#6B7280">캡: <tspan font-style="italic">E</tspan> 가 면을 스침 → Φ = 0</text>
+  <line x1="450" y1="98" x2="404" y2="130" stroke="#6B7280" stroke-width="1"/>
+
+  <!-- Gaussian surface label -->
+  <text x="40" y="88" font-size="13" fill="#6B7280">가우스 원통면</text>
+  <text x="40" y="106" font-size="13" fill="#6B7280">(반지름 <tspan font-style="italic">r</tspan>, 높이 <tspan font-style="italic">h</tspan>)</text>
+  <line x1="92" y1="112" x2="216" y2="142" stroke="#6B7280" stroke-width="1"/>
+
+  <!-- bottom caption -->
+  <text x="320" y="452" text-anchor="middle" font-size="14" fill="#8B0029" font-weight="bold">옆면: E ⊥ 면을 뚫음 → Φ = E(2πrh)</text>
+</svg>

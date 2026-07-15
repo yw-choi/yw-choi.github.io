@@ -1,0 +1,50 @@
+<svg viewBox="0 0 650 400" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrRed8" markerWidth="12" markerHeight="10" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#8B0029"/>
+    </marker>
+    <marker id="arrBlue8" markerWidth="12" markerHeight="10" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2563EB"/>
+    </marker>
+    <marker id="arrGray8" markerWidth="10" markerHeight="8" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <text x="325" y="30" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a1a">퍼텐셜의 변화율에서 전기장을 얻는다</text>
+
+  <!-- equipotential curves -->
+  <path d="M 240 70 C 200 160, 200 240, 240 330" fill="none" stroke="#2563EB" stroke-width="2" stroke-dasharray="6 4"/>
+  <path d="M 400 70 C 360 160, 360 240, 400 330" fill="none" stroke="#2563EB" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="246" y="354" text-anchor="middle" font-size="15" font-style="italic" fill="#2563EB">V</text>
+  <text x="412" y="354" text-anchor="middle" font-size="15" fill="#2563EB"><tspan font-style="italic">V</tspan> + <tspan font-style="italic">dV</tspan></text>
+  <text x="325" y="330" text-anchor="middle" font-size="12" fill="#6B7280">두 등퍼텐셜면 (dV &lt; 0)</text>
+
+  <!-- s axis (dashed extension of ds) -->
+  <line x1="212" y1="198" x2="470" y2="80" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrGray8)"/>
+  <text x="482" y="80" text-anchor="start" font-size="15" font-style="italic" fill="#6B7280">s</text>
+
+  <!-- E vector (perpendicular to equipotential) -->
+  <line x1="224" y1="198" x2="330" y2="198" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRed8)"/>
+  <text x="348" y="204" text-anchor="start" font-size="16" font-style="italic" font-weight="bold" fill="#8B0029">E</text>
+  <line x1="348" y1="188" x2="358" y2="188" stroke="#8B0029" stroke-width="1.5"/>
+  <path d="M 362 188 l -6 -3 v 6 Z" fill="#8B0029"/>
+
+  <!-- ds vector along s -->
+  <line x1="222" y1="193.4" x2="317" y2="150" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrBlue8)"/>
+  <text x="300" y="136" text-anchor="middle" font-size="15" font-style="italic" font-weight="bold" fill="#2563EB">ds</text>
+  <line x1="292" y1="120" x2="304" y2="120" stroke="#2563EB" stroke-width="1.5"/>
+  <path d="M 308 120 l -6 -3 v 6 Z" fill="#2563EB"/>
+
+  <!-- angle theta -->
+  <path d="M 257 198 A 45 45 0 0 0 253 177.4" fill="none" stroke="#1a1a1a" stroke-width="1.2"/>
+  <text x="268" y="186" text-anchor="start" font-size="15" font-style="italic" fill="#1a1a1a">θ</text>
+
+  <!-- test charge -->
+  <circle cx="212" cy="198" r="10" fill="#8B0029" stroke="#5c001b" stroke-width="2"/>
+  <text x="212" y="203" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">+</text>
+  <text x="196" y="222" text-anchor="middle" font-size="13" fill="#1a1a1a"><tspan font-style="italic">q</tspan><tspan font-size="10" dy="3">0</tspan></text>
+
+  <!-- bottom equation -->
+  <text x="325" y="382" text-anchor="middle" font-size="15" fill="#8B0029"><tspan font-style="italic">E</tspan> cos <tspan font-style="italic">θ</tspan> = −<tspan font-style="italic">dV</tspan>/<tspan font-style="italic">ds</tspan>   ⇒   <tspan font-style="italic">E</tspan><tspan font-size="11" dy="4">s</tspan><tspan dy="-4"> = −∂</tspan><tspan font-style="italic">V</tspan>/∂<tspan font-style="italic">s</tspan></text>
+</svg>

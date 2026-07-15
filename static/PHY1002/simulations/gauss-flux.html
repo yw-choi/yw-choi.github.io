@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>가우스 법칙과 전기 플럭스</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; touch-action: none; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.check-group { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: #444; }
+.check-group input { accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-weight: 700; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 14px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+.relation-box { background: #eef3fe; border: 1px solid #c3d4f5; border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 1.8; color: #2b4a8b; }
+.relation-box .katex { font-size: 12px; }
+.relation-box b { color: #1a3a7a; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.canvas-title { position: absolute; top: 8px; left: 16px; right: 16px; pointer-events: none; font-size: 14px; font-weight: 700; color: #8B0029; line-height: 1.4; }
+.hint { position: absolute; bottom: 8px; left: 16px; pointer-events: none; font-size: 11px; color: #6B7280; }
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+.canvas-overlay .katex-label {
+  position: absolute; white-space: nowrap; font-size: 13px; line-height: 1;
+  pointer-events: none; transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.88); padding: 2px 6px; border-radius: 4px;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.95em; }
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label" id="lblQenc" style="color:#8B0029;font-weight:bold;"></div>
+      <div class="katex-label" id="lblPhi" style="color:#1a1a1a;"></div>
+      <div class="katex-label" id="lblR" style="color:#6B7280;"></div>
+    </div>
+    <div class="canvas-title" id="canvasTitle"></div>
+    <div class="hint">전하를 드래그해 가우스면(점선 원) 안팎으로 옮겨 보세요</div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>가우스 법칙과 전기 플럭스</h2>
+      <div class="subtitle">Gauss' Law (Ch.23)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>가우스면 반지름 R = <span id="rVal">0.30</span> m</label>
+      <input type="range" id="rSlider" min="60" max="220" value="120" step="2">
+    </div>
+
+    <div class="check-group">
+      <input type="checkbox" id="gridChk" checked>
+      <label for="gridChk">배경 전기장 화살표 표시</label>
+    </div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="relation-box" id="relationBox"></div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <button class="reset-btn" id="resetBtn">&#8635; 기본값 복원</button>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false, displayMode: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW, CH;
+
+const rSlider = document.getElementById('rSlider');
+const gridChk = document.getElementById('gridChk');
+const resetBtn = document.getElementById('resetBtn');
+
+// Physics constants
+const k = 8.99e9;            // N·m²/C²
+const EPS0 = 8.85e-12;       // C²/(N·m²)
+const MICRO = 1e-6;
+const M_PER_PX = 0.0025;     // 1 px = 2.5 mm
+
+// Gaussian circle radius in px (slider value)
+let Rpx = parseFloat(rSlider.value);
+
+// Four draggable charges (μC). Positions set relative to canvas center in resetPositions().
+const charges = [
+  { x: 0, y: 0, q: +3 },
+  { x: 0, y: 0, q: -3 },
+  { x: 0, y: 0, q: +3 },
+  { x: 0, y: 0, q: -3 },
+];
+const CHARGE_R = 15;
+
+let dragIdx = -1;
+let positionsInit = false;
+
+function center() { return { x: CW / 2, y: CH / 2 }; }
+
+function resetPositions() {
+  const c = center();
+  charges[0].x = c.x - 40;        charges[0].y = c.y + 10;   // +3 inside
+  charges[1].x = c.x + Rpx + 90;  charges[1].y = c.y - 60;   // -3 outside right
+  charges[2].x = c.x - Rpx - 90;  charges[2].y = c.y - 50;   // +3 outside left
+  charges[3].x = c.x + 60;        charges[3].y = c.y + Rpx + 80; // -3 outside bottom
+  positionsInit = true;
+}
+
+function clampInside() {
+  for (const c of charges) {
+    c.x = Math.max(CHARGE_R + 6, Math.min(CW - CHARGE_R - 6, c.x));
+    c.y = Math.max(CHARGE_R + 6, Math.min(CH - CHARGE_R - 6, c.y));
+  }
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const oldW = CW, oldH = CH;
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (CW < 1 || CH < 1) return;   // layout not ready yet (e.g. hidden iframe) — retry later
+  if (!positionsInit) {
+    resetPositions();
+  } else if (oldW > 0 && oldH > 0 && (oldW !== CW || oldH !== CH)) {
+    // keep relative placement so charges never leave the canvas
+    for (const c of charges) { c.x *= CW / oldW; c.y *= CH / oldH; }
+  }
+  clampInside();
+  draw();
+}
+
+// net E field (N/C) at pixel point (px, py); positions converted to meters
+function fieldAt(px, py) {
+  let Ex = 0, Ey = 0;
+  for (const c of charges) {
+    const dx = (px - c.x) * M_PER_PX;
+    const dy = (py - c.y) * M_PER_PX;
+    const r2 = dx * dx + dy * dy;
+    const r = Math.sqrt(r2);
+    if (r < 1e-4) continue;
+    const E = k * c.q * MICRO / r2;
+    Ex += E * dx / r;
+    Ey += E * dy / r;
+  }
+  return { Ex, Ey };
+}
+
+function enclosedCharge() {
+  const c = center();
+  let q = 0, n = 0;
+  for (const ch of charges) {
+    if (Math.hypot(ch.x - c.x, ch.y - c.y) < Rpx) { q += ch.q; n++; }
+  }
+  return { q, n };   // q in μC
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw, headLen) {
+  const hl = headLen || 10;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2 - (hl - 2) * Math.cos(angle), y2 - (hl - 2) * Math.sin(angle));
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - hl * Math.cos(angle - 0.42), y2 - hl * Math.sin(angle - 0.42));
+  ctx.lineTo(x2 - hl * Math.cos(angle + 0.42), y2 - hl * Math.sin(angle + 0.42));
+  ctx.closePath(); ctx.fill();
+}
+
+function drawTextWithBg(text, x, y, color, font) {
+  ctx.font = font || 'bold 12px sans-serif';
+  const w = ctx.measureText(text).width;
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillRect(x - w / 2 - 3, y - 8, w + 6, 16);
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(text, x, y);
+}
+
+function draw() {
+  if (!positionsInit) return;
+  ctx.clearRect(0, 0, CW, CH);
+  const c = center();
+
+  // --- background grid field arrows ---
+  if (gridChk.checked) {
+    const step = 64;
+    for (let gx = step / 2; gx < CW; gx += step) {
+      for (let gy = step / 2; gy < CH; gy += step) {
+        let nearCharge = false;
+        for (const ch of charges) {
+          if (Math.hypot(gx - ch.x, gy - ch.y) < 40) { nearCharge = true; break; }
+        }
+        if (nearCharge) continue;
+        const { Ex, Ey } = fieldAt(gx, gy);
+        const E = Math.hypot(Ex, Ey);
+        if (E < 1e2) continue;
+        const ux = Ex / E, uy = Ey / E;
+        const L = 13;
+        drawArrow(gx - ux * L / 2, gy - uy * L / 2, gx + ux * L / 2, gy + uy * L / 2,
+                  'rgba(107,114,128,0.45)', 1.4, 6);
+      }
+    }
+  }
+
+  // --- Gaussian circle ---
+  ctx.setLineDash([7, 5]);
+  ctx.strokeStyle = '#6B7280';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(c.x, c.y, Rpx, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // center mark
+  ctx.strokeStyle = '#9ca3af'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(c.x - 5, c.y); ctx.lineTo(c.x + 5, c.y);
+  ctx.moveTo(c.x, c.y - 5); ctx.lineTo(c.x, c.y + 5);
+  ctx.stroke();
+
+  // --- field arrows crossing the Gaussian circle ---
+  const N = 26;
+  for (let i = 0; i < N; i++) {
+    const a = (i / N) * Math.PI * 2;
+    const px = c.x + Rpx * Math.cos(a);
+    const py = c.y + Rpx * Math.sin(a);
+    const { Ex, Ey } = fieldAt(px, py);
+    const E = Math.hypot(Ex, Ey);
+    if (E < 1e2) continue;
+    const ux = Ex / E, uy = Ey / E;
+    const nx = Math.cos(a), ny = Math.sin(a);        // outward normal
+    const En = Ex * nx + Ey * ny;                    // normal component
+    let color;
+    if (Math.abs(En) / E < 0.25) color = '#9ca3af';           // skimming
+    else color = En > 0 ? '#8B0029' : '#2563EB';              // out / in
+    const L = Math.min(12 + 9 * Math.log10(1 + E / 1e4), 42);
+    drawArrow(px - ux * L / 2, py - uy * L / 2, px + ux * L / 2, py + uy * L / 2, color, 2.5, 9);
+  }
+
+  // --- charges ---
+  for (let i = 0; i < charges.length; i++) drawCharge(charges[i], i);
+
+  updateOverlay();
+  updateInfo();
+}
+
+function drawCharge(cq, idx) {
+  const isPos = cq.q > 0;
+  const grad = ctx.createRadialGradient(cq.x, cq.y, CHARGE_R * 0.2, cq.x, cq.y, CHARGE_R);
+  if (isPos) { grad.addColorStop(0, '#c4234f'); grad.addColorStop(1, '#8B0029'); }
+  else { grad.addColorStop(0, '#5b8cf5'); grad.addColorStop(1, '#2563EB'); }
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cq.x, cq.y, CHARGE_R, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.18)'; ctx.lineWidth = 2; ctx.stroke();
+
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 19px sans-serif';
+  ctx.fillText(isPos ? '+' : '−', cq.x, cq.y + 1);
+
+  // value label below (avoid overlap with nearby charge labels)
+  let ly = cq.y + CHARGE_R + 12;
+  for (let j = 0; j < idx; j++) {
+    const o = charges[j];
+    if (Math.abs(cq.x - o.x) < 58 && Math.abs((o.y + CHARGE_R + 12) - ly) < 16) ly += 16;
+  }
+  drawTextWithBg((isPos ? '+' : '−') + Math.abs(cq.q).toFixed(0) + ' μC', cq.x, ly,
+                 isPos ? '#8B0029' : '#2563EB');
+}
+
+function fmtPhi(phi) {
+  if (phi === 0) return '0';
+  const sign = phi < 0 ? '-' : '';
+  const a = Math.abs(phi);
+  const exp = Math.floor(Math.log10(a));
+  const mant = (a / Math.pow(10, exp)).toFixed(2);
+  return sign + mant + '\\times 10^{' + exp + '}';
+}
+
+function updateOverlay() {
+  const c = center();
+  const { q } = enclosedCharge();
+  const phi = q * MICRO / EPS0;
+
+  const lblQ = document.getElementById('lblQenc');
+  const lblPhi = document.getElementById('lblPhi');
+  const lblR = document.getElementById('lblR');
+
+  // q_enc + Phi labels near circle center; nudge down if a charge sits near the center
+  let qy = c.y - 12;
+  for (const ch of charges) {
+    if (Math.hypot(ch.x - c.x, ch.y - qy) < CHARGE_R + 34) { qy = c.y - Rpx * 0.55 - 14; break; }
+  }
+  qy = Math.max(30, qy);
+  lblQ.style.left = c.x + 'px';
+  lblQ.style.top = qy + 'px';
+  lblQ.innerHTML = tex('q_{\\text{enc}} = ' + (q > 0 ? '+' : '') + q.toFixed(0) + '\\ \\mu\\text{C}');
+
+  lblPhi.style.left = c.x + 'px';
+  lblPhi.style.top = (qy + 26) + 'px';
+  lblPhi.innerHTML = tex('\\Phi = ' + fmtPhi(phi) + '\\ \\text{N}\\cdot\\text{m}^2/\\text{C}');
+
+  // R label at the bottom edge of the circle
+  let ry = c.y + Rpx + 16;
+  if (ry > CH - 24) ry = c.y + Rpx - 18;
+  lblR.style.left = c.x + 'px';
+  lblR.style.top = ry + 'px';
+  lblR.innerHTML = tex('R = ' + (Rpx * M_PER_PX).toFixed(2) + '\\ \\text{m}');
+}
+
+function updateInfo() {
+  const { q, n } = enclosedCharge();
+  const phi = q * MICRO / EPS0;
+  const box = document.getElementById('infoBox');
+  let phiTxt;
+  if (q === 0) phiTxt = '0';
+  else {
+    const a = Math.abs(phi);
+    const exp = Math.floor(Math.log10(a));
+    const mant = (a / Math.pow(10, exp)).toFixed(2);
+    phiTxt = (phi < 0 ? '−' : '') + mant + '×10' + sup(exp);
+  }
+  let html = '';
+  html += '<span class="label">내부 전하 수</span> <span class="val">' + n + '개</span><br>';
+  html += '<span class="label">알짜 내부 전하</span> <span class="val">q<sub>enc</sub> = ' +
+          (q > 0 ? '+' : '') + q.toFixed(0) + ' μC</span><br>';
+  html += '<span class="label">알짜 플럭스</span> <span class="val">Φ = ' + phiTxt + ' N·m²/C</span><br>';
+  let msg, color;
+  if (q > 0) { msg = '알짜 플럭스가 바깥쪽 (빨강 우세)'; color = '#8B0029'; }
+  else if (q < 0) { msg = '알짜 플럭스가 안쪽 (파랑 우세)'; color = '#2563EB'; }
+  else { msg = '들어온 만큼 나감 → Φ = 0'; color = '#6B7280'; }
+  html += '<span style="color:' + color + ';font-weight:700">' + msg + '</span>';
+  box.innerHTML = html;
+}
+
+function sup(n) {
+  const map = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³',
+                '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  return String(n).split('').map(ch => map[ch] || ch).join('');
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML =
+    '가우스 법칙: 닫힌 곡면의 알짜 플럭스는 <span style="color:#8B0029">내부 전하</span>만으로 결정된다';
+
+  document.getElementById('theoremBox').innerHTML =
+    '가우스 법칙<br>' +
+    tex('\\varepsilon_0 \\Phi = q_{\\text{enc}}') + '<br>' +
+    '<span style="font-size:11px;font-weight:400">' +
+    tex('\\Phi = \\oint \\vec{E}\\cdot d\\vec{A} = q_{\\text{enc}}/\\varepsilon_0') + '</span>';
+
+  document.getElementById('relationBox').innerHTML =
+    '<b>확인 1</b> — 반지름 R을 바꿔도 내부 전하가 같으면 ' + tex('\\Phi') + ' 는 <b>불변</b><br>' +
+    '<b>확인 2</b> — 바깥 전하는 아무리 가까워도 ' + tex('\\Phi') + ' 에 기여 0';
+
+  document.getElementById('formulaBox').innerHTML =
+    '<b style="color:#8B0029">빨강 화살표:</b> 장이 밖으로 (플럭스 +)<br>' +
+    '<b style="color:#2563EB">파랑 화살표:</b> 장이 안으로 (플럭스 −)<br>' +
+    '<b style="color:#6B7280">회색:</b> 면을 스침 (기여 ≈ 0)<br>' +
+    '점선 원 = 가우스면 (2D 단면)';
+}
+
+// ---------- dragging ----------
+function eventToCanvas(e) {
+  const rect = canvas.getBoundingClientRect();
+  const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+  return { x: cx, y: cy };
+}
+
+function hitTest(x, y) {
+  for (let i = charges.length - 1; i >= 0; i--) {
+    if (Math.hypot(x - charges[i].x, y - charges[i].y) <= CHARGE_R + 8) return i;
+  }
+  return -1;
+}
+
+function onDown(e) {
+  const p = eventToCanvas(e);
+  const idx = hitTest(p.x, p.y);
+  if (idx >= 0) {
+    dragIdx = idx;
+    canvas.style.cursor = 'grabbing';
+    e.preventDefault();
+  }
+}
+function onMove(e) {
+  const p = eventToCanvas(e);
+  if (dragIdx >= 0) {
+    charges[dragIdx].x = p.x;
+    charges[dragIdx].y = p.y;
+    clampInside();
+    draw();
+    e.preventDefault();
+  } else {
+    canvas.style.cursor = hitTest(p.x, p.y) >= 0 ? 'grab' : 'default';
+  }
+}
+function onUp() {
+  dragIdx = -1;
+  canvas.style.cursor = 'default';
+}
+
+canvas.addEventListener('mousedown', onDown);
+window.addEventListener('mousemove', onMove);
+window.addEventListener('mouseup', onUp);
+canvas.addEventListener('touchstart', onDown, { passive: false });
+canvas.addEventListener('touchmove', onMove, { passive: false });
+canvas.addEventListener('touchend', onUp);
+
+// ---------- controls ----------
+rSlider.addEventListener('input', () => {
+  Rpx = parseFloat(rSlider.value);
+  document.getElementById('rVal').textContent = (Rpx * M_PER_PX).toFixed(2);
+  draw();
+});
+gridChk.addEventListener('change', draw);
+
+resetBtn.addEventListener('click', () => {
+  rSlider.value = 120; Rpx = 120;
+  document.getElementById('rVal').textContent = (Rpx * M_PER_PX).toFixed(2);
+  gridChk.checked = true;
+  resetPositions();
+  clampInside();
+  draw();
+});
+
+window.addEventListener('resize', resize);
+
+renderStatic();
+document.getElementById('rVal').textContent = (parseFloat(rSlider.value) * M_PER_PX).toFixed(2);
+// Lazy init: in an iframe the canvas may have zero layout size when the script
+// runs (or while the iframe is display:none). Retry every frame until it is
+// laid out, then resize() performs the initial placement exactly once.
+(function initWhenVisible() {
+  resize();
+  if (!positionsInit) requestAnimationFrame(initWhenVisible);
+})();
+</script>
+</body>
+</html>

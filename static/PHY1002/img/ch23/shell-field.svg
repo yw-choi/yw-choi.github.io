@@ -1,0 +1,66 @@
+<svg viewBox="0 0 720 430" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="aR" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="10" markerHeight="9" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#8B0029"/>
+    </marker>
+  </defs>
+
+  <!-- spherical shell (annulus) -->
+  <circle cx="270" cy="215" r="122" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <circle cx="270" cy="215" r="97" fill="#fff" stroke="#6B7280" stroke-width="2"/>
+  <g fill="#8B0029" font-size="13" font-weight="bold" text-anchor="middle">
+    <text x="379.5" y="220">+</text>
+    <text x="364.8" y="165.3">+</text>
+    <text x="324.8" y="125.2">+</text>
+    <text x="270" y="110.5">+</text>
+    <text x="215.2" y="125.2">+</text>
+    <text x="175.2" y="165.3">+</text>
+    <text x="160.5" y="220">+</text>
+    <text x="175.2" y="274.8">+</text>
+    <text x="215.2" y="314.8">+</text>
+    <text x="270" y="329.5">+</text>
+    <text x="324.8" y="314.8">+</text>
+    <text x="364.8" y="274.8">+</text>
+  </g>
+
+  <!-- Gaussian surface S1 (inside) -->
+  <circle cx="270" cy="215" r="58" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="270" y="198" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">S₁</text>
+  <text x="270" y="222" text-anchor="middle" font-size="13" fill="#1a1a1a"><tspan font-style="italic">E</tspan> = 0</text>
+  <text x="270" y="244" text-anchor="middle" font-size="11.5" fill="#6B7280"><tspan font-style="italic">q</tspan><tspan baseline-shift="sub" font-size="9">enc</tspan> = 0</text>
+
+  <!-- Gaussian surface S2 (outside) -->
+  <circle cx="270" cy="215" r="172" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="270" y="32" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">S₂</text>
+
+  <!-- E arrows on S2 -->
+  <g stroke="#8B0029" stroke-width="2.5">
+    <line x1="448" y1="215" x2="492" y2="215" marker-end="url(#aR)"/>
+    <line x1="395.8" y1="89.2" x2="426.9" y2="58.1" marker-end="url(#aR)"/>
+    <line x1="144.2" y1="89.2" x2="113.1" y2="58.1" marker-end="url(#aR)"/>
+    <line x1="92" y1="215" x2="48" y2="215" marker-end="url(#aR)"/>
+    <line x1="144.2" y1="340.8" x2="113.1" y2="371.9" marker-end="url(#aR)"/>
+    <line x1="395.8" y1="340.8" x2="426.9" y2="371.9" marker-end="url(#aR)"/>
+  </g>
+  <text x="498" y="203" fill="#8B0029" font-size="14" font-style="italic">E</text>
+
+  <!-- R label (to inner radius) -->
+  <line x1="270" y1="215" x2="186" y2="263.5" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="198" y="244" font-size="14" font-style="italic" fill="#1a1a1a">R</text>
+
+  <!-- r label (to S2, angle -15 deg) -->
+  <line x1="270" y1="215" x2="436" y2="259.5" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="405" y="268" font-size="14" font-style="italic" fill="#1a1a1a">r</text>
+
+  <!-- shell label -->
+  <text x="30" y="42" font-size="13.5" fill="#6B7280">균일하게 대전된 껍질 (총 전하 <tspan font-style="italic">q</tspan>)</text>
+  <line x1="128" y1="52" x2="182" y2="122" stroke="#6B7280" stroke-width="1"/>
+
+  <!-- right annotations -->
+  <text x="520" y="140" font-size="14" font-weight="bold" fill="#1a1a1a">r ≥ R (S₂):</text>
+  <text x="520" y="166" font-size="14" fill="#8B0029" font-weight="bold">E = q/(4πε₀r²)</text>
+  <text x="520" y="190" font-size="12.5" fill="#6B7280">→ 중심의 점전하처럼</text>
+  <text x="520" y="256" font-size="14" font-weight="bold" fill="#1a1a1a">r &lt; R (S₁):</text>
+  <text x="520" y="282" font-size="14" fill="#8B0029" font-weight="bold">E = 0</text>
+  <text x="520" y="306" font-size="12.5" fill="#6B7280">→ 껍질 정리 2</text>
+</svg>
