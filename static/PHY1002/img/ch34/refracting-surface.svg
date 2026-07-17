@@ -1,0 +1,67 @@
+<svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="mray6" markerWidth="10" markerHeight="9" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8B0029"/>
+    </marker>
+    <marker id="mdim6" markerWidth="10" markerHeight="9" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <text x="380" y="32" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a1a">구면 굴절면: 굴절이 광선을 중심축 쪽으로 꺾으면 실상이 생긴다</text>
+
+  <!-- glass region -->
+  <path d="M 314 60 Q 286 220 314 380 L 726 380 L 726 60 Z" fill="#F3F4F6" stroke="none"/>
+  <path d="M 314 60 Q 286 220 314 380" fill="none" stroke="#6B7280" stroke-width="2"/>
+
+  <!-- axis -->
+  <line x1="34" y1="220" x2="726" y2="220" stroke="#6B7280" stroke-width="1"/>
+
+  <!-- normal line through a and C -->
+  <line x1="200" y1="124" x2="470" y2="220" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- incident ray O -> a -->
+  <polyline points="60,220 181,190 302,160" fill="none" stroke="#8B0029" stroke-width="2.5" marker-mid="url(#mray6)"/>
+  <!-- refracted ray a -> I -->
+  <polyline points="302,160 481,190 660,220" fill="none" stroke="#8B0029" stroke-width="2.5" marker-mid="url(#mray6)"/>
+  <!-- axial ray -->
+  <polyline points="60,220 360,220 655,220" fill="none" stroke="#8B0029" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- angle arcs -->
+  <path d="M 106 220 A 46 46 0 0 0 104.7 208.9" fill="none" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="118" y="207" font-size="14" font-style="italic" fill="#2563EB">α</text>
+  <path d="M 430 220 A 40 40 0 0 1 432.3 206.6" fill="none" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="419" y="199" font-size="14" font-style="italic" fill="#2563EB">β</text>
+  <path d="M 620 220 A 40 40 0 0 1 620.6 213.4" fill="none" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="606" y="205" font-size="14" font-style="italic" fill="#2563EB">γ</text>
+  <path d="M 263.2 169.6 A 40 40 0 0 1 264.3 146.6" fill="none" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="240" y="160" font-size="13" font-style="italic" fill="#2563EB">θ₁</text>
+  <path d="M 347.4 167.6 A 46 46 0 0 1 345.3 175.5" fill="none" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="356" y="186" font-size="13" font-style="italic" fill="#2563EB">θ₂</text>
+
+  <!-- points -->
+  <circle cx="60" cy="220" r="4.5" fill="#2563EB"/>
+  <text x="60" y="243" text-anchor="middle" font-size="14" font-weight="bold" font-style="italic" fill="#2563EB">O</text>
+  <circle cx="470" cy="220" r="4" fill="#1a1a1a"/>
+  <text x="470" y="243" text-anchor="middle" font-size="14" font-style="italic" fill="#1a1a1a">C</text>
+  <circle cx="660" cy="220" r="4.5" fill="#2563EB"/>
+  <text x="660" y="243" text-anchor="middle" font-size="14" font-weight="bold" font-style="italic" fill="#2563EB">I</text>
+  <text x="312" y="150" font-size="14" font-style="italic" fill="#8B0029">a</text>
+  <text x="291" y="242" font-size="13" font-style="italic" fill="#6B7280">c</text>
+
+  <!-- medium labels -->
+  <text x="150" y="82" text-anchor="middle" font-size="14" fill="#1a1a1a"><tspan font-style="italic">n</tspan>₁ (공기)</text>
+  <text x="560" y="82" text-anchor="middle" font-size="14" fill="#1a1a1a"><tspan font-style="italic">n</tspan>₂ &gt; <tspan font-style="italic">n</tspan>₁ (유리)</text>
+
+  <!-- dimensions -->
+  <line x1="60" y1="326" x2="300" y2="326" stroke="#6B7280" stroke-width="1" marker-start="url(#mdim6)" marker-end="url(#mdim6)"/>
+  <text x="180" y="320" text-anchor="middle" font-size="13" font-style="italic" fill="#6B7280">p</text>
+  <line x1="300" y1="352" x2="470" y2="352" stroke="#6B7280" stroke-width="1" marker-start="url(#mdim6)" marker-end="url(#mdim6)"/>
+  <text x="385" y="346" text-anchor="middle" font-size="13" font-style="italic" fill="#6B7280">r</text>
+  <line x1="300" y1="376" x2="660" y2="376" stroke="#6B7280" stroke-width="1" marker-start="url(#mdim6)" marker-end="url(#mdim6)"/>
+  <text x="480" y="370" text-anchor="middle" font-size="13" font-style="italic" fill="#6B7280">i</text>
+  <line x1="60" y1="226" x2="60" y2="332" stroke="#6B7280" stroke-width="1" stroke-dasharray="2 3"/>
+  <line x1="470" y1="226" x2="470" y2="358" stroke="#6B7280" stroke-width="1" stroke-dasharray="2 3"/>
+  <line x1="660" y1="226" x2="660" y2="382" stroke="#6B7280" stroke-width="1" stroke-dasharray="2 3"/>
+  <line x1="300" y1="226" x2="300" y2="382" stroke="#6B7280" stroke-width="1" stroke-dasharray="2 3"/>
+</svg>

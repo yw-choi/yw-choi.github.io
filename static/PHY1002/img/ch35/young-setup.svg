@@ -1,0 +1,90 @@
+<svg viewBox="0 0 780 450" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6B7280"/>
+    </marker>
+    <clipPath id="clipBC">
+      <rect x="304" y="25" width="332" height="390"/>
+    </clipPath>
+  </defs>
+
+  <!-- incident plane wavefronts -->
+  <line x1="50" y1="150" x2="50" y2="310" stroke="#2563EB" stroke-width="2"/>
+  <line x1="68" y1="150" x2="68" y2="310" stroke="#2563EB" stroke-width="2"/>
+  <line x1="86" y1="150" x2="86" y2="310" stroke="#2563EB" stroke-width="2"/>
+  <line x1="104" y1="150" x2="104" y2="310" stroke="#2563EB" stroke-width="2"/>
+  <text x="45" y="135" font-size="13.5" fill="#2563EB">입사 평면파</text>
+  <line x1="58" y1="330" x2="112" y2="330" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrG)"/>
+
+  <!-- screen A with single slit S0 -->
+  <rect x="127" y="60" width="7" height="163" fill="#6B7280"/>
+  <rect x="127" y="237" width="7" height="163" fill="#6B7280"/>
+  <text x="112" y="235" font-size="14" font-style="italic" fill="#1a1a1a" text-anchor="end">S₀</text>
+
+  <!-- circular wavefronts from S0 -->
+  <path d="M130,200 A 30 30 0 0 1 130,260" fill="none" stroke="#8B0029" stroke-width="1.5"/>
+  <path d="M130,170 A 60 60 0 0 1 130,290" fill="none" stroke="#8B0029" stroke-width="1.5"/>
+  <path d="M130,140 A 90 90 0 0 1 130,320" fill="none" stroke="#8B0029" stroke-width="1.5"/>
+  <path d="M130,110 A 120 120 0 0 1 130,350" fill="none" stroke="#8B0029" stroke-width="1.5"/>
+  <path d="M130,80 A 150 150 0 0 1 130,380" fill="none" stroke="#8B0029" stroke-width="1.5"/>
+
+  <!-- screen B with S1, S2 -->
+  <rect x="297" y="60" width="7" height="128" fill="#6B7280"/>
+  <rect x="297" y="202" width="7" height="56" fill="#6B7280"/>
+  <rect x="297" y="272" width="7" height="128" fill="#6B7280"/>
+  <text x="282" y="200" font-size="14" font-style="italic" fill="#1a1a1a" text-anchor="end">S₂</text>
+  <text x="282" y="270" font-size="14" font-style="italic" fill="#1a1a1a" text-anchor="end">S₁</text>
+
+  <!-- d dimension -->
+  <line x1="284" y1="195" x2="284" y2="265" stroke="#6B7280" stroke-width="1" marker-start="url(#arrG)" marker-end="url(#arrG)"/>
+  <text x="272" y="236" font-size="14" font-style="italic" fill="#6B7280" text-anchor="end">d</text>
+
+  <!-- overlapping circular wavefronts from S1 and S2 -->
+  <g clip-path="url(#clipBC)" stroke="#8B0029" stroke-width="1.2" fill="none">
+    <path d="M300,168 A 27 27 0 0 1 300,222"/>
+    <path d="M300,141 A 54 54 0 0 1 300,249"/>
+    <path d="M300,114 A 81 81 0 0 1 300,276"/>
+    <path d="M300,87  A 108 108 0 0 1 300,303"/>
+    <path d="M300,60  A 135 135 0 0 1 300,330"/>
+    <path d="M300,33  A 162 162 0 0 1 300,357"/>
+    <path d="M300,6   A 189 189 0 0 1 300,384"/>
+    <path d="M300,-21 A 216 216 0 0 1 300,411"/>
+    <path d="M300,-48 A 243 243 0 0 1 300,438"/>
+    <path d="M300,-75 A 270 270 0 0 1 300,465"/>
+    <path d="M300,-102 A 297 297 0 0 1 300,492"/>
+    <path d="M300,-129 A 324 324 0 0 1 300,519"/>
+    <path d="M300,238 A 27 27 0 0 1 300,292"/>
+    <path d="M300,211 A 54 54 0 0 1 300,319"/>
+    <path d="M300,184 A 81 81 0 0 1 300,346"/>
+    <path d="M300,157 A 108 108 0 0 1 300,373"/>
+    <path d="M300,130 A 135 135 0 0 1 300,400"/>
+    <path d="M300,103 A 162 162 0 0 1 300,427"/>
+    <path d="M300,76  A 189 189 0 0 1 300,454"/>
+    <path d="M300,49  A 216 216 0 0 1 300,481"/>
+    <path d="M300,22  A 243 243 0 0 1 300,508"/>
+    <path d="M300,-5  A 270 270 0 0 1 300,535"/>
+    <path d="M300,-32 A 297 297 0 0 1 300,562"/>
+    <path d="M300,-59 A 324 324 0 0 1 300,589"/>
+  </g>
+
+  <!-- viewing screen C -->
+  <rect x="640" y="40" width="7" height="380" fill="#6B7280"/>
+
+  <!-- maxima marks -->
+  <circle cx="643.5" cy="59"  r="6" fill="#8B0029"/>
+  <circle cx="643.5" cy="116" r="6" fill="#8B0029"/>
+  <circle cx="643.5" cy="173" r="6" fill="#8B0029"/>
+  <circle cx="643.5" cy="230" r="6" fill="#8B0029"/>
+  <circle cx="643.5" cy="287" r="6" fill="#8B0029"/>
+  <circle cx="643.5" cy="344" r="6" fill="#8B0029"/>
+  <circle cx="643.5" cy="401" r="6" fill="#8B0029"/>
+
+  <text x="658" y="120" font-size="13" fill="#8B0029">밝은 무늬 (보강)</text>
+  <text x="658" y="206" font-size="13" fill="#6B7280">어두운 무늬 (상쇄)</text>
+  <text x="658" y="234" font-size="13" fill="#1a1a1a" font-weight="bold">중앙 극대 (m = 0)</text>
+
+  <!-- bottom labels -->
+  <text x="130" y="432" font-size="14" fill="#1a1a1a" text-anchor="middle">화면 A</text>
+  <text x="300" y="432" font-size="14" fill="#1a1a1a" text-anchor="middle">화면 B (이중슬릿)</text>
+  <text x="643" y="440" font-size="14" fill="#1a1a1a" text-anchor="middle">화면 C (스크린)</text>
+</svg>

@@ -1,0 +1,57 @@
+<svg viewBox="0 0 760 430" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8B0029"/>
+    </marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- glass region -->
+  <rect x="430" y="80" width="270" height="250" fill="#F3F4F6"/>
+  <!-- boundaries -->
+  <line x1="330" y1="80" x2="330" y2="330" stroke="#6B7280" stroke-width="2"/>
+  <line x1="430" y1="80" x2="430" y2="330" stroke="#6B7280" stroke-width="2"/>
+
+  <text x="195" y="60" font-size="14.5" fill="#1a1a1a" text-anchor="middle">공기 n₁ = 1.00</text>
+  <text x="380" y="60" font-size="14.5" fill="#1a1a1a" text-anchor="middle">MgF₂ 코팅 n₂ = 1.38</text>
+  <text x="565" y="60" font-size="14.5" fill="#1a1a1a" text-anchor="middle">유리(렌즈) n₃ = 1.50</text>
+
+  <!-- incident ray -->
+  <line x1="100" y1="300" x2="330" y2="255" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <text x="108" y="320" font-size="14" fill="#8B0029">입사광</text>
+
+  <!-- r1 -->
+  <line x1="330" y1="255" x2="100" y2="210" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <text x="112" y="202" font-size="14" font-style="italic" fill="#8B0029" text-anchor="end">r₁</text>
+
+  <!-- inside coating a -> b -->
+  <line x1="330" y1="255" x2="430" y2="241" stroke="#8B0029" stroke-width="2.5"/>
+  <!-- reflection at glass surface b -> c -->
+  <line x1="430" y1="241" x2="330" y2="227" stroke="#8B0029" stroke-width="2.5"/>
+  <!-- exit c -> observer -->
+  <line x1="330" y1="227" x2="100" y2="182" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <text x="112" y="174" font-size="14" font-style="italic" fill="#8B0029" text-anchor="end">r₂</text>
+
+  <!-- point labels -->
+  <text x="318" y="274" font-size="14" font-style="italic" fill="#1a1a1a" text-anchor="end">a</text>
+  <text x="440" y="258" font-size="14" font-style="italic" fill="#1a1a1a">b</text>
+  <text x="318" y="220" font-size="14" font-style="italic" fill="#1a1a1a" text-anchor="end">c</text>
+
+  <!-- callouts -->
+  <text x="60" y="105" font-size="14" fill="#8B0029" font-weight="bold">반사 ①: 1.00 → 1.38 (낮 → 높) ⇒ 0.5λ 이동</text>
+  <line x1="240" y1="115" x2="322" y2="245" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="450" y="105" font-size="14" fill="#8B0029" font-weight="bold">반사 ②: 1.38 → 1.50 (낮 → 높) ⇒ 역시 0.5λ 이동</text>
+  <line x1="470" y1="115" x2="434" y2="233" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- L dimension -->
+  <line x1="330" y1="330" x2="330" y2="356" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="430" y1="330" x2="430" y2="356" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="330" y1="350" x2="430" y2="350" stroke="#6B7280" stroke-width="1" marker-start="url(#arrG)" marker-end="url(#arrG)"/>
+  <text x="380" y="342" font-size="15" font-style="italic" fill="#1a1a1a" text-anchor="middle">L</text>
+
+  <!-- bottom conclusion -->
+  <text x="380" y="390" font-size="14" fill="#1a1a1a" text-anchor="middle">두 반사파 모두 0.5λ 이동 → 반사에 의한 위상차는 0 → 상쇄 조건은 경로차가 결정</text>
+  <text x="380" y="415" font-size="15" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">2L = (m + ½) λ/n₂  →  최소 두께 L = λ/(4n₂)</text>
+</svg>

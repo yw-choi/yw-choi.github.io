@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>거울·렌즈 광선 추적</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; touch-action: none; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 14px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 9px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 2px; }
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.mode-btn { border: 1.5px solid #ddd; background: #fff; border-radius: 7px; padding: 7px 4px; font-size: 12px; font-weight: 600; color: #555; cursor: pointer; }
+.mode-btn.active { background: #8B0029; border-color: #8B0029; color: #fff; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 9px 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-weight: 700; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 9px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.7; }
+.theorem-box .katex { color: #fff; font-size: 13.5px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+.relation-box { background: #eef3fe; border: 1px solid #c3d4f5; border-radius: 8px; padding: 8px 10px; font-size: 11.5px; line-height: 1.75; color: #2b4a8b; }
+.relation-box b { color: #1a3a7a; }
+button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 8px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.reset-btn:hover { background: #a3003a; }
+.canvas-title { position: absolute; top: 8px; left: 16px; right: 16px; pointer-events: none; font-size: 13.5px; font-weight: 700; color: #8B0029; line-height: 1.4; }
+.canvas-title .katex { font-size: 13px; }
+.hint { position: absolute; bottom: 8px; left: 16px; pointer-events: none; font-size: 11px; color: #6B7280; }
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label {
+  position: absolute; white-space: nowrap; font-size: 12.5px; line-height: 1;
+  pointer-events: none; transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.88); padding: 1px 5px; border-radius: 4px;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.95em; }
+.canvas-overlay .status-label {
+  position: absolute; white-space: nowrap; font-size: 12px; font-weight: 700; line-height: 1.35;
+  transform: translate(-50%, -100%); background: rgba(255,255,255,0.92);
+  padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.08); text-align: center;
+}
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label" id="lblP" style="color:#6B7280;"></div>
+      <div class="katex-label" id="lblI"></div>
+      <div class="status-label" id="lblStatus"></div>
+    </div>
+    <div class="canvas-title" id="canvasTitle"></div>
+    <div class="hint">물체(화살표)를 드래그해 보세요 — 좌우로 p, 위아래로 높이 h</div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>거울·렌즈 광선 추적</h2>
+      <div class="subtitle">Images: mirrors &amp; thin lenses (Ch.34)</div>
+    </div>
+
+    <div class="mode-grid">
+      <button class="mode-btn active" data-mode="concave">오목거울</button>
+      <button class="mode-btn" data-mode="convex">볼록거울</button>
+      <button class="mode-btn" data-mode="converging">수렴렌즈</button>
+      <button class="mode-btn" data-mode="diverging">발산렌즈</button>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>초점거리 |f| = <span id="fVal">15.0</span> cm</label>
+      <input type="range" id="fSlider" min="8" max="30" value="15" step="0.5">
+    </div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="relation-box" id="relationBox"></div>
+
+    <button class="reset-btn" id="resetBtn">&#8635; 기본값 복원</button>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false, displayMode: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW = 0, CH = 0;
+
+// ---------- logical (world) state: cm units, element at x=0, axis y=0 ----------
+// Object position stored in physical units only; pixel mapping is computed
+// fresh on every draw, so load-time canvas size never matters (iframe-safe).
+const state = {
+  mode: 'concave',        // concave | convex | converging | diverging
+  p: 26,                  // object distance (cm), always > 0
+  h: 8,                   // object height (cm)
+  f: 15,                  // |focal length| (cm)
+};
+const P_MIN = 6, P_MAX = 48, H_MIN = 3, H_MAX = 16;
+const ELEM_HALF = 20;     // element half-height (cm) for drawing / ray-2 cutoff
+
+const MODE = {
+  concave:    { kind: 'mirror', sign: +1, name: '오목거울' },
+  convex:     { kind: 'mirror', sign: -1, name: '볼록거울' },
+  converging: { kind: 'lens',   sign: +1, name: '수렴 렌즈' },
+  diverging:  { kind: 'lens',   sign: -1, name: '발산 렌즈' },
+};
+
+function fSigned() { return MODE[state.mode].sign * state.f; }
+function isMirror() { return MODE[state.mode].kind === 'mirror'; }
+
+// image distance i from 1/p + 1/i = 1/f  (i > 0 real, i < 0 virtual)
+function computeImage() {
+  const fs = fSigned(), p = state.p;
+  const denom = p - fs;
+  const atInfinity = Math.abs(denom) < 1e-9;
+  const i = atInfinity ? Infinity : (p * fs) / denom;
+  const m = atInfinity ? Infinity : -i / p;
+  return { fs, i, m, hImg: atInfinity ? Infinity : m * state.h, atInfinity: !isFinite(i) || Math.abs(i) > 5000 };
+}
+
+// world x of the image (mirror: real image in front = object side; lens: real image opposite side)
+function imageWorldX(i) { return isMirror() ? -i : i; }
+
+// ---------- mapping world(cm) <-> pixels ----------
+function mapping() {
+  const scale = Math.min(CW / 112, CH / 58);
+  const cx = CW * 0.52, cy = CH * 0.54;
+  return { scale, cx, cy };
+}
+function W2P(wx, wy, M) { return { x: M.cx + wx * M.scale, y: M.cy - wy * M.scale }; }
+function P2W(px, py, M) { return { x: (px - M.cx) / M.scale, y: (M.cy - py) / M.scale }; }
+
+// ---------- drawing helpers ----------
+function drawArrowHead(x, y, angle, color, size) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x - size * Math.cos(angle - 0.42), y - size * Math.sin(angle - 0.42));
+  ctx.lineTo(x - size * Math.cos(angle + 0.42), y - size * Math.sin(angle + 0.42));
+  ctx.closePath(); ctx.fill();
+}
+function rayLine(x1, y1, x2, y2, opts) {
+  opts = opts || {};
+  ctx.strokeStyle = opts.color || '#8B0029';
+  ctx.lineWidth = opts.lw || 2.2;
+  ctx.setLineDash(opts.dash ? [5, 4] : []);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  ctx.setLineDash([]);
+  if (opts.arrow) {
+    const ang = Math.atan2(y2 - y1, x2 - x1);
+    const mx = x1 + (x2 - x1) * (opts.arrowAt || 0.55);
+    const my = y1 + (y2 - y1) * (opts.arrowAt || 0.55);
+    drawArrowHead(mx, my, ang, opts.color || '#8B0029', 9);
+  }
+}
+function drawTextWithBg(text, x, y, color, font, align) {
+  ctx.font = font || 'bold 13px sans-serif';
+  ctx.textAlign = align || 'center'; ctx.textBaseline = 'middle';
+  const w = ctx.measureText(text).width;
+  ctx.fillStyle = 'rgba(250,250,250,0.85)';
+  const x0 = align === 'left' ? x - 3 : x - w / 2 - 3;
+  ctx.fillRect(x0, y - 9, w + 6, 18);
+  ctx.fillStyle = color;
+  ctx.fillText(text, x, y);
+}
+
+// ---------- main draw ----------
+function draw() {
+  if (CW < 10 || CH < 10) return;
+  ctx.clearRect(0, 0, CW, CH);
+  const M = mapping();
+  const { fs, i, m, hImg, atInfinity } = computeImage();
+  const p = state.p, h = state.h;
+
+  // optical axis
+  const axisL = W2P(-56, 0, M), axisR = W2P(56, 0, M);
+  ctx.strokeStyle = '#9ca3af'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(Math.max(4, axisL.x), axisL.y); ctx.lineTo(Math.min(CW - 4, axisR.x), axisR.y); ctx.stroke();
+
+  // ----- optical element at x = 0 -----
+  const top = W2P(0, ELEM_HALF, M), bot = W2P(0, -ELEM_HALF, M), c0 = W2P(0, 0, M);
+  const Hpx = top.y - c0.y; // negative
+  const halfPx = Math.abs(c0.y - top.y);
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 2.5;
+  if (isMirror()) {
+    const sag = Math.min(halfPx * 0.16, 16) * (state.mode === 'concave' ? 1 : -1);
+    // concave: edges toward object (x<0) => edge px x = c0.x - sag ; control at +sag
+    ctx.beginPath();
+    ctx.moveTo(c0.x - sag, top.y);
+    ctx.quadraticCurveTo(c0.x + sag, c0.y, c0.x - sag, bot.y);
+    ctx.stroke();
+    // hatching behind
+    ctx.lineWidth = 1;
+    for (let k = 0; k <= 8; k++) {
+      const t = k / 8;
+      const yy = top.y + (bot.y - top.y) * t;
+      const xx = c0.x - sag + 2 * sag * (1 - Math.pow(2 * t - 1, 2)) / 2; // approx curve x
+      ctx.beginPath(); ctx.moveTo(xx + 2, yy); ctx.lineTo(xx + 12, yy - 7); ctx.stroke();
+    }
+  } else {
+    const w = Math.min(halfPx * 0.22, 18);
+    ctx.fillStyle = 'rgba(243,244,246,0.85)';
+    ctx.beginPath();
+    if (state.mode === 'converging') {
+      ctx.moveTo(c0.x, top.y);
+      ctx.bezierCurveTo(c0.x + w, top.y + halfPx * 0.6, c0.x + w, bot.y - halfPx * 0.6, c0.x, bot.y);
+      ctx.bezierCurveTo(c0.x - w, bot.y - halfPx * 0.6, c0.x - w, top.y + halfPx * 0.6, c0.x, top.y);
+    } else {
+      const e = w * 0.85;
+      ctx.moveTo(c0.x - e, top.y);
+      ctx.lineTo(c0.x + e, top.y);
+      ctx.quadraticCurveTo(c0.x + e * 0.15, c0.y, c0.x + e, bot.y);
+      ctx.lineTo(c0.x - e, bot.y);
+      ctx.quadraticCurveTo(c0.x - e * 0.15, c0.y, c0.x - e, top.y);
+    }
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+  }
+
+  // ----- focal points / center of curvature -----
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  function dot(wx, label, color) {
+    const q = W2P(wx, 0, M);
+    ctx.fillStyle = color || '#8B0029';
+    ctx.beginPath(); ctx.arc(q.x, q.y, 4, 0, Math.PI * 2); ctx.fill();
+    drawTextWithBg(label, q.x, q.y - 14, color || '#8B0029', 'italic bold 13px sans-serif');
+  }
+  if (isMirror()) {
+    dot(-fs, 'F');
+    dot(-2 * fs, 'C', '#1a1a1a');
+  } else {
+    // converging: F1 on object side; diverging: F2 on object side (Halliday)
+    dot(-Math.abs(fs), fs > 0 ? 'F₁' : 'F₂');
+    dot(Math.abs(fs), fs > 0 ? 'F₂' : 'F₁');
+  }
+
+  // ----- object arrow -----
+  const ob = W2P(-p, 0, M), ot = W2P(-p, h, M);
+  ctx.strokeStyle = '#2563EB'; ctx.lineWidth = 3.5; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(ob.x, ob.y); ctx.lineTo(ot.x, ot.y + 8); ctx.stroke();
+  drawArrowHead(ot.x, ot.y, -Math.PI / 2, '#2563EB', 11);
+  drawTextWithBg('물체', ot.x, ot.y - 14, '#2563EB');
+
+  // ----- rays -----
+  const virt = i < 0;
+  const Tx = atInfinity ? null : imageWorldX(i);   // world x of image
+  const Ty = atInfinity ? null : hImg;
+  const T = atInfinity ? null : W2P(Tx, Ty, M);
+  const oTip = W2P(-p, h, M);
+  const hit1 = W2P(0, h, M);                        // ray 1 hits element at y=h
+  const y2w = atInfinity ? null : hImg;             // ray 2 hits element at y=h' exactly
+  const ray2ok = !atInfinity && Math.abs(y2w) < ELEM_HALF * 0.95;
+  const EXT = 60 * M.scale;                         // extension length in px
+
+  function extendFrom(px1, py1, px2, py2, len) {
+    const d = Math.hypot(px2 - px1, py2 - py1) || 1;
+    return { x: px2 + (px2 - px1) / d * len, y: py2 + (py2 - py1) / d * len };
+  }
+
+  // Ray 1: incident parallel to axis
+  rayLine(oTip.x, oTip.y, hit1.x, hit1.y, { arrow: true });
+  if (atInfinity) {
+    // exits through/away from F: direction from hit1 through F (mirror: F at -fs; lens: F2 at +fs)
+    const Fpt = W2P(isMirror() ? -fs : fs, 0, M);
+    const e = extendFrom(hit1.x, hit1.y, Fpt.x, Fpt.y, EXT * 2);
+    rayLine(hit1.x, hit1.y, e.x, e.y, { arrow: true });
+  } else if (!virt) {
+    const e = extendFrom(hit1.x, hit1.y, T.x, T.y, EXT * 0.55);
+    rayLine(hit1.x, hit1.y, e.x, e.y, { arrow: true, arrowAt: 0.45 });
+  } else {
+    // virtual: outgoing ray travels away from T through hit1
+    const e = extendFrom(T.x, T.y, hit1.x, hit1.y, EXT);
+    rayLine(hit1.x, hit1.y, e.x, e.y, { arrow: true, arrowAt: 0.5 });
+    rayLine(T.x, T.y, hit1.x, hit1.y, { dash: true, lw: 1.5 });
+  }
+
+  // Ray 2: through (or toward) F on object side -> exits parallel to axis
+  if (ray2ok) {
+    const hit2 = W2P(0, y2w, M);
+    rayLine(oTip.x, oTip.y, hit2.x, hit2.y, { arrow: true });
+    const dir = isMirror() ? -1 : 1; // outgoing horizontal direction
+    const endX = dir > 0 ? Math.min(CW - 6, hit2.x + EXT * 2) : Math.max(6, hit2.x - EXT * 2);
+    rayLine(hit2.x, hit2.y, endX, hit2.y, { arrow: true, arrowAt: 0.5 });
+    if (virt && T) rayLine(T.x, T.y, hit2.x, hit2.y, { dash: true, lw: 1.5 });
+  }
+
+  // Ray 3 (lens: center) / Ray 4 (mirror: vertex)
+  const cpt = W2P(0, 0, M);
+  rayLine(oTip.x, oTip.y, cpt.x, cpt.y, { arrow: true });
+  if (isMirror()) {
+    // reflect symmetric about the axis: reflected line is y = (h/p)·x for x<0
+    const far = W2P(-56, -56 * h / p, M);
+    rayLine(cpt.x, cpt.y, far.x, far.y, { arrow: true, arrowAt: 0.35 });
+    if (virt && T) rayLine(cpt.x, cpt.y, T.x, T.y, { dash: true, lw: 1.5 });
+  } else {
+    // straight through
+    const far = W2P(56, -56 * h / p, M);
+    rayLine(cpt.x, cpt.y, far.x, far.y, { arrow: true, arrowAt: 0.3 });
+    if (virt && T) rayLine(T.x, T.y, oTip.x, oTip.y, { dash: true, lw: 1.5 });
+  }
+
+  // ----- image arrow -----
+  if (!atInfinity) {
+    const ibase = W2P(Tx, 0, M), itip = T;
+    const onScreen = itip.x > 8 && itip.x < CW - 8;
+    ctx.strokeStyle = '#2563EB'; ctx.lineWidth = 3.5;
+    ctx.setLineDash(virt ? [6, 4] : []);
+    ctx.globalAlpha = virt ? 0.85 : 1;
+    ctx.beginPath(); ctx.moveTo(ibase.x, ibase.y);
+    const tipYAdj = itip.y + (Ty >= 0 ? 8 : -8);
+    ctx.lineTo(itip.x, tipYAdj); ctx.stroke();
+    ctx.setLineDash([]);
+    drawArrowHead(itip.x, itip.y, Ty >= 0 ? -Math.PI / 2 : Math.PI / 2, '#2563EB', 11);
+    ctx.globalAlpha = 1;
+  }
+
+  positionLabels(M, { i, m, hImg, atInfinity, virt, Tx, Ty });
+  updateInfo({ fs, i, m, atInfinity, virt });
+}
+
+// ---------- overlay labels (KaTeX) ----------
+function positionLabels(M, r) {
+  const lblP = document.getElementById('lblP');
+  const lblI = document.getElementById('lblI');
+  const lblStatus = document.getElementById('lblStatus');
+  const axisY = W2P(0, 0, M).y;
+
+  // p label: midpoint between object and element, just below axis
+  const pm = W2P(-state.p / 2, 0, M);
+  lblP.style.display = 'block';
+  lblP.style.left = pm.x + 'px';
+  lblP.style.top = (axisY + 18) + 'px';
+  lblP.innerHTML = tex('p = ' + state.p.toFixed(1) + '\\,\\text{cm}');
+
+  if (!r.atInfinity) {
+    // i label: midpoint between element and image, lower row to avoid p label
+    const im = W2P(r.Tx / 2, 0, M);
+    let ix = Math.max(46, Math.min(CW - 46, im.x));
+    lblI.style.display = 'block';
+    lblI.style.left = ix + 'px';
+    lblI.style.top = (axisY + 40) + 'px';
+    lblI.style.color = r.virt ? '#2563EB' : '#8B0029';
+    lblI.style.fontWeight = 'bold';
+    lblI.innerHTML = tex('i = ' + r.i.toFixed(1) + '\\,\\text{cm}');
+
+    // status near image tip
+    const tp = W2P(r.Tx, r.Ty, M);
+    let sx = Math.max(70, Math.min(CW - 70, tp.x));
+    let sy = r.Ty >= 0 ? tp.y - 14 : tp.y + 58;
+    sy = Math.max(46, Math.min(CH - 20, sy));
+    // avoid overlapping the object label region
+    const otp = W2P(-state.p, state.h, M);
+    if (Math.abs(sx - otp.x) < 70 && Math.abs(sy - (otp.y - 14)) < 30) sx += (sx < otp.x ? -75 : 75);
+    lblStatus.style.display = 'block';
+    lblStatus.style.left = sx + 'px';
+    lblStatus.style.top = sy + 'px';
+    lblStatus.style.color = r.virt ? '#2563EB' : '#8B0029';
+    const kind = r.virt ? '허상' : '실상';
+    const orient = r.m > 0 ? '정립' : '도립';
+    const size = Math.abs(r.m) > 1.02 ? '확대' : (Math.abs(r.m) < 0.98 ? '축소' : '같은 크기');
+    lblStatus.innerHTML = kind + ' · ' + orient + ' · ' + size +
+      '<br><span style="font-weight:400">m = ' + r.m.toFixed(2) + '</span>';
+  } else {
+    lblI.style.display = 'none';
+    lblStatus.style.display = 'block';
+    lblStatus.style.left = (CW / 2) + 'px';
+    lblStatus.style.top = '52px';
+    lblStatus.style.color = '#6B7280';
+    lblStatus.innerHTML = '물체가 초점 위 (p = f)<br><span style="font-weight:400">반사·굴절 광선이 평행 → 상은 무한대에</span>';
+  }
+}
+
+// ---------- info panel ----------
+function fmtOrInf(v, digits) {
+  if (!isFinite(v) || Math.abs(v) > 5000) return '±∞';
+  return v.toFixed(digits === undefined ? 1 : digits);
+}
+function updateInfo(r) {
+  const box = document.getElementById('infoBox');
+  let kindTxt, color;
+  if (r.atInfinity) { kindTxt = '상이 무한대에'; color = '#6B7280'; }
+  else if (r.virt) { kindTxt = '허상 (스크린에 못 맺음)'; color = '#2563EB'; }
+  else { kindTxt = '실상 (스크린에 맺힘)'; color = '#8B0029'; }
+
+  let html = '';
+  html += '<span class="label">초점거리</span> <span class="val">f = ' + (fSigned() >= 0 ? '+' : '−') + state.f.toFixed(1) + ' cm</span><br>';
+  html += '<span class="label">물체 거리</span> <span class="val">p = ' + state.p.toFixed(1) + ' cm</span><br>';
+  html += '<span class="label">상 거리</span> <span class="val">i = ' + fmtOrInf(r.i) + ' cm</span><br>';
+  html += '<span class="label">배율</span> <span class="val">m = −i/p = ' + fmtOrInf(r.m, 2) + '</span><br>';
+  html += '<span class="label">상의 종류</span> <span class="val" style="color:' + color + '">' + kindTxt + '</span>';
+  box.innerHTML = html;
+
+  // substituted equation
+  const fb = document.getElementById('formulaBox');
+  let eq;
+  if (r.atInfinity) {
+    eq = tex('\\tfrac{1}{' + state.p.toFixed(1) + '} + \\tfrac{1}{i} = \\tfrac{1}{' + state.p.toFixed(1) + '} \\Rightarrow i \\to \\infty');
+  } else {
+    eq = tex('\\tfrac{1}{' + state.p.toFixed(1) + '} + \\tfrac{1}{' + r.i.toFixed(1) + '} = \\tfrac{1}{' + (fSigned()).toFixed(1) + '}');
+  }
+  fb.innerHTML = '<b>현재 값 대입:</b><br>' + eq + '<br>' +
+    tex('m = -\\tfrac{i}{p} = ' + fmtOrInf(r.m, 2));
+}
+
+// ---------- static panel text per mode ----------
+function renderStatic() {
+  const mirror = isMirror();
+  const name = MODE[state.mode].name;
+  document.getElementById('canvasTitle').innerHTML =
+    name + ' — ' + (mirror ? '거울 공식 ' : '얇은 렌즈 공식 ') +
+    tex('\\tfrac{1}{p} + \\tfrac{1}{i} = \\tfrac{1}{f}') +
+    ',&nbsp; ' + tex('m = -i/p');
+
+  document.getElementById('theoremBox').innerHTML =
+    (mirror
+      ? tex('\\dfrac{1}{p} + \\dfrac{1}{i} = \\dfrac{2}{r} = \\dfrac{1}{f}')
+      : tex('\\dfrac{1}{p} + \\dfrac{1}{i} = \\dfrac{1}{f}')) +
+    '<br><span style="font-size:11px;font-weight:400">' +
+    (state.mode === 'concave' ? '오목거울: f > 0 (실초점)'
+      : state.mode === 'convex' ? '볼록거울: f < 0 (허초점)'
+      : state.mode === 'converging' ? '수렴 렌즈: f > 0 (실초점)'
+      : '발산 렌즈: f < 0 (허초점)') + '</span>';
+
+  const rb = document.getElementById('relationBox');
+  if (mirror) {
+    rb.innerHTML = '<b>부호 관습 (거울)</b><br>' +
+      '실상 i &gt; 0: 물체와 <b>같은 쪽</b> (거울 앞)<br>' +
+      '허상 i &lt; 0: 거울 <b>뒤</b><br>' +
+      'm &gt; 0 정립, m &lt; 0 도립';
+  } else {
+    rb.innerHTML = '<b>부호 관습 (렌즈)</b><br>' +
+      '실상 i &gt; 0: 물체 <b>반대쪽</b><br>' +
+      '허상 i &lt; 0: 물체와 <b>같은 쪽</b><br>' +
+      'm &gt; 0 정립, m &lt; 0 도립';
+  }
+}
+
+// ---------- resize ----------
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = Math.max(1, Math.round(CW * dpr));
+  canvas.height = Math.max(1, Math.round(CH * dpr));
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+// ---------- dragging (object arrow) ----------
+let dragging = false;
+function eventPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+  return { x: cx, y: cy };
+}
+function hitObject(px, py) {
+  const M = mapping();
+  const ob = W2P(-state.p, 0, M), ot = W2P(-state.p, state.h, M);
+  // near the arrow segment (within 18 px horizontally, spanning base..tip vertically)
+  return Math.abs(px - ob.x) < 20 && py > ot.y - 22 && py < ob.y + 14;
+}
+function onDown(e) {
+  const q = eventPos(e);
+  if (hitObject(q.x, q.y)) { dragging = true; canvas.style.cursor = 'grabbing'; e.preventDefault(); }
+}
+function onMove(e) {
+  const q = eventPos(e);
+  if (dragging) {
+    const M = mapping();
+    const w = P2W(q.x, q.y, M);
+    state.p = Math.max(P_MIN, Math.min(P_MAX, -w.x));
+    state.h = Math.max(H_MIN, Math.min(H_MAX, w.y));
+    draw();
+    e.preventDefault();
+  } else {
+    canvas.style.cursor = hitObject(q.x, q.y) ? 'grab' : 'default';
+  }
+}
+function onUp() { dragging = false; canvas.style.cursor = 'default'; }
+
+canvas.addEventListener('mousedown', onDown);
+window.addEventListener('mousemove', onMove);
+window.addEventListener('mouseup', onUp);
+canvas.addEventListener('touchstart', onDown, { passive: false });
+canvas.addEventListener('touchmove', onMove, { passive: false });
+canvas.addEventListener('touchend', onUp);
+
+// ---------- controls ----------
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.mode = btn.dataset.mode;
+    renderStatic();
+    draw();
+  });
+});
+const fSlider = document.getElementById('fSlider');
+fSlider.addEventListener('input', () => {
+  state.f = parseFloat(fSlider.value);
+  document.getElementById('fVal').textContent = state.f.toFixed(1);
+  draw();
+});
+document.getElementById('resetBtn').addEventListener('click', () => {
+  state.p = 26; state.h = 8; state.f = 15;
+  fSlider.value = 15;
+  document.getElementById('fVal').textContent = '15.0';
+  draw();
+});
+
+window.addEventListener('resize', resize);
+
+renderStatic();
+resize();
+</script>
+</body>
+</html>
