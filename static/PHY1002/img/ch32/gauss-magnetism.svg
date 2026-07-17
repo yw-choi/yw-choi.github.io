@@ -1,0 +1,42 @@
+<svg viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrG2" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- field lines (drawn first, behind magnet) -->
+  <!-- axis line up from N -->
+  <line x1="350" y1="118" x2="350" y2="48" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrG2)"/>
+  <!-- axis line into S from below -->
+  <line x1="350" y1="415" x2="350" y2="315" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrG2)"/>
+
+  <!-- right loops: from N (top) around to S (bottom) -->
+  <path d="M 358 115 C 470 70, 470 350, 362 305" fill="none" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrG2)"/>
+  <path d="M 364 108 C 570 30, 570 390, 368 312" fill="none" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrG2)"/>
+  <!-- left loops (mirror) -->
+  <path d="M 342 115 C 230 70, 230 350, 338 305" fill="none" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrG2)"/>
+  <path d="M 336 108 C 130 30, 130 390, 332 312" fill="none" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrG2)"/>
+
+  <!-- bar magnet (vertical) -->
+  <rect x="330" y="120" width="40" height="95" fill="#8B0029" stroke="#8B0029" stroke-width="2"/>
+  <rect x="330" y="215" width="40" height="95" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <text x="350" y="175" font-size="17" font-weight="bold" fill="#fff" text-anchor="middle">N</text>
+  <text x="350" y="270" font-size="17" font-weight="bold" fill="#6B7280" text-anchor="middle">S</text>
+
+  <!-- Gaussian surface I: encloses the N pole -->
+  <ellipse cx="350" cy="125" rx="125" ry="52" fill="none" stroke="#8B0029" stroke-width="2" stroke-dasharray="7 4"/>
+  <text x="505" y="90" font-size="14" font-weight="bold" fill="#8B0029">곡면 I</text>
+  <text x="505" y="110" font-size="12.5" fill="#6B7280">N극을 감싸도</text>
+  <text x="505" y="127" font-size="12.5" fill="#6B7280">자석 내부로 자기력선이</text>
+  <text x="505" y="144" font-size="12.5" fill="#6B7280">되돌아 들어온다</text>
+
+  <!-- Gaussian surface II: outside the magnet -->
+  <ellipse cx="150" cy="235" rx="52" ry="72" fill="none" stroke="#8B0029" stroke-width="2" stroke-dasharray="7 4"/>
+  <text x="40" y="330" font-size="14" font-weight="bold" fill="#8B0029">곡면 II</text>
+  <text x="40" y="350" font-size="12.5" fill="#6B7280">들어온 선이 그대로</text>
+  <text x="40" y="367" font-size="12.5" fill="#6B7280">빠져나간다</text>
+
+  <!-- bottom caption -->
+  <text x="350" y="440" font-size="15" font-weight="bold" fill="#8B0029" text-anchor="middle">어떤 닫힌 곡면을 잡아도 알짜 자기다발은 0 : 자기력선은 항상 닫힌 고리이다</text>
+</svg>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LC 진동과 직렬 RLC 교류 회로</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; touch-action: none; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 14px 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 9px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 2px; }
+.mode-btns { display: flex; gap: 6px; }
+.mode-btns button { flex: 1; padding: 8px 4px; font-size: 12.5px; font-weight: 700; border: 1.5px solid #8B0029; border-radius: 6px; background: #fff; color: #8B0029; cursor: pointer; }
+.mode-btns button.active { background: #8B0029; color: #fff; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 9px 10px; font-size: 12px; line-height: 1.85; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-weight: 700; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 9px 10px; font-size: 12.5px; text-align: center; font-weight: 700; line-height: 1.7; }
+.theorem-box .katex { color: #fff; font-size: 13px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 11.5px; line-height: 1.9; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 11.5px; }
+.btn-row { display: flex; gap: 6px; }
+.btn-row button { flex: 1; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.run-btn { background: #8B0029; color: #fff; }
+button.run-btn:hover { background: #a3003a; }
+button.reset-btn { background: #fff; color: #8B0029; border: 1.5px solid #8B0029 !important; }
+.canvas-title { position: absolute; top: 8px; left: 16px; right: 16px; pointer-events: none; font-size: 13.5px; font-weight: 700; color: #8B0029; line-height: 1.4; }
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label { position: absolute; white-space: nowrap; font-size: 12.5px; line-height: 1; pointer-events: none; transform: translate(-50%, -50%); background: rgba(255,255,255,0.85); padding: 1px 4px; border-radius: 4px; }
+.canvas-overlay .katex-label .katex { font-size: 0.95em; }
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label" id="lblA" style="color:#8B0029;"></div>
+      <div class="katex-label" id="lblB" style="color:#2563EB;"></div>
+      <div class="katex-label" id="lblC" style="color:#8B0029;"></div>
+      <div class="katex-label" id="lblD" style="color:#8B0029;"></div>
+      <div class="katex-label" id="lblE" style="color:#2563EB;"></div>
+    </div>
+    <div class="canvas-title" id="canvasTitle"></div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>LC 진동 · RLC 교류</h2>
+      <div class="subtitle">Electromagnetic Oscillations &amp; AC (Ch.31)</div>
+    </div>
+
+    <div class="mode-btns">
+      <button id="btnLC" class="active">1. LC 진동</button>
+      <button id="btnRLC">2. 직렬 RLC 교류</button>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group" id="grpL">
+      <label>인덕턴스 L = <span id="LVal">50</span> mH</label>
+      <input type="range" id="LSlider" min="10" max="100" value="50" step="5">
+    </div>
+    <div class="control-group" id="grpC">
+      <label>전기용량 C = <span id="CVal">5.0</span> μF</label>
+      <input type="range" id="CSlider" min="1" max="10" value="5" step="0.5">
+    </div>
+    <div class="control-group" id="grpW" style="display:none">
+      <label>구동 각진동수 ω<sub>d</sub> = <span id="WVal">300</span> rad/s</label>
+      <input type="range" id="WSlider" min="150" max="950" value="300" step="10">
+    </div>
+    <div class="control-group" id="grpR" style="display:none">
+      <label>저항 R = <span id="RVal">50</span> Ω</label>
+      <input type="range" id="RSlider" min="10" max="200" value="50" step="5">
+    </div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <div class="btn-row">
+      <button class="run-btn" id="runBtn">&#10074;&#10074; 정지</button>
+      <button class="reset-btn" id="resetBtn">&#8635; 리셋</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tex(expr) { return katex.renderToString(expr, { throwOnError: false, displayMode: false }); }
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW = 0, CH = 0;          // logical canvas size; set in resize(), used only inside draw()
+
+// ---------- state (all positions are computed from CW/CH inside draw: iframe-safe) ----------
+let mode = 'lc';             // 'lc' | 'rlc'
+let running = true;
+let tSim = 0;                // circuit time (s)
+let lastWall = null;
+
+// mode 1 params
+let L1 = 0.050;              // H
+let C1 = 5.0e-6;             // F
+const Q0 = 100e-6;           // C (initial charge, fixed)
+
+// mode 2 params (L, C fixed; textbook sample values)
+const L2 = 0.230;            // H
+const C2 = 15e-6;            // F
+const EM = 36.0;             // V
+let wd = 300;                // rad/s
+let R2 = 50;                 // ohm
+
+const SLOW1 = 1 / 500;       // mode 1: 1 s wall = 2 ms circuit time
+const SLOW2 = 1 / 300;       // mode 2: 1 s wall = 3.3 ms circuit time
+
+function omega1() { return 1 / Math.sqrt(L1 * C1); }
+function omega2() { return 1 / Math.sqrt(L2 * C2); }   // ≈ 538.7 rad/s
+function xl() { return wd * L2; }
+function xc() { return 1 / (wd * C2); }
+function zImp() { const d = xl() - xc(); return Math.sqrt(R2 * R2 + d * d); }
+function iAmp() { return EM / zImp(); }
+function phi() { return Math.atan2(xl() - xc(), R2); }
+
+// ---------- drawing helpers ----------
+function drawArrow(x1, y1, x2, y2, color, lw) {
+  const headLen = Math.max(9, lw * 3.4);
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2 - (headLen - 2) * Math.cos(angle), y2 - (headLen - 2) * Math.sin(angle));
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.42), y2 - headLen * Math.sin(angle - 0.42));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.42), y2 - headLen * Math.sin(angle + 0.42));
+  ctx.closePath(); ctx.fill();
+}
+
+function drawTextWithBg(s, x, y, color, font, align) {
+  ctx.font = font || '12px sans-serif';
+  ctx.textAlign = align || 'center';
+  ctx.textBaseline = 'middle';
+  const w = ctx.measureText(s).width;
+  const x0 = align === 'left' ? x : (align === 'right' ? x - w : x - w / 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillRect(x0 - 3, y - 8, w + 6, 16);
+  ctx.fillStyle = color;
+  ctx.fillText(s, x, y);
+}
+
+function place(id, x, y, show) {
+  const el = document.getElementById(id);
+  if (!show) { el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+}
+
+// cache overlay math so innerHTML is only rewritten when content changes
+const lblCache = {};
+function setLbl(id, expr) {
+  if (lblCache[id] !== expr) {
+    document.getElementById(id).innerHTML = tex(expr);
+    lblCache[id] = expr;
+  }
+}
+
+// ============================================================
+// MODE 1 : LC oscillation
+// ============================================================
+function drawLC() {
+  const w = omega1();
+  const q = Q0 * Math.cos(w * tSim);
+  const i = -w * Q0 * Math.sin(w * tSim);
+  const I = w * Q0;
+  const UE = q * q / (2 * C1);
+  const UB = 0.5 * L1 * i * i;
+  const UT = Q0 * Q0 / (2 * C1);
+
+  // ---- layout (all from CW/CH) ----
+  const topH = Math.min(CH * 0.52, 300);
+  const cirX1 = CW * 0.06, cirX2 = CW * 0.40;
+  const cirY1 = 66, cirY2 = Math.min(66 + topH * 0.62, topH + 10);
+  const cyMid = (cirY1 + cirY2) / 2;
+
+  // ---- circuit ----
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+  // top & bottom wires
+  ctx.beginPath(); ctx.moveTo(cirX1, cirY1); ctx.lineTo(cirX2, cirY1); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cirX1, cirY2); ctx.lineTo(cirX2, cirY2); ctx.stroke();
+  // left inductor
+  const nb = 4, bh = (cirY2 - cirY1 - 16) / nb;
+  ctx.beginPath(); ctx.moveTo(cirX1, cirY1); ctx.lineTo(cirX1, cirY1 + 8);
+  for (let k = 0; k < nb; k++) {
+    const ya = cirY1 + 8 + k * bh;
+    ctx.arc(cirX1, ya + bh / 2, bh / 2, -Math.PI / 2, Math.PI / 2, true);
+  }
+  ctx.lineTo(cirX1, cirY2); ctx.stroke();
+  drawTextWithBg('L', cirX1 - 22, cyMid, '#1a1a1a', 'italic 14px sans-serif');
+  // right capacitor
+  const pw = 22;
+  ctx.beginPath(); ctx.moveTo(cirX2, cirY1); ctx.lineTo(cirX2, cyMid - 7); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cirX2, cyMid + 7); ctx.lineTo(cirX2, cirY2); ctx.stroke();
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(cirX2 - pw, cyMid - 7); ctx.lineTo(cirX2 + pw, cyMid - 7); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cirX2 - pw, cyMid + 7); ctx.lineTo(cirX2 + pw, cyMid + 7); ctx.stroke();
+  drawTextWithBg('C', cirX2 + 34, cyMid, '#1a1a1a', 'italic 14px sans-serif');
+  // capacitor charge signs (count scales with |q|)
+  const nq = Math.round(4 * Math.abs(q) / Q0);
+  const topPos = q > 0;   // q>0 : top plate +
+  for (let k = 0; k < nq; k++) {
+    const sx = cirX2 - 12 + (nq === 1 ? 12 : k * 24 / Math.max(nq - 1, 1));
+    ctx.fillStyle = '#8B0029'; ctx.font = 'bold 13px sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(topPos ? '+' : '−', sx, cyMid - 16);
+    ctx.fillStyle = '#2563EB';
+    ctx.fillText(topPos ? '−' : '+', sx, cyMid + 17);
+  }
+  // current arrow on top wire; i>0 means dq/dt>0 (charging top plate +): CCW = leftward on top wire
+  if (Math.abs(i) > 0.02 * I) {
+    const mid = (cirX1 + cirX2) / 2;
+    const len = 18 + 34 * Math.abs(i) / I;
+    const dir = i > 0 ? 1 : -1;   // i>0 -> toward capacitor (right)
+    drawArrow(mid - dir * len / 2, cirY1 - 14, mid + dir * len / 2, cirY1 - 14, '#8B0029', 2.5);
+    drawTextWithBg('i', mid, cirY1 - 28, '#8B0029', 'italic 13px sans-serif');
+  }
+
+  // ---- energy bars ----
+  const barW = Math.min(46, CW * 0.055);
+  const bx1 = CW * 0.52, bx2 = bx1 + barW + Math.min(42, CW * 0.05);
+  const bBase = cirY2, bMaxH = bBase - 78;
+  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 12.5px sans-serif';
+  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('에너지 (μJ)', bx1 - 4, 58);
+  for (const [bx, U, color] of [[bx1, UE, '#2563EB'], [bx2, UB, '#8B0029']]) {
+    const h = bMaxH * U / UT;
+    ctx.fillStyle = '#F3F4F6';
+    ctx.fillRect(bx, bBase - bMaxH, barW, bMaxH);
+    ctx.strokeStyle = '#D1D5DB'; ctx.lineWidth = 1;
+    ctx.strokeRect(bx, bBase - bMaxH, barW, bMaxH);
+    ctx.fillStyle = color;
+    ctx.fillRect(bx, bBase - h, barW, h);
+    const uTxt = (U * 1e6).toFixed(0);
+    if (h > 22) {
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(uTxt, bx + barW / 2, bBase - h + 12);
+    } else {
+      drawTextWithBg(uTxt, bx + barW / 2, bBase - h - 10, color, 'bold 11px sans-serif');
+    }
+  }
+  // total energy dashed line
+  ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1.2; ctx.setLineDash([5, 4]);
+  ctx.beginPath(); ctx.moveTo(bx1 - 8, bBase - bMaxH); ctx.lineTo(bx2 + barW + 8, bBase - bMaxH); ctx.stroke();
+  ctx.setLineDash([]);
+  drawTextWithBg('U = 일정', bx2 + barW + 12, bBase - bMaxH, '#6B7280', '11.5px sans-serif', 'left');
+  // overlay KaTeX labels under bars
+  setLbl('lblB', 'U_E = q^2\\!/2C');
+  place('lblB', bx1 + barW / 2, bBase + 14, true);
+  setLbl('lblA', 'U_B = \\tfrac{1}{2}Li^2');
+  place('lblA', bx2 + barW / 2, bBase + 14, true);
+
+  // ---- q(t), i(t) graph (analytic trailing window) ----
+  const gx1 = CW * 0.08, gx2 = CW - 24;
+  const gy1 = Math.max(cirY2 + 56, CH * 0.60), gy2 = CH - 30;
+  const gyMid = (gy1 + gy2) / 2, gAmp = (gy2 - gy1) / 2 - 6;
+  const T = 2 * Math.PI / w;
+  const win = 3 * T;
+  ctx.strokeStyle = '#9CA3AF'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(gx1, gyMid); ctx.lineTo(gx2, gyMid); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(gx1, gy1 - 4); ctx.lineTo(gx1, gy2 + 4); ctx.stroke();
+  for (const [fn, color] of [[(t) => Math.cos(w * t), '#8B0029'],
+                             [(t) => -Math.sin(w * t), '#2563EB']]) {
+    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath();
+    const N = 240;
+    for (let k = 0; k <= N; k++) {
+      const t = tSim - win + win * k / N;
+      const x = gx1 + (gx2 - gx1) * k / N;
+      const y = gyMid - gAmp * (t < 0 ? (color === '#8B0029' ? 1 : 0) : fn(t));
+      if (k === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+  drawTextWithBg('q(t)/Q', gx1 + 34, gy1 - 12, '#8B0029', 'italic bold 12.5px sans-serif');
+  drawTextWithBg('i(t)/I', gx1 + 104, gy1 - 12, '#2563EB', 'italic bold 12.5px sans-serif');
+  drawTextWithBg('t', gx2 - 6, gyMid + 14, '#6B7280', 'italic 12px sans-serif');
+  // current-time marker
+  ctx.fillStyle = '#8B0029';
+  ctx.beginPath(); ctx.arc(gx2, gyMid - gAmp * Math.cos(w * tSim), 4, 0, 2 * Math.PI); ctx.fill();
+  ctx.fillStyle = '#2563EB';
+  ctx.beginPath(); ctx.arc(gx2, gyMid + gAmp * Math.sin(w * tSim), 4, 0, 2 * Math.PI); ctx.fill();
+
+  // overlay: omega formula near circuit
+  setLbl('lblC', `\\omega = \\dfrac{1}{\\sqrt{LC}} = ${(w).toFixed(0)}\\ \\text{rad/s}`);
+  place('lblC', (cirX1 + cirX2) / 2, cirY2 + 26, true);
+  place('lblD', 0, 0, false);
+  place('lblE', 0, 0, false);
+
+  // ---- info box ----
+  const box = document.getElementById('infoBox');
+  box.innerHTML =
+    '<span class="label">각진동수</span> <span class="val">ω = ' + w.toFixed(0) + ' rad/s</span><br>' +
+    '<span class="label">주기</span> <span class="val">T = ' + (2 * Math.PI / w * 1000).toFixed(2) + ' ms</span><br>' +
+    '<span class="label">전기 에너지</span> <span class="val" style="color:#2563EB">U<sub>E</sub> = ' + (UE * 1e6).toFixed(1) + ' μJ</span><br>' +
+    '<span class="label">자기 에너지</span> <span class="val" style="color:#8B0029">U<sub>B</sub> = ' + (UB * 1e6).toFixed(1) + ' μJ</span><br>' +
+    '<span class="label">총 에너지</span> <span class="val">U = ' + (UT * 1e6).toFixed(1) + ' μJ (일정)</span>';
+}
+
+// ============================================================
+// MODE 2 : driven series RLC
+// ============================================================
+function drawRLC() {
+  const w0 = omega2();
+  const XL = xl(), XC = xc(), Z = zImp(), I = iAmp(), ph = phi();
+  const th = wd * tSim;              // emf phase
+  const VR = I * R2, VL = I * XL, VC = I * XC;
+
+  // ---- phasor diagram (left) ----
+  const cx = CW * 0.26, cy = CH * 0.47;
+  const rad = Math.min(CW * 0.21, CH * 0.30);
+  ctx.strokeStyle = '#E5E7EB'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx - rad - 14, cy); ctx.lineTo(cx + rad + 14, cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx, cy - rad - 14); ctx.lineTo(cx, cy + rad + 14); ctx.stroke();
+  // auto scale: fit the largest phasor
+  const vmax = Math.max(EM, VL, VC, VR);
+  const pxV = rad / vmax;
+  const thI = th - ph;               // current phase
+  function tipAt(ang, Lpx) { return [cx + Lpx * Math.cos(ang), cy - Lpx * Math.sin(ang)]; }
+  // V_L (ahead of I by 90°) and V_C (behind I by 90°)
+  const [lxx, lyy] = tipAt(thI + Math.PI / 2, VL * pxV);
+  const [cxx, cyy] = tipAt(thI - Math.PI / 2, VC * pxV);
+  const [rxx, ryy] = tipAt(thI, VR * pxV);
+  const [exx, eyy] = tipAt(th, EM * pxV);
+  const [ixx, iyy] = tipAt(thI, rad * 0.92);
+  drawArrow(cx, cy, lxx, lyy, '#c98a9d', 2.5);
+  drawArrow(cx, cy, cxx, cyy, '#c98a9d', 2.5);
+  drawArrow(cx, cy, rxx, ryy, '#8B0029', 2.5);
+  drawArrow(cx, cy, ixx, iyy, '#2563EB', 2.2);
+  drawArrow(cx, cy, exx, eyy, '#8B0029', 3.5);
+  // phasor tip labels (KaTeX overlays, positioned every frame)
+  setLbl('lblA', '\\mathcal{E}_m');
+  const [ex2, ey2] = tipAt(th, EM * pxV + 20);
+  place('lblA', ex2, ey2, true);
+  setLbl('lblE', 'I');
+  const [ix2, iy2] = tipAt(thI, rad * 0.92 + 18);
+  place('lblE', ix2, iy2, true);
+  setLbl('lblC', 'V_L');
+  const [lx2, ly2] = tipAt(thI + Math.PI / 2, VL * pxV + 18);
+  place('lblC', lx2, ly2, true);
+  setLbl('lblD', 'V_C');
+  const [cx2p, cy2p] = tipAt(thI - Math.PI / 2, VC * pxV + 18);
+  place('lblD', cx2p, cy2p, true);
+  drawTextWithBg('VR', rxx + 12 * Math.cos(thI), ryy - 12 * Math.sin(thI) - 12, '#8B0029', 'italic 11.5px sans-serif');
+  drawTextWithBg('세로축 투영 = 순간값, 반시계 방향 ω_d 회전', cx, cy + rad + 26, '#6B7280', '11.5px sans-serif');
+  // phase status
+  const st = Math.abs(XL - XC) < 0.02 * Z ? '공명 (φ ≈ 0)' :
+             (XL > XC ? '유도성: 전류가 뒤진다 (ELI)' : '용량성: 전류가 앞선다 (ICE)');
+  drawTextWithBg(st, cx, cy - rad - 24, '#8B0029', 'bold 12.5px sans-serif');
+
+  // ---- resonance curve I(ω_d) (right top) ----
+  const gx1 = CW * 0.55, gx2 = CW - 26;
+  const gy1 = 56, gy2 = CH * 0.44;
+  const wMin = 150, wMax = 950;
+  const Imax = EM / R2;   // peak for current R
+  ctx.strokeStyle = '#9CA3AF'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(gx1, gy2); ctx.lineTo(gx2 + 6, gy2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(gx1, gy2); ctx.lineTo(gx1, gy1 - 6); ctx.stroke();
+  // dashed vertical at natural frequency
+  const xw0 = gx1 + (w0 - wMin) / (wMax - wMin) * (gx2 - gx1);
+  ctx.strokeStyle = '#6B7280'; ctx.setLineDash([4, 3]);
+  ctx.beginPath(); ctx.moveTo(xw0, gy2); ctx.lineTo(xw0, gy1); ctx.stroke();
+  ctx.setLineDash([]);
+  drawTextWithBg('ω = 1/√(LC)', xw0, gy1 - 8, '#6B7280', '11.5px sans-serif');
+  ctx.strokeStyle = '#8B0029'; ctx.lineWidth = 2.2; ctx.beginPath();
+  const NN = 200;
+  for (let k = 0; k <= NN; k++) {
+    const wk = wMin + (wMax - wMin) * k / NN;
+    const Ik = EM / Math.sqrt(R2 * R2 + Math.pow(wk * L2 - 1 / (wk * C2), 2));
+    const x = gx1 + (gx2 - gx1) * k / NN;
+    const y = gy2 - (gy2 - gy1 - 14) * Ik / Imax;
+    if (k === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  // marker at current wd
+  const xNow = gx1 + (wd - wMin) / (wMax - wMin) * (gx2 - gx1);
+  const yNow = gy2 - (gy2 - gy1 - 14) * I / Imax;
+  ctx.fillStyle = '#2563EB';
+  ctx.beginPath(); ctx.arc(xNow, yNow, 5, 0, 2 * Math.PI); ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+  drawTextWithBg('전류 진폭 I(ω_d)', gx1 + 58, gy1 + 2, '#8B0029', 'bold 12px sans-serif');
+  drawTextWithBg('ω_d', gx2 - 4, gy2 + 14, '#6B7280', 'italic 12px sans-serif');
+
+  // ---- waveforms e(t), i(t) (right bottom) ----
+  const hy1 = CH * 0.56, hy2 = CH - 34;
+  const hyMid = (hy1 + hy2) / 2, hAmp = (hy2 - hy1) / 2 - 8;
+  const Td = 2 * Math.PI / wd, win = 2.5 * Td;
+  ctx.strokeStyle = '#9CA3AF'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(gx1, hyMid); ctx.lineTo(gx2 + 6, hyMid); ctx.stroke();
+  for (const [fn, color] of [[(t) => Math.sin(wd * t), '#8B0029'],
+                             [(t) => Math.sin(wd * t - ph), '#2563EB']]) {
+    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath();
+    const N2 = 200;
+    for (let k = 0; k <= N2; k++) {
+      const t = tSim - win + win * k / N2;
+      const x = gx1 + (gx2 - gx1) * k / N2;
+      const y = hyMid - hAmp * (t < 0 ? 0 : fn(t));
+      if (k === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+  drawTextWithBg('ℰ(t)/ℰ_m', gx1 + 36, hy1 - 2, '#8B0029', 'italic bold 12px sans-serif');
+  drawTextWithBg('i(t)/I', gx1 + 108, hy1 - 2, '#2563EB', 'italic bold 12px sans-serif');
+  drawTextWithBg('t', gx2 - 4, hyMid + 14, '#6B7280', 'italic 12px sans-serif');
+  place('lblB', 0, 0, false);
+
+  // ---- info box ----
+  const box = document.getElementById('infoBox');
+  const phDeg = ph * 180 / Math.PI;
+  box.innerHTML =
+    '<span class="label">리액턴스</span> <span class="val">X<sub>L</sub> = ' + XL.toFixed(1) +
+    ' Ω, X<sub>C</sub> = ' + XC.toFixed(1) + ' Ω</span><br>' +
+    '<span class="label">임피던스</span> <span class="val">Z = ' + Z.toFixed(1) + ' Ω</span><br>' +
+    '<span class="label">전류 진폭</span> <span class="val" style="color:#2563EB">I = ℰ<sub>m</sub>/Z = ' + I.toFixed(3) + ' A</span><br>' +
+    '<span class="label">위상 상수</span> <span class="val">φ = ' + phDeg.toFixed(1) + '°</span><br>' +
+    '<span class="label">전압 진폭</span> <span class="val">V<sub>R</sub>=' + VR.toFixed(0) +
+    ', V<sub>L</sub>=' + VL.toFixed(0) + ', V<sub>C</sub>=' + VC.toFixed(0) + ' V</span><br>' +
+    '<span class="label">공명 진동수</span> <span class="val">ω = ' + w0.toFixed(0) + ' rad/s</span>';
+}
+
+// ============================================================
+function draw() {
+  if (!CW || !CH) return;
+  ctx.clearRect(0, 0, CW, CH);
+  if (mode === 'lc') drawLC(); else drawRLC();
+}
+
+function frame(wall) {
+  if (lastWall === null) lastWall = wall;
+  let dt = (wall - lastWall) / 1000;
+  lastWall = wall;
+  if (dt > 0.1) dt = 0.1;
+  if (running) tSim += dt * (mode === 'lc' ? SLOW1 : SLOW2);
+  draw();
+  requestAnimationFrame(frame);
+}
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  CW = rect.width; CH = rect.height;
+  canvas.width = CW * dpr; canvas.height = CH * dpr;
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  draw();
+}
+
+// ---------- static panel text ----------
+function renderStatic() {
+  const t = document.getElementById('theoremBox');
+  const f = document.getElementById('formulaBox');
+  const ttl = document.getElementById('canvasTitle');
+  if (mode === 'lc') {
+    ttl.innerHTML = 'LC 진동: 전기 에너지와 자기 에너지가 주기적으로 교환된다 (총 에너지 일정)';
+    t.innerHTML = 'LC 진동<br>' + tex('q = Q\\cos(\\omega t), \\quad \\omega = \\dfrac{1}{\\sqrt{LC}}');
+    f.innerHTML = '<b>빨강 곡선:</b> 전하 ' + tex('q(t)') + ', <b>파랑 곡선:</b> 전류 ' + tex('i(t)') + '<br>' +
+      tex('U_E = \\dfrac{q^2}{2C}') + ' (축전기), ' + tex('U_B = \\dfrac{Li^2}{2}') + ' (인덕터)<br>' +
+      '초기 전하 ' + tex('Q = 100\\ \\mu\\text{C}') + ', 저항 없음 (감쇠 없음)';
+  } else {
+    ttl.innerHTML = '직렬 RLC 교류: 구동 진동수 ω<sub>d</sub>를 바꿔 공명(ω<sub>d</sub> = ω)을 찾아보세요';
+    t.innerHTML = '직렬 RLC 회로<br>' +
+      tex('I = \\dfrac{\\mathcal{E}_m}{\\sqrt{R^2 + (X_L - X_C)^2}}') + '<br>' +
+      '<span style="font-size:11px;font-weight:400">공명: ' + tex('\\omega_d = \\omega = 1/\\sqrt{LC}') + '</span>';
+    f.innerHTML = '<b>고정:</b> ' + tex('L = 230\\ \\text{mH},\\ C = 15\\ \\mu\\text{F}') + '<br>' +
+      tex('\\mathcal{E}_m = 36\\ \\text{V}') + ', ' + tex('X_L = \\omega_d L,\\ X_C = 1/\\omega_d C') + '<br>' +
+      '<b>ELI the ICE man:</b> 유도성이면 전류가 뒤지고(φ&gt;0), 용량성이면 앞선다(φ&lt;0)';
+  }
+}
+
+// ---------- UI events ----------
+const btnLC = document.getElementById('btnLC');
+const btnRLC = document.getElementById('btnRLC');
+function setMode(m) {
+  mode = m;
+  tSim = 0;
+  btnLC.classList.toggle('active', m === 'lc');
+  btnRLC.classList.toggle('active', m === 'rlc');
+  document.getElementById('grpL').style.display = m === 'lc' ? '' : 'none';
+  document.getElementById('grpC').style.display = m === 'lc' ? '' : 'none';
+  document.getElementById('grpW').style.display = m === 'rlc' ? '' : 'none';
+  document.getElementById('grpR').style.display = m === 'rlc' ? '' : 'none';
+  renderStatic();
+  draw();
+}
+btnLC.addEventListener('click', () => setMode('lc'));
+btnRLC.addEventListener('click', () => setMode('rlc'));
+
+document.getElementById('LSlider').addEventListener('input', (e) => {
+  L1 = parseFloat(e.target.value) * 1e-3;
+  document.getElementById('LVal').textContent = e.target.value;
+  draw();
+});
+document.getElementById('CSlider').addEventListener('input', (e) => {
+  C1 = parseFloat(e.target.value) * 1e-6;
+  document.getElementById('CVal').textContent = parseFloat(e.target.value).toFixed(1);
+  draw();
+});
+document.getElementById('WSlider').addEventListener('input', (e) => {
+  wd = parseFloat(e.target.value);
+  document.getElementById('WVal').textContent = e.target.value;
+  draw();
+});
+document.getElementById('RSlider').addEventListener('input', (e) => {
+  R2 = parseFloat(e.target.value);
+  document.getElementById('RVal').textContent = e.target.value;
+  draw();
+});
+
+const runBtn = document.getElementById('runBtn');
+runBtn.addEventListener('click', () => {
+  running = !running;
+  runBtn.innerHTML = running ? '&#10074;&#10074; 정지' : '&#9654; 시작';
+});
+document.getElementById('resetBtn').addEventListener('click', () => {
+  tSim = 0;
+  if (mode === 'lc') {
+    document.getElementById('LSlider').value = 50; L1 = 0.050;
+    document.getElementById('CSlider').value = 5; C1 = 5e-6;
+    document.getElementById('LVal').textContent = '50';
+    document.getElementById('CVal').textContent = '5.0';
+  } else {
+    document.getElementById('WSlider').value = 300; wd = 300;
+    document.getElementById('RSlider').value = 50; R2 = 50;
+    document.getElementById('WVal').textContent = '300';
+    document.getElementById('RVal').textContent = '50';
+  }
+  draw();
+});
+
+window.addEventListener('resize', resize);
+renderStatic();
+resize();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

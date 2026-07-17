@@ -1,0 +1,66 @@
+<svg viewBox="0 0 800 400" width="800" height="400" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="qR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8B0029"/>
+    </marker>
+    <marker id="qB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/>
+    </marker>
+    <marker id="qG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- ===== left: two-sheet arrangement ===== -->
+  <line x1="30" y1="210" x2="112" y2="210" stroke="#8B0029" stroke-width="2"/>
+  <circle cx="160" cy="210" r="52" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <g stroke="#6B7280" stroke-width="1">
+    <line x1="124" y1="172.5" x2="124" y2="247.5"/>
+    <line x1="142" y1="161.2" x2="142" y2="258.8"/>
+    <line x1="160" y1="158" x2="160" y2="262"/>
+    <line x1="178" y1="161.2" x2="178" y2="258.8"/>
+    <line x1="196" y1="172.5" x2="196" y2="247.5"/>
+  </g>
+  <line x1="216" y1="210" x2="244" y2="210" stroke="#8B0029" stroke-width="2"/>
+  <circle cx="292" cy="210" r="52" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <g stroke="#6B7280" stroke-width="1" transform="rotate(30 292 210)">
+    <line x1="256" y1="172.5" x2="256" y2="247.5"/>
+    <line x1="274" y1="161.2" x2="274" y2="258.8"/>
+    <line x1="292" y1="158" x2="292" y2="262"/>
+    <line x1="310" y1="161.2" x2="310" y2="258.8"/>
+    <line x1="328" y1="172.5" x2="328" y2="247.5"/>
+  </g>
+  <line x1="348" y1="210" x2="396" y2="210" stroke="#8B0029" stroke-width="2" marker-end="url(#qR)"/>
+
+  <text x="160" y="140" text-anchor="middle" font-size="13" fill="#1a1a1a">편광판 P₁ (세로)</text>
+  <text x="292" y="140" text-anchor="middle" font-size="13" fill="#1a1a1a">분석기 P₂ (θ 기울임)</text>
+  <text x="68" y="243" text-anchor="middle" font-size="12.5" font-style="italic" fill="#6B7280">I₀ (비편광)</text>
+  <text x="226" y="288" text-anchor="middle" font-size="12.5" font-style="italic" fill="#6B7280">I₁ = ½I₀</text>
+  <text x="352" y="243" font-size="13" font-style="italic" font-weight="bold" fill="#8B0029">I₂ = I₁cos²θ</text>
+
+  <!-- ===== right: head-on decomposition ===== -->
+  <circle cx="600" cy="210" r="105" fill="#F3F4F6" opacity="0.5" stroke="#6B7280" stroke-width="1"/>
+  <line x1="600" y1="92" x2="600" y2="328" stroke="#6B7280" stroke-width="1" stroke-dasharray="5 4"/>
+  <text x="600" y="80" text-anchor="middle" font-size="12" fill="#6B7280">P₂의 편광 방향</text>
+
+  <!-- theta arc -->
+  <path d="M600,170 A40 40 0 0 1 620,175.4" fill="none" stroke="#6B7280" stroke-width="1"/>
+  <text x="615" y="160" font-size="14" font-style="italic" fill="#6B7280">θ</text>
+
+  <!-- E vector and components -->
+  <line x1="647.5" y1="127.7" x2="600" y2="127.7" stroke="#6B7280" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="647.5" y1="127.7" x2="647.5" y2="210" stroke="#6B7280" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="600" y1="210" x2="647.5" y2="127.7" stroke="#8B0029" stroke-width="2.5" marker-end="url(#qR)"/>
+  <line x1="600" y1="210" x2="600" y2="127.7" stroke="#2563EB" stroke-width="2.5" marker-end="url(#qB)"/>
+  <line x1="600" y1="210" x2="647.5" y2="210" stroke="#6B7280" stroke-width="2.5" marker-end="url(#qG)"/>
+
+  <text x="662" y="122" font-size="15" font-style="italic" font-weight="bold" fill="#8B0029">E</text>
+  <text x="588" y="120" text-anchor="end" font-size="13" font-style="italic" fill="#2563EB">E cos θ (통과)</text>
+  <text x="640" y="232" font-size="13" font-style="italic" fill="#6B7280">E sin θ (흡수)</text>
+
+  <text x="600" y="356" text-anchor="middle" font-size="14.5" font-style="italic" font-weight="bold" fill="#8B0029">I = I₀ cos²θ (말뤼스 법칙)</text>
+  <text x="600" y="378" text-anchor="middle" font-size="11.5" fill="#6B7280">여기서 I₀는 편광판에 도달하는 "이미 편광된" 빛의 세기</text>
+
+  <text x="212" y="356" text-anchor="middle" font-size="12.5" fill="#6B7280">비편광 빛은 절반 규칙(P₁),</text>
+  <text x="212" y="376" text-anchor="middle" font-size="12.5" fill="#6B7280">편광된 빛은 cos²θ 규칙(P₂)을 적용한다</text>
+</svg>

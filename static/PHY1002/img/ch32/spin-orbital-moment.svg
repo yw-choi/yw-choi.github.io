@@ -1,0 +1,60 @@
+<svg viewBox="0 0 760 440" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrR8" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#8B0029"/>
+    </marker>
+    <marker id="arrB8" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#2563EB"/>
+    </marker>
+  </defs>
+
+  <!-- ============ Panel (a): spin ============ -->
+  <text x="190" y="40" font-size="15" font-weight="bold" fill="#1a1a1a" text-anchor="middle">(a) 스핀 자기 모멘트 (고유한 성질)</text>
+
+  <!-- spin S arrow up -->
+  <line x1="190" y1="200" x2="190" y2="110" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB8)"/>
+  <text x="208" y="130" font-size="15" font-style="italic" font-weight="bold" fill="#2563EB">S</text>
+  <text x="253" y="130" font-size="12.5" fill="#6B7280">(스핀 각운동량)</text>
+
+  <!-- electron -->
+  <circle cx="190" cy="230" r="27" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <text x="190" y="236" font-size="14" fill="#1a1a1a" text-anchor="middle">−e</text>
+  <text x="243" y="236" font-size="12.5" fill="#6B7280">전자</text>
+
+  <!-- mu_s arrow down -->
+  <line x1="190" y1="262" x2="190" y2="352" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR8)"/>
+  <text x="206" y="340" font-size="15" font-style="italic" font-weight="bold" fill="#8B0029">μ<tspan font-size="11" dy="3">s</tspan></text>
+  <text x="255" y="340" font-size="12.5" fill="#6B7280">(스핀 자기 모멘트)</text>
+
+  <text x="190" y="398" font-size="14.5" fill="#1a1a1a" text-anchor="middle"><tspan font-style="italic" font-weight="bold">μ</tspan><tspan font-size="11" dy="3" font-style="italic">s</tspan><tspan dy="-3"> = −(e/m) </tspan><tspan font-style="italic" font-weight="bold">S</tspan></text>
+
+  <!-- ============ Panel (b): orbital ============ -->
+  <text x="550" y="40" font-size="15" font-weight="bold" fill="#1a1a1a" text-anchor="middle">(b) 궤도 자기 모멘트 (원자 안에서)</text>
+
+  <!-- L_orb arrow up -->
+  <line x1="550" y1="240" x2="550" y2="115" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB8)"/>
+  <text x="566" y="138" font-size="15" font-style="italic" font-weight="bold" fill="#2563EB">L<tspan font-size="11" dy="3">orb</tspan></text>
+
+  <!-- orbit -->
+  <ellipse cx="550" cy="250" rx="130" ry="45" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+  <circle cx="550" cy="250" r="4" fill="#6B7280"/>
+
+  <!-- electron on left edge, moving toward viewer (counterclockwise seen from above) -->
+  <circle cx="420" cy="250" r="9" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <text x="404" y="232" font-size="12.5" fill="#1a1a1a" text-anchor="middle">−e</text>
+  <line x1="417" y1="266" x2="417" y2="320" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB8)"/>
+  <text x="398" y="302" font-size="14" font-style="italic" fill="#2563EB">v</text>
+
+  <!-- conventional current: arc along the front-right edge (opposite circulation) -->
+  <path d="M 672 265 Q 640 287 584 293" fill="none" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR8)"/>
+  <text x="662" y="315" font-size="13.5" fill="#8B0029" text-anchor="middle"><tspan font-style="italic">i</tspan> (전자와 반대)</text>
+
+  <!-- mu_orb arrow down -->
+  <line x1="550" y1="262" x2="550" y2="370" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR8)"/>
+  <text x="566" y="362" font-size="15" font-style="italic" font-weight="bold" fill="#8B0029">μ<tspan font-size="11" dy="3">orb</tspan></text>
+
+  <text x="550" y="398" font-size="14.5" fill="#1a1a1a" text-anchor="middle"><tspan font-style="italic" font-weight="bold">μ</tspan><tspan font-size="11" dy="3" font-style="italic">orb</tspan><tspan dy="-3"> = −(e/2m) </tspan><tspan font-style="italic" font-weight="bold">L</tspan><tspan font-size="11" dy="3" font-style="italic">orb</tspan></text>
+
+  <!-- bottom note -->
+  <text x="380" y="430" font-size="13.5" fill="#6B7280" text-anchor="middle">전자의 전하가 음(−)이므로 자기 모멘트는 각운동량과 항상 반대 방향이다</text>
+</svg>

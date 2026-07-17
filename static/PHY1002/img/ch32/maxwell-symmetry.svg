@@ -1,0 +1,51 @@
+<svg viewBox="0 0 780 470" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrR6" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#8B0029"/>
+    </marker>
+    <marker id="arrB6" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#2563EB"/>
+    </marker>
+  </defs>
+
+  <!-- column headers -->
+  <text x="205" y="42" font-size="15" font-weight="bold" fill="#6B7280" text-anchor="middle">닫힌 곡면 적분 (다발, flux)</text>
+  <text x="575" y="42" font-size="15" font-weight="bold" fill="#6B7280" text-anchor="middle">닫힌 고리 적분 (순환, circulation)</text>
+
+  <!-- Box 1: Gauss E -->
+  <rect x="40" y="60" width="330" height="125" rx="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <text x="205" y="90" font-size="15" font-weight="bold" fill="#2563EB" text-anchor="middle">가우스 법칙 (전기)</text>
+  <text x="205" y="126" font-size="17" fill="#1a1a1a" text-anchor="middle">∮ <tspan font-style="italic" font-weight="bold">E</tspan> · d<tspan font-style="italic" font-weight="bold">A</tspan> = q<tspan font-size="12" dy="3">enc</tspan><tspan dy="-3">/ε₀</tspan></text>
+  <text x="205" y="162" font-size="13" fill="#6B7280" text-anchor="middle">전하가 전기장의 원천이다</text>
+
+  <!-- Box 2: Faraday -->
+  <rect x="410" y="60" width="330" height="125" rx="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <text x="575" y="90" font-size="15" font-weight="bold" fill="#2563EB" text-anchor="middle">패러데이 법칙</text>
+  <text x="575" y="126" font-size="17" fill="#1a1a1a" text-anchor="middle">∮ <tspan font-style="italic" font-weight="bold">E</tspan> · d<tspan font-style="italic" font-weight="bold">s</tspan> = −dΦ<tspan font-size="12" dy="3" font-style="italic">B</tspan><tspan dy="-3">/dt</tspan></text>
+  <text x="575" y="162" font-size="13" fill="#6B7280" text-anchor="middle">변하는 자기다발 → 전기장 유도</text>
+
+  <!-- Box 3: Gauss B -->
+  <rect x="40" y="255" width="330" height="125" rx="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <text x="205" y="285" font-size="15" font-weight="bold" fill="#8B0029" text-anchor="middle">가우스 법칙 (자기)</text>
+  <text x="205" y="321" font-size="17" fill="#1a1a1a" text-anchor="middle">∮ <tspan font-style="italic" font-weight="bold">B</tspan> · d<tspan font-style="italic" font-weight="bold">A</tspan> = 0</text>
+  <text x="205" y="357" font-size="13" fill="#6B7280" text-anchor="middle">자기 단극자(자하)는 존재하지 않는다</text>
+
+  <!-- Box 4: Ampere-Maxwell -->
+  <rect x="410" y="255" width="330" height="125" rx="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <text x="575" y="285" font-size="15" font-weight="bold" fill="#8B0029" text-anchor="middle">암페어-맥스웰 법칙</text>
+  <text x="575" y="321" font-size="17" fill="#1a1a1a" text-anchor="middle">∮ <tspan font-style="italic" font-weight="bold">B</tspan> · d<tspan font-style="italic" font-weight="bold">s</tspan> = μ₀ε₀ dΦ<tspan font-size="12" dy="3" font-style="italic">E</tspan><tspan dy="-3">/dt + μ₀i</tspan><tspan font-size="12" dy="3">enc</tspan></text>
+  <text x="575" y="357" font-size="13" fill="#6B7280" text-anchor="middle">변하는 전기다발과 전류 → 자기장 유도</text>
+
+  <!-- coupling arrows between Faraday and Ampere-Maxwell -->
+  <line x1="548" y1="192" x2="548" y2="248" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB6)"/>
+  <line x1="602" y1="248" x2="602" y2="192" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR6)"/>
+  <text x="668" y="224" font-size="13" fill="#1a1a1a" text-anchor="middle">서로가 서로를 유도</text>
+
+  <!-- row labels -->
+  <text x="205" y="222" font-size="13.5" fill="#6B7280" text-anchor="middle">B의 원천 항에는 "자하"가 없다 —</text>
+  <text x="205" y="242" font-size="13.5" fill="#6B7280" text-anchor="middle">전기·자기의 비대칭은 단극자의 부재 탓</text>
+
+  <!-- bottom note -->
+  <text x="390" y="425" font-size="15" font-weight="bold" fill="#8B0029" text-anchor="middle">변하는 E와 변하는 B가 꼬리를 물고 서로를 만든다 → 전자기파 (33장)</text>
+  <text x="390" y="452" font-size="13" fill="#6B7280" text-anchor="middle">네 방정식이 전자기학 전체(21~32장)를 요약한다</text>
+</svg>

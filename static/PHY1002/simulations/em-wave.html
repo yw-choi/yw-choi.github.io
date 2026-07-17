@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>진행하는 전자기파</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
+.container { display: flex; height: 100vh; }
+.canvas-area { flex: 1; position: relative; background: #fafafa; touch-action: none; }
+canvas { display: block; width: 100%; height: 100%; }
+.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
+.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
+.control-group { display: flex; flex-direction: column; gap: 3px; }
+.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
+.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
+.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
+.info-box .label { color: #8B0029; font-weight: 700; }
+.info-box .val { font-weight: 700; }
+.info-box .katex { font-size: 12px; }
+.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
+.theorem-box .katex { color: #fff; font-size: 13px; }
+.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
+.formula-box b { color: #8B0029; }
+.formula-box .katex { font-size: 12px; }
+.relation-box { background: #eef3fe; border: 1px solid #c3d4f5; border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 1.8; color: #2b4a8b; }
+.relation-box .katex { font-size: 12px; }
+.relation-box b { color: #1a3a7a; }
+button.main-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
+button.main-btn:hover { background: #a3003a; }
+.canvas-title { position: absolute; top: 8px; left: 16px; right: 16px; pointer-events: none; font-size: 13.5px; font-weight: 700; color: #8B0029; line-height: 1.4; }
+.canvas-title .katex { font-size: 13px; }
+.hint { position: absolute; bottom: 8px; left: 16px; pointer-events: none; font-size: 11px; color: #6B7280; }
+.canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.canvas-overlay .katex-label {
+  position: absolute; white-space: nowrap; font-size: 13px; line-height: 1;
+  pointer-events: none; transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.85); padding: 1px 5px; border-radius: 4px;
+}
+.canvas-overlay .katex-label .katex { font-size: 0.95em; }
+.toggle-row { display: flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 600; color: #444; }
+.toggle-row input { accent-color: #8B0029; width: 15px; height: 15px; }
+.malus-bar-wrap { margin-top: 5px; }
+.malus-bar-title { font-size: 11px; color: #555; margin-bottom: 3px; }
+.malus-bar-bg { background: #e5e7eb; border-radius: 5px; height: 16px; position: relative; overflow: hidden; }
+.malus-bar-fill { background: #8B0029; height: 100%; border-radius: 5px 0 0 5px; width: 100%; transition: width 0.08s linear; }
+.malus-bar-txt { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 700; color: #fff; mix-blend-mode: difference; }
+.pol-controls { display: none; flex-direction: column; gap: 8px; }
+.pol-controls.on { display: flex; }
+@media (max-width: 700px) {
+  .container { flex-direction: column; }
+  .canvas-area { height: 55vh; }
+  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="canvas-area">
+    <canvas id="canvas"></canvas>
+    <div class="canvas-overlay" id="overlay">
+      <div class="katex-label" id="lblE" style="color:#8B0029;font-weight:bold;"></div>
+      <div class="katex-label" id="lblB" style="color:#2563EB;font-weight:bold;"></div>
+      <div class="katex-label" id="lblLam" style="color:#6B7280;"></div>
+      <div class="katex-label" id="lblPol" style="color:#374151;font-size:11px;"></div>
+    </div>
+    <div class="canvas-title" id="canvasTitle"></div>
+    <div class="hint" id="hint">빨강 = 전기장 E (y축) · 파랑 = 자기장 B (z축) · 파동은 +x 방향으로 진행</div>
+  </div>
+  <div class="controls">
+    <div>
+      <h2>진행하는 전자기파</h2>
+      <div class="subtitle">Electromagnetic Wave (Ch.33)</div>
+    </div>
+
+    <div class="theorem-box" id="theoremBox"></div>
+
+    <div class="control-group">
+      <label>파장 λ = <span id="lamVal">3.0</span> m</label>
+      <input type="range" id="lamSlider" min="1.5" max="6" value="3" step="0.1">
+    </div>
+
+    <div class="control-group">
+      <label>진동수 f = <span id="freqVal">100</span> MHz</label>
+      <input type="range" id="freqSlider" min="50" max="200" value="100" step="1">
+    </div>
+
+    <div class="info-box" id="infoBox"></div>
+
+    <div class="toggle-row">
+      <input type="checkbox" id="polToggle">
+      <label for="polToggle">편광판 모드 (말뤼스 법칙)</label>
+    </div>
+
+    <div class="pol-controls" id="polControls">
+      <div class="control-group">
+        <label>편광판 각도 θ = <span id="thetaVal">30</span>°</label>
+        <input type="range" id="thetaSlider" min="0" max="90" value="30" step="1">
+      </div>
+      <div class="malus-bar-wrap">
+        <div class="malus-bar-title" id="malusTitle"></div>
+        <div class="malus-bar-bg">
+          <div class="malus-bar-fill" id="malusFill"></div>
+          <div class="malus-bar-txt" id="malusTxt"></div>
+        </div>
+      </div>
+      <div class="relation-box" id="malusBox"></div>
+    </div>
+
+    <div class="formula-box" id="formulaBox"></div>
+
+    <button class="main-btn" id="playBtn">&#10074;&#10074; 일시정지</button>
+  </div>
+</div>
+
+<script>
+function tex(expr) {
+  if (typeof katex === 'undefined') return expr;
+  return katex.renderToString(expr, { throwOnError: false, displayMode: false });
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dpr = window.devicePixelRatio || 1;
+let CW = 0, CH = 0;          // logical canvas size (CSS px); 0 until first valid layout
+
+// ---------- physics state (logical, layout-independent) ----------
+const C_LIGHT = 3.00e8;       // m/s (교육용 반올림 값, 실제 2.998×10⁸)
+let lambda = 3.0;             // m
+let freq = C_LIGHT / lambda;  // Hz (real)
+let running = true;
+let phase0 = 0;               // accumulated phase offset (rad), advanced each frame
+let lastTs = null;
+
+let polMode = false;
+let thetaDeg = 30;
+
+// visual constants (fractions of canvas -> resize-proportional)
+const X_SPAN_M = 9.0;         // meters of wave shown across the axis length
+const VIS_PERIOD_AT_100MHZ = 4.0;  // seconds of animation per oscillation at f=100MHz
+
+// ---------- DOM ----------
+const lamSlider = document.getElementById('lamSlider');
+const freqSlider = document.getElementById('freqSlider');
+const thetaSlider = document.getElementById('thetaSlider');
+const polToggle = document.getElementById('polToggle');
+const playBtn = document.getElementById('playBtn');
+
+// ---------- projection (computed from CW/CH every frame: iframe/resize safe) ----------
+function proj() {
+  const ox = CW * 0.13, oy = CH * 0.52;
+  const axLen = CW * 0.78;               // px length of x axis
+  const pxPerM = axLen / X_SPAN_M;
+  const amp = Math.min(CH * 0.21, axLen * 0.16);  // E amplitude in px
+  const zx = -0.38, zy = 0.30;           // unit z direction on screen (toward lower-left)
+  const zScale = amp * 0.95;
+  return { ox, oy, axLen, pxPerM, amp, zx, zy, zScale };
+}
+function toScreen(P, xm, ey, bz) {
+  // xm in meters along axis; ey in [-1,1] (y, up); bz in [-1,1] (z)
+  const sx = P.ox + xm * P.pxPerM + bz * P.zScale * P.zx;
+  const sy = P.oy - ey * P.amp - bz * P.zScale * P.zy;
+  return [sx, sy];
+}
+
+function drawArrow(x1, y1, x2, y2, color, lw, headLen) {
+  headLen = headLen || 8;
+  const ang = Math.atan2(y2 - y1, x2 - x1);
+  const L = Math.hypot(x2 - x1, y2 - y1);
+  if (L < 2) return;
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2 - (headLen - 2) * Math.cos(ang), y2 - (headLen - 2) * Math.sin(ang));
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(ang - 0.42), y2 - headLen * Math.sin(ang - 0.42));
+  ctx.lineTo(x2 - headLen * Math.cos(ang + 0.42), y2 - headLen * Math.sin(ang + 0.42));
+  ctx.closePath(); ctx.fill();
+}
+
+function drawTextWithBg(txt, x, y, color, font) {
+  ctx.font = font || 'italic bold 14px sans-serif';
+  const w = ctx.measureText(txt).width;
+  ctx.fillStyle = 'rgba(250,250,250,0.85)';
+  ctx.fillRect(x - w / 2 - 3, y - 9, w + 6, 18);
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(txt, x, y);
+}
+
+// ---------- resize ----------
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  if (rect.width < 10 || rect.height < 10) { CW = 0; CH = 0; return; }
+  CW = rect.width; CH = rect.height;
+  canvas.width = Math.round(CW * dpr); canvas.height = Math.round(CH * dpr);
+  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', () => { resize(); });
+
+// ---------- main draw ----------
+function draw() {
+  if (CW < 10 || CH < 10) { resize(); if (CW < 10) return; }  // lazy init in iframe
+  ctx.clearRect(0, 0, CW, CH);
+  const P = proj();
+  const k = 2 * Math.PI / lambda;              // rad/m (drawing space)
+  const theta = thetaDeg * Math.PI / 180;
+  const cosT = Math.cos(theta), sinT = Math.sin(theta);
+  const xPol = X_SPAN_M * 0.55;                // polarizer position (m)
+
+  // --- axes ---
+  const [x0, y0] = toScreen(P, 0, 0, 0);
+  const [x1, y1] = toScreen(P, X_SPAN_M + 0.55, 0, 0);
+  drawArrow(x0, y0, x1, y1, '#6B7280', 1.4, 7);                 // x
+  drawArrow(x0, y0, x0, y0 - P.amp * 1.45, '#6B7280', 1.4, 7);  // y
+  const zx2 = x0 + 1.5 * P.zScale * P.zx, zy2 = y0 - 1.5 * P.zScale * P.zy;
+  drawArrow(x0, y0, zx2, zy2, '#6B7280', 1.4, 7);               // z
+  ctx.fillStyle = '#6B7280'; ctx.font = 'italic 13px sans-serif';
+  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('x', x1 + 6, y1);
+  ctx.fillText('y', x0 - 14, y0 - P.amp * 1.45);
+  ctx.fillText('z', zx2 - 12, zy2 + 8);
+
+  // field value at position x (m): sin(kx - phase0)
+  const S = (xm) => Math.sin(k * xm - phase0);
+
+  const NARR = 46;                    // number of field arrows
+  const dxm = X_SPAN_M / NARR;
+
+  // --- B arrows + envelope (draw first: "behind" E) ---
+  ctx.globalAlpha = 0.95;
+  let bPeak = null;                  // strongest B arrow tip for label
+  const bEnv = [];
+  for (let i = 0; i <= NARR; i++) {
+    const xm = i * dxm;
+    if (polMode && xm > xPol) continue;   // after polarizer: B not drawn (see panel note)
+    const s = S(xm);
+    const [bx, by] = toScreen(P, xm, 0, s);
+    bEnv.push([bx, by]);
+    if (i % 2 === 0) {
+      const [ax, ay] = toScreen(P, xm, 0, 0);
+      drawArrow(ax, ay, bx, by, '#2563EB', 1.8, 6);
+      if (s > 0.985) bPeak = [bx, by];
+      else if (!bPeak && s > 0.9) bPeak = [bx, by];
+    }
+  }
+  ctx.strokeStyle = 'rgba(37,99,235,0.55)'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  bEnv.forEach(([px, py], j) => j === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py));
+  ctx.stroke();
+
+  // --- E arrows + envelope ---
+  let ePeak = null;
+  const eEnv = [];
+  for (let i = 0; i <= NARR; i++) {
+    const xm = i * dxm;
+    const s = S(xm);
+    let tip;
+    if (polMode && xm > xPol) {
+      const a = s * cosT;                       // transmitted amplitude factor
+      tip = toScreen(P, xm, a * cosT, a * sinT); // E along transmission axis (θ from y)
+    } else {
+      tip = toScreen(P, xm, s, 0);
+    }
+    eEnv.push(tip);
+    if (i % 2 === 0) {
+      const [ax, ay] = toScreen(P, xm, 0, 0);
+      drawArrow(ax, ay, tip[0], tip[1], '#8B0029', 2.2, 7);
+      if (!polMode || xm <= xPol) { if (s > 0.985) ePeak = tip; }
+    }
+  }
+  ctx.strokeStyle = 'rgba(139,0,41,0.55)'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  eEnv.forEach(([px, py], j) => j === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py));
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // --- polarizer disk ---
+  let polTop = null;
+  if (polMode) {
+    const [pcx, pcy] = toScreen(P, xPol, 0, 0);
+    const ry = P.amp * 1.28;
+    const rx = ry * 0.34;
+    ctx.save();
+    ctx.translate(pcx, pcy);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(107,114,128,0.13)';
+    ctx.fill();
+    ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.restore();
+    // transmission axis line (angle θ from vertical y, rotated toward z), projected via toScreen
+    const e1 = toScreen(P, xPol, 0.92 * 1.28 * cosT, 0.92 * 1.28 * sinT * P.amp / P.zScale);
+    const e2 = toScreen(P, xPol, -0.92 * 1.28 * cosT, -0.92 * 1.28 * sinT * P.amp / P.zScale);
+    ctx.strokeStyle = '#374151'; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(e1[0], e1[1]); ctx.lineTo(e2[0], e2[1]); ctx.stroke();
+    polTop = [pcx, pcy - ry - 14];
+  }
+
+  // --- λ dimension line between two consecutive E crests (above wave) ---
+  // crest positions: kx - phase0 = π/2 + 2πn  =>  x = (π/2 + phase0 + 2πn)/k
+  let xc = ((Math.PI / 2 + phase0) % (2 * Math.PI)) / k;
+  while (xc < 0) xc += lambda;
+  while (xc - lambda >= 0) xc -= lambda;   // first crest >= 0
+  let lamLbl = null;
+  const xcEnd = xc + lambda;
+  const lamMax = polMode ? xPol : X_SPAN_M;
+  if (xcEnd <= lamMax) {
+    const yDim = Math.max(28, P.oy - P.amp * 1.62);
+    const [dx1] = toScreen(P, xc, 0, 0);
+    const [dx2] = toScreen(P, xcEnd, 0, 0);
+    ctx.strokeStyle = '#6B7280'; ctx.lineWidth = 1;
+    ctx.setLineDash([4, 3]);
+    const [, yTip] = toScreen(P, xc, 1, 0);
+    ctx.beginPath(); ctx.moveTo(dx1, yDim); ctx.lineTo(dx1, yTip); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(dx2, yDim); ctx.lineTo(dx2, yTip); ctx.stroke();
+    ctx.setLineDash([]);
+    drawArrow(dx1 + 2, yDim, dx2 - 2, yDim, '#6B7280', 1.2, 6);
+    drawArrow(dx2 - 2, yDim, dx1 + 2, yDim, '#6B7280', 1.2, 6);
+    lamLbl = [(dx1 + dx2) / 2, yDim - 12];
+  }
+
+  // --- propagation direction arrow c ---
+  const cy = Math.max(16, P.oy - P.amp * 1.9);
+  drawArrow(CW * 0.62, cy, CW * 0.62 + Math.min(90, CW * 0.1), cy, '#8B0029', 2.5, 9);
+  drawTextWithBg('진행 방향 c', CW * 0.62 + Math.min(90, CW * 0.1) / 2, cy - 14, '#8B0029', 'bold 12.5px sans-serif');
+
+  positionLabels(ePeak, bPeak, lamLbl, polTop);
+}
+
+// ---------- overlay labels (KaTeX, overlap-guarded) ----------
+function positionLabels(ePeak, bPeak, lamLbl, polTop) {
+  const lblE = document.getElementById('lblE');
+  const lblB = document.getElementById('lblB');
+  const lblLam = document.getElementById('lblLam');
+  const lblPol = document.getElementById('lblPol');
+
+  function place(el, pos, html) {
+    if (!pos) { el.style.display = 'none'; return null; }
+    let x = Math.max(28, Math.min(CW - 34, pos[0]));
+    let y = Math.max(12, Math.min(CH - 14, pos[1]));
+    el.style.display = 'block';
+    el.style.left = x + 'px'; el.style.top = y + 'px';
+    if (el._html !== html) { el.innerHTML = html; el._html = html; }
+    return [x, y];
+  }
+  const pE = place(lblE, ePeak ? [ePeak[0] + 4, ePeak[1] - 14] : null, tex('\\vec{E}'));
+  let pB = place(lblB, bPeak ? [bPeak[0] - 6, bPeak[1] + 15] : null, tex('\\vec{B}'));
+  // overlap guard between E and B labels
+  if (pE && pB && Math.hypot(pE[0] - pB[0], pE[1] - pB[1]) < 34) {
+    lblB.style.top = (pB[1] + 26) + 'px';
+  }
+  const pL = place(lblLam, lamLbl, tex('\\lambda'));
+  if (pL && pE && Math.hypot(pL[0] - pE[0], pL[1] - pE[1]) < 30) {
+    lblLam.style.top = (pL[1] - 18) + 'px';
+  }
+  place(lblPol, polTop, polTop ? ('편광판 (투과축 θ = ' + thetaDeg + '°)') : '');
+}
+
+// ---------- animation loop ----------
+function tick(ts) {
+  if (lastTs === null) lastTs = ts;
+  const dt = Math.min(0.05, (ts - lastTs) / 1000);
+  lastTs = ts;
+  if (running) {
+    // visual angular frequency: proportional to real f, slowed to human scale
+    const omegaVis = 2 * Math.PI * (freq / 1e8) / VIS_PERIOD_AT_100MHZ;
+    phase0 += omegaVis * dt;
+    if (phase0 > 1e6) phase0 %= 2 * Math.PI;
+  }
+  draw();
+  requestAnimationFrame(tick);
+}
+
+// ---------- panel rendering ----------
+function fmtSci(v, digits) {
+  const exp = Math.floor(Math.log10(v));
+  const mant = (v / Math.pow(10, exp)).toFixed(digits);
+  return mant + '\\times 10^{' + exp + '}';
+}
+
+function renderStatic() {
+  document.getElementById('canvasTitle').innerHTML =
+    '전자기파: ' + tex('\\vec{E} \\perp \\vec{B} \\perp') + ' 진행 방향, ' +
+    tex('E/B = c') + ', ' + tex('c = \\lambda f');
+  document.getElementById('theoremBox').innerHTML =
+    '전자기파의 속력<br>' +
+    tex('c = \\lambda f = \\dfrac{1}{\\sqrt{\\mu_0 \\varepsilon_0}}') + '<br>' +
+    '<span style="font-size:11px;font-weight:400">' +
+    tex('c = 3.00\\times10^{8}\\ \\text{m/s}') + ' (고정)</span>';
+  document.getElementById('formulaBox').innerHTML =
+    '<b>빨강:</b> 전기장 ' + tex('E = E_m \\sin(kx - \\omega t)') + '<br>' +
+    '<b>파랑:</b> 자기장 ' + tex('B = B_m \\sin(kx - \\omega t)') + '<br>' +
+    '두 장은 같은 위상으로 진동하며 서로를 유도한다<br>' +
+    '<span style="font-size:10.5px;color:#6B7280">화면의 진동은 실제보다 느리게 재생됨</span>';
+}
+
+function renderInfo() {
+  freq = C_LIGHT / lambda;
+  const fMHz = freq / 1e6;
+  document.getElementById('lamVal').textContent = lambda.toFixed(1);
+  document.getElementById('freqVal').textContent = fMHz.toFixed(1);
+  const T = 1 / freq;
+  document.getElementById('infoBox').innerHTML =
+    '<span class="label">파장</span> <span class="val">λ = ' + lambda.toFixed(1) + ' m</span><br>' +
+    '<span class="label">진동수</span> <span class="val">f = ' + fMHz.toFixed(1) + ' MHz</span><br>' +
+    '<span class="label">주기</span> <span class="val">' + tex('T = 1/f = ' + fmtSci(T, 2) + '\\ \\text{s}') + '</span><br>' +
+    '<span class="label">검산</span> <span class="val">' + tex('\\lambda f = ' + fmtSci(lambda * freq, 2) + '\\ \\text{m/s} = c') + '</span>';
+}
+
+function renderMalus() {
+  const th = thetaDeg * Math.PI / 180;
+  const ratio = Math.cos(th) * Math.cos(th);
+  document.getElementById('malusTitle').innerHTML =
+    '투과 세기 ' + tex('I = I_0\\cos^2\\theta');
+  document.getElementById('malusFill').style.width = (ratio * 100).toFixed(1) + '%';
+  document.getElementById('malusTxt').textContent = 'I/I₀ = ' + (ratio * 100).toFixed(1) + '%';
+  document.getElementById('malusBox').innerHTML =
+    '<b>말뤼스 법칙</b> ' + tex('I = I_0 \\cos^2\\theta') + '<br>' +
+    tex('\\theta = ' + thetaDeg + '^\\circ \\;\\Rightarrow\\; I/I_0 = ' + ratio.toFixed(3)) + '<br>' +
+    '<span style="font-size:10.5px">입사파는 y축 편광 · 투과 E는 투과축 방향, 진폭 ' +
+    tex('E_m\\cos\\theta') + '<br>투과파의 B는 표시 생략 (E에 수직으로 함께 진행)</span>';
+}
+
+// ---------- events ----------
+lamSlider.addEventListener('input', () => {
+  lambda = parseFloat(lamSlider.value);
+  freq = C_LIGHT / lambda;
+  freqSlider.value = Math.round(freq / 1e6);
+  document.getElementById('lamVal').textContent = lambda.toFixed(1);
+  document.getElementById('freqVal').textContent = (freq / 1e6).toFixed(0);
+  renderInfo();
+});
+freqSlider.addEventListener('input', () => {
+  const fMHz = parseFloat(freqSlider.value);
+  freq = fMHz * 1e6;
+  lambda = C_LIGHT / freq;
+  lamSlider.value = lambda.toFixed(1);
+  document.getElementById('lamVal').textContent = lambda.toFixed(1);
+  document.getElementById('freqVal').textContent = fMHz.toFixed(0);
+  renderInfo();
+});
+thetaSlider.addEventListener('input', () => {
+  thetaDeg = parseInt(thetaSlider.value, 10);
+  document.getElementById('thetaVal').textContent = thetaDeg;
+  renderMalus();
+});
+polToggle.addEventListener('change', () => {
+  polMode = polToggle.checked;
+  document.getElementById('polControls').classList.toggle('on', polMode);
+  document.getElementById('hint').textContent = polMode
+    ? '편광판 뒤에서는 투과축 성분만 남는다: 진폭 Em cosθ, 세기 I₀cos²θ'
+    : '빨강 = 전기장 E (y축) · 파랑 = 자기장 B (z축) · 파동은 +x 방향으로 진행';
+  renderMalus();
+});
+playBtn.addEventListener('click', () => {
+  running = !running;
+  playBtn.innerHTML = running ? '&#10074;&#10074; 일시정지' : '&#9654; 재생';
+});
+
+// ---------- start ----------
+renderStatic();
+renderInfo();
+renderMalus();
+resize();
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>

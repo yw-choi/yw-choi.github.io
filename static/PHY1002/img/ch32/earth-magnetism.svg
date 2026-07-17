@@ -1,0 +1,55 @@
+<svg viewBox="0 0 700 490" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrG7" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- field lines: emerge near southern hemisphere, reenter in northern hemisphere -->
+  <path d="M 390 385 C 580 330, 580 170, 390 115" fill="none" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrG7)"/>
+  <path d="M 420 425 C 680 340, 680 160, 420 75" fill="none" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrG7)"/>
+  <path d="M 310 385 C 120 330, 120 170, 310 115" fill="none" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrG7)"/>
+  <path d="M 280 425 C 20 340, 20 160, 280 75" fill="none" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrG7)"/>
+
+  <!-- Earth -->
+  <circle cx="350" cy="250" r="130" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+
+  <!-- rotation axis RR (vertical, dashed) -->
+  <line x1="350" y1="55" x2="350" y2="450" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="358" y="66" font-size="13" font-style="italic" fill="#6B7280">R</text>
+  <text x="358" y="448" font-size="13" font-style="italic" fill="#6B7280">R</text>
+
+  <!-- dipole axis MM (tilted ~18 deg for visibility, labeled 11.5) -->
+  <line x1="286" y1="55" x2="414" y2="450" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="270" y="66" font-size="13" font-style="italic" fill="#6B7280">M</text>
+  <text x="418" y="448" font-size="13" font-style="italic" fill="#6B7280">M</text>
+
+  <!-- angle between axes -->
+  <path d="M 350 95 A 155 155 0 0 0 303 103" fill="none" stroke="#8B0029" stroke-width="1.5"/>
+  <text x="322" y="82" font-size="13" fill="#8B0029">11.5°</text>
+
+  <!-- bar magnet along MM: S on top (north side), N on bottom -->
+  <g transform="rotate(-18 350 250)">
+    <rect x="331" y="145" width="38" height="105" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+    <rect x="331" y="250" width="38" height="105" fill="#8B0029" stroke="#8B0029" stroke-width="2"/>
+    <text x="350" y="205" font-size="17" font-weight="bold" fill="#6B7280" text-anchor="middle">S</text>
+    <text x="350" y="310" font-size="17" font-weight="bold" fill="#fff" text-anchor="middle">N</text>
+  </g>
+
+  <!-- geographic north pole (rotation axis crosses surface at top) -->
+  <circle cx="350" cy="120" r="4" fill="#1a1a1a"/>
+  <line x1="356" y1="116" x2="470" y2="96" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="476" y="100" font-size="13.5" fill="#1a1a1a">지리적 북극 (자전축)</text>
+
+  <!-- geomagnetic north pole (dipole axis crosses surface, tilted) -->
+  <circle cx="310" cy="126" r="4" fill="#8B0029"/>
+  <line x1="304" y1="122" x2="196" y2="100" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="190" y="104" font-size="13.5" fill="#8B0029" text-anchor="end">지자기 북극</text>
+
+  <!-- dipole moment note -->
+  <text x="36" y="420" font-size="13" fill="#6B7280">쌍극자 모멘트</text>
+  <text x="36" y="440" font-size="13" fill="#6B7280">μ = 8.0 × 10²² J/T</text>
+
+  <!-- bottom caption -->
+  <text x="350" y="478" font-size="14.5" font-weight="bold" fill="#8B0029" text-anchor="middle">북반구에 있는 극은 사실 지구 쌍극자의 S극이다 — 그래서 나침반 N극이 북쪽을 가리킨다</text>
+</svg>

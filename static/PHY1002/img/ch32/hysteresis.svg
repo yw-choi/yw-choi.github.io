@@ -1,0 +1,65 @@
+<svg viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrG11" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- axes -->
+  <line x1="70" y1="230" x2="640" y2="230" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrG11)"/>
+  <line x1="350" y1="420" x2="350" y2="60" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrG11)"/>
+  <text x="650" y="235" font-size="15" font-style="italic" fill="#1a1a1a">B₀</text>
+  <text x="362" y="58" font-size="15" font-style="italic" fill="#1a1a1a">B<tspan font-size="11" dy="3">M</tspan></text>
+  <text x="332" y="248" font-size="13" fill="#6B7280">0</text>
+
+  <!-- initial magnetization curve a -> b (blue) -->
+  <path d="M 350 230 C 400 225, 440 190, 480 140 C 500 118, 530 111, 560 110"
+        fill="none" stroke="#2563EB" stroke-width="2.5"/>
+
+  <!-- hysteresis loop b -> c -> d -> e -> b (red) -->
+  <path d="M 560 110 C 500 112, 420 125, 350 150 C 300 168, 255 230, 215 285 C 190 320, 165 340, 140 350"
+        fill="none" stroke="#8B0029" stroke-width="2.5"/>
+  <path d="M 140 350 C 200 348, 280 335, 350 310 C 400 292, 445 230, 485 175 C 510 140, 535 120, 560 110"
+        fill="none" stroke="#8B0029" stroke-width="2.5"/>
+
+  <!-- direction arrows (small triangles) -->
+  <!-- on initial curve, pointing up-right at (455,155) tangent ~-50deg -->
+  <polygon points="0,-5 9,0 0,5" fill="#2563EB" transform="translate(452,168) rotate(-48)"/>
+  <!-- b->c: pointing left at (450,122) -->
+  <polygon points="0,-5 9,0 0,5" fill="#8B0029" transform="translate(450,124) rotate(187)"/>
+  <!-- c->d: pointing down-left at (255,232), tangent ~129deg -->
+  <polygon points="0,-5 9,0 0,5" fill="#8B0029" transform="translate(255,232) rotate(129)"/>
+  <!-- d->e: pointing right at (250,338) -->
+  <polygon points="0,-5 9,0 0,5" fill="#8B0029" transform="translate(250,339) rotate(-8)"/>
+  <!-- e->b: pointing up-right at (460,207) -->
+  <polygon points="0,-5 9,0 0,5" fill="#8B0029" transform="translate(458,210) rotate(-52)"/>
+
+  <!-- points -->
+  <circle cx="350" cy="230" r="4" fill="#1a1a1a"/>
+  <text x="360" y="252" font-size="14" font-style="italic" fill="#1a1a1a">a</text>
+  <circle cx="560" cy="110" r="4" fill="#1a1a1a"/>
+  <text x="575" y="106" font-size="14" font-style="italic" fill="#1a1a1a">b</text>
+  <circle cx="350" cy="150" r="4" fill="#8B0029"/>
+  <text x="360" y="142" font-size="14" font-style="italic" fill="#8B0029">c</text>
+  <circle cx="140" cy="350" r="4" fill="#1a1a1a"/>
+  <text x="122" y="368" font-size="14" font-style="italic" fill="#1a1a1a">d</text>
+  <circle cx="350" cy="310" r="4" fill="#8B0029"/>
+  <text x="358" y="330" font-size="14" font-style="italic" fill="#8B0029">e</text>
+
+  <!-- legend -->
+  <line x1="80" y1="78" x2="112" y2="78" stroke="#2563EB" stroke-width="2.5"/>
+  <text x="120" y="83" font-size="13" fill="#1a1a1a">처음 자화 곡선 (a→b)</text>
+  <line x1="80" y1="102" x2="112" y2="102" stroke="#8B0029" stroke-width="2.5"/>
+  <text x="120" y="107" font-size="13" fill="#1a1a1a">이력 곡선 (b→c→d→e→b)</text>
+
+  <!-- annotations for remanence -->
+  <text x="75" y="150" font-size="12.5" fill="#8B0029">c, e : B₀ = 0인데도 자화가 남는다</text>
+  <text x="75" y="170" font-size="12.5" fill="#6B7280">(잔류 자화 → 영구 자석)</text>
+  <line x1="290" y1="146" x2="340" y2="149" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- saturation note -->
+  <text x="520" y="86" font-size="12.5" fill="#6B7280">b, d : 포화 (모든 자구 정렬)</text>
+
+  <!-- bottom caption -->
+  <text x="350" y="448" font-size="14" font-weight="bold" fill="#8B0029" text-anchor="middle">자구의 변화가 완전히 되돌아가지 않는다 → 재료가 이력을 "기억" : 자기 기록의 원리</text>
+</svg>

@@ -1,0 +1,43 @@
+<svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrRed" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#8B0029"/>
+    </marker>
+    <marker id="arrBlue" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#2563EB"/>
+    </marker>
+    <marker id="arrDark" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#1a1a1a"/>
+    </marker>
+    <marker id="arrGray" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#6B7280"/>
+    </marker>
+  </defs>
+<line x1="220.0" y1="70.0" x2="340.0" y2="70.0" stroke="#1a1a1a" stroke-width="2"/>
+<path d="M340.0,70.0 L358.6,84.0 L377.1,56.0 L395.7,84.0 L414.3,56.0 L432.9,84.0 L451.4,56.0 L470.0,70.0" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+<line x1="470.0" y1="70.0" x2="600.0" y2="70.0" stroke="#1a1a1a" stroke-width="2"/>
+<text x="405.0" y="44.0" font-size="15" fill="#1a1a1a" text-anchor="middle" font-style="italic">R</text>
+<line x1="600.0" y1="70.0" x2="600.0" y2="162.0" stroke="#1a1a1a" stroke-width="2"/>
+<line x1="600.0" y1="178.0" x2="600.0" y2="270.0" stroke="#1a1a1a" stroke-width="2"/>
+<line x1="578.0" y1="162.0" x2="622.0" y2="162.0" stroke="#1a1a1a" stroke-width="2.5"/>
+<line x1="578.0" y1="178.0" x2="622.0" y2="178.0" stroke="#1a1a1a" stroke-width="2.5"/>
+<text x="632.0" y="175.0" font-size="15" fill="#1a1a1a" text-anchor="start" font-style="italic">C</text>
+<line x1="600.0" y1="270.0" x2="470.0" y2="270.0" stroke="#1a1a1a" stroke-width="2"/>
+<path d="M350,270 A18.6,15.0 0 0 0 380.0,270 A18.6,15.0 0 0 0 410.0,270 A18.6,15.0 0 0 0 440.0,270 A18.6,15.0 0 0 0 470.0,270" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+<line x1="350.0" y1="270.0" x2="220.0" y2="270.0" stroke="#1a1a1a" stroke-width="2"/>
+<text x="410.0" y="308.0" font-size="15" fill="#1a1a1a" text-anchor="middle" font-style="italic">L</text>
+<line x1="220.0" y1="70.0" x2="220.0" y2="140.0" stroke="#1a1a1a" stroke-width="2"/>
+<circle cx="220" cy="170" r="30" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<path d="M203.5,170 Q211.8,148.6 220.0,170 Q228.2,191.4 236.5,170" fill="none" stroke="#1a1a1a" stroke-width="1.8"/>
+<line x1="220.0" y1="200.0" x2="220.0" y2="270.0" stroke="#1a1a1a" stroke-width="2"/>
+<text x="175.0" y="152.0" font-size="17" fill="#8B0029" text-anchor="end" font-style="italic">ℰ</text>
+<text x="120.0" y="250.0" font-size="14" fill="#8B0029" text-anchor="middle" font-style="italic">ℰ = ℰ<tspan font-size="10" dy="3">m</tspan><tspan dy="-3"> sin ω</tspan><tspan font-size="10" dy="3">d</tspan><tspan dy="-3">t</tspan></text>
+<line x1="270.0" y1="56.0" x2="315.0" y2="56.0" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrDark)"/>
+<text x="292.0" y="48.0" font-size="13" fill="#1a1a1a" text-anchor="middle" font-style="italic">i</text>
+<line x1="614.0" y1="105.0" x2="614.0" y2="140.0" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrDark)"/>
+<text x="626.0" y="126.0" font-size="13" fill="#1a1a1a" text-anchor="start" font-style="italic">i</text>
+<line x1="315.0" y1="284.0" x2="270.0" y2="284.0" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrDark)"/>
+<text x="292.0" y="302.0" font-size="13" fill="#1a1a1a" text-anchor="middle" font-style="italic">i</text>
+<text x="350.0" y="322.0" font-size="13.5" fill="#6B7280" text-anchor="middle">교류 기전력이 구동하는 직렬 RLC 회로 — 세 소자에 같은 전류 i가 흐른다</text>
+
+</svg>
