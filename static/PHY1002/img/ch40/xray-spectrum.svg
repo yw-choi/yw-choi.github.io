@@ -1,0 +1,61 @@
+<svg viewBox="0 0 700 440" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrGray3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6B7280"/>
+    </marker>
+    <marker id="arrRed3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8B0029"/>
+    </marker>
+  </defs>
+
+  <!-- axes -->
+  <line x1="70" y1="370" x2="670" y2="370" stroke="#6B7280" stroke-width="2" marker-end="url(#arrGray3)"/>
+  <line x1="70" y1="370" x2="70" y2="55" stroke="#6B7280" stroke-width="2" marker-end="url(#arrGray3)"/>
+  <text x="640" y="398" font-size="14" fill="#1a1a1a" text-anchor="end">파장 (pm)</text>
+  <text x="84" y="72" font-size="14" fill="#1a1a1a">상대 세기</text>
+
+  <!-- x ticks: 30..90 pm, x = 70 + (lambda-30)*10 -->
+  <line x1="70" y1="370" x2="70" y2="376" stroke="#6B7280" stroke-width="1"/>
+  <text x="70" y="392" font-size="12" fill="#6B7280" text-anchor="middle">30</text>
+  <line x1="170" y1="370" x2="170" y2="376" stroke="#6B7280" stroke-width="1"/>
+  <text x="170" y="392" font-size="12" fill="#6B7280" text-anchor="middle">40</text>
+  <line x1="270" y1="370" x2="270" y2="376" stroke="#6B7280" stroke-width="1"/>
+  <text x="270" y="392" font-size="12" fill="#6B7280" text-anchor="middle">50</text>
+  <line x1="370" y1="370" x2="370" y2="376" stroke="#6B7280" stroke-width="1"/>
+  <text x="370" y="392" font-size="12" fill="#6B7280" text-anchor="middle">60</text>
+  <line x1="470" y1="370" x2="470" y2="376" stroke="#6B7280" stroke-width="1"/>
+  <text x="470" y="392" font-size="12" fill="#6B7280" text-anchor="middle">70</text>
+  <line x1="570" y1="370" x2="570" y2="376" stroke="#6B7280" stroke-width="1"/>
+  <text x="570" y="392" font-size="12" fill="#6B7280" text-anchor="middle">80</text>
+  <line x1="670" y1="370" x2="670" y2="376" stroke="#6B7280" stroke-width="1"/>
+  <text x="670" y="392" font-size="12" fill="#6B7280" text-anchor="middle">90</text>
+
+  <!-- spectrum curve: lambda_min at 35.4pm (x=124); Kbeta at 63pm (x=400); Kalpha at 71pm (x=480) -->
+  <path d="M 124 369
+           C 140 300, 165 255, 210 240
+           C 255 228, 300 235, 360 252
+           L 385 258
+           L 393 180 L 400 130 L 407 180 L 415 262
+           L 455 272
+           L 465 190 L 473 85 L 481 190 L 493 280
+           C 540 295, 610 310, 665 320"
+        fill="none" stroke="#8B0029" stroke-width="2.5"/>
+
+  <!-- lambda_min marker -->
+  <line x1="124" y1="369" x2="124" y2="300" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="118" y="288" font-size="14" font-style="italic" fill="#1a1a1a" text-anchor="middle">&#955;<tspan font-size="11" baseline-shift="sub">min</tspan></text>
+  <line x1="118" y1="322" x2="123" y2="360" stroke="#6B7280" stroke-width="1" marker-end="url(#arrGray3)"/>
+
+  <!-- peak labels -->
+  <text x="400" y="115" font-size="14" font-style="italic" fill="#8B0029" text-anchor="middle">K<tspan font-size="11" baseline-shift="sub">&#946;</tspan></text>
+  <text x="473" y="70" font-size="14" font-style="italic" fill="#8B0029" text-anchor="middle">K<tspan font-size="11" baseline-shift="sub">&#945;</tspan></text>
+
+  <!-- annotations -->
+  <text x="240" y="200" font-size="13" fill="#6B7280">연속 스펙트럼</text>
+  <line x1="265" y1="207" x2="280" y2="230" stroke="#6B7280" stroke-width="1" marker-end="url(#arrGray3)"/>
+  <text x="540" y="120" font-size="13" fill="#8B0029">특성 스펙트럼</text>
+  <text x="540" y="138" font-size="12" fill="#8B0029">(날카로운 봉우리)</text>
+
+  <!-- setup note -->
+  <text x="660" y="60" font-size="12.5" fill="#6B7280" text-anchor="end">35 keV 전자 &#8594; 몰리브데넘 표적</text>
+</svg>

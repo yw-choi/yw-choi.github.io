@@ -1,0 +1,50 @@
+<svg viewBox="0 0 760 500" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<defs>
+<marker id="arrR" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+  <path d="M0,0 L9,4 L0,8 Z" fill="#8B0029"/>
+</marker>
+<marker id="arrB" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+  <path d="M0,0 L9,4 L0,8 Z" fill="#2563EB"/>
+</marker>
+<marker id="arrG" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+  <path d="M0,0 L9,4 L0,8 Z" fill="#6B7280"/>
+</marker>
+<marker id="arrK" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+  <path d="M0,0 L9,4 L0,8 Z" fill="#1a1a1a"/>
+</marker>
+</defs>
+<rect x="0" y="0" width="760" height="500" fill="#ffffff"/>
+<line x1="150.0" y1="70.0" x2="650.0" y2="70.0" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round"/>
+<text x="138.0" y="74.0" font-size="12.5" fill="#6B7280" text-anchor="end">E = 0 (이온화)</text>
+<line x1="150.0" y1="439.9" x2="650.0" y2="439.9" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
+<text x="662.0" y="443.9" font-size="13" fill="#1a1a1a" text-anchor="start">n = 1</text>
+<text x="138.0" y="443.9" font-size="12.5" fill="#6B7280" text-anchor="end">-13.6 eV</text>
+<line x1="150.0" y1="162.5" x2="650.0" y2="162.5" stroke="#6B7280" stroke-width="1.6" stroke-linecap="round"/>
+<text x="662.0" y="166.5" font-size="13" fill="#1a1a1a" text-anchor="start">n = 2</text>
+<text x="138.0" y="166.5" font-size="12.5" fill="#6B7280" text-anchor="end">-3.4 eV</text>
+<line x1="150.0" y1="111.1" x2="650.0" y2="111.1" stroke="#6B7280" stroke-width="1.6" stroke-linecap="round"/>
+<text x="662.0" y="115.1" font-size="13" fill="#1a1a1a" text-anchor="start">n = 3</text>
+<text x="138.0" y="115.1" font-size="12.5" fill="#6B7280" text-anchor="end">-1.51 eV</text>
+<line x1="150.0" y1="93.1" x2="650.0" y2="93.1" stroke="#6B7280" stroke-width="1.6" stroke-linecap="round"/>
+<text x="662.0" y="100.1" font-size="13" fill="#1a1a1a" text-anchor="start">n = 4</text>
+<line x1="150.0" y1="84.7" x2="650.0" y2="84.7" stroke="#6B7280" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="150.0" y1="80.3" x2="650.0" y2="80.3" stroke="#6B7280" stroke-width="1.6" stroke-linecap="round"/>
+<text x="662.0" y="62.0" font-size="12.5" fill="#1a1a1a" text-anchor="start">n = 5, 6, ⋯ ∞</text>
+<line x1="190.0" y1="164.5" x2="190.0" y2="434.9" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)" stroke-linecap="round"/>
+<line x1="216.0" y1="113.1" x2="216.0" y2="434.9" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)" stroke-linecap="round"/>
+<line x1="242.0" y1="95.1" x2="242.0" y2="434.9" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR)" stroke-linecap="round"/>
+<line x1="360.0" y1="113.1" x2="360.0" y2="157.5" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB)" stroke-linecap="round"/>
+<line x1="386.0" y1="95.1" x2="386.0" y2="157.5" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB)" stroke-linecap="round"/>
+<line x1="412.0" y1="86.7" x2="412.0" y2="157.5" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB)" stroke-linecap="round"/>
+<line x1="438.0" y1="82.3" x2="438.0" y2="157.5" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB)" stroke-linecap="round"/>
+<line x1="545.0" y1="95.1" x2="545.0" y2="106.1" stroke="#6B7280" stroke-width="2.5" marker-end="url(#arrG)" stroke-linecap="round"/>
+<line x1="571.0" y1="86.7" x2="571.0" y2="106.1" stroke="#6B7280" stroke-width="2.5" marker-end="url(#arrG)" stroke-linecap="round"/>
+<line x1="597.0" y1="82.3" x2="597.0" y2="106.1" stroke="#6B7280" stroke-width="2.5" marker-end="url(#arrG)" stroke-linecap="round"/>
+<text x="216.0" y="463.9" font-size="13.5" fill="#8B0029" text-anchor="middle" font-weight="bold">라이먼 계열 (자외선): n = 1로</text>
+<text x="216.0" y="481.9" font-size="12.5" fill="#8B0029" text-anchor="middle">122 nm ~ 91.1 nm</text>
+<text x="399.0" y="186.5" font-size="13.5" fill="#2563EB" text-anchor="middle" font-weight="bold">발머 계열 (가시광): n = 2로</text>
+<text x="399.0" y="204.5" font-size="12.5" fill="#2563EB" text-anchor="middle">656, 486, 434, 410 nm</text>
+<text x="571.0" y="135.1" font-size="13.5" fill="#6B7280" text-anchor="middle" font-weight="bold">파셴 계열 (적외선): n = 3로</text>
+<text x="571.0" y="153.1" font-size="12.5" fill="#6B7280" text-anchor="middle">1875 nm ~ 820 nm</text>
+<text x="380.0" y="34.0" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="bold">수소의 에너지 준위와 스펙트럼 계열: Eₙ = −13.6/n² eV</text>
+</svg>

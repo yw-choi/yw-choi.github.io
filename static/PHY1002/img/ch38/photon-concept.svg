@@ -1,0 +1,37 @@
+<svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<defs><marker id="arrRed" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8B0029"/></marker><marker id="arrBlue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/></marker><marker id="arrGray" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6B7280"/></marker><marker id="arrInk" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a1a1a"/></marker></defs>
+<line x1="380" y1="30" x2="380" y2="330" stroke="#6B7280" stroke-width="1" stroke-dasharray="6 5"/>
+<text x="200" y="48" font-size="17" fill="#1a1a1a" text-anchor="middle" font-weight="bold">고전적 파동 관점</text>
+<text x="200" y="70" font-size="13" fill="#6B7280" text-anchor="middle" font-weight="normal">에너지가 연속적으로 흐른다</text>
+<path d="M45.0,140.0 L47.0,134.5 L49.0,129.2 L51.0,124.2 L53.0,119.8 L55.0,116.1 L57.0,113.1 L59.0,111.1 L61.0,110.1 L63.0,110.1 L65.0,111.1 L67.0,113.1 L69.0,116.1 L71.0,119.8 L73.0,124.2 L75.0,129.2 L77.0,134.5 L79.0,140.0 L81.0,145.5 L83.0,150.8 L85.0,155.8 L87.0,160.2 L89.0,163.9 L91.0,166.9 L93.0,168.9 L95.0,169.9 L97.0,169.9 L99.0,168.9 L101.0,166.9 L103.0,163.9 L105.0,160.2 L107.0,155.8 L109.0,150.8 L111.0,145.5 L113.0,140.0 L115.0,134.5 L117.0,129.2 L119.0,124.2 L121.0,119.8 L123.0,116.1 L125.0,113.1 L127.0,111.1 L129.0,110.1 L131.0,110.1 L133.0,111.1 L135.0,113.1 L137.0,116.1 L139.0,119.8 L141.0,124.2 L143.0,129.2 L145.0,134.5 L147.0,140.0 L149.0,145.5 L151.0,150.8 L153.0,155.8 L155.0,160.2 L157.0,163.9 L159.0,166.9 L161.0,168.9 L163.0,169.9 L165.0,169.9 L167.0,168.9 L169.0,166.9 L171.0,163.9 L173.0,160.2 L175.0,155.8 L177.0,150.8 L179.0,145.5 L181.0,140.0 L183.0,134.5 L185.0,129.2 L187.0,124.2 L189.0,119.8 L191.0,116.1 L193.0,113.1 L195.0,111.1 L197.0,110.1 L199.0,110.1 L201.0,111.1 L203.0,113.1 L205.0,116.1 L207.0,119.8 L209.0,124.2 L211.0,129.2 L213.0,134.5 L215.0,140.0 L217.0,145.5 L219.0,150.8 L221.0,155.8 L223.0,160.2 L225.0,163.9 L227.0,166.9 L229.0,168.9 L231.0,169.9 L233.0,169.9 L235.0,168.9 L237.0,166.9 L239.0,163.9 L241.0,160.2 L243.0,155.8 L245.0,150.8 L247.0,145.5 L249.0,140.0 L251.0,134.5 L253.0,129.2 L255.0,124.2 L257.0,119.8 L259.0,116.1 L261.0,113.1 L263.0,111.1 L265.0,110.1 L267.0,110.1 L269.0,111.1 L271.0,113.1 L273.0,116.1 L275.0,119.8 L277.0,124.2 L279.0,129.2 L281.0,134.5 L283.0,140.0 L285.0,145.5 L287.0,150.8 L289.0,155.8 L291.0,160.2 L293.0,163.9 L295.0,166.9 L297.0,168.9 L299.0,169.9 L301.0,169.9 L303.0,168.9 L305.0,166.9 L307.0,163.9 L309.0,160.2 L311.0,155.8 L313.0,150.8 L315.0,145.5" stroke="#2563EB" stroke-width="2.5" fill="none"/>
+<line x1="318" y1="140" x2="352" y2="140" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrBlue)"/>
+<rect x="70" y="215" width="26" height="105" fill="#F3F4F6" stroke="#6B7280" stroke-width="2" rx="4"/>
+<rect x="72" y="252" width="22" height="66" fill="#2563EB" opacity="0.55"/>
+<text x="83" y="210" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="normal" font-style="italic">E</text>
+<text x="230" y="250" font-size="13.5" fill="#1a1a1a" text-anchor="middle" font-weight="normal">총 에너지는 어떤 값이든</text>
+<text x="230" y="270" font-size="13.5" fill="#1a1a1a" text-anchor="middle" font-weight="normal">연속적으로 가능</text>
+<text x="230" y="296" font-size="12.5" fill="#6B7280" text-anchor="middle" font-weight="normal" font-style="italic">(0.6hf 도, 75.5hf 도 OK)</text>
+<text x="565" y="48" font-size="17" fill="#8B0029" text-anchor="middle" font-weight="bold">광자(양자) 관점</text>
+<text x="565" y="70" font-size="13" fill="#6B7280" text-anchor="middle" font-weight="normal">에너지가 hf 덩어리로만 온다</text>
+<circle cx="445" cy="140" r="13" fill="#8B0029"/>
+<path d="M413.0,140.0 L415.0,134.3 L417.0,132.0 L419.0,134.3 L421.0,140.0 L423.0,145.7 L425.0,148.0 L427.0,145.7 L429.0,140.0" stroke="#8B0029" stroke-width="1.5" fill="none" opacity="0.55"/>
+<circle cx="535" cy="140" r="13" fill="#8B0029"/>
+<path d="M503.0,140.0 L505.0,134.3 L507.0,132.0 L509.0,134.3 L511.0,140.0 L513.0,145.7 L515.0,148.0 L517.0,145.7 L519.0,140.0" stroke="#8B0029" stroke-width="1.5" fill="none" opacity="0.55"/>
+<circle cx="625" cy="140" r="13" fill="#8B0029"/>
+<path d="M593.0,140.0 L595.0,134.3 L597.0,132.0 L599.0,134.3 L601.0,140.0 L603.0,145.7 L605.0,148.0 L607.0,145.7 L609.0,140.0" stroke="#8B0029" stroke-width="1.5" fill="none" opacity="0.55"/>
+<line x1="645" y1="140" x2="688" y2="140" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRed)"/>
+<text x="535" y="175" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">광자 1개의 에너지  E = hf</text>
+<line x1="440" y1="320" x2="440" y2="210" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arrInk)"/>
+<line x1="432" y1="296" x2="448" y2="296" stroke="#8B0029" stroke-width="2.5"/>
+<text x="456" y="301" font-size="12.5" fill="#1a1a1a" text-anchor="start" font-weight="normal" font-style="italic">1hf</text>
+<line x1="432" y1="272" x2="448" y2="272" stroke="#8B0029" stroke-width="2.5"/>
+<text x="456" y="277" font-size="12.5" fill="#1a1a1a" text-anchor="start" font-weight="normal" font-style="italic">2hf</text>
+<line x1="432" y1="248" x2="448" y2="248" stroke="#8B0029" stroke-width="2.5"/>
+<text x="456" y="253" font-size="12.5" fill="#1a1a1a" text-anchor="start" font-weight="normal" font-style="italic">3hf</text>
+<line x1="432" y1="224" x2="448" y2="224" stroke="#8B0029" stroke-width="2.5"/>
+<text x="456" y="229" font-size="12.5" fill="#1a1a1a" text-anchor="start" font-weight="normal" font-style="italic">4hf</text>
+<text x="426" y="320" font-size="12" fill="#6B7280" text-anchor="end" font-weight="normal">0</text>
+<text x="600" y="250" font-size="13.5" fill="#1a1a1a" text-anchor="middle" font-weight="normal">총 에너지는 hf 의</text>
+<text x="600" y="270" font-size="13.5" fill="#1a1a1a" text-anchor="middle" font-weight="normal" font-style="italic">정수배만 가능:  E = nhf</text>
+<text x="600" y="296" font-size="12.5" fill="#6B7280" text-anchor="middle" font-weight="normal" font-style="italic">(양자화, quantized)</text>
+</svg>

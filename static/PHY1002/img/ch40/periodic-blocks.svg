@@ -1,0 +1,49 @@
+<svg viewBox="0 0 760 480" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <!-- title note -->
+  <text x="380" y="40" font-size="14" fill="#1a1a1a" text-anchor="middle">마지막으로 채워지는 버금껍질이 원소의 &#8220;블록&#8221;을 결정한다</text>
+
+  <!-- grid: x0=40, y0=70, cell=36 -->
+
+  <!-- s block: H (r1c1) -->
+  <rect x="40" y="70" width="36" height="36" fill="#8B0029" stroke="#fff" stroke-width="1"/>
+  <text x="58" y="93" font-size="12" fill="#fff" text-anchor="middle">H</text>
+  <!-- He at r1c18, chemically s-subshell -->
+  <rect x="652" y="70" width="36" height="36" fill="#8B0029" stroke="#fff" stroke-width="1"/>
+  <text x="670" y="93" font-size="12" fill="#fff" text-anchor="middle">He</text>
+
+  <!-- s block rows 2-7, cols 1-2 -->
+  <rect x="40" y="106" width="72" height="216" fill="#8B0029" stroke="#fff" stroke-width="1"/>
+  <text x="76" y="220" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle">s</text>
+  <text x="76" y="242" font-size="12" fill="#fff" text-anchor="middle">(2개)</text>
+
+  <!-- p block rows 2-7, cols 13-18 -->
+  <rect x="472" y="106" width="216" height="216" fill="#2563EB" stroke="#fff" stroke-width="1"/>
+  <text x="580" y="220" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle">p</text>
+  <text x="580" y="242" font-size="12" fill="#fff" text-anchor="middle">(6개)</text>
+
+  <!-- d block rows 4-7, cols 3-12 -->
+  <rect x="112" y="178" width="360" height="144" fill="#6B7280" stroke="#fff" stroke-width="1"/>
+  <text x="292" y="252" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle">d</text>
+  <text x="292" y="274" font-size="12" fill="#fff" text-anchor="middle">(10개)</text>
+
+  <!-- f block, detached below -->
+  <rect x="148" y="342" width="504" height="72" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <text x="400" y="378" font-size="22" font-weight="bold" fill="#1a1a1a" text-anchor="middle">f</text>
+  <text x="400" y="400" font-size="12" fill="#6B7280" text-anchor="middle">(14개) &#8212; 란타넘족·악티늄족</text>
+
+  <!-- period numbers -->
+  <text x="28" y="93" font-size="12" fill="#6B7280" text-anchor="end">1</text>
+  <text x="28" y="129" font-size="12" fill="#6B7280" text-anchor="end">2</text>
+  <text x="28" y="165" font-size="12" fill="#6B7280" text-anchor="end">3</text>
+  <text x="28" y="201" font-size="12" fill="#6B7280" text-anchor="end">4</text>
+  <text x="28" y="237" font-size="12" fill="#6B7280" text-anchor="end">5</text>
+  <text x="28" y="273" font-size="12" fill="#6B7280" text-anchor="end">6</text>
+  <text x="28" y="309" font-size="12" fill="#6B7280" text-anchor="end">7</text>
+
+  <!-- markers: alkali & noble columns -->
+  <text x="76" y="336" font-size="12" fill="#8B0029" text-anchor="middle">알칼리 금속 쪽</text>
+  <text x="616" y="336" font-size="12" fill="#2563EB" text-anchor="middle">비활성 기체 쪽</text>
+
+  <!-- caption -->
+  <text x="380" y="448" font-size="14" fill="#1a1a1a" text-anchor="middle">주기별 원소 수 2, 8, 8, 18, 18, 32 = 그 주기에 채워지는 버금껍질 정원의 합</text>
+</svg>

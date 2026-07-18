@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 380" width="760" height="380" font-family="sans-serif">
+  <defs>
+    <marker id="arrR8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8B0029"/>
+    </marker>
+    <marker id="arrB8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/>
+    </marker>
+  </defs>
+
+  <text x="380" y="36" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a1a">상대론적 속도 변환 — 속도는 단순히 더해지지 않는다</text>
+
+  <!-- ground observer -->
+  <line x1="40" y1="300" x2="720" y2="300" stroke="#6B7280" stroke-width="2"/>
+  <circle cx="90" cy="268" r="8" fill="#1a1a1a"/>
+  <rect x="85" y="276" width="10" height="22" rx="2" fill="#1a1a1a"/>
+  <text x="90" y="326" text-anchor="middle" font-size="13.5" fill="#1a1a1a">지상 좌표계 S</text>
+
+  <!-- mother ship -->
+  <path d="M220 175 h130 l38 20 -38 20 h-130 q-10 0 -10 -10 v-20 q0 -10 10 -10 z" fill="#F3F4F6" stroke="#2563EB" stroke-width="2"/>
+  <text x="290" y="200" text-anchor="middle" font-size="13.5" fill="#2563EB" font-weight="bold">우주선 (S′)</text>
+  <!-- ship velocity -->
+  <line x1="395" y1="195" x2="490" y2="195" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB8)"/>
+  <text x="442" y="184" text-anchor="middle" font-size="14" fill="#2563EB"><tspan font-style="italic">v</tspan> = 0.90<tspan font-style="italic">c</tspan> (지상 기준)</text>
+
+  <!-- probe launched from ship -->
+  <circle cx="520" cy="110" r="10" fill="#8B0029"/>
+  <text x="498" y="88" text-anchor="end" font-size="13.5" fill="#8B0029" font-weight="bold">탐사선</text>
+  <line x1="536" y1="110" x2="640" y2="110" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR8)"/>
+  <text x="590" y="99" text-anchor="middle" font-size="14" fill="#8B0029"><tspan font-style="italic">u</tspan>′ = 0.80<tspan font-style="italic">c</tspan> (우주선 기준)</text>
+  <!-- launch dashed line -->
+  <line x1="350" y1="180" x2="505" y2="118" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- question + answer -->
+  <text x="380" y="358" text-anchor="middle" font-size="15" fill="#1a1a1a">지상에서 본 탐사선의 속도는?  갈릴레이: 1.70<tspan font-style="italic">c</tspan> (틀림) →
+    <tspan fill="#8B0029" font-weight="bold">상대론: u = (u′+v)/(1+u′v/c²) = 0.988c</tspan></text>
+</svg>

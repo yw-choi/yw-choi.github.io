@@ -1,0 +1,56 @@
+<svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8B0029"/>
+    </marker>
+    <marker id="arrGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <!-- z axis -->
+  <line x1="280" y1="450" x2="280" y2="45" stroke="#6B7280" stroke-width="2" marker-end="url(#arrGray)"/>
+  <text x="290" y="52" font-size="14" font-style="italic" fill="#6B7280">z</text>
+
+  <!-- Lz level dashed lines and labels -->
+  <line x1="280" y1="80" x2="400" y2="80" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="280" y1="160" x2="466" y2="160" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="280" y1="320" x2="466" y2="320" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="280" y1="400" x2="400" y2="400" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <text x="270" y="85" font-size="14" fill="#1a1a1a" text-anchor="end"><tspan font-style="italic">L</tspan><tspan font-size="11" baseline-shift="sub">z</tspan> = +2&#8463;</text>
+  <text x="270" y="165" font-size="14" fill="#1a1a1a" text-anchor="end">+&#8463;</text>
+  <text x="270" y="245" font-size="14" fill="#1a1a1a" text-anchor="end">0</text>
+  <text x="270" y="325" font-size="14" fill="#1a1a1a" text-anchor="end">&#8722;&#8463;</text>
+  <text x="270" y="405" font-size="14" fill="#1a1a1a" text-anchor="end">&#8722;2&#8463;</text>
+
+  <!-- precession cone circle for m=+2 -->
+  <ellipse cx="280" cy="80" rx="113" ry="18" fill="none" stroke="#2563EB" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="410" y="62" font-size="13" fill="#2563EB">벡터의 끝은 원뿔 위 어딘가</text>
+
+  <!-- L vectors, |L| = sqrt(6) hbar = 196px -->
+  <line x1="280" y1="240" x2="393" y2="80" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRed)"/>
+  <line x1="280" y1="240" x2="459" y2="160" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRed)"/>
+  <line x1="280" y1="240" x2="476" y2="240" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRed)"/>
+  <line x1="280" y1="240" x2="459" y2="320" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRed)"/>
+  <line x1="280" y1="240" x2="393" y2="400" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRed)"/>
+
+  <!-- L label on the m=+2 vector -->
+  <text x="352" y="140" font-size="16" font-style="italic" font-weight="bold" fill="#8B0029">L</text>
+
+  <!-- m_l labels at vector tips -->
+  <text x="404" y="95" font-size="13" fill="#8B0029"><tspan font-style="italic">m</tspan><tspan font-size="10" baseline-shift="sub">&#8467;</tspan> = +2</text>
+  <text x="472" y="164" font-size="13" fill="#8B0029">+1</text>
+  <text x="488" y="244" font-size="13" fill="#8B0029">0</text>
+  <text x="472" y="330" font-size="13" fill="#8B0029">&#8722;1</text>
+  <text x="404" y="414" font-size="13" fill="#8B0029">&#8722;2</text>
+
+  <!-- theta arc between z axis and m=+2 vector -->
+  <path d="M 280 185 A 55 55 0 0 1 312 195" fill="none" stroke="#2563EB" stroke-width="1"/>
+  <text x="292" y="178" font-size="14" font-style="italic" fill="#2563EB">&#952;</text>
+
+  <!-- info box -->
+  <text x="500" y="380" font-size="14" fill="#1a1a1a">&#8467; = 2 인 경우:</text>
+  <text x="500" y="404" font-size="14" font-style="italic" fill="#1a1a1a">L = &#8730;6 &#8463; &#8776; 2.45&#8463;</text>
+  <text x="500" y="428" font-size="14" fill="#1a1a1a">cos <tspan font-style="italic">&#952;</tspan> = <tspan font-style="italic">L</tspan><tspan font-size="11" baseline-shift="sub">z</tspan> / <tspan font-style="italic">L</tspan></text>
+</svg>

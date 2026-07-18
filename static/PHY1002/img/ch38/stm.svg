@@ -1,0 +1,38 @@
+<svg viewBox="0 0 760 430" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<defs><marker id="arrRed" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8B0029"/></marker><marker id="arrBlue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/></marker><marker id="arrGray" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6B7280"/></marker><marker id="arrInk" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a1a1a"/></marker></defs>
+<circle cx="70" cy="365" r="20" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+<circle cx="122" cy="365" r="20" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+<circle cx="174" cy="365" r="20" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+<circle cx="226" cy="365" r="20" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+<circle cx="278" cy="365" r="20" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+<circle cx="330" cy="365" r="20" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+<circle cx="382" cy="365" r="20" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+<circle cx="434" cy="365" r="20" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+<circle cx="486" cy="365" r="20" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+<circle cx="538" cy="365" r="20" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+<circle cx="590" cy="365" r="20" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+<circle cx="642" cy="365" r="20" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+<circle cx="694" cy="365" r="20" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+<text x="350" y="412" font-size="13.5" fill="#6B7280" text-anchor="middle" font-weight="normal">시료 표면의 원자들</text>
+<polygon points="270,80 390,80 345,250 338,320 322,320 315,250" fill="#8B0029" opacity="0.92"/>
+<text x="478" y="105" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold">날카로운 금속 탐침</text>
+<text x="478" y="125" font-size="12.5" fill="#6B7280" text-anchor="middle" font-weight="normal">(끝이 원자 몇 개 크기)</text>
+<line x1="240" y1="60" x2="420" y2="60" stroke="#1a1a1a" stroke-width="1.8" marker-start="url(#arrInk)" marker-end="url(#arrInk)"/>
+<text x="330" y="44" font-size="13.5" fill="#1a1a1a" text-anchor="middle" font-weight="normal">x–y 스캔</text>
+<path d="M 330 324 L 330 343" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrBlue)"/>
+<text x="250" y="300" font-size="13" fill="#2563EB" text-anchor="end" font-weight="normal">틈 ≈ 1 nm 진공</text>
+<text x="250" y="318" font-size="13" fill="#2563EB" text-anchor="end" font-weight="bold">= 퍼텐셜 장벽</text>
+<text x="405" y="318" font-size="13" fill="#2563EB" text-anchor="start" font-weight="bold">전자가 터널링</text>
+<line x1="390" y1="160" x2="660" y2="160" stroke="#1a1a1a" stroke-width="2"/>
+<line x1="660" y1="160" x2="660" y2="336" stroke="#1a1a1a" stroke-width="2"/>
+<circle cx="660" cy="240" r="16" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="660" y="245" font-size="13.5" fill="#1a1a1a" text-anchor="middle" font-weight="bold">A</text>
+<text x="636" y="275" font-size="12.5" fill="#1a1a1a" text-anchor="end" font-weight="normal">터널링 전류 (~nA)</text>
+<text x="636" y="293" font-size="12.5" fill="#6B7280" text-anchor="end" font-weight="normal">거리에 극도로 민감</text>
+<text x="525" y="150" font-size="12" fill="#6B7280" text-anchor="middle" font-weight="normal">바이어스 전압 ~10 mV</text>
+<rect x="30" y="150" width="215" height="112" rx="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="1.5"/>
+<text x="137" y="178" font-size="13.5" fill="#8B0029" text-anchor="middle" font-weight="bold">원리</text>
+<text x="137" y="201" font-size="12.5" fill="#1a1a1a" text-anchor="middle" font-weight="normal">전류가 일정해지도록</text>
+<text x="137" y="220" font-size="12.5" fill="#1a1a1a" text-anchor="middle" font-weight="normal">탐침 높이를 피드백 조절</text>
+<text x="137" y="245" font-size="12.5" fill="#8B0029" text-anchor="middle" font-weight="bold">→ 높이 기록 = 원자 지도</text>
+</svg>

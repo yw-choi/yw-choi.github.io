@@ -1,0 +1,49 @@
+<svg viewBox="0 0 780 480" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<defs>
+<marker id="arrR" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+  <path d="M0,0 L9,4 L0,8 Z" fill="#8B0029"/>
+</marker>
+<marker id="arrB" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+  <path d="M0,0 L9,4 L0,8 Z" fill="#2563EB"/>
+</marker>
+<marker id="arrG" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+  <path d="M0,0 L9,4 L0,8 Z" fill="#6B7280"/>
+</marker>
+<marker id="arrK" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+  <path d="M0,0 L9,4 L0,8 Z" fill="#1a1a1a"/>
+</marker>
+</defs>
+<rect x="0" y="0" width="780" height="480" fill="#ffffff"/>
+<line x1="130.0" y1="440.0" x2="130.0" y2="42.0" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arrK)" stroke-linecap="round"/>
+<line x1="130.0" y1="440.0" x2="450.0" y2="440.0" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
+<text x="118.0" y="40.0" font-size="14" fill="#1a1a1a" text-anchor="end">E (eV)</text>
+<line x1="124.0" y1="440.0" x2="130.0" y2="440.0" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
+<text x="118.0" y="445.0" font-size="13" fill="#6B7280" text-anchor="end">0</text>
+<line x1="124.0" y1="362.0" x2="130.0" y2="362.0" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
+<text x="118.0" y="367.0" font-size="13" fill="#6B7280" text-anchor="end">200</text>
+<line x1="124.0" y1="284.0" x2="130.0" y2="284.0" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
+<text x="118.0" y="289.0" font-size="13" fill="#6B7280" text-anchor="end">400</text>
+<line x1="124.0" y1="206.0" x2="130.0" y2="206.0" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
+<text x="118.0" y="211.0" font-size="13" fill="#6B7280" text-anchor="end">600</text>
+<line x1="124.0" y1="128.0" x2="130.0" y2="128.0" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
+<text x="118.0" y="133.0" font-size="13" fill="#6B7280" text-anchor="end">800</text>
+<line x1="124.0" y1="50.0" x2="130.0" y2="50.0" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
+<text x="118.0" y="55.0" font-size="13" fill="#6B7280" text-anchor="end">1000</text>
+<line x1="180.0" y1="425.3" x2="430.0" y2="425.3" stroke="#8B0029" stroke-width="2.5" stroke-linecap="round"/>
+<text x="444.0" y="430.3" font-size="14" fill="#1a1a1a" text-anchor="start">E₁ = 37.7 eV</text>
+<text x="580.0" y="430.3" font-size="13" fill="#6B7280" text-anchor="start">(바닥상태)</text>
+<line x1="180.0" y1="381.2" x2="430.0" y2="381.2" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round"/>
+<text x="444.0" y="386.2" font-size="14" fill="#1a1a1a" text-anchor="start">E₂ = 150.8 eV</text>
+<text x="580.0" y="386.2" font-size="13" fill="#6B7280" text-anchor="start">(첫째 들뜬상태)</text>
+<line x1="180.0" y1="307.7" x2="430.0" y2="307.7" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round"/>
+<text x="444.0" y="312.7" font-size="14" fill="#1a1a1a" text-anchor="start">E₃ = 339.3 eV</text>
+<text x="580.0" y="312.7" font-size="13" fill="#6B7280" text-anchor="start">(둘째 들뜬상태)</text>
+<line x1="180.0" y1="204.8" x2="430.0" y2="204.8" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round"/>
+<text x="444.0" y="209.8" font-size="14" fill="#1a1a1a" text-anchor="start">E₄ = 603.2 eV</text>
+<text x="580.0" y="209.8" font-size="13" fill="#6B7280" text-anchor="start">(셋째 들뜬상태)</text>
+<line x1="180.0" y1="72.4" x2="430.0" y2="72.4" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round"/>
+<text x="444.0" y="77.4" font-size="14" fill="#1a1a1a" text-anchor="start">E₅ = 942.5 eV</text>
+<text x="580.0" y="77.4" font-size="13" fill="#6B7280" text-anchor="start">(넷째 들뜬상태)</text>
+<text x="305.0" y="28.0" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="bold">무한 우물의 에너지 준위 (L = 100 pm 전자)</text>
+<text x="305.0" y="470.0" font-size="13.5" fill="#6B7280" text-anchor="middle">E ∝ n² : 위로 갈수록 간격이 벌어진다 (중간 에너지는 금지)</text>
+</svg>

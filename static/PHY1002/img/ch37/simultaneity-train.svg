@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 540" width="760" height="540" font-family="sans-serif">
+  <defs>
+    <marker id="arrB2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/>
+    </marker>
+  </defs>
+
+  <!-- ========== Panel (a): t = 0, both strikes (ground frame) ========== -->
+  <text x="30" y="40" font-size="16" font-weight="bold" fill="#1a1a1a">(a) 지상 좌표계, t = 0 : 두 번개가 기차 양 끝을 때린다</text>
+
+  <!-- lightning bolts at A(190) and B(570) -->
+  <path d="M190 55 l-10 26 h9 l-13 30 l22 -22 h-9 l14 -34 z" fill="#8B0029" stroke="none"/>
+  <path d="M570 55 l-10 26 h9 l-13 30 l22 -22 h-9 l14 -34 z" fill="#8B0029" stroke="none"/>
+  <text x="168" y="72" text-anchor="end" font-size="14" font-weight="bold" fill="#8B0029">사건 A</text>
+  <text x="594" y="72" font-size="14" font-weight="bold" fill="#8B0029">사건 B</text>
+
+  <!-- train from 190 to 570 -->
+  <rect x="190" y="118" width="380" height="44" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+  <!-- Sally in middle of train (380) -->
+  <circle cx="380" cy="133" r="7" fill="#2563EB"/>
+  <rect x="376" y="140" width="8" height="16" rx="2" fill="#2563EB"/>
+  <text x="380" y="112" text-anchor="middle" font-size="13" fill="#2563EB" font-weight="bold">기차 관측자 (기차 정중앙)</text>
+  <!-- velocity arrow -->
+  <line x1="586" y1="140" x2="656" y2="140" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrB2)"/>
+  <text x="621" y="129" text-anchor="middle" font-size="14" font-style="italic" fill="#2563EB">v</text>
+
+  <!-- ground + observer -->
+  <line x1="60" y1="177" x2="700" y2="177" stroke="#6B7280" stroke-width="2"/>
+  <circle cx="380" cy="193" r="7" fill="#1a1a1a"/>
+  <rect x="376" y="200" width="8" height="16" rx="2" fill="#1a1a1a"/>
+  <text x="380" y="236" text-anchor="middle" font-size="13" fill="#1a1a1a" font-weight="bold">지상 관측자 (두 사건의 정중앙에 정지)</text>
+
+  <!-- ========== Panel (b): slightly later ========== -->
+  <text x="30" y="300" font-size="16" font-weight="bold" fill="#1a1a1a">(b) 잠시 후 : 기차 관측자가 B의 파면과 먼저 만난다</text>
+
+  <!-- wavefront arcs (upper semicircles) from A(190) and B(570), baseline y=470 -->
+  <!-- earlier fronts (faint) r=70 -->
+  <path d="M120 470 A 70 70 0 0 1 260 470" fill="none" stroke="#8B0029" stroke-width="1.5" opacity="0.35"/>
+  <path d="M500 470 A 70 70 0 0 1 640 470" fill="none" stroke="#8B0029" stroke-width="1.5" opacity="0.35"/>
+  <!-- current fronts r=136 -->
+  <path d="M54 470 A 136 136 0 0 1 326 470" fill="none" stroke="#8B0029" stroke-width="2"/>
+  <path d="M434 470 A 136 136 0 0 1 706 470" fill="none" stroke="#8B0029" stroke-width="2"/>
+
+  <!-- train shifted right by 54: 244..624 -->
+  <rect x="244" y="424" width="380" height="42" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="2" opacity="0.92"/>
+  <!-- Sally at 434 meets B wavefront -->
+  <circle cx="434" cy="438" r="6" fill="#2563EB"/>
+  <rect x="431" y="444" width="6" height="14" rx="2" fill="#2563EB"/>
+  <circle cx="434" cy="445" r="15" fill="none" stroke="#8B0029" stroke-width="2" stroke-dasharray="3 2"/>
+
+  <!-- ground line + observer at 380 -->
+  <line x1="60" y1="470" x2="700" y2="470" stroke="#6B7280" stroke-width="2"/>
+  <circle cx="380" cy="482" r="6" fill="#1a1a1a"/>
+  <rect x="377" y="488" width="6" height="13" rx="2" fill="#1a1a1a"/>
+
+  <!-- A, B strike positions marked -->
+  <text x="190" y="490" text-anchor="middle" font-size="13" fill="#8B0029" font-weight="bold">A</text>
+  <text x="570" y="490" text-anchor="middle" font-size="13" fill="#8B0029" font-weight="bold">B</text>
+
+  <!-- annotations -->
+  <text x="380" y="519" text-anchor="middle" font-size="13.5" fill="#2563EB">기차 관측자: B 파면과 <tspan font-weight="bold">이미 만남</tspan>, A 파면은 아직 → "B가 먼저 일어났다"</text>
+  <text x="380" y="538" text-anchor="middle" font-size="13.5" fill="#1a1a1a">지상 관측자: 두 파면이 잠시 후 <tspan font-weight="bold">동시에</tspan> 도착 → "A와 B는 동시" — 둘 다 옳다!</text>
+
+  <!-- label near wavefronts -->
+  <text x="85" y="326" text-anchor="middle" font-size="12.5" fill="#8B0029">A의 빛 파면</text>
+  <text x="678" y="326" text-anchor="middle" font-size="12.5" fill="#8B0029">B의 빛 파면</text>
+</svg>

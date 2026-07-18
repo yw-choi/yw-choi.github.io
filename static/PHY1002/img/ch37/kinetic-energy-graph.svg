@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="700" height="440" font-family="sans-serif">
+  <defs>
+    <marker id="arrG10" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <text x="370" y="34" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a1a">운동 에너지: 고전역학 vs 상대론</text>
+
+  <!-- gridlines K/mc^2 = 1,2,3 -->
+  <line x1="80" y1="266.7" x2="660" y2="266.7" stroke="#F3F4F6" stroke-width="2"/>
+  <line x1="80" y1="153.3" x2="660" y2="153.3" stroke="#F3F4F6" stroke-width="2"/>
+  <line x1="80" y1="40" x2="660" y2="40" stroke="#F3F4F6" stroke-width="2"/>
+
+  <!-- axes -->
+  <line x1="80" y1="380" x2="672" y2="380" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrG10)"/>
+  <line x1="80" y1="380" x2="80" y2="28" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrG10)"/>
+  <text x="664" y="404" text-anchor="middle" font-size="15" font-style="italic" fill="#1a1a1a">v/c</text>
+  <text x="46" y="34" text-anchor="middle" font-size="14" fill="#1a1a1a"><tspan font-style="italic">K</tspan>/<tspan font-style="italic">mc</tspan>²</text>
+
+  <!-- x ticks -->
+  <g font-size="13" fill="#6B7280" text-anchor="middle">
+    <line x1="192" y1="380" x2="192" y2="386" stroke="#6B7280" stroke-width="1"/><text x="192" y="402">0.2</text>
+    <line x1="304" y1="380" x2="304" y2="386" stroke="#6B7280" stroke-width="1"/><text x="304" y="402">0.4</text>
+    <line x1="416" y1="380" x2="416" y2="386" stroke="#6B7280" stroke-width="1"/><text x="416" y="402">0.6</text>
+    <line x1="528" y1="380" x2="528" y2="386" stroke="#6B7280" stroke-width="1"/><text x="528" y="402">0.8</text>
+    <line x1="640" y1="380" x2="640" y2="386" stroke="#6B7280" stroke-width="1"/><text x="640" y="402">1.0</text>
+    <text x="80" y="402">0</text>
+  </g>
+  <!-- y ticks -->
+  <g font-size="13" fill="#6B7280" text-anchor="end">
+    <text x="72" y="385">0</text>
+    <text x="72" y="271">1</text>
+    <text x="72" y="158">2</text>
+    <text x="72" y="45">3</text>
+  </g>
+
+  <!-- asymptote v = c -->
+  <line x1="640" y1="380" x2="640" y2="40" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="598" y="58" text-anchor="end" font-size="13" fill="#6B7280">v = c (도달 불가)</text>
+
+  <!-- classical curve K = (1/2)mv^2 -->
+  <polyline fill="none" stroke="#2563EB" stroke-width="2.5"
+    points="80,380 136,379.4 192,377.7 248,374.9 304,370.9 360,365.8 416,359.6 472,352.2 528,343.7 584,334.1 640,323.3"/>
+  <text x="560" y="313" font-size="14" fill="#2563EB" font-weight="bold">고전: K = ½mv²</text>
+
+  <!-- relativistic curve K = (γ-1)mc^2 -->
+  <polyline fill="none" stroke="#8B0029" stroke-width="2.5"
+    points="80,380 192,377.7 248,374.5 304,369.7 360,362.5 416,351.7 472,334.6 528,304.4 556,278.2 584,233.3 600.8,185.0 612,130.4 617.6,88.6 622.2,40"/>
+  <text x="566" y="200" text-anchor="end" font-size="14" fill="#8B0029" font-weight="bold">상대론: K = (γ−1)mc²</text>
+
+  <!-- annotation -->
+  <text x="200" y="330" font-size="13" fill="#6B7280">저속에서는 두 곡선이 일치</text>
+  <text x="592" y="110" text-anchor="end" font-size="13" fill="#8B0029">v → c 에서 K → ∞</text>
+</svg>

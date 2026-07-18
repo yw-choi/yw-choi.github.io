@@ -1,0 +1,43 @@
+<svg viewBox="0 0 720 440" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<defs><marker id="arrRed" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8B0029"/></marker><marker id="arrBlue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/></marker><marker id="arrGray" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6B7280"/></marker><marker id="arrInk" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a1a1a"/></marker></defs>
+<rect x="95" y="60" width="220" height="290" fill="#F3F4F6"/>
+<text x="205.0" y="150" font-size="13.5" fill="#6B7280" text-anchor="middle" font-weight="normal">전자 방출 없음</text>
+<text x="205.0" y="170" font-size="13" fill="#6B7280" text-anchor="middle" font-weight="normal" font-style="italic">( f &lt; f₀ )</text>
+<line x1="95" y1="350" x2="680" y2="350" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arrInk)"/>
+<line x1="95" y1="350" x2="95" y2="40" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arrInk)"/>
+<text x="685" y="392" font-size="14" fill="#1a1a1a" text-anchor="end" font-weight="normal" font-style="italic">f (10¹⁴ Hz)</text>
+<text x="55" y="30" font-size="14" fill="#1a1a1a" text-anchor="start" font-weight="normal">정지 전압 <tspan font-style="italic">V</tspan><tspan font-size="10" dy="4">stop</tspan><tspan dy="-4"> (V)</tspan></text>
+<line x1="175.0" y1="350" x2="175.0" y2="356" stroke="#1a1a1a" stroke-width="1.2"/>
+<text x="175.0" y="372" font-size="12.5" fill="#1a1a1a" text-anchor="middle" font-weight="normal">2</text>
+<line x1="255.0" y1="350" x2="255.0" y2="356" stroke="#1a1a1a" stroke-width="1.2"/>
+<text x="255.0" y="372" font-size="12.5" fill="#1a1a1a" text-anchor="middle" font-weight="normal">4</text>
+<line x1="415.0" y1="350" x2="415.0" y2="356" stroke="#1a1a1a" stroke-width="1.2"/>
+<text x="415.0" y="372" font-size="12.5" fill="#1a1a1a" text-anchor="middle" font-weight="normal">8</text>
+<line x1="495.0" y1="350" x2="495.0" y2="356" stroke="#1a1a1a" stroke-width="1.2"/>
+<text x="495.0" y="372" font-size="12.5" fill="#1a1a1a" text-anchor="middle" font-weight="normal">10</text>
+<line x1="575.0" y1="350" x2="575.0" y2="356" stroke="#1a1a1a" stroke-width="1.2"/>
+<text x="575.0" y="372" font-size="12.5" fill="#1a1a1a" text-anchor="middle" font-weight="normal">12</text>
+<line x1="89" y1="267.14285714285717" x2="95" y2="267.14285714285717" stroke="#1a1a1a" stroke-width="1.2"/>
+<text x="83" y="272.14285714285717" font-size="12.5" fill="#1a1a1a" text-anchor="end" font-weight="normal">1.0</text>
+<line x1="89" y1="184.2857142857143" x2="95" y2="184.2857142857143" stroke="#1a1a1a" stroke-width="1.2"/>
+<text x="83" y="189.2857142857143" font-size="12.5" fill="#1a1a1a" text-anchor="end" font-weight="normal">2.0</text>
+<line x1="89" y1="101.42857142857144" x2="95" y2="101.42857142857144" stroke="#1a1a1a" stroke-width="1.2"/>
+<text x="83" y="106.42857142857144" font-size="12.5" fill="#1a1a1a" text-anchor="end" font-weight="normal">3.0</text>
+<line x1="315.0" y1="350.0" x2="635.0" y2="75.6" stroke="#8B0029" stroke-width="2.5"/>
+<line x1="315.0" y1="350.0" x2="263.0" y2="394.59371428571427" stroke="#8B0029" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="251.0" y="416.59371428571427" font-size="12.5" fill="#8B0029" text-anchor="end" font-weight="normal" font-style="italic">직선을 연장하면 세로축 절편 = −Φ/e</text>
+<circle cx="359.0" cy="312.3" r="4.5" fill="#8B0029" stroke="#fff" stroke-width="1.2"/>
+<circle cx="399.0" cy="278.0" r="4.5" fill="#8B0029" stroke="#fff" stroke-width="1.2"/>
+<circle cx="443.0" cy="240.2" r="4.5" fill="#8B0029" stroke="#fff" stroke-width="1.2"/>
+<circle cx="495.0" cy="195.6" r="4.5" fill="#8B0029" stroke="#fff" stroke-width="1.2"/>
+<circle cx="559.0" cy="140.8" r="4.5" fill="#8B0029" stroke="#fff" stroke-width="1.2"/>
+<circle cx="607.0" cy="99.6" r="4.5" fill="#8B0029" stroke="#fff" stroke-width="1.2"/>
+<line x1="435.0" y1="247.09142857142857" x2="575.0" y2="247.09142857142857" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="575.0" y1="247.09142857142857" x2="575.0" y2="127.03142857142859" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="505.0" y="265.09142857142854" font-size="13" fill="#6B7280" text-anchor="middle" font-weight="normal" font-style="italic">Δf</text>
+<text x="585.0" y="191.06142857142856" font-size="13" fill="#6B7280" text-anchor="start" font-weight="normal" font-style="italic">ΔV</text>
+<text x="455.0" y="151.04342857142856" font-size="14.5" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">기울기 = h/e</text>
+<circle cx="315.0" cy="350" r="5" fill="#fff" stroke="#8B0029" stroke-width="2"/>
+<text x="315.0" y="374" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold" font-style="italic">f₀</text>
+<text x="331.0" y="392" font-size="12.5" fill="#8B0029" text-anchor="start" font-weight="normal" font-style="italic">문턱 진동수 (Φ = hf₀)</text>
+</svg>

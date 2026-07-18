@@ -1,0 +1,39 @@
+<svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<defs><marker id="arrRed" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8B0029"/></marker><marker id="arrBlue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/></marker><marker id="arrGray" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6B7280"/></marker><marker id="arrInk" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a1a1a"/></marker></defs>
+<rect x="150" y="55" width="460" height="185" rx="42" fill="#FBFBFC" stroke="#6B7280" stroke-width="2"/>
+<text x="238" y="45" font-size="13" fill="#6B7280" text-anchor="middle" font-weight="normal">진공 유리관</text>
+<rect x="395" y="52" width="105" height="7" fill="#2563EB" opacity="0.35"/>
+<text x="388" y="42" font-size="12.5" fill="#2563EB" text-anchor="end" font-weight="normal">석영 창</text>
+<line x1="505" y1="18" x2="228" y2="110" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRed)"/>
+<line x1="527" y1="26" x2="244" y2="126" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRed)"/>
+<line x1="549" y1="34" x2="260" y2="142" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrRed)"/>
+<text x="560" y="20" font-size="14" fill="#8B0029" text-anchor="start" font-weight="bold">입사광 (진동수 f )</text>
+<rect x="205" y="90" width="12" height="120" fill="#8B0029" stroke="none" rx="2"/>
+<text x="211" y="230" font-size="13.5" fill="#8B0029" text-anchor="middle" font-weight="bold">타깃 T</text>
+<path d="M525,95 L545,95 L545,205 L525,205 M525,95 L525,115 M525,205 L525,185" stroke="#2563EB" stroke-width="6" fill="none" stroke-linecap="round"/>
+<text x="540" y="230" font-size="13.5" fill="#2563EB" text-anchor="middle" font-weight="bold">컬렉터 C</text>
+<circle cx="300" cy="130" r="7" fill="#2563EB"/>
+<text x="300" y="134" font-size="11" fill="#fff" text-anchor="middle" font-weight="normal">−</text>
+<line x1="310" y1="130" x2="346" y2="130" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrGray)"/>
+<circle cx="370" cy="150" r="7" fill="#2563EB"/>
+<text x="370" y="154" font-size="11" fill="#fff" text-anchor="middle" font-weight="normal">−</text>
+<line x1="380" y1="150" x2="416" y2="150" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrGray)"/>
+<circle cx="440" cy="170" r="7" fill="#2563EB"/>
+<text x="440" y="174" font-size="11" fill="#fff" text-anchor="middle" font-weight="normal">−</text>
+<line x1="450" y1="170" x2="486" y2="170" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrGray)"/>
+<text x="368" y="212" font-size="13" fill="#6B7280" text-anchor="middle" font-weight="normal">광전자 (photoelectrons)</text>
+<line x1="211" y1="240" x2="211" y2="330" stroke="#1a1a1a" stroke-width="2"/>
+<line x1="535" y1="205" x2="535" y2="330" stroke="#1a1a1a" stroke-width="2"/>
+<line x1="211" y1="330" x2="300" y2="330" stroke="#1a1a1a" stroke-width="2"/>
+<line x1="430" y1="330" x2="480" y2="330" stroke="#1a1a1a" stroke-width="2"/>
+<line x1="510" y1="330" x2="535" y2="330" stroke="#1a1a1a" stroke-width="2"/>
+<rect x="300" y="316" width="130" height="28" fill="#F3F4F6" stroke="#6B7280" stroke-width="2" rx="4"/>
+<text x="315" y="336" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="normal">−</text>
+<text x="415" y="336" font-size="15" fill="#1a1a1a" text-anchor="middle" font-weight="normal">+</text>
+<line x1="365" y1="296" x2="365" y2="314" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrGray)"/>
+<text x="365" y="288" font-size="12.5" fill="#6B7280" text-anchor="middle" font-weight="normal">가변 전위차 V (부호·크기 조절)</text>
+<circle cx="495" cy="330" r="16" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+<text x="495" y="335" font-size="14" fill="#1a1a1a" text-anchor="middle" font-weight="bold">A</text>
+<text x="495" y="368" font-size="12.5" fill="#6B7280" text-anchor="middle" font-weight="normal">전류계 (광전류 i )</text>
+<text x="380" y="400" font-size="13.5" fill="#1a1a1a" text-anchor="middle" font-weight="normal">V를 음(−)으로 걸어 전자를 감속 → 전류가 0이 되는 전압이 정지 전압 V<tspan font-size="10" dy="4">stop</tspan></text>
+</svg>

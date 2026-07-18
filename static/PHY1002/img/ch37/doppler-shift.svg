@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 440" width="740" height="440" font-family="sans-serif">
+  <defs>
+    <marker id="arrR9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8B0029"/>
+    </marker>
+    <marker id="arrG9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6B7280"/>
+    </marker>
+  </defs>
+
+  <text x="370" y="34" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a1a">움직이는 광원의 도플러 효과</text>
+
+  <!-- wavefront circles: source moving right; emitted earlier = bigger, center further left -->
+  <circle cx="340" cy="225" r="160" fill="none" stroke="#6B7280" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="372" cy="225" r="120" fill="none" stroke="#6B7280" stroke-width="1.5" opacity="0.65"/>
+  <circle cx="404" cy="225" r="80" fill="none" stroke="#6B7280" stroke-width="1.5" opacity="0.8"/>
+  <circle cx="436" cy="225" r="40" fill="none" stroke="#6B7280" stroke-width="1.5"/>
+
+  <!-- source now -->
+  <circle cx="468" cy="225" r="8" fill="#8B0029"/>
+  <line x1="480" y1="225" x2="540" y2="225" stroke="#8B0029" stroke-width="2.5" marker-end="url(#arrR9)"/>
+  <text x="510" y="212" text-anchor="middle" font-size="14" font-style="italic" fill="#8B0029">v</text>
+  <text x="503" y="252" text-anchor="middle" font-size="13" fill="#8B0029" font-weight="bold">광원</text>
+
+  <!-- wavelength measure behind (stretched): between back edges 180 and 252 -->
+  <line x1="196" y1="290" x2="269" y2="290" stroke="#8B0029" stroke-width="1" stroke-dasharray="4 3" marker-start="url(#arrG9)" marker-end="url(#arrG9)"/>
+  <text x="232" y="310" text-anchor="middle" font-size="12" fill="#8B0029">λ</text>
+
+  <!-- behind: stretched -->
+  <text x="100" y="185" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#8B0029">λ 길어짐</text>
+  <text x="100" y="205" text-anchor="middle" font-size="13.5" fill="#8B0029">적색 이동 (red shift)</text>
+  <text x="100" y="245" text-anchor="middle" font-size="13" fill="#6B7280">광원이 멀어지는</text>
+  <text x="100" y="263" text-anchor="middle" font-size="13" fill="#6B7280">관측자</text>
+
+  <!-- ahead: compressed -->
+  <text x="640" y="185" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#2563EB">λ 짧아짐</text>
+  <text x="640" y="205" text-anchor="middle" font-size="13.5" fill="#2563EB">청색 이동 (blue shift)</text>
+  <text x="640" y="245" text-anchor="middle" font-size="13" fill="#6B7280">광원이 다가오는</text>
+  <text x="640" y="263" text-anchor="middle" font-size="13" fill="#6B7280">관측자</text>
+
+  <!-- formulas at bottom -->
+  <text x="370" y="420" text-anchor="middle" font-size="14.5" fill="#1a1a1a">멀어질 때: λ = λ₀√[(1+β)/(1−β)] &gt; λ₀ ····· 가까워질 때는 β의 부호를 반대로</text>
+</svg>
