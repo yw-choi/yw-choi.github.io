@@ -1,4 +1,24 @@
 /* Mobile Navigation Menu */
+.workspace-entry {
+    margin-left: .45rem;
+    border: 1px solid #d7d2c8;
+    border-radius: 7px;
+    background: #f7f5ef;
+    color: #2947bd !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+}
+
+.workspace-entry::after {
+    margin-left: .35rem;
+    content: "→";
+}
+
+.workspace-entry:hover {
+    border-color: #b9b2a5;
+    background: #efede6;
+}
+
 @media (max-width: 991.98px) {
     #mainNav {
         margin-top: 1rem;
@@ -15,6 +35,12 @@
 
     #mainNav a:last-child {
         border-bottom: none;
+    }
+
+    #mainNav .workspace-entry {
+        margin: .5rem 0 0;
+        padding-right: .75rem !important;
+        padding-left: .75rem !important;
     }
 }
 
