@@ -63,7 +63,3 @@ weight = 47
 name = 'Photos'
 pageRef = '/photos'
 weight = 50
-[[menus.main]]
-name = 'Workspace'
-url = '/portal'
-weight = 60
