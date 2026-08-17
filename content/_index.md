@@ -19,11 +19,14 @@ title: "Home"
 </div>
 
 ### Recent News
+- **2026/08** Our paper on a single-*q* charge density wave in pristine 1*T*-TiSe<sub>2</sub> has been accepted for publication in Nature Communications!
 - **2026/07** Dongsin Kim received an Outstanding Poster Presentation Award at the 2026 KIAS ESCW!
 - **2026/07** Our group participated in the 2nd Electronic Structure Symposium!
+- **2026/04** Our paper on dislocation networks in marginally twisted bilayer MoS<sub>2</sub> has been published in ACS Materials Letters!
 - **2026/04** Byeongchan Lee began a six-month research visit to Prof. Zhenglu Li's group at USC!
 - **2026/03** Dongsin Kim received an award at the G-LAMP Undergraduate Research Presentation!
 - **2026/03** Sreang Sokly joined our group. Welcome!
+- **2026/01** Our paper on impurity-induced charge modulations in black phosphorus has been published in Physical Review B!
 - **2026/01** Dr. Sanghyun Ji joined our group. Welcome!
 - **2025/12** We are organizing [the 1st International Nanomaterials Symposium](./2025_1st_INS) in Busan, Korea on December 9-10, 2025! 
 - **2025/11** Our paper on p-Doping of Carbon Nanotube Transistors has been published in ACS Nano!
