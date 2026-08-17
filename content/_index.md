@@ -20,17 +20,16 @@ title: "Home"
 
 <style>
     .home-news {
-        border-top: 2px solid #cfd5dc;
-        margin-top: 1rem;
+        margin-top: 0.55rem;
     }
     .home-news-item {
         display: grid;
-        grid-template-columns: 5.7rem 5.3rem minmax(0, 1fr);
-        column-gap: 0.55rem;
+        grid-template-columns: 5.15rem 4.85rem minmax(0, 1fr);
+        column-gap: 0.35rem;
         align-items: baseline;
-        padding: 0.66rem 0.1rem;
-        border-bottom: 1px solid #dfe3e8;
-        line-height: 1.45;
+        padding: 0.24rem 0;
+        font-size: 0.95rem;
+        line-height: 1.35;
     }
     .home-news-date {
         color: #59636e;
@@ -63,12 +62,10 @@ title: "Home"
     }
     @media (max-width: 575.98px) {
         .home-news-item {
-            grid-template-columns: 5.2rem minmax(0, 1fr);
-            row-gap: 0.18rem;
-            padding: 0.7rem 0;
-        }
-        .home-news-copy {
-            grid-column: 1 / -1;
+            grid-template-columns: 4.75rem 4.45rem minmax(0, 1fr);
+            column-gap: 0.22rem;
+            padding: 0.25rem 0;
+            font-size: 0.88rem;
         }
     }
 </style>
