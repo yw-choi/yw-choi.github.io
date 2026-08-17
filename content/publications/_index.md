@@ -17,27 +17,27 @@ title: Publications
 </style>
 
 18. Kimoon Higashihira Han†, Dongju Hwang†, **Dongsin Kim**†, Yeojin Ahn, Jaehun Cha, Seonggeon Gim, Gyubin Lee, Mingi Jho, Chan-young Lim, Sae Hee Ryu, Chris Jozwiak, Aaron Bostwick, Eli Rotenberg, Jonathan D. Denlinger, Makoto Hashimoto, Donghui Lu, **Young Woo Choi**\*, Gil Young Cho\*, and Yeongkwan Kim\*,<br>
-<span class="publication-title">Unexpected stabilization of a single-*q* charge density wave in pristine 1*T*-TiSe<sub>2</sub></span>,<br>
+<span id="publication-18" class="publication-title">Unexpected stabilization of a single-*q* charge density wave in pristine 1*T*-TiSe<sub>2</sub></span>,<br>
 <span class="publication-citation">Nature Communications (accepted, 2026).</span>
 
 17. Byunghyun Kim†, Ayoung Yuk†, Yunyeong Chang†, **Dongsin Kim**†, Daesung Park, **Young Woo Choi**\*, Miyoung Kim\*, Moon Sung Kang\*, and Hyobin Yoo\*,  
-<a class="publication-title" href="https://doi.org/10.1021/acsmaterialslett.5c01692" target="_blank" rel="noopener noreferrer">Dislocation Networks in Marginally Twisted Bilayer MoS<sub>2</sub></a>,<br>
+<a id="publication-17" class="publication-title" href="https://doi.org/10.1021/acsmaterialslett.5c01692" target="_blank" rel="noopener noreferrer">Dislocation Networks in Marginally Twisted Bilayer MoS<sub>2</sub></a>,<br>
 <span class="publication-citation">ACS Materials Letters **8**, 1382 (2026).</span>
 
 16. Byeongin Lee, Junho Bang, Sayan Banerjee, João Augusto Sobral, **Young Woo Choi**, Claudia Felser, Mathias S. Scheurer, Jian-Feng Ge, and Doohee Cho,  
-<a class="publication-title" href="https://journals.aps.org/prb/abstract/10.1103/39jp-9dkp" target="_blank" rel="noopener noreferrer">Anomalous impurity-induced charge modulations in black phosphorus</a>,<br>
+<a id="publication-16" class="publication-title" href="https://journals.aps.org/prb/abstract/10.1103/39jp-9dkp" target="_blank" rel="noopener noreferrer">Anomalous impurity-induced charge modulations in black phosphorus</a>,<br>
 <span class="publication-citation">Physical Review B **113**, L041105 (2026).</span>
 
 15.  Yongjae Cho, Sushanta Pal, Stephen J. Buffat, Hao-Yu Lan, **Young Woo Choi**, Dmitry Y. Zemlyanov, Connor Devitt, Sunil A. Bhave, Zhihong Chen, and Joerg Appenzeller,     
-<a class="publication-title" href="https://doi.org/10.1021/acsnano.5c09061" target="_blank" rel="noopener noreferrer">Extension p-Doping of Carbon Nanotube Transistors through Nitric Oxides Annealing</a>,<br>
+<a id="publication-15" class="publication-title" href="https://doi.org/10.1021/acsnano.5c09061" target="_blank" rel="noopener noreferrer">Extension p-Doping of Carbon Nanotube Transistors through Nitric Oxides Annealing</a>,<br>
 <span class="publication-citation">ACS Nano **19**, 39014 (2025).</span>
 
 14.  **Young Woo Choi**†, Yangjin Lee†, Kwanpyo Kim, Alex Zettl, and Marvin L. Cohen,  
-<a class="publication-title" href="https://doi.org/10.1021/acsnano.5c00034" target="_blank" rel="noopener noreferrer">Atomic and Electronic Structures of 1D Phosphorus Nanoring and Nanohelix</a>,<br>
+<a id="publication-14" class="publication-title" href="https://doi.org/10.1021/acsnano.5c00034" target="_blank" rel="noopener noreferrer">Atomic and Electronic Structures of 1D Phosphorus Nanoring and Nanohelix</a>,<br>
 <span class="publication-citation">ACS Nano **19**, 12155 (2025).</span>
 
 13.  **Young Woo Choi**, Jisoon Ihm, and Marvin L. Cohen,  
-<a class="publication-title" href="https://doi.org/10.1103/PhysRevB.110.155127" target="_blank" rel="noopener noreferrer">Pairing interaction from three-dimensional acoustic plasmon demon modes in Sr<sub>2</sub>RuO<sub>4</sub></a>,<br>
+<a id="publication-13" class="publication-title" href="https://doi.org/10.1103/PhysRevB.110.155127" target="_blank" rel="noopener noreferrer">Pairing interaction from three-dimensional acoustic plasmon demon modes in Sr<sub>2</sub>RuO<sub>4</sub></a>,<br>
 <span class="publication-citation">Physical Review B **110**, 155127 (2024).</span>
 
 12.  Yangjin Lee†, **Young Woo Choi**†, Linxuan Li, Wu Zhou, Marvin L. Cohen, Kwanpyo Kim, and Alex Zettl,  

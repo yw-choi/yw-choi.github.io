@@ -19,26 +19,24 @@ title: "Home"
 </div>
 
 ### Recent News
-- **2026/08 [Paper]** Nature Communications: single-*q* charge density wave in pristine 1*T*-TiSe<sub>2</sub> (accepted).
+- **2026/08 [Paper]** [#18](/publications/#publication-18) Nature Communications: single-*q* charge density wave in pristine 1*T*-TiSe<sub>2</sub> (accepted).
 - **2026/07 [Member]** Dongsin Kim: Outstanding Poster Award, KIAS ESCW.
 - **2026/07 [Events]** 2nd Electronic Structure Symposium.
-- **2026/04 [Paper]** ACS Materials Letters: dislocation networks in marginally twisted bilayer MoS<sub>2</sub>.
+- **2026/04 [Paper]** [#17](/publications/#publication-17) ACS Materials Letters: dislocation networks in marginally twisted bilayer MoS<sub>2</sub>.
 - **2026/04 [Member]** Byeongchan Lee: six-month visit to Zhenglu Li's group, USC.
 - **2026/03 [Member]** Dongsin Kim: G-LAMP Undergraduate Research Presentation Award.
-- **2026/03 [Member]** Sreang Sokly joined.
-- **2026/01 [Paper]** Physical Review B: impurity-induced charge modulations in black phosphorus.
-- **2026/01 [Member]** Dr. Sanghyun Ji joined.
-- **2025/12 [Events]** [1st International Nanomaterials Symposium](./2025_1st_INS): Busan, December 9–10.
-- **2025/11 [Paper]** ACS Nano: p-doping of carbon nanotube transistors.
-- **2025/09 [Grant]** KISTI Nurion allocation awarded.
-- **2025/09 [Member]** Minchul Choi joined.
-- **2025/03 [Paper]** ACS Nano: 1D phosphorus nanostructures.
-- **2024/12 [Member]** Dr. Jae Ha Kim joined.
-- **2024/10 [Member]** Seunghee joined.
-- **2024/10 [Paper]** Physical Review B: pairing interaction from demon modes (published).
-- **2024/10 [Member]** Seongbin joined.
-- **2024/09 [Member]** Seungwoo, Seongmin, and Dongsin joined.
-- **2024/09 [Member]** Byeongchan joined.
-- **2024/09 [Grant]** KISTI Nurion allocation awarded.
-- **2024/09 [Member]** Young Woo Choi joined Sogang University.
+- **2026/03 [Member]** Sreang Sokly.
+- **2026/01 [Paper]** [#16](/publications/#publication-16) Physical Review B: impurity-induced charge modulations in black phosphorus.
+- **2026/01 [Member]** Dr. Sanghyun Ji.
+- **2025/12 [Events]** Organized the [1st International Nanomaterials Symposium](https://yw-choi.github.io/2025_1st_INS), Busan, December 9–10.
+- **2025/11 [Paper]** [#15](/publications/#publication-15) ACS Nano: p-doping of carbon nanotube transistors.
+- **2025/09 [Member]** Minchul Choi.
+- **2025/03 [Paper]** [#14](/publications/#publication-14) ACS Nano: 1D phosphorus nanostructures.
+- **2024/12 [Member]** Dr. Jae Ha Kim.
+- **2024/10 [Member]** Seunghee.
+- **2024/10 [Paper]** [#13](/publications/#publication-13) Physical Review B: pairing interaction from demon modes (published).
+- **2024/10 [Member]** Seongbin.
+- **2024/09 [Member]** Seungwoo, Seongmin, and Dongsin.
+- **2024/09 [Member]** Byeongchan.
+- **2024/09 [Member]** Young Woo Choi established the group at Sogang University.
 {class="home-news"}
