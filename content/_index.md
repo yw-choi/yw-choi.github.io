@@ -19,26 +19,26 @@ title: "Home"
 </div>
 
 ### Recent News
-- **2026/08** Our paper on a single-*q* charge density wave in pristine 1*T*-TiSe<sub>2</sub> has been accepted for publication in Nature Communications!
-- **2026/07** Dongsin Kim received an Outstanding Poster Presentation Award at the 2026 KIAS ESCW!
-- **2026/07** Our group participated in the 2nd Electronic Structure Symposium!
-- **2026/04** Our paper on dislocation networks in marginally twisted bilayer MoS<sub>2</sub> has been published in ACS Materials Letters!
-- **2026/04** Byeongchan Lee began a six-month research visit to Prof. Zhenglu Li's group at USC!
-- **2026/03** Dongsin Kim received an award at the G-LAMP Undergraduate Research Presentation!
-- **2026/03** Sreang Sokly joined our group. Welcome!
-- **2026/01** Our paper on impurity-induced charge modulations in black phosphorus has been published in Physical Review B!
-- **2026/01** Dr. Sanghyun Ji joined our group. Welcome!
-- **2025/12** We are organizing [the 1st International Nanomaterials Symposium](./2025_1st_INS) in Busan, Korea on December 9-10, 2025! 
-- **2025/11** Our paper on p-Doping of Carbon Nanotube Transistors has been published in ACS Nano!
-- **2025/09** Our KISTI Nurion allocation proposal has been accepted!
-- **2025/09** Minchul Choi joined our group. Welcome!
-- **2025/03** Our paper on 1D phosphorus nanostructures has been published in ACS Nano!
-- **2024/12** Dr. Jae Ha Kim joined our group. Welcome!
-- **2024/10** Seunghee joined our group. Welcome!
-- **2024/10** Our paper on pairing interaction from demon modes has been accepted for publication in Physical Review B.
-- **2024/10** Seongbin joined our group. Welcome!
-- **2024/09** Seungwoo, Seongmin, and Dongsin joined our group. Welcome!
-- **2024/09** Byeongchan joined our group. Welcome!
-- **2024/09** Our allocation proposal for KISTI supercomputer resource (NURION) has been accepted!
-- **2024/09** Young Woo Choi joined Sogang University!
+- **2026/08 [Paper]** Nature Communications — single-*q* charge density wave in pristine 1*T*-TiSe<sub>2</sub> (accepted).
+- **2026/07 [Member]** Dongsin Kim — Outstanding Poster Award, KIAS ESCW.
+- **2026/07 [Events]** 2nd Electronic Structure Symposium.
+- **2026/04 [Paper]** ACS Materials Letters — dislocation networks in marginally twisted bilayer MoS<sub>2</sub>.
+- **2026/04 [Member]** Byeongchan Lee — six-month visit to Zhenglu Li's group, USC.
+- **2026/03 [Member]** Dongsin Kim — G-LAMP Undergraduate Research Presentation Award.
+- **2026/03 [Member]** Sreang Sokly joined.
+- **2026/01 [Paper]** Physical Review B — impurity-induced charge modulations in black phosphorus.
+- **2026/01 [Member]** Dr. Sanghyun Ji joined.
+- **2025/12 [Events]** [1st International Nanomaterials Symposium](./2025_1st_INS) — Busan, December 9–10.
+- **2025/11 [Paper]** ACS Nano — p-doping of carbon nanotube transistors.
+- **2025/09 [Grant]** KISTI Nurion allocation awarded.
+- **2025/09 [Member]** Minchul Choi joined.
+- **2025/03 [Paper]** ACS Nano — 1D phosphorus nanostructures.
+- **2024/12 [Member]** Dr. Jae Ha Kim joined.
+- **2024/10 [Member]** Seunghee joined.
+- **2024/10 [Paper]** Physical Review B — pairing interaction from demon modes (accepted).
+- **2024/10 [Member]** Seongbin joined.
+- **2024/09 [Member]** Seungwoo, Seongmin, and Dongsin joined.
+- **2024/09 [Member]** Byeongchan joined.
+- **2024/09 [Grant]** KISTI Nurion allocation awarded.
+- **2024/09 [Member]** Young Woo Choi joined Sogang University.
 {class="home-news"}
