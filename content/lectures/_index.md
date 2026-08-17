@@ -20,6 +20,9 @@ title: Lectures
     </span>
     <ul>
         <li>
+        <a href="/PHY4008/">Computational Physics II</a> (undergraduate course, in English)
+        </li>
+        <li>
         <a href="/PHY1002/">General Physics II</a> (undergraduate course)
         </li>
     </ul>
