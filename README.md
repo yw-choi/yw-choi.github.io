@@ -16,7 +16,7 @@ The website showcases:
 - **Static Site Generator**: [Hugo](https://gohugo.io/) v0.128.0
 - **Theme**: Custom theme (`ywchoi`)
 - **CSS Framework**: Bootstrap 5.3.3
-- **Font**: Inter (Google Fonts)
+- **Font**: Arial
 - **Hosting**: GitHub Pages
 - **Deployment**: GitHub Actions
 
