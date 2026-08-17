@@ -32,12 +32,12 @@ title: "Home"
         line-height: 1.35;
     }
     .home-news-date {
-        color: #59636e;
-        font-weight: 700;
+        color: #212529;
+        font-weight: 400;
         font-variant-numeric: tabular-nums;
     }
     .home-news-category {
-        font-weight: 700;
+        font-weight: 400;
     }
     .home-news-paper {
         color: #003377;
@@ -76,7 +76,7 @@ title: "Home"
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/08</span>
         <span class="home-news-category home-news-paper">[Paper]</span>
-        <span class="home-news-copy"><a href="/publications/#publication-18">#18</a> Nature Communications: single-<em>q</em> charge density wave in pristine 1<em>T</em>-TiSe<sub>2</sub> (accepted).</span>
+        <span class="home-news-copy"><a href="/publications/#publication-18">Nature Communications: single-<em>q</em> charge density wave in pristine 1<em>T</em>-TiSe<sub>2</sub> (accepted).</a></span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/08</span>
@@ -106,7 +106,7 @@ title: "Home"
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/04</span>
         <span class="home-news-category home-news-paper">[Paper]</span>
-        <span class="home-news-copy"><a href="/publications/#publication-17">#17</a> ACS Materials Letters: dislocation networks in marginally twisted bilayer MoS<sub>2</sub>.</span>
+        <span class="home-news-copy"><a href="/publications/#publication-17">ACS Materials Letters: dislocation networks in marginally twisted bilayer MoS<sub>2</sub>.</a></span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/04</span>
@@ -131,7 +131,7 @@ title: "Home"
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/01</span>
         <span class="home-news-category home-news-paper">[Paper]</span>
-        <span class="home-news-copy"><a href="/publications/#publication-16">#16</a> Physical Review B: impurity-induced charge modulations in black phosphorus.</span>
+        <span class="home-news-copy"><a href="/publications/#publication-16">Physical Review B: impurity-induced charge modulations in black phosphorus.</a></span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2025/12</span>
@@ -151,7 +151,7 @@ title: "Home"
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2025/11</span>
         <span class="home-news-category home-news-paper">[Paper]</span>
-        <span class="home-news-copy"><a href="/publications/#publication-15">#15</a> ACS Nano: p-doping of carbon nanotube transistors.</span>
+        <span class="home-news-copy"><a href="/publications/#publication-15">ACS Nano: p-doping of carbon nanotube transistors.</a></span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2025/10</span>
@@ -176,7 +176,7 @@ title: "Home"
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2025/03</span>
         <span class="home-news-category home-news-paper">[Paper]</span>
-        <span class="home-news-copy"><a href="/publications/#publication-14">#14</a> ACS Nano: 1D phosphorus nanostructures.</span>
+        <span class="home-news-copy"><a href="/publications/#publication-14">ACS Nano: 1D phosphorus nanostructures.</a></span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2025/03</span>
@@ -196,7 +196,7 @@ title: "Home"
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2024/10</span>
         <span class="home-news-category home-news-paper">[Paper]</span>
-        <span class="home-news-copy"><a href="/publications/#publication-13">#13</a> Physical Review B: pairing interaction from demon modes (published).</span>
+        <span class="home-news-copy"><a href="/publications/#publication-13">Physical Review B: pairing interaction from demon modes (published).</a></span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2024/10</span>
@@ -210,6 +210,7 @@ title: "Home"
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2024/09</span>
+        <span class="home-news-category" aria-hidden="true"></span>
         <span class="home-news-copy">Sogang QMP lab opened.</span>
     </div>
 </div>
