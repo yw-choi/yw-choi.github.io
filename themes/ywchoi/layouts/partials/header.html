@@ -23,13 +23,13 @@
       {{ range site.Menus.main }}
       {{ if or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .)}}
       <a href="{{ .URL }}"
-        class="fs-6 fw-light link-dark link-offset-2 link-underline-opacity-100 align-middle px-2 py-2 py-lg-0"
+        class="fs-6 fw-normal link-dark link-offset-2 link-underline-opacity-100 align-middle px-2 py-2 py-lg-0"
         aria-current="page">
         {{ .Name }}
       </a>
       {{ else }}
       <a href="{{ .URL }}"
-        class="fs-6 fw-light link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-25-hover align-middle px-2 py-2 py-lg-0">
+        class="fs-6 fw-normal link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-25-hover align-middle px-2 py-2 py-lg-0">
         {{ .Name }}
       </a>
       {{ end }}
