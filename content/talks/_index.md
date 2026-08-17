@@ -17,6 +17,94 @@ title: Talks
 
 <li>
 <span class="talk-title">
+Polarons and Excitons in Low-Dimensional Materials from First Principles
+</span><br>
+<span class="talk-type">Invited talk</span><br>
+<span class="talk-venue">CCP2026, Sejong University Convention Center, Seoul, Korea, Aug 9-14, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
+First-principles study of doping and temperature effects on electron-phonon interaction in 2H-WS2
+</span><br>
+<span class="talk-type">Poster of Minchul Choi</span><br>
+<span class="talk-venue">CCP2026, Sejong University Convention Center, Seoul, Korea, Aug 9-14, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
+First-Principles Study on Electronic and Transport Properties of 1D Single-Chain Heterojunctions
+</span><br>
+<span class="talk-type">Poster of Seongbin Park</span><br>
+<span class="talk-venue">CCP2026, Sejong University Convention Center, Seoul, Korea, Aug 9-14, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
+Ab Initio Study of the Electronic Structure of Hydrogenated 2D Electride Gd2CHx
+</span><br>
+<span class="talk-type">Poster of Seungwoo Shin</span><br>
+<span class="talk-venue">CCP2026, Sejong University Convention Center, Seoul, Korea, Aug 9-14, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
+Polarons in Multilayer Hexagonal Boron Nitride
+</span><br>
+<span class="talk-type">Poster of Chaewoon Hong</span><br>
+<span class="talk-venue">CCP2026, Sejong University Convention Center, Seoul, Korea, Aug 9-14, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
+Structural Relaxation and Phonons in Moiré Materials from an Atomistic Approach
+</span><br>
+<span class="talk-type">Poster of Dongsin Kim</span><br>
+<span class="talk-venue">CCP2026, Sejong University Convention Center, Seoul, Korea, Aug 9-14, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
+First-Principles Study on Electronic and Transport Properties of 1D Single-Chain Heterojunctions
+</span><br>
+<span class="talk-type">Poster of Seongbin Park</span><br>
+<span class="talk-venue">The 22nd KIAS Electronic Structure Calculation Workshop, KIAS, Seoul, Korea, Jul 9-10, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
+First-Principles Study of Electronic Structure of Hydrogenated 2D Electride Gd2CH2
+</span><br>
+<span class="talk-type">Poster of Seungwoo Shin</span><br>
+<span class="talk-venue">The 22nd KIAS Electronic Structure Calculation Workshop, KIAS, Seoul, Korea, Jul 9-10, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
+First-Principles Study of Electron-Phonon Interaction in Doped Bulk 2H-WS2: Doping and Temperature Dependence
+</span><br>
+<span class="talk-type">Poster of Minchul Choi</span><br>
+<span class="talk-venue">The 22nd KIAS Electronic Structure Calculation Workshop, KIAS, Seoul, Korea, Jul 9-10, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
+Computational Studies of Structural and Vibrational Properties in Moiré Materials
+</span><br>
+<span class="talk-type">Poster of Dongsin Kim</span><br>
+<span class="talk-venue">The 22nd KIAS Electronic Structure Calculation Workshop, KIAS, Seoul, Korea, Jul 9-10, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
+Phonon-Entropy-Driven Sequential CDW Transitions in 1T-TiSe2
+</span><br>
+<span class="talk-type">Poster of Dongsin Kim</span><br>
+<span class="talk-venue">The 22nd KIAS Electronic Structure Calculation Workshop, KIAS, Seoul, Korea, Jul 9-10, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
 Excitons in 1D Single-Chains and Anisotropic 2D Heterostructures from First Principles
 </span><br>
 <span class="talk-type">Invited talk</span><br>
