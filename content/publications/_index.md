@@ -10,7 +10,7 @@ title: Publications
 
 18. Kimoon Higashihira Han†, Dongju Hwang†, **Dongsin Kim**†, Yeojin Ahn, Jaehun Cha, Seonggeon Gim, Gyubin Lee, Mingi Jho, Chan-young Lim, Sae Hee Ryu, Chris Jozwiak, Aaron Bostwick, Eli Rotenberg, Jonathan D. Denlinger, Makoto Hashimoto, Donghui Lu, **Young Woo Choi**\*, Gil Young Cho\*, and Yeongkwan Kim\*,<br>
 Unexpected stabilization of a single-*q* charge density wave in pristine 1*T*-TiSe<sub>2</sub>,<br>
-<span class="publication-citation-unlinked">Nature Communications (accepted, 2026).</span>
+<span style="color: var(--bs-link-color, #0d6efd);">Nature Communications (accepted, 2026).</span>
 
 17. Byunghyun Kim†, Ayoung Yuk†, Yunyeong Chang†, **Dongsin Kim**†, Daesung Park, **Young Woo Choi**\*, Miyoung Kim\*, Moon Sung Kang\*, and Hyobin Yoo\*,  
 Dislocation Networks in Marginally Twisted Bilayer MoS<sub>2</sub>,  

@@ -237,10 +237,6 @@
     padding-left: 0;
 }
 
-.publication-citation-unlinked {
-    color: var(--bs-link-color);
-}
-
 /* Research interests */
 .research-topic {
     margin-bottom: 2.5rem;
