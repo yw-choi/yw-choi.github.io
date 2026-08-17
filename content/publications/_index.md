@@ -9,7 +9,10 @@ title: Publications
 † Equal Contributions, * Corresponding Author
 
 <style>
-.publication-title { color: #003377; }
+.publication-title {
+  color: #003377;
+  font-weight: 700;
+}
 </style>
 
 18. Kimoon Higashihira Han†, Dongju Hwang†, **Dongsin Kim**†, Yeojin Ahn, Jaehun Cha, Seonggeon Gim, Gyubin Lee, Mingi Jho, Chan-young Lim, Sae Hee Ryu, Chris Jozwiak, Aaron Bostwick, Eli Rotenberg, Jonathan D. Denlinger, Makoto Hashimoto, Donghui Lu, **Young Woo Choi**\*, Gil Young Cho\*, and Yeongkwan Kim\*,<br>
