@@ -181,6 +181,11 @@ title: "Home"
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2025/03</span>
         <span class="home-news-category home-news-events">[Events]</span>
+        <span class="home-news-copy">KPS Spring Focus Session.</span>
+    </div>
+    <div class="home-news-item" role="listitem">
+        <span class="home-news-date">2025/03</span>
+        <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy">APS Global Physics Summit, Anaheim.</span>
     </div>
     <div class="home-news-item" role="listitem">
