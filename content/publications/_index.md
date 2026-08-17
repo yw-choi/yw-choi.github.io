@@ -8,6 +8,10 @@ title: Publications
 
 † Equal Contributions, * Corresponding Author
 
+18. Kimoon Higashihira Han†, Dongju Hwang†, **Dongsin Kim**†, Yeojin Ahn, Jaehun Cha, Seonggeon Gim, Gyubin Lee, Mingi Jho, Chan-young Lim, Sae Hee Ryu, Chris Jozwiak, Aaron Bostwick, Eli Rotenberg, Jonathan D. Denlinger, Makoto Hashimoto, Donghui Lu, **Young Woo Choi**\*, Gil Young Cho\*, and Yeongkwan Kim\*,<br>
+Unexpected stabilization of a single-*q* charge density wave in pristine 1*T*-TiSe<sub>2</sub>,<br>
+*Nature Communications* (accepted in principle, 2026).
+
 17. Byunghyun Kim†, Ayoung Yuk†, Yunyeong Chang†, **Dongsin Kim**†, Daesung Park, **Young Woo Choi**\*, Miyoung Kim\*, Moon Sung Kang\*, and Hyobin Yoo\*,  
 Dislocation Networks in Marginally Twisted Bilayer MoS<sub>2</sub>,  
 [ACS Materials Letters **8**, 1382 (2026)](https://doi.org/10.1021/acsmaterialslett.5c01692).
