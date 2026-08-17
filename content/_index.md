@@ -116,6 +116,11 @@ title: "Home"
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/04</span>
         <span class="home-news-category home-news-events">[Events]</span>
+        <span class="home-news-copy">Korean Physical Society Spring Meeting, Daejeon.</span>
+    </div>
+    <div class="home-news-item" role="listitem">
+        <span class="home-news-date">2026/04</span>
+        <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy">Workshop on CMS and HPC, University of Southern California.</span>
     </div>
     <div class="home-news-item" role="listitem">
@@ -156,6 +161,11 @@ title: "Home"
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2025/10</span>
         <span class="home-news-category home-news-events">[Events]</span>
+        <span class="home-news-copy">Korean Physical Society Fall Meeting, Gwangju.</span>
+    </div>
+    <div class="home-news-item" role="listitem">
+        <span class="home-news-date">2025/10</span>
+        <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy">Electronic Structure Workshop.</span>
     </div>
     <div class="home-news-item" role="listitem">
@@ -174,14 +184,14 @@ title: "Home"
         <span class="home-news-copy">Sogang G-LAMP Kick-off Meeting, Seoul.</span>
     </div>
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2025/03</span>
-        <span class="home-news-category home-news-paper">[Paper]</span>
-        <span class="home-news-copy"><a href="/publications/#publication-14">ACS Nano: 1D phosphorus nanostructures.</a></span>
+        <span class="home-news-date">2025/04</span>
+        <span class="home-news-category home-news-events">[Events]</span>
+        <span class="home-news-copy">Korean Physical Society Spring Meeting, Daejeon.</span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2025/03</span>
-        <span class="home-news-category home-news-events">[Events]</span>
-        <span class="home-news-copy">KPS Spring Focus Session.</span>
+        <span class="home-news-category home-news-paper">[Paper]</span>
+        <span class="home-news-copy"><a href="/publications/#publication-14">ACS Nano: 1D phosphorus nanostructures.</a></span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2025/03</span>
