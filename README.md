@@ -131,7 +131,7 @@ Edit `content/people/index.html` to add or update group members and alumni.
 
 ### Adding News
 
-Edit `content/_index.md` and add new items to the "Recent News" section.
+Edit `content/_index.md` and add new items to the "News" section.
 
 ## Contributing
 
