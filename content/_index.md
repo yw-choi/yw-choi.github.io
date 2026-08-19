@@ -70,21 +70,21 @@ title: "Home"
     }
 </style>
 
-### Recent News
+### News
 
-<div class="home-news" role="list" aria-label="Recent news">
+<div class="home-news" role="list" aria-label="News">
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/08</span>
         <span class="home-news-category home-news-paper">[Paper]</span>
         <span class="home-news-copy"><a href="/publications/#publication-18">Nature Communications: single-<em>q</em> charge density wave in pristine 1<em>T</em>-TiSe<sub>2</sub> (accepted).</a></span>
     </div>
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2026/08</span>
+        <span class="home-news-date"><span class="visually-hidden">2026/08</span></span>
         <span class="home-news-category home-news-member">[Member]</span>
         <span class="home-news-copy">Chaewoon Hong: Outstanding Poster Award, CCP2026.</span>
     </div>
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2026/08</span>
+        <span class="home-news-date"><span class="visually-hidden">2026/08</span></span>
         <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy">Conference on Computational Physics 2026 (CCP2026), Seoul.</span>
     </div>
@@ -94,7 +94,7 @@ title: "Home"
         <span class="home-news-copy">Dongsin Kim: Outstanding Poster Award, KIAS ESCW.</span>
     </div>
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2026/07</span>
+        <span class="home-news-date"><span class="visually-hidden">2026/07</span></span>
         <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy">22nd KIAS Electronic Structure Calculation Workshop and 2nd Electronic Structure Symposium, Seoul.</span>
     </div>
@@ -109,17 +109,17 @@ title: "Home"
         <span class="home-news-copy"><a href="/publications/#publication-17">ACS Materials Letters: dislocation networks in marginally twisted bilayer MoS<sub>2</sub>.</a></span>
     </div>
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2026/04</span>
+        <span class="home-news-date"><span class="visually-hidden">2026/04</span></span>
         <span class="home-news-category home-news-member">[Member]</span>
         <span class="home-news-copy">Byeongchan Lee: six-month visit to Zhenglu Li's group, USC.</span>
     </div>
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2026/04</span>
+        <span class="home-news-date"><span class="visually-hidden">2026/04</span></span>
         <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy">Korean Physical Society Spring Meeting, Daejeon.</span>
     </div>
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2026/04</span>
+        <span class="home-news-date"><span class="visually-hidden">2026/04</span></span>
         <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy">Workshop on CMS and HPC, University of Southern California.</span>
     </div>
@@ -129,7 +129,7 @@ title: "Home"
         <span class="home-news-copy">Dongsin Kim: G-LAMP Undergraduate Research Presentation Award.</span>
     </div>
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2026/03</span>
+        <span class="home-news-date"><span class="visually-hidden">2026/03</span></span>
         <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy">G-LAMP Undergraduate Research Presentation, Sogang University.</span>
     </div>
@@ -144,12 +144,12 @@ title: "Home"
         <span class="home-news-copy">Organized the <a href="/2025_1st_INS">1st International Nanomaterials Symposium</a>, Busan.</span>
     </div>
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2025/12</span>
+        <span class="home-news-date"><span class="visually-hidden">2025/12</span></span>
         <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy">ICAMD 2025, Busan.</span>
     </div>
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2025/12</span>
+        <span class="home-news-date"><span class="visually-hidden">2025/12</span></span>
         <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy">Sogang G-LAMP Workshop, Busan.</span>
     </div>
@@ -164,7 +164,7 @@ title: "Home"
         <span class="home-news-copy">Korean Physical Society Fall Meeting, Gwangju.</span>
     </div>
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2025/10</span>
+        <span class="home-news-date"><span class="visually-hidden">2025/10</span></span>
         <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy">Electronic Structure Workshop.</span>
     </div>
@@ -194,7 +194,7 @@ title: "Home"
         <span class="home-news-copy"><a href="/publications/#publication-14">ACS Nano: 1D phosphorus nanostructures.</a></span>
     </div>
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2025/03</span>
+        <span class="home-news-date"><span class="visually-hidden">2025/03</span></span>
         <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy">APS Global Physics Summit, Anaheim.</span>
     </div>
@@ -204,7 +204,7 @@ title: "Home"
         <span class="home-news-copy">Korean Society of Superconductivity and Cryogenics Meeting, Muju.</span>
     </div>
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2025/02</span>
+        <span class="home-news-date"><span class="visually-hidden">2025/02</span></span>
         <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy">Quantum Materials Symposium 2025, Busan.</span>
     </div>
@@ -214,12 +214,12 @@ title: "Home"
         <span class="home-news-copy"><a href="/publications/#publication-13">Physical Review B: pairing interaction from demon modes (published).</a></span>
     </div>
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2024/10</span>
+        <span class="home-news-date"><span class="visually-hidden">2024/10</span></span>
         <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy">25th Asian Workshop on First-Principles Electronic Structure Calculations, Ulsan.</span>
     </div>
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2024/10</span>
+        <span class="home-news-date"><span class="visually-hidden">2024/10</span></span>
         <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy">Korean Physical Society Fall Meeting, Yeosu.</span>
     </div>
