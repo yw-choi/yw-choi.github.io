@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 350" font-family="sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" font-family="sans-serif">
   <defs>
     <marker id="flB" markerWidth="9" markerHeight="6.3" refX="9" refY="3.15" orient="auto"><polygon points="0 0, 9 3.15, 0 6.3" fill="#2563EB"/></marker>
   </defs>
@@ -65,5 +65,6 @@
     <line x1="612" y1="275" x2="732" y2="275"/>
   </g>
 
-  <text x="400" y="332" font-size="14" fill="#1a1a1a" text-anchor="middle">전기력선은 양전하에서 <tspan font-weight="bold">나와서</tspan> 음전하에서 <tspan font-weight="bold">끝난다</tspan> — 선이 빽빽할수록 장이 강하다</text>
+  <text x="400" y="330" font-size="14" fill="#1a1a1a" text-anchor="middle">전기력선은 양전하 또는 무한대에서 시작해 음전하 또는 무한대에서 끝남</text>
+  <text x="400" y="356" font-size="14" fill="#1a1a1a" text-anchor="middle">선이 조밀할수록 전기장의 크기가 큼</text>
 </svg>

@@ -1,760 +1,447 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>유도 전하와 도체 분극</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>정전기 유도</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
-.container { display: flex; height: 100vh; }
-.canvas-area { flex: 1; position: relative; background: #fafafa; }
-canvas { display: block; width: 100%; height: 100%; }
-.controls { width: 270px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
-.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
-.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
-.control-group { display: flex; flex-direction: column; gap: 3px; }
-.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
-.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
-.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.85; }
-.info-box .label { color: #8B0029; font-weight: 700; }
-.info-box .katex { font-size: 12px; }
-.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 12.5px; text-align: center; font-weight: 700; line-height: 1.5; }
-.theorem-box .katex { color: #fff; font-size: 13px; }
-.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 11.5px; line-height: 1.85; color: #555; }
-.formula-box b { color: #8B0029; }
-.seg { display: flex; gap: 0; border: 2px solid #8B0029; border-radius: 7px; overflow: hidden; }
-.seg button { flex: 1; background: #fff; color: #8B0029; border: none; padding: 7px 4px; font-size: 12px; cursor: pointer; font-weight: 700; transition: background .12s; }
-.seg button.active { background: #8B0029; color: #fff; }
-button.act-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
-button.act-btn:hover:not(:disabled) { background: #a3003a; }
-button.act-btn:disabled { background: #cbb3ba; cursor: not-allowed; }
-button.reset-btn { background: #fff; color: #8B0029; border: 2px solid #8B0029; border-radius: 6px; padding: 8px; font-size: 13px; cursor: pointer; font-weight: 600; }
-button.reset-btn:hover { background: #f8f0f2; }
-.canvas-title { position: absolute; top: 8px; left: 16px; right: 16px; pointer-events: none; font-size: 14px; font-weight: 700; color: #8B0029; line-height: 1.4; }
-.legend { position: absolute; bottom: 10px; left: 16px; pointer-events: none; font-size: 11.5px; color: #444; background: rgba(255,255,255,0.82); border-radius: 6px; padding: 6px 9px; line-height: 1.6; }
-.legend b { font-weight: 700; }
-.glab { font-weight: 700; font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: .04em; }
-@media (max-width: 700px) {
-  .container { flex-direction: column; }
-  .canvas-area { height: 56vh; }
-  .controls { width: 100%; height: 44vh; border-left: none; border-top: 2px solid #eee; }
-  .canvas-title { font-size: 12px; }
+:root { --red:#8B0029; --blue:#2563EB; --ink:#171717; --gray:#6B7280; --line:#D1D5DB; --light:#F3F4F6; }
+* { box-sizing:border-box; }
+html,body { width:100%; height:100%; margin:0; }
+body { overflow:hidden; background:#fff; color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+.app { display:flex; width:100%; height:100%; min-height:0; }
+.stage { position:relative; flex:1 1 auto; min-width:0; background:#fff; touch-action:none; }
+canvas { display:block; width:100%; height:100%; cursor:default; }
+.controls { flex:0 0 248px; width:248px; padding:20px 18px; border-left:1px solid var(--line); overflow:auto; }
+h1 { margin:0; color:var(--red); font-size:20px; line-height:1.25; letter-spacing:-.02em; }
+.formula { min-height:37px; margin:9px 0 18px; font-size:18px; line-height:1.5; white-space:nowrap; }
+.label { display:block; margin:0 0 7px; color:var(--gray); font-size:15px; font-weight:650; }
+.segmented { display:grid; grid-template-columns:1fr 1fr; margin:0 0 17px; border:1px solid var(--ink); }
+.segmented button { min-height:40px; padding:0 5px; border:0; border-right:1px solid var(--ink); border-radius:0; background:#fff; color:var(--ink); font:650 15px/1 inherit; cursor:pointer; }
+.segmented button:last-child { border-right:0; }
+.segmented button[aria-pressed="true"] { background:var(--ink); color:#fff; }
+.segmented button:focus-visible, .action:focus-visible { position:relative; z-index:1; outline:3px solid rgba(37,99,235,.28); outline-offset:2px; }
+.readout { display:grid; grid-template-columns:auto 1fr; gap:9px 12px; margin:20px 0 11px; padding:15px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); font-size:15px; }
+.readout dt { color:var(--gray); }
+.readout dd { margin:0; text-align:right; font-weight:650; }
+.qualitative { margin:0 0 16px; color:var(--gray); font-size:15px; line-height:1.45; }
+.action { width:100%; min-height:44px; border:1px solid var(--red); border-radius:2px; background:var(--red); color:#fff; font:700 15px/1 inherit; cursor:pointer; }
+.action:hover:not(:disabled) { background:#a3003a; }
+.action:disabled { border-color:var(--line); background:#fff; color:var(--gray); cursor:not-allowed; }
+.sr-only { position:absolute; width:1px; height:1px; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; }
+@media (max-width:700px) {
+  .app { flex-direction:column; }
+  .stage { flex:0 0 62%; min-height:285px; }
+  .controls { flex:1 1 auto; width:100%; padding:14px 18px 18px; border-left:0; border-top:1px solid var(--line); }
+  h1 { font-size:19px; }
+  .formula { margin:6px 0 11px; }
+  .label { margin-bottom:5px; }
+  .segmented { margin-bottom:11px; }
+  .readout { margin:12px 0 8px; padding:9px 0; }
+  .qualitative { margin-bottom:10px; }
+}
+@media (max-width:390px) {
+  .stage { flex-basis:58%; min-height:255px; }
+  .segmented button { min-height:38px; }
 }
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="canvas-area">
-    <canvas id="canvas"></canvas>
-    <div class="canvas-title" id="canvasTitle"></div>
-    <div class="legend" id="legend"></div>
-  </div>
-  <div class="controls">
-    <div>
-      <h2>유도 전하와 도체 분극</h2>
-      <div class="subtitle">Charge Induction &amp; Polarization (Ch.21)</div>
+<main class="app">
+  <section class="stage" id="stage">
+    <canvas id="canvas" aria-label="막대를 끌어 도체와 부도체의 전하 재배치를 비교하는 정전기 유도 시뮬레이션"></canvas>
+    <span class="sr-only">막대를 가까이 가져간 뒤 접지 연결, 접지 끊기, 막대 제거 순서로 조작함.</span>
+  </section>
+  <aside class="controls" aria-label="시뮬레이션 조절">
+    <h1>정전기 유도</h1>
+    <div class="formula" id="formula"></div>
+
+    <span class="label">물질</span>
+    <div class="segmented" id="material" role="group" aria-label="물질 선택">
+      <button type="button" data-value="conductor" aria-pressed="true">도체</button>
+      <button type="button" data-value="insulator" aria-pressed="false">부도체</button>
     </div>
 
-    <div class="theorem-box" id="theoremBox"></div>
-
-    <div class="control-group">
-      <span class="glab">물질</span>
-      <div class="seg" id="matSeg">
-        <button data-mat="conductor" class="active">도체 (conductor)</button>
-        <button data-mat="insulator">부도체 (insulator)</button>
-      </div>
+    <span class="label">막대 전하</span>
+    <div class="segmented" id="rodSign" role="group" aria-label="막대 전하 부호">
+      <button type="button" data-value="1" aria-pressed="true">+</button>
+      <button type="button" data-value="-1" aria-pressed="false">−</button>
     </div>
 
-    <div class="control-group">
-      <span class="glab">대전 막대 부호</span>
-      <div class="seg" id="rodSeg">
-        <button data-sign="1" class="active">+ 양전하</button>
-        <button data-sign="-1">&minus; 음전하</button>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <label>막대 거리 d = <span id="dVal">0.55</span> (가까울수록 작음)</label>
-      <input type="range" id="dSlider" min="0" max="1" value="0.55" step="0.01">
-    </div>
-
-    <button class="act-btn" id="groundBtn">&#9783; 접지 (Ground)</button>
-    <button class="act-btn" id="removeBtn" disabled>막대 제거 / 접지 끊기</button>
-    <button class="reset-btn" id="resetBtn">&#8635; 초기화 (Reset)</button>
-
-    <div class="info-box" id="infoBox"></div>
-
-    <div class="formula-box" id="formulaBox"></div>
-  </div>
-</div>
+    <dl class="readout">
+      <dt>현재 단계</dt><dd id="phaseOut">막대 접근</dd>
+      <dt>물체의 순전하</dt><dd id="chargeOut">0</dd>
+    </dl>
+    <p class="qualitative">정성 모형 · 점 개수는 전하량 축척 아님</p>
+    <button class="action" id="action" type="button" disabled>막대를 가까이 이동</button>
+  </aside>
+</main>
 
 <script>
-function tex(expr) { return katex.renderToString(expr, { throwOnError: false }); }
+(() => {
+  'use strict';
+  const RED='#8B0029';
+  const BLUE='#2563EB';
+  const INK='#171717';
+  const GRAY='#6B7280';
+  const LIGHT='#F3F4F6';
+  const WORLD={xmin:-1.6,xmax:1.6,ymin:-1,ymax:1};
+  const ROD_RANGE={far:-1.34,near:-.58};
+  const NEAR_THRESHOLD=-.88;
+  const canvas=document.getElementById('canvas');
+  const stage=document.getElementById('stage');
+  const ctx=canvas.getContext('2d');
+  const state={
+    material:'conductor',
+    rodSign:1,
+    rodX:ROD_RANGE.far,
+    phase:'approach',
+    drag:false,
+    hover:false,
+    width:0,
+    height:0,
+    dpr:1
+  };
+  let transform=null;
 
-const RED = '#8B0029';
-const BLUE = '#2563EB';
-const GRAY = '#6B7280';
-const LIGHT = '#F3F4F6';
+  function renderTex(expression) {
+    const target=document.getElementById('formula');
+    if (window.katex) target.innerHTML=katex.renderToString(expression,{throwOnError:false});
+    else target.textContent='Qnet = Σ qsurface';
+  }
 
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-let dpr = window.devicePixelRatio || 1;
-let CW, CH;
+  function isNear(snapshot=state) {
+    return snapshot.rodX>=NEAR_THRESHOLD&&snapshot.phase!=='removed';
+  }
 
-const dSlider = document.getElementById('dSlider');
-const groundBtn = document.getElementById('groundBtn');
-const removeBtn = document.getElementById('removeBtn');
-const resetBtn = document.getElementById('resetBtn');
+  function modelState({material,rodSign,phase,rodNear=true}) {
+    const conductor=material==='conductor';
+    const rodPresent=phase!=='removed';
+    const grounded=conductor&&phase==='grounded';
+    let netCharge=0;
+    if (conductor&&(phase==='grounded'||phase==='isolated'||phase==='removed')) netCharge=-Math.sign(rodSign||1);
+    return {
+      material,
+      phase,
+      rodSign:Math.sign(rodSign||1),
+      rodNear:Boolean(rodNear&&rodPresent),
+      rodPresent,
+      grounded,
+      netCharge,
+      mobileCharge:conductor
+    };
+  }
 
-// ---- State ----
-let material = 'conductor';   // 'conductor' | 'insulator'
-let rodSign = 1;              // +1 or -1
-let rodPresent = true;        // is the charged rod in the scene
-let grounded = false;         // ground wire connected
-let netCharge = 0;            // net charge on the object in units of "electrons" (sign convention below)
-                              // netCharge counts excess electrons added (negative netCharge field is awkward),
-                              // we track it as integer count of EXCESS electrons (positive = extra electrons = net -).
-let phase = 'induction';      // 'induction' | 'grounding' | 'charged'
+  function transition(phase,action,options={}) {
+    const material=options.material||'conductor';
+    const rodNear=Boolean(options.rodNear);
+    if (action==='reset') return 'approach';
+    if (material!=='conductor') return phase;
+    if (phase==='approach'&&action==='connect'&&rodNear) return 'grounded';
+    if (phase==='grounded'&&action==='disconnect') return 'isolated';
+    if (phase==='isolated'&&action==='remove') return 'removed';
+    return phase;
+  }
 
-// Object geometry (in canvas-fraction coords, resolved each frame)
-let obj = { cx: 0, cy: 0, w: 0, h: 0 };
-let rodX = 0, rodY = 0, rodH = 0;
+  function layout() {
+    const pad=26;
+    const sx=(state.width-pad*2)/(WORLD.xmax-WORLD.xmin);
+    const sy=(state.height-pad*2)/(WORLD.ymax-WORLD.ymin);
+    const scale=Math.max(1,Math.min(sx,sy));
+    const usedW=scale*(WORLD.xmax-WORLD.xmin);
+    const usedH=scale*(WORLD.ymax-WORLD.ymin);
+    transform={left:(state.width-usedW)/2,top:(state.height-usedH)/2,width:usedW,height:usedH};
+  }
 
-// ---- Conductor model: fixed + ion lattice, free electrons that drift ----
-const N_PAIRS = 22;          // number of +ion / free-electron pairs in conductor
-let ions = [];               // fixed positive ions {fx,fy}  (fractional 0..1 within object box)
-let electrons = [];          // free electrons {x,y (current px), tx,ty (target px)}
-// Extra electrons (from grounding) appended to electrons[] beyond N_PAIRS.
+  function worldToScreen(x,y) {
+    return {
+      x:transform.left+(x-WORLD.xmin)/(WORLD.xmax-WORLD.xmin)*transform.width,
+      y:transform.top+(WORLD.ymax-y)/(WORLD.ymax-WORLD.ymin)*transform.height
+    };
+  }
 
-// ---- Insulator model: grid of atoms that polarize locally ----
-const ATOM_COLS = 6, ATOM_ROWS = 4;
-let atoms = [];              // {fx,fy, ox,oy (electron-cloud offset px)}
+  function screenToWorldX(x) {
+    return WORLD.xmin+(x-transform.left)/transform.width*(WORLD.xmax-WORLD.xmin);
+  }
 
-function rnd(a, b) { return a + Math.random() * (b - a); }
+  function line(x1,y1,x2,y2,color,width,dash=[]) {
+    ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=width; ctx.setLineDash(dash);
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore();
+  }
 
-function buildLattice() {
-  ions = [];
-  electrons = [];
-  // jittered grid of ions inside object box (fractional coords with margin)
-  const cols = 6, rows = 4;
-  let placed = 0;
-  for (let r = 0; r < rows && placed < N_PAIRS; r++) {
-    for (let c = 0; c < cols && placed < N_PAIRS; c++) {
-      const fx = (c + 0.5) / cols + rnd(-0.04, 0.04);
-      const fy = (r + 0.5) / rows + rnd(-0.05, 0.05);
-      ions.push({ fx, fy });
-      // electron starts near its ion
-      electrons.push({ fx, fy, x: 0, y: 0, tx: 0, ty: 0, extra: false });
-      placed++;
+  function textBg(text,x,y,options={}) {
+    const size=options.size||15;
+    ctx.save();
+    ctx.font=`${options.weight||600} ${size}px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif`;
+    ctx.textAlign=options.align||'center'; ctx.textBaseline='middle';
+    const w=ctx.measureText(text).width;
+    let left=x-w/2-4;
+    if (ctx.textAlign==='left') left=x-4;
+    if (ctx.textAlign==='right') left=x-w-4;
+    ctx.fillStyle='rgba(255,255,255,.92)'; ctx.fillRect(left,y-size*.65-2,w+8,size+5);
+    ctx.fillStyle=options.color||INK; ctx.fillText(text,x,y); ctx.restore();
+  }
+
+  function drawCharge(x,y,sign,radius=9) {
+    const color=sign>0?RED:BLUE;
+    ctx.save();
+    ctx.fillStyle=color; ctx.beginPath(); ctx.arc(x,y,radius,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.font=`700 ${Math.max(13,radius*1.6)}px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif`;
+    ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(sign>0?'+':'−',x,y-.5); ctx.restore();
+  }
+
+  function ellipsePoint(cx,cy,rx,ry,angle) {
+    return {x:cx+rx*Math.cos(angle),y:cy+ry*Math.sin(angle)};
+  }
+
+  function drawGround(x,y) {
+    line(x,y,x,y+38,INK,2);
+    line(x-18,y+38,x+18,y+38,INK,2);
+    line(x-12,y+45,x+12,y+45,INK,2);
+    line(x-6,y+52,x+6,y+52,INK,2);
+  }
+
+  function drawRod() {
+    const p=worldToScreen(state.rodX,0);
+    const top=worldToScreen(state.rodX,.48).y;
+    const bottom=worldToScreen(state.rodX,-.48).y;
+    const color=state.rodSign>0?RED:BLUE;
+    ctx.save();
+    ctx.strokeStyle=color; ctx.lineWidth=28; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(p.x,top); ctx.lineTo(p.x,bottom); ctx.stroke();
+    ctx.strokeStyle=state.hover||state.drag?INK:'#fff'; ctx.lineWidth=state.hover||state.drag?2:1;
+    ctx.beginPath(); ctx.moveTo(p.x,top); ctx.lineTo(p.x,bottom); ctx.stroke();
+    ctx.fillStyle='#fff'; ctx.font='700 23px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    [-.3,0,.3].forEach(y=>ctx.fillText(state.rodSign>0?'+':'−',p.x,worldToScreen(state.rodX,y).y));
+    ctx.restore();
+    textBg(state.phase==='approach'?'끌어서 접근':'막대 유지',p.x,top-22,{size:15,color:GRAY});
+  }
+
+  function drawConductor(model) {
+    const center=worldToScreen(.42,0);
+    const edgeX=worldToScreen(.42+.58,0).x-center.x;
+    const edgeY=center.y-worldToScreen(.42,.43).y;
+    ctx.save();
+    ctx.fillStyle=LIGHT; ctx.strokeStyle=INK; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.ellipse(center.x,center.y,edgeX,edgeY,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.restore();
+    textBg('도체',center.x,center.y,{size:16,color:GRAY,weight:650});
+
+    if (model.phase==='approach') {
+      const count=4+Math.round(proximity()*6);
+      for (let i=0;i<count;i++) {
+        const t=(i+.5)/count;
+        const nearAngle=Math.PI/2+Math.PI*t;
+        const farAngle=-Math.PI/2+Math.PI*t;
+        const near=ellipsePoint(center.x,center.y,edgeX,edgeY,nearAngle);
+        const far=ellipsePoint(center.x,center.y,edgeX,edgeY,farAngle);
+        drawCharge(near.x,near.y,-state.rodSign,8);
+        drawCharge(far.x,far.y,state.rodSign,8);
+      }
+    } else if (model.phase==='grounded'||model.phase==='isolated') {
+      const count=11;
+      for (let i=0;i<count;i++) {
+        const spread=.14*Math.PI+.72*Math.PI*(i+.5)/count;
+        const angle=Math.PI/2+spread;
+        const p=ellipsePoint(center.x,center.y,edgeX,edgeY,angle);
+        drawCharge(p.x,p.y,-state.rodSign,8);
+      }
+    } else {
+      const count=12;
+      for (let i=0;i<count;i++) {
+        const p=ellipsePoint(center.x,center.y,edgeX,edgeY,Math.PI*2*(i+.5)/count);
+        drawCharge(p.x,p.y,-state.rodSign,8);
+      }
+    }
+
+    if (model.grounded) drawGround(center.x,center.y+edgeY);
+  }
+
+  function drawInsulator() {
+    const center=worldToScreen(.42,0);
+    const edgeX=worldToScreen(.42+.58,0).x-center.x;
+    const edgeY=center.y-worldToScreen(.42,.43).y;
+    ctx.save();
+    ctx.fillStyle='#fff'; ctx.strokeStyle=INK; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.ellipse(center.x,center.y,edgeX,edgeY,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.restore();
+    const shift=-state.rodSign*(2+5*proximity());
+    for (let row=0;row<3;row++) {
+      for (let col=0;col<5;col++) {
+        const wx=.42-.39+col*.195;
+        const wy=.24-row*.24;
+        const p=worldToScreen(wx,wy);
+        ctx.save();
+        ctx.fillStyle='rgba(37,99,235,.20)'; ctx.strokeStyle=BLUE; ctx.lineWidth=1.3;
+        ctx.beginPath(); ctx.arc(p.x+shift,p.y,10,0,Math.PI*2); ctx.fill(); ctx.stroke();
+        ctx.restore();
+        drawCharge(p.x,p.y,1,5.5);
+      }
+    }
+    textBg('부도체 · 국소 분극',center.x,center.y+edgeY+24,{size:15,color:GRAY});
+  }
+
+  function proximity() {
+    if (state.phase==='removed') return 0;
+    return Math.max(0,Math.min(1,(state.rodX-ROD_RANGE.far)/(ROD_RANGE.near-ROD_RANGE.far)));
+  }
+
+  function phaseLabel() {
+    if (state.material==='insulator') return isNear()?'국소 분극':'막대 접근';
+    return {approach:isNear()?'접지 준비':'막대 접근',grounded:'접지 연결',isolated:'접지 끊김',removed:'막대 제거'}[state.phase];
+  }
+
+  function drawSequence() {
+    const labels=['접근','접지','분리','제거'];
+    const index=state.phase==='approach'?0:state.phase==='grounded'?1:state.phase==='isolated'?2:3;
+    const y=28;
+    const totalWidth=Math.min(state.width-42,380);
+    const start=(state.width-totalWidth)/2;
+    const gap=totalWidth/(labels.length-1);
+    line(start,y,start+totalWidth,y,'#D1D5DB',1);
+    labels.forEach((label,i)=>{
+      const x=start+i*gap;
+      ctx.fillStyle=i===index?RED:'#fff'; ctx.strokeStyle=i===index?RED:GRAY; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.arc(x,y,6,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      textBg(label,x,y+23,{size:15,color:i===index?RED:GRAY,weight:i===index?700:500});
+    });
+  }
+
+  function updateControls(model) {
+    document.getElementById('phaseOut').textContent=phaseLabel();
+    document.getElementById('chargeOut').textContent=model.netCharge===0?'0':model.netCharge>0?'> 0':'< 0';
+    const button=document.getElementById('action');
+    if (state.material==='insulator') {
+      button.textContent='부도체 · 접지 불가'; button.disabled=true;
+    } else if (state.phase==='approach') {
+      button.textContent=isNear()?'접지 연결':'막대를 가까이 이동'; button.disabled=!isNear();
+    } else if (state.phase==='grounded') {
+      button.textContent='접지 끊기'; button.disabled=false;
+    } else if (state.phase==='isolated') {
+      button.textContent='막대 제거'; button.disabled=false;
+    } else {
+      button.textContent='처음부터'; button.disabled=false;
     }
   }
-}
 
-function buildAtoms() {
-  atoms = [];
-  for (let r = 0; r < ATOM_ROWS; r++) {
-    for (let c = 0; c < ATOM_COLS; c++) {
-      const fx = (c + 0.5) / ATOM_COLS;
-      const fy = (r + 0.5) / ATOM_ROWS;
-      atoms.push({ fx, fy, ox: 0, oy: 0 });
-    }
-  }
-}
-
-function resetState() {
-  material = document.querySelector('#matSeg button.active').dataset.mat;
-  rodSign = parseInt(document.querySelector('#rodSeg button.active').dataset.sign);
-  rodPresent = true;
-  grounded = false;
-  netCharge = 0;
-  phase = 'induction';
-  buildLattice();
-  buildAtoms();
-  removeBtn.disabled = true;
-  updateGroundBtn();
-}
-
-function updateGroundBtn() {
-  // grounding only meaningful for a conductor with the rod present and not already grounded
-  groundBtn.disabled = !(material === 'conductor' && rodPresent && !grounded);
-  if (grounded) groundBtn.textContent = '♻ 접지 연결됨';
-  else groundBtn.textContent = '♻ 접지 (Ground)';
-}
-
-// ---------- physics-ish layout of charges ----------
-// Returns target px positions for electrons given current rod proximity & sign.
-// proximity in [0,1]: 1 = rod very close, 0 = far/absent.
-function layoutConductor(proximity) {
-  const L = obj.cx - obj.w / 2, R = obj.cx + obj.w / 2;
-  const T = obj.cy - obj.h / 2, B = obj.cy + obj.h / 2;
-  const innerL = L + obj.w * 0.10, innerR = R - obj.w * 0.10;
-  const innerT = T + obj.h * 0.12, innerB = B - obj.h * 0.12;
-
-  // The rod is on the LEFT (near side = left edge of object).
-  // If rod is +, electrons are attracted to the NEAR (left) side -> left becomes net -, right net +.
-  // If rod is -, electrons repelled to the FAR (right) side -> right net -, left net +.
-  // "shift" is the bias direction for electrons: negative => pulled left, positive => pushed right.
-  const shift = (rodSign > 0) ? -1 : +1;   // +rod pulls e- left (toward rod); -rod pushes e- right
-
-  const n = electrons.length;
-  for (let i = 0; i < n; i++) {
-    const e = electrons[i];
-    // base position: each electron belongs to a "column slot" so they spread out, not stack.
-    // Use a deterministic slot per index for even vertical spread.
-    const col = i % 5;
-    const row = Math.floor(i / 5) % 4;
-    let baseX = innerL + (innerR - innerL) * (col + 0.5) / 5;
-    let baseY = innerT + (innerB - innerT) * (row + 0.5) / 4;
-
-    // Bias: when proximity is high, push the whole electron cloud toward the biased side.
-    // Compress electrons toward one edge by remapping x.
-    const bias = shift * proximity;   // -1..1 scaled by proximity
-    // Map baseX fraction (0..1 across inner width) toward the biased edge.
-    let fx = (baseX - innerL) / (innerR - innerL);   // 0 (left) .. 1 (right)
-    // squeeze toward target edge: blend fx with edge value
-    const targetEdge = (bias < 0) ? 0.0 : (bias > 0 ? 1.0 : 0.5);
-    const strength = Math.abs(bias);
-    // ease so the migration is visible but charges still fill a band (not a single line)
-    fx = fx * (1 - strength * 0.78) + targetEdge * (strength * 0.78);
-    const tx = innerL + fx * (innerR - innerL);
-    const ty = baseY + rnd(-2, 2) * 0; // keep deterministic
-    e.tx = tx;
-    e.ty = baseY;
-  }
-}
-
-// extra electrons (grounding) get placed on the side determined by sign so the NET charge shows.
-function layoutExtras() {
-  // extras already appended/removed in electrons[]; their target handled in layoutConductor by index,
-  // but we want extras to sit on the appropriate edge clearly. We override here.
-  const L = obj.cx - obj.w / 2, R = obj.cx + obj.w / 2;
-  const innerL = L + obj.w * 0.10, innerR = R - obj.w * 0.10;
-  const innerT = obj.cy - obj.h / 2 + obj.h * 0.12;
-  const innerB = obj.cy + obj.h / 2 - obj.h * 0.12;
-  let k = 0;
-  for (let i = 0; i < electrons.length; i++) {
-    if (!electrons[i].extra) continue;
-    // when rod is + we ground -> object gains electrons (net -). They distribute through the conductor
-    // (after rod removed). While rod present, surplus electrons crowd the near side too.
-    const row = k % 4;
-    const colJitter = (k % 2 === 0) ? 0.25 : 0.55;
-    electrons[i].tx = innerL + (innerR - innerL) * colJitter + rnd(-3, 3) * 0;
-    electrons[i].ty = innerT + (innerB - innerT) * (row + 0.5) / 4;
-    k++;
-  }
-}
-
-// ---------- drawing helpers ----------
-function drawTextWithBg(text, x, y, opts) {
-  opts = opts || {};
-  const font = opts.font || 'bold 12px sans-serif';
-  const color = opts.color || '#1a1a1a';
-  const pad = opts.pad != null ? opts.pad : 3;
-  const align = opts.align || 'center';
-  ctx.font = font;
-  ctx.textAlign = align;
-  ctx.textBaseline = 'middle';
-  const w = ctx.measureText(text).width;
-  let bx = x;
-  if (align === 'center') bx = x - w / 2;
-  else if (align === 'right') bx = x - w;
-  ctx.fillStyle = opts.bg || 'rgba(255,255,255,0.85)';
-  const fontPx = parseInt(font.match(/(\d+)px/)[1]);
-  ctx.fillRect(bx - pad, y - fontPx / 2 - pad, w + pad * 2, fontPx + pad * 2);
-  ctx.fillStyle = color;
-  ctx.fillText(text, x, y);
-}
-
-function drawPlus(x, y, r, color) {
-  ctx.strokeStyle = color; ctx.lineWidth = 2.2; ctx.lineCap = 'round';
-  ctx.beginPath();
-  ctx.moveTo(x - r, y); ctx.lineTo(x + r, y);
-  ctx.moveTo(x, y - r); ctx.lineTo(x, y + r);
-  ctx.stroke();
-}
-function drawMinus(x, y, r, color) {
-  ctx.strokeStyle = color; ctx.lineWidth = 2.2; ctx.lineCap = 'round';
-  ctx.beginPath();
-  ctx.moveTo(x - r, y); ctx.lineTo(x + r, y);
-  ctx.stroke();
-}
-function drawIon(x, y) {
-  ctx.fillStyle = '#fff'; ctx.strokeStyle = RED; ctx.lineWidth = 1.6;
-  ctx.beginPath(); ctx.arc(x, y, 8, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-  drawPlus(x, y, 3.6, RED);
-}
-function drawElectron(x, y, glow) {
-  if (glow) {
-    ctx.fillStyle = 'rgba(37,99,235,0.18)';
-    ctx.beginPath(); ctx.arc(x, y, 9.5, 0, Math.PI * 2); ctx.fill();
-  }
-  ctx.fillStyle = BLUE; ctx.strokeStyle = '#1e40af'; ctx.lineWidth = 1.2;
-  ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-  drawMinus(x, y, 3, '#fff');
-}
-
-// ---------- main draw ----------
-let lastTime = performance.now();
-
-function draw(now) {
-  now = now || performance.now();
-  const dt = Math.min((now - lastTime) / 1000, 0.05);
-  lastTime = now;
-
-  ctx.clearRect(0, 0, CW, CH);
-
-  // layout object & rod
-  obj.w = Math.min(CW * 0.34, 300);
-  obj.h = Math.min(CH * 0.5, 240);
-  obj.cx = CW * 0.62;
-  obj.cy = CH * 0.52;
-  rodH = obj.h * 0.92;
-  rodY = obj.cy;
-  // distance slider: 0 (closest) .. 1 (farthest)
-  const d = parseFloat(dSlider.value);
-  const objLeft = obj.cx - obj.w / 2;
-  const nearX = objLeft - 22;                 // closest rod position (right edge of rod)
-  const farX = Math.max(CW * 0.10, 60);       // farthest
-  const rodRightEdge = farX + (nearX - farX) * (1 - d);
-  rodX = rodRightEdge;                         // we treat rodX as the rod's right edge (facing object)
-
-  // proximity for induction strength (0 far .. 1 near). Only if rod present.
-  let proximity = 0;
-  if (rodPresent) {
-    proximity = 1 - d;             // d=0 -> proximity 1
-    proximity = Math.max(0, Math.min(1, proximity));
+  function draw() {
+    if (!state.width||!state.height) return;
+    ctx.clearRect(0,0,state.width,state.height);
+    layout();
+    drawSequence();
+    const model=modelState({material:state.material,rodSign:state.rodSign,phase:state.phase,rodNear:isNear()});
+    if (state.material==='conductor') drawConductor(model); else drawInsulator();
+    if (state.phase!=='removed') drawRod();
+    textBg('정성 모형',24,state.height-22,{size:15,color:GRAY,align:'left'});
+    updateControls(model);
   }
 
-  // ---------- compute targets ----------
-  if (material === 'conductor') {
-    layoutConductor(proximity);
-    layoutExtras();
+  function resize() {
+    const rect=stage.getBoundingClientRect();
+    if (!rect.width||!rect.height) return;
+    state.width=rect.width; state.height=rect.height; state.dpr=Math.max(1,window.devicePixelRatio||1);
+    canvas.width=Math.round(state.width*state.dpr); canvas.height=Math.round(state.height*state.dpr);
+    canvas.style.width=`${state.width}px`; canvas.style.height=`${state.height}px`;
+    ctx.setTransform(state.dpr,0,0,state.dpr,0,0);
+    draw();
   }
 
-  // ---------- draw ground wire (behind object) ----------
-  if (grounded) drawGroundWire();
-
-  // ---------- draw object box ----------
-  const L = obj.cx - obj.w / 2, R = obj.cx + obj.w / 2;
-  const T = obj.cy - obj.h / 2, B = obj.cy + obj.h / 2;
-  ctx.fillStyle = LIGHT;
-  ctx.strokeStyle = '#9ca3af';
-  ctx.lineWidth = 2;
-  roundRect(L, T, obj.w, obj.h, 14);
-  ctx.fill(); ctx.stroke();
-
-  // shading hint of induced surface charge (near / far) for conductor while rod present
-  if (material === 'conductor' && rodPresent && proximity > 0.05) {
-    drawSurfaceTint(L, T, R, B, proximity);
+  function pointerPosition(event) {
+    const rect=canvas.getBoundingClientRect();
+    return {x:event.clientX-rect.left,y:event.clientY-rect.top};
   }
 
-  // ---------- draw charges ----------
-  if (material === 'conductor') {
-    drawConductor(dt);
-  } else {
-    drawInsulator(proximity);
+  function hitRod(p) {
+    if (state.phase!=='approach') return false;
+    const rod=worldToScreen(state.rodX,0);
+    const top=worldToScreen(state.rodX,.55).y;
+    const bottom=worldToScreen(state.rodX,-.55).y;
+    return Math.abs(p.x-rod.x)<34&&p.y>top-18&&p.y<bottom+18;
   }
 
-  // ---------- object label / net charge tag ----------
-  drawObjectLabel(L, T, R, B);
-
-  // ---------- draw rod ----------
-  if (rodPresent) drawRod();
-
-  // ---------- side labels: which side is + / - ----------
-  if (material === 'conductor' && rodPresent && proximity > 0.12 && !grounded) {
-    drawSideLabels(L, R, T);
-  }
-
-  updateInfo();
-  requestAnimationFrame(draw);
-}
-
-function roundRect(x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
-}
-
-function drawSurfaceTint(L, T, R, B, p) {
-  // near side (left) acquires charge OPPOSITE to rod; far side (right) gets the same sign as rod.
-  const nearColor = (rodSign > 0) ? 'rgba(37,99,235,' : 'rgba(139,0,41,';   // +rod -> near is - (blue)
-  const farColor  = (rodSign > 0) ? 'rgba(139,0,41,' : 'rgba(37,99,235,';
-  const a = (0.10 * p).toFixed(3);
-  const bandW = obj.w * 0.32;
-  // near (left) band
-  let g = ctx.createLinearGradient(L, 0, L + bandW, 0);
-  g.addColorStop(0, nearColor + a + ')');
-  g.addColorStop(1, nearColor + '0)');
-  ctx.fillStyle = g;
-  ctx.fillRect(L + 2, T + 2, bandW, B - T - 4);
-  // far (right) band
-  let g2 = ctx.createLinearGradient(R, 0, R - bandW, 0);
-  g2.addColorStop(0, farColor + a + ')');
-  g2.addColorStop(1, farColor + '0)');
-  ctx.fillStyle = g2;
-  ctx.fillRect(R - bandW - 2, T + 2, bandW, B - T - 4);
-}
-
-function drawConductor(dt) {
-  // draw fixed ions
-  const L = obj.cx - obj.w / 2, T = obj.cy - obj.h / 2;
-  const innerL = L + obj.w * 0.10, innerR = (obj.cx + obj.w / 2) - obj.w * 0.10;
-  const innerT = T + obj.h * 0.12, innerB = (obj.cy + obj.h / 2) - obj.h * 0.12;
-
-  // ions fixed at their lattice fractional positions
-  for (const ion of ions) {
-    const x = innerL + (innerR - innerL) * ion.fx;
-    const y = innerT + (innerB - innerT) * ion.fy;
-    drawIon(x, y);
-  }
-
-  // animate electrons toward targets
-  for (const e of electrons) {
-    if (e.x === 0 && e.y === 0) { e.x = e.tx; e.y = e.ty; }   // initialize
-    // smooth drift
-    e.x += (e.tx - e.x) * Math.min(1, dt * 6.5);
-    e.y += (e.ty - e.y) * Math.min(1, dt * 6.5);
-  }
-  // draw electrons (extras glow to emphasize net charge)
-  for (const e of electrons) {
-    drawElectron(e.x, e.y, e.extra);
-  }
-}
-
-function drawInsulator(p) {
-  const L = obj.cx - obj.w / 2, T = obj.cy - obj.h / 2;
-  const W = obj.w, H = obj.h;
-  const innerL = L + W * 0.10, innerR = L + W * 0.90;
-  const innerT = T + H * 0.12, innerB = T + H * 0.88;
-  // each atom: nucleus (+) fixed, electron cloud (-) offset slightly.
-  // +rod (left) pulls bound electrons toward rod (left, -offset x); -rod pushes them right.
-  const dir = (rodSign > 0) ? -1 : +1;
-  const maxOff = 5.5 * p;   // small offset only -> weak polarization, no migration
-  for (const a of atoms) {
-    const x = innerL + (innerR - innerL) * a.fx;
-    const y = innerT + (innerB - innerT) * a.fy;
-    const ox = dir * maxOff;
-    // electron cloud (blue translucent disk) offset by ox
-    ctx.fillStyle = 'rgba(37,99,235,0.22)';
-    ctx.strokeStyle = 'rgba(37,99,235,0.55)';
-    ctx.lineWidth = 1.1;
-    ctx.beginPath(); ctx.arc(x + ox, y, 11, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    // small minus marker in the cloud
-    drawMinus(x + ox, y, 3, BLUE);
-    // nucleus +
-    ctx.fillStyle = '#fff'; ctx.strokeStyle = RED; ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    drawPlus(x, y, 3, RED);
-  }
-}
-
-function drawObjectLabel(L, T, R, B) {
-  // net charge tag above the object
-  let tag, tagColor, tagBg;
-  const netSign = netChargeSign();
-  if (netSign === 0) {
-    tag = '알짜 전하: 0 (중성)';
-    tagColor = GRAY; tagBg = 'rgba(255,255,255,0.9)';
-  } else if (netSign < 0) {
-    tag = '알짜 전하: − (음전하)';
-    tagColor = BLUE; tagBg = 'rgba(37,99,235,0.10)';
-  } else {
-    tag = '알짜 전하: + (양전하)';
-    tagColor = RED; tagBg = 'rgba(139,0,41,0.08)';
-  }
-  drawTextWithBg(tag, (L + R) / 2, T - 16, { font: 'bold 13px sans-serif', color: tagColor, bg: tagBg, pad: 4 });
-
-  // material label under object
-  const matTxt = (material === 'conductor') ? '도체 (자유전자 이동 가능)' : '부도체 (전자가 원자에 속박)';
-  drawTextWithBg(matTxt, (L + R) / 2, B + 18, { font: '12px sans-serif', color: GRAY, bg: 'rgba(255,255,255,0.85)', pad: 3 });
-}
-
-function drawSideLabels(L, R, T) {
-  // near (left) side gets opposite sign to rod
-  const nearSym = (rodSign > 0) ? '−' : '+';
-  const farSym  = (rodSign > 0) ? '+' : '−';
-  const nearCol = (rodSign > 0) ? BLUE : RED;
-  const farCol  = (rodSign > 0) ? RED : BLUE;
-  // place just INSIDE the top edge of the object so they never collide with the
-  // centered net-charge tag that sits above the box (at T - 16).
-  drawTextWithBg(nearSym + ' 면', L + 26, T + 15, { font: 'bold 13px sans-serif', color: nearCol, pad: 3, bg: 'rgba(255,255,255,0.92)' });
-  drawTextWithBg(farSym + ' 면', R - 26, T + 15, { font: 'bold 13px sans-serif', color: farCol, pad: 3, bg: 'rgba(255,255,255,0.92)' });
-}
-
-function drawRod() {
-  const w = 22, h = rodH;
-  const x = rodX - w;   // rodX is right edge
-  const y = rodY - h / 2;
-  // rod body
-  ctx.fillStyle = (rodSign > 0) ? '#f3dce2' : '#dce6fb';
-  ctx.strokeStyle = (rodSign > 0) ? RED : BLUE;
-  ctx.lineWidth = 2;
-  roundRect(x, y, w, h, 8);
-  ctx.fill(); ctx.stroke();
-  // charges along the facing (right) edge
-  const sym = rodSign > 0 ? '+' : '−';
-  const col = rodSign > 0 ? RED : BLUE;
-  const nSym = 6;
-  ctx.font = 'bold 15px sans-serif';
-  for (let i = 0; i < nSym; i++) {
-    const cy = y + h * (i + 0.5) / nSym;
-    if (rodSign > 0) drawPlus(rodX - 6, cy, 4.2, col);
-    else drawMinus(rodX - 6, cy, 4.2, col);
-  }
-  // rod label
-  drawTextWithBg('대전 막대', x + w / 2, y - 14, { font: 'bold 12px sans-serif', color: col, pad: 3, bg: 'rgba(255,255,255,0.9)' });
-
-  // small attraction/repulsion hint arrow near gap (only conductor or insulator both attract net)
-  // The object is always attracted to the rod (induced opposite charge nearer) -> draw subtle arrow.
-}
-
-function drawGroundWire() {
-  // wire from bottom-right of object down to a ground symbol
-  const startX = obj.cx + obj.w * 0.30;
-  const startY = obj.cy + obj.h / 2;
-  const gy = Math.min(CH - 26, startY + 70);
-  ctx.strokeStyle = GRAY; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
-  ctx.beginPath();
-  ctx.moveTo(startX, startY);
-  ctx.lineTo(startX, gy);
-  ctx.stroke();
-  // ground symbol (three horizontal lines)
-  const widths = [22, 14, 7];
-  for (let i = 0; i < 3; i++) {
-    const yy = gy + i * 5;
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.moveTo(startX - widths[i] / 2, yy);
-    ctx.lineTo(startX + widths[i] / 2, yy);
-    ctx.stroke();
-  }
-  drawTextWithBg('접지', startX + 30, gy + 3, { font: 'bold 12px sans-serif', color: GRAY, align: 'left', pad: 3, bg: 'rgba(255,255,255,0.85)' });
-
-  // flowing electrons in/out animation hint: a couple of moving dots along the wire
-  drawGroundFlow(startX, startY, gy);
-}
-
-let flowPhase = 0;
-function drawGroundFlow(x, y0, y1) {
-  flowPhase = (flowPhase + 0.012) % 1;
-  // direction: if rod +, electrons flow UP into object (from ground) -> object gains electrons (net -).
-  //            if rod -, electrons flow DOWN out of object -> object loses electrons (net +).
-  const up = (rodSign > 0);
-  for (let k = 0; k < 2; k++) {
-    let t = (flowPhase + k * 0.5) % 1;
-    let yy = up ? (y1 - t * (y1 - y0)) : (y0 + t * (y1 - y0));
-    ctx.fillStyle = BLUE;
-    ctx.beginPath(); ctx.arc(x, yy, 4, 0, Math.PI * 2); ctx.fill();
-    drawMinus(x, yy, 2, '#fff');
-  }
-}
-
-// ---------- net charge bookkeeping ----------
-// netCharge field: number of EXCESS electrons on object.
-//   >0 excess electrons -> net NEGATIVE
-//   <0 deficit electrons -> net POSITIVE
-function netChargeSign() {
-  if (netCharge > 0) return -1;   // excess electrons => net negative
-  if (netCharge < 0) return +1;   // deficit electrons => net positive
-  return 0;
-}
-
-// ---------- info panel ----------
-function updateInfo() {
-  const box = document.getElementById('infoBox');
-  let html = '';
-  // phase / state line
-  let stateTxt;
-  if (phase === 'induction') stateTxt = '유도 상태 (막대 근처)';
-  else if (phase === 'grounding') stateTxt = '접지 연결됨';
-  else stateTxt = '유도 대전 완료';
-  html += '<span class="label">상태:</span> ' + stateTxt + '<br>';
-
-  const ns = netChargeSign();
-  let netTxt = (ns === 0) ? '0 (중성)' : (ns < 0 ? '− (음전하)' : '+ (양전하)');
-  html += '<span class="label">알짜 전하:</span> ' + netTxt + '<br>';
-
-  if (material === 'conductor') {
-    if (rodPresent && (1 - parseFloat(dSlider.value)) > 0.12 && !grounded) {
-      const nearSym = (rodSign > 0) ? '−' : '+';
-      const farSym  = (rodSign > 0) ? '+' : '−';
-      html += '<span class="label">가까운 면:</span> ' + nearSym + ' / <span class="label">먼 면:</span> ' + farSym + '<br>';
-    }
-    html += '<span class="label">전하 이동:</span> 자유전자 이동';
-  } else {
-    html += '<span class="label">전하 이동:</span> 없음 (국소 분극)';
-  }
-  box.innerHTML = html;
-}
-
-// ---------- static panel text ----------
-function renderStatic() {
-  document.getElementById('canvasTitle').innerHTML =
-    '유도(induction): 대전체를 가까이 하면 도체 내 자유전자가 재배치된다';
-
-  document.getElementById('theoremBox').innerHTML =
-    '전하 보존 + 유도<br>' +
-    '도체: 가까운 면 = 반대 부호, 먼 면 = 같은 부호<br>' +
-    '<span style="font-weight:400;font-size:11px">(접지 전까지 알짜 전하는 0)</span>';
-
-  document.getElementById('legend').innerHTML =
-    '<b style="color:' + RED + '">+ 양이온/양전하</b> &nbsp; ' +
-    '<b style="color:' + BLUE + '">− 전자/음전하</b><br>' +
-    '<span style="color:' + GRAY + '">회색 박스 = 중성 물체</span>';
-
-  document.getElementById('formulaBox').innerHTML =
-    '<b>도체:</b> 자유전자가 물체 전체를 가로질러 이동 &rarr; 가까운 면에 반대 부호 유도. ' +
-    '막대를 치우면 다시 중성.<br><br>' +
-    '<b>부도체:</b> 전자가 원자에 속박 &rarr; 각 원자가 살짝 분극될 뿐, ' +
-    '전하가 물체를 가로질러 이동하지 않음 (효과 약함).<br><br>' +
-    '<b>접지(ground):</b> 막대가 가까운 상태에서 접지하면 먼 면의 전하가 땅으로 빠져나가거나 ' +
-    '땅에서 전자가 들어와, 막대를 치운 뒤에도 물체에 <b>막대와 반대 부호</b> 의 알짜 전하가 남는다 (유도 대전).';
-}
-
-// ---------- actions ----------
-function doGround() {
-  if (material !== 'conductor' || !rodPresent || grounded) return;
-  grounded = true;
-  phase = 'grounding';
-  // While grounded with rod near:
-  //  rod +  -> attracts electrons to near side; far-side + repels... ground supplies electrons:
-  //            object GAINS electrons -> excess electrons -> net negative (opposite to +rod). ✓
-  //  rod -  -> repels electrons to far side; near side +; ground drains electrons to earth:
-  //            object LOSES electrons -> deficit -> net positive (opposite to -rod). ✓
-  // We represent the eventual net charge as a handful of extra/removed electrons.
-  const NUM = 5;
-  if (rodSign > 0) {
-    // add NUM extra electrons
-    for (let i = 0; i < NUM; i++) {
-      electrons.push({ fx: 0, fy: 0, x: 0, y: 0, tx: 0, ty: 0, extra: true });
-    }
-    netCharge += NUM;   // excess electrons => net negative
-  } else {
-    // remove NUM electrons (drain to ground). Remove from the array (non-extra ones near far side).
-    let removed = 0;
-    for (let i = electrons.length - 1; i >= 0 && removed < NUM; i--) {
-      if (!electrons[i].extra) { electrons.splice(i, 1); removed++; }
-    }
-    netCharge -= NUM;   // deficit electrons => net positive
-  }
-  removeBtn.disabled = false;
-  updateGroundBtn();
-}
-
-function doRemove() {
-  // Step: disconnect ground first (if connected), then remove rod -> net charge stays & redistributes.
-  if (grounded) {
-    grounded = false;
-  }
-  if (rodPresent) {
-    rodPresent = false;
-  }
-  phase = (netCharge === 0) ? 'induction' : 'charged';
-  // With no rod, remaining charges (incl. net) spread uniformly over the conductor.
-  // Extras keep their glow so the leftover net charge stays visible.
-  // Redistribution happens in draw() via layoutConductor with proximity 0.
-  removeBtn.disabled = true;
-  updateGroundBtn();   // rod is gone -> ground disabled AND label reset to "접지 (Ground)"
-}
-
-// ---------- events ----------
-document.querySelectorAll('#matSeg button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('#matSeg button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    resetState();
+  canvas.addEventListener('pointerdown',event=>{
+    if (!hitRod(pointerPosition(event))) return;
+    state.drag=true; state.hover=true; canvas.setPointerCapture(event.pointerId); canvas.style.cursor='grabbing';
+    event.preventDefault(); draw();
   });
-});
-document.querySelectorAll('#rodSeg button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('#rodSeg button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    rodSign = parseInt(btn.dataset.sign);
-    // changing sign mid-charge resets the induction state for clarity
-    resetState();
+  canvas.addEventListener('pointermove',event=>{
+    const p=pointerPosition(event);
+    if (state.drag) {
+      state.rodX=Math.max(ROD_RANGE.far,Math.min(ROD_RANGE.near,screenToWorldX(p.x)));
+      draw(); return;
+    }
+    state.hover=hitRod(p); canvas.style.cursor=state.hover?'grab':'default'; draw();
   });
-});
+  function endDrag(event) {
+    if (state.drag&&canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+    state.drag=false; canvas.style.cursor=state.hover?'grab':'default'; draw();
+  }
+  canvas.addEventListener('pointerup',endDrag);
+  canvas.addEventListener('pointercancel',endDrag);
+  canvas.addEventListener('pointerleave',()=>{if(!state.drag){state.hover=false;canvas.style.cursor='default';draw();}});
 
-dSlider.addEventListener('input', () => {
-  document.getElementById('dVal').textContent = parseFloat(dSlider.value).toFixed(2);
-});
+  function select(group,value) {
+    document.querySelectorAll(`#${group} button`).forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.value===String(value))));
+  }
 
-groundBtn.addEventListener('click', doGround);
-removeBtn.addEventListener('click', doRemove);
-resetBtn.addEventListener('click', () => {
-  dSlider.value = 0.55;
-  document.getElementById('dVal').textContent = '0.55';
-  resetState();
-});
+  document.getElementById('material').addEventListener('click',event=>{
+    const button=event.target.closest('button[data-value]');
+    if (!button) return;
+    state.material=button.dataset.value; state.phase='approach'; state.rodX=ROD_RANGE.far;
+    select('material',state.material); draw();
+  });
+  document.getElementById('rodSign').addEventListener('click',event=>{
+    const button=event.target.closest('button[data-value]');
+    if (!button) return;
+    state.rodSign=Number(button.dataset.value); state.phase='approach'; state.rodX=ROD_RANGE.far;
+    select('rodSign',state.rodSign); draw();
+  });
+  document.getElementById('action').addEventListener('click',()=>{
+    if (state.phase==='approach') state.phase=transition(state.phase,'connect',{material:state.material,rodNear:isNear()});
+    else if (state.phase==='grounded') state.phase=transition(state.phase,'disconnect',{material:state.material,rodNear:isNear()});
+    else if (state.phase==='isolated') state.phase=transition(state.phase,'remove',{material:state.material,rodNear:isNear()});
+    else {state.phase=transition(state.phase,'reset',{material:state.material,rodNear:false}); state.rodX=ROD_RANGE.far;}
+    draw();
+  });
 
-// ---------- sizing ----------
-function resize() {
-  dpr = window.devicePixelRatio || 1;
-  const rect = canvas.parentElement.getBoundingClientRect();
-  CW = rect.width; CH = rect.height;
-  canvas.width = CW * dpr; canvas.height = CH * dpr;
-  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-}
-window.addEventListener('resize', resize);
+  function getState() {
+    return {...modelState({material:state.material,rodSign:state.rodSign,phase:state.phase,rodNear:isNear()}),rodX_m:state.rodX};
+  }
 
-// ---------- drag rod ----------
-let dragging = false;
-function rodHitTest(mx, my) {
-  if (!rodPresent) return false;
-  const w = 30, h = rodH;
-  const x = rodX - w;
-  return mx >= x - 8 && mx <= rodX + 8 && my >= rodY - h / 2 && my <= rodY + h / 2;
-}
-function pointerPos(ev) {
-  const rect = canvas.getBoundingClientRect();
-  const cx = (ev.touches ? ev.touches[0].clientX : ev.clientX) - rect.left;
-  const cy = (ev.touches ? ev.touches[0].clientY : ev.clientY) - rect.top;
-  return { x: cx, y: cy };
-}
-function onDown(ev) {
-  const p = pointerPos(ev);
-  if (rodHitTest(p.x, p.y)) { dragging = true; ev.preventDefault(); }
-}
-function onMove(ev) {
-  if (!dragging) return;
-  const p = pointerPos(ev);
-  // convert px to slider value (0 closest .. 1 farthest)
-  const objLeft = obj.cx - obj.w / 2;
-  const nearX = objLeft - 22;
-  const farX = Math.max(CW * 0.10, 60);
-  // p.x is desired rod right edge
-  let edge = Math.max(farX, Math.min(nearX, p.x));
-  // rodRightEdge = farX + (nearX - farX)*(1-d)  =>  (1-d) = (edge-farX)/(nearX-farX)
-  const f = (edge - farX) / (nearX - farX);  // 0 far .. 1 near = (1-d)
-  let d = 1 - f;
-  d = Math.max(0, Math.min(1, d));
-  dSlider.value = d;
-  document.getElementById('dVal').textContent = d.toFixed(2);
-  ev.preventDefault();
-}
-function onUp() { dragging = false; }
-canvas.addEventListener('mousedown', onDown);
-window.addEventListener('mousemove', onMove);
-window.addEventListener('mouseup', onUp);
-canvas.addEventListener('touchstart', onDown, { passive: false });
-window.addEventListener('touchmove', onMove, { passive: false });
-window.addEventListener('touchend', onUp);
-
-// ---------- boot ----------
-renderStatic();
-resetState();
-resize();
-document.getElementById('dVal').textContent = parseFloat(dSlider.value).toFixed(2);
-requestAnimationFrame(draw);
+  function runValidation() {
+    const neutral=modelState({material:'conductor',rodSign:1,phase:'approach',rodNear:true});
+    const plusGround=modelState({material:'conductor',rodSign:1,phase:'grounded',rodNear:true});
+    const minusGround=modelState({material:'conductor',rodSign:-1,phase:'grounded',rodNear:true});
+    const plusIsolated=modelState({material:'conductor',rodSign:1,phase:'isolated',rodNear:true});
+    const plusRemoved=modelState({material:'conductor',rodSign:1,phase:'removed',rodNear:false});
+    const minusIsolated=modelState({material:'conductor',rodSign:-1,phase:'isolated',rodNear:true});
+    const minusRemoved=modelState({material:'conductor',rodSign:-1,phase:'removed',rodNear:false});
+    const insulated=modelState({material:'insulator',rodSign:1,phase:'grounded',rodNear:true});
+    const sequence1=transition('approach','connect',{material:'conductor',rodNear:true});
+    const sequence2=transition(sequence1,'disconnect',{material:'conductor',rodNear:true});
+    const sequence3=transition(sequence2,'remove',{material:'conductor',rodNear:true});
+    const tests={
+      neutral_induction:neutral.netCharge===0,
+      grounded_opposes_rod:plusGround.netCharge===-1&&minusGround.netCharge===1,
+      charge_persists_after_disconnect:plusIsolated.netCharge===-1&&minusIsolated.netCharge===1,
+      charge_persists_after_rod_removal:plusRemoved.netCharge===-1&&minusRemoved.netCharge===1,
+      correct_sequence:sequence1==='grounded'&&sequence2==='isolated'&&sequence3==='removed',
+      no_early_ground:transition('approach','connect',{material:'conductor',rodNear:false})==='approach',
+      insulator_conserves_charge:insulated.netCharge===0&&transition('approach','connect',{material:'insulator',rodNear:true})==='approach'
+    };
+    const pass=Object.values(tests).every(Boolean);
+    document.body.dataset.physicsValidated=pass?'pass':'fail';
+    return {pass,tests};
+  }
+  window.__physicsValidation={modelState,transition,getState,run:runValidation};
+  renderTex(String.raw`Q_{\mathrm{net}}=\sum_i q_i`);
+  runValidation();
+  new ResizeObserver(resize).observe(stage);
+  window.addEventListener('load',resize,{once:true});
+})();
 </script>
 </body>
 </html>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 430" role="img" aria-labelledby="title desc">
+  <title id="title">Electric and gravitational forces between a proton and an electron</title>
+  <desc id="desc">Logarithmic comparison showing parallel inverse-square force curves separated by about 39 decades.</desc>
+  <rect width="760" height="430" fill="#fff"/>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#1a1a1a">
+    <line x1="105" y1="350" x2="700" y2="350" stroke="#111" stroke-width="1.5"/>
+    <line x1="105" y1="350" x2="105" y2="45" stroke="#111" stroke-width="1.5"/>
+    <g font-size="16" text-anchor="middle">
+      <line x1="105" y1="350" x2="105" y2="357" stroke="#111"/><text x="105" y="382">−15</text>
+      <line x1="303" y1="350" x2="303" y2="357" stroke="#111"/><text x="303" y="382">−13</text>
+      <line x1="502" y1="350" x2="502" y2="357" stroke="#111"/><text x="502" y="382">−11</text>
+      <line x1="700" y1="350" x2="700" y2="357" stroke="#111"/><text x="700" y="382">−9</text>
+      <text x="402" y="405" font-size="19">log₁₀(r / m)</text>
+    </g>
+    <g font-size="16" text-anchor="end">
+      <line x1="98" y1="322.3" x2="105" y2="322.3" stroke="#111"/><text x="90" y="328.3">−45</text>
+      <line x1="98" y1="266.8" x2="105" y2="266.8" stroke="#111"/><text x="90" y="272.8">−35</text>
+      <line x1="98" y1="211.4" x2="105" y2="211.4" stroke="#111"/><text x="90" y="217.4">−25</text>
+      <line x1="98" y1="155.9" x2="105" y2="155.9" stroke="#111"/><text x="90" y="161.9">−15</text>
+      <line x1="98" y1="100.5" x2="105" y2="100.5" stroke="#111"/><text x="90" y="106.5">−5</text>
+      <line x1="98" y1="45" x2="105" y2="45" stroke="#111"/><text x="90" y="51">+5</text>
+    </g>
+    <text x="23" y="203" font-size="19" text-anchor="middle" transform="rotate(-90 23 203)">log₁₀(F / N)</text>
+    <path d="M105 59.6 L700 126.2" fill="none" stroke="#8B0029" stroke-width="3"/>
+    <path d="M105 277.9 L700 344.4" fill="none" stroke="#2563EB" stroke-width="3"/>
+    <text x="548" y="104" fill="#8B0029" font-size="21" font-weight="700">electric</text>
+    <text x="548" y="322" fill="#2563EB" font-size="21" font-weight="700">gravity</text>
+    <line x1="440" y1="97.1" x2="440" y2="315.3" stroke="#6B7280" stroke-width="1.2" marker-start="url(#a)" marker-end="url(#a)"/>
+    <text x="456" y="207" fill="#6B7280" font-size="18">39.36 decades</text>
+  </g>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto-start-reverse"><path d="M0 4L8 0L8 8Z" fill="#6B7280"/></marker></defs>
+</svg>

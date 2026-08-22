@@ -60,5 +60,5 @@
   <text x="320" y="470" font-size="13" fill="#1a1a1a" text-anchor="middle">균일하게 대전된 고리: 총 전하 <tspan font-style="italic">q</tspan>, 선전하 밀도 <tspan font-style="italic">λ = q/2πR</tspan></text>
 
   <!-- caption -->
-  <text x="320" y="500" font-size="14" fill="#1a1a1a" text-anchor="middle">대칭 요소끼리 합치면 축에 수직인 성분은 상쇄 → 축 성분 <tspan font-style="italic">dE</tspan> cos <tspan font-style="italic">θ</tspan> 만 더하면 된다</text>
+  <text x="320" y="488" font-size="14" fill="#1a1a1a" text-anchor="middle">대칭 요소끼리 합치면 축에 수직인 성분은 상쇄 → 축 성분 <tspan font-style="italic">dE</tspan> cos <tspan font-style="italic">θ</tspan> 만 더하면 된다</text>
 </svg>

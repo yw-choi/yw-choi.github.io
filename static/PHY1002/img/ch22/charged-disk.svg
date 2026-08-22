@@ -49,5 +49,5 @@
 
   <!-- labels -->
   <text x="320" y="472" font-size="13" fill="#1a1a1a" text-anchor="middle">균일한 표면전하 밀도 <tspan font-style="italic">σ</tspan> (C/m²)</text>
-  <text x="320" y="500" font-size="14" fill="#1a1a1a" text-anchor="middle">고리 요소의 기여 <tspan font-style="italic">dE</tspan> 를 <tspan font-style="italic">r</tspan> = 0 부터 <tspan font-style="italic">R</tspan> 까지 적분한다</text>
+  <text x="320" y="488" font-size="14" fill="#1a1a1a" text-anchor="middle">고리 요소의 기여 <tspan font-style="italic">dE</tspan> 를 <tspan font-style="italic">r</tspan> = 0 부터 <tspan font-style="italic">R</tspan> 까지 적분한다</text>
 </svg>

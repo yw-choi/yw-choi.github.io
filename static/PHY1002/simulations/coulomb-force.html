@@ -1,600 +1,441 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>쿨롱 힘 놀이터</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>두 전하와 쿨롱 힘</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
-.container { display: flex; height: 100vh; }
-.canvas-area { flex: 1; position: relative; background: #fafafa; touch-action: none; }
-canvas { display: block; width: 100%; height: 100%; }
-.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
-.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
-.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
-.control-group { display: flex; flex-direction: column; gap: 3px; }
-.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
-.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
-.q1pos { accent-color: #8B0029; }
-.q2neg { accent-color: #2563EB; }
-.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
-.info-box .label { color: #8B0029; font-weight: 700; }
-.info-box .val { font-weight: 700; }
-.info-box .katex { font-size: 12px; }
-.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.6; }
-.theorem-box .katex { color: #fff; font-size: 14px; }
-.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 2.0; color: #555; }
-.formula-box b { color: #8B0029; }
-.formula-box .katex { font-size: 12px; }
-button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
-button.reset-btn:hover { background: #a3003a; }
-.canvas-title { position: absolute; top: 8px; left: 16px; right: 16px; pointer-events: none; font-size: 14px; font-weight: 700; color: #8B0029; line-height: 1.4; }
-.hint { position: absolute; bottom: 8px; left: 16px; pointer-events: none; font-size: 11px; color: #6B7280; }
-.relation-box { background: #eef3fe; border: 1px solid #c3d4f5; border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 1.8; color: #2b4a8b; }
-.relation-box .katex { font-size: 12px; }
-.relation-box b { color: #1a3a7a; }
-
-.canvas-overlay {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  pointer-events: none; overflow: hidden;
+:root { --red:#8B0029; --blue:#2563EB; --ink:#171717; --gray:#6B7280; --line:#D1D5DB; }
+* { box-sizing:border-box; }
+html, body { width:100%; height:100%; margin:0; }
+body { overflow:hidden; background:#fff; color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+.app { display:flex; width:100%; height:100%; min-height:0; }
+.stage { position:relative; flex:1 1 auto; min-width:0; background:#fff; touch-action:none; }
+canvas { display:block; width:100%; height:100%; cursor:default; }
+.controls { flex:0 0 248px; width:248px; padding:20px 18px; border-left:1px solid var(--line); overflow:auto; }
+h1 { margin:0; color:var(--red); font-size:20px; line-height:1.25; letter-spacing:-.02em; }
+.formula { min-height:37px; margin:9px 0 20px; font-size:18px; line-height:1.5; white-space:nowrap; }
+.control { margin:0 0 18px; }
+.control label { display:flex; justify-content:space-between; gap:10px; margin-bottom:8px; font-size:15px; font-weight:650; }
+.control output { font-variant-numeric:tabular-nums; }
+input[type="range"] { display:block; width:100%; margin:0; accent-color:var(--red); }
+.readout { display:grid; grid-template-columns:auto 1fr; gap:8px 12px; margin:22px 0 18px; padding:15px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); font-size:15px; }
+.readout dt { color:var(--gray); }
+.readout dd { margin:0; text-align:right; font-weight:650; font-variant-numeric:tabular-nums; }
+.relation { min-height:24px; margin:0 0 18px; color:var(--ink); font-size:15px; line-height:1.5; }
+button { width:100%; min-height:42px; border:1px solid var(--ink); border-radius:2px; background:#fff; color:var(--ink); font:650 15px/1 inherit; cursor:pointer; }
+button:hover { border-color:var(--red); color:var(--red); }
+button:focus-visible, input:focus-visible { outline:3px solid rgba(37,99,235,.28); outline-offset:2px; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+@media (max-width:700px) {
+  .app { flex-direction:column; }
+  .stage { flex:0 0 58%; min-height:260px; }
+  .controls { flex:1 1 auto; width:100%; padding:15px 18px 18px; border-left:0; border-top:1px solid var(--line); }
+  h1 { font-size:19px; }
+  .formula { margin:6px 0 12px; }
+  .control { margin-bottom:12px; }
+  .readout { margin:14px 0 12px; padding:10px 0; }
+  button { min-height:40px; }
 }
-.canvas-overlay .katex-label {
-  position: absolute; white-space: nowrap; font-size: 13px; line-height: 1;
-  pointer-events: none; transform: translate(-50%, -50%);
-  background: rgba(255,255,255,0.85); padding: 1px 5px; border-radius: 4px;
-}
-.canvas-overlay .katex-label .katex { font-size: 0.95em; }
-
-@media (max-width: 700px) {
-  .container { flex-direction: column; }
-  .canvas-area { height: 55vh; }
-  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+@media (max-width:390px) {
+  .stage { flex-basis:55%; min-height:238px; }
+  .controls { padding-top:12px; }
+  .formula { font-size:17px; }
 }
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="canvas-area">
-    <canvas id="canvas"></canvas>
-    <div class="canvas-overlay" id="overlay">
-      <div class="katex-label" id="lblF1" style="color:#8B0029;font-weight:bold;"></div>
-      <div class="katex-label" id="lblF2" style="color:#8B0029;font-weight:bold;"></div>
-      <div class="katex-label" id="lblR" style="color:#6B7280;"></div>
-    </div>
-    <div class="canvas-title" id="canvasTitle"></div>
-    <div class="hint">두 전하를 마우스(또는 손가락)로 끌어보세요</div>
-  </div>
-  <div class="controls">
-    <div>
-      <h2>쿨롱 힘 놀이터</h2>
-      <div class="subtitle">Coulomb's Law (Ch.21)</div>
-    </div>
+<main class="app">
+  <section class="stage" id="stage">
+    <canvas id="canvas" aria-label="드래그 가능한 두 전하와 쿨롱 힘의 거리 의존성 플롯"></canvas>
+    <p class="sr-only" id="canvasHelp">두 전하를 끌어 거리를 바꾸면 힘 화살표와 거리-힘 플롯이 함께 바뀜.</p>
+  </section>
+  <aside class="controls" aria-label="시뮬레이션 조절">
+    <h1>두 전하와 쿨롱 힘</h1>
+    <div class="formula" id="formula" aria-label="쿨롱 법칙"></div>
 
-    <div class="theorem-box" id="theoremBox"></div>
-
-    <div class="control-group">
-      <label>전하 q<sub>1</sub> = <span id="q1Val">+3.0</span> μC</label>
-      <input type="range" id="q1Slider" min="-5" max="5" value="3" step="0.5">
+    <div class="control">
+      <label for="q1"><span>전하 <i>q</i><sub>1</sub></span><output id="q1Out">+3.0 μC</output></label>
+      <input id="q1" type="range" min="-5" max="5" step="0.5" value="3">
+    </div>
+    <div class="control">
+      <label for="q2"><span>전하 <i>q</i><sub>2</sub></span><output id="q2Out">−3.0 μC</output></label>
+      <input id="q2" type="range" min="-5" max="5" step="0.5" value="-3">
     </div>
 
-    <div class="control-group">
-      <label>전하 q<sub>2</sub> = <span id="q2Val">-3.0</span> μC</label>
-      <input type="range" id="q2Slider" min="-5" max="5" value="-3" step="0.5">
-    </div>
-
-    <div class="info-box" id="infoBox"></div>
-
-    <div class="relation-box" id="relationBox"></div>
-
-    <div class="formula-box" id="formulaBox"></div>
-
-    <button class="reset-btn" id="resetBtn">&#8635; 기본값 복원</button>
-  </div>
-</div>
+    <dl class="readout">
+      <dt>거리 <i>r</i></dt><dd id="rOut">1.10 m</dd>
+      <dt>힘 |<i>F</i>|</dt><dd id="fOut">0.067 N</dd>
+    </dl>
+    <p class="relation" id="relation">인력 · 작용·반작용 크기 같음</p>
+    <button id="reset" type="button">기본 배치</button>
+  </aside>
+</main>
 
 <script>
-function tex(expr) { return katex.renderToString(expr, { throwOnError: false, displayMode: false }); }
+(() => {
+  'use strict';
+  const K = 8.99e9;
+  const MICRO = 1e-6;
+  const RED = '#8B0029';
+  const BLUE = '#2563EB';
+  const INK = '#171717';
+  const GRAY = '#6B7280';
+  const LIGHT = '#D1D5DB';
+  const WORLD = { xmin:-1.4, xmax:1.4, ymin:-0.72, ymax:0.72 };
+  const PLOT = { xmin:0.2, xmax:2.8, ymin:0, ymax:6 };
+  const MIN_R = 0.2;
 
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-const overlay = document.getElementById('overlay');
-let dpr = window.devicePixelRatio || 1;
-let CW, CH;
+  const canvas = document.getElementById('canvas');
+  const stage = document.getElementById('stage');
+  const ctx = canvas.getContext('2d');
+  const q1Input = document.getElementById('q1');
+  const q2Input = document.getElementById('q2');
+  const state = {
+    charges: [
+      { x:-0.55, y:0, q:Number(q1Input.value) },
+      { x: 0.55, y:0, q:Number(q2Input.value) }
+    ],
+    drag:-1,
+    hover:-1,
+    width:0,
+    height:0,
+    dpr:1
+  };
+  let diagramRect = null;
 
-const q1Slider = document.getElementById('q1Slider');
-const q2Slider = document.getElementById('q2Slider');
-const resetBtn = document.getElementById('resetBtn');
-
-// Physics constants
-const k = 8.99e9;          // N·m²/C²
-const MICRO = 1e-6;        // μC -> C
-const M_PER_PX = 0.0025;   // 1 canvas px = 2.5 mm  => 100 px = 0.25 m
-
-// Charge state: position stored in screen pixels (canvas-local)
-// Initialized properly in resetPositions() once canvas size known.
-const charge = [
-  { x: 0, y: 0, q: parseFloat(q1Slider.value) },  // q1
-  { x: 0, y: 0, q: parseFloat(q2Slider.value) },  // q2
-];
-
-let dragIdx = -1;
-let positionsInit = false;
-
-function resetPositions() {
-  charge[0].x = CW * 0.34;
-  charge[0].y = CH * 0.5;
-  charge[1].x = CW * 0.66;
-  charge[1].y = CH * 0.5;
-  positionsInit = true;
-}
-
-function clampInside() {
-  for (const c of charge) {
-    const r = chargeRadius(c.q);
-    c.x = Math.max(r + 6, Math.min(CW - r - 6, c.x));
-    c.y = Math.max(r + 6, Math.min(CH - r - 6, c.y));
-  }
-}
-
-function resize() {
-  dpr = window.devicePixelRatio || 1;
-  const rect = canvas.parentElement.getBoundingClientRect();
-  CW = rect.width; CH = rect.height;
-  canvas.width = CW * dpr; canvas.height = CH * dpr;
-  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  if (!positionsInit) resetPositions();
-  clampInside();
-  draw();
-}
-
-function chargeRadius(q) {
-  return 16 + Math.abs(q) * 2.6;   // scale slightly with |q|
-}
-
-// Returns force magnitude (N), separation r (m), unit vector from c0 -> c1
-function computeForce() {
-  const dx = charge[1].x - charge[0].x;
-  const dy = charge[1].y - charge[0].y;
-  const distPx = Math.hypot(dx, dy);
-  const r = Math.max(distPx * M_PER_PX, 1e-4);
-  const q1 = charge[0].q * MICRO;
-  const q2 = charge[1].q * MICRO;
-  const F = k * Math.abs(q1) * Math.abs(q2) / (r * r);
-  const ux = distPx > 1e-6 ? dx / distPx : 1;
-  const uy = distPx > 1e-6 ? dy / distPx : 0;
-  // product sign: >0 repulsive (same sign), <0 attractive (opposite)
-  const prod = charge[0].q * charge[1].q;
-  return { F, r, distPx, ux, uy, prod };
-}
-
-function drawArrow(x1, y1, x2, y2, color, lw) {
-  const headLen = 11;
-  const angle = Math.atan2(y2 - y1, x2 - x1);
-  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
-  ctx.beginPath();
-  ctx.moveTo(x1, y1);
-  // stop the shaft short of the head so the tip is crisp
-  ctx.lineTo(x2 - (headLen - 2) * Math.cos(angle), y2 - (headLen - 2) * Math.sin(angle));
-  ctx.stroke();
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.moveTo(x2, y2);
-  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.42), y2 - headLen * Math.sin(angle - 0.42));
-  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.42), y2 - headLen * Math.sin(angle + 0.42));
-  ctx.closePath(); ctx.fill();
-}
-
-function draw() {
-  if (!positionsInit) return;
-  ctx.clearRect(0, 0, CW, CH);
-
-  const { F, r, distPx, ux, uy, prod } = computeForce();
-
-  // --- connecting line between charges ---
-  ctx.strokeStyle = 'rgba(107,114,128,0.5)';
-  ctx.lineWidth = 1;
-  ctx.setLineDash([4, 3]);
-  ctx.beginPath();
-  ctx.moveTo(charge[0].x, charge[0].y);
-  ctx.lineTo(charge[1].x, charge[1].y);
-  ctx.stroke();
-  ctx.setLineDash([]);
-
-  // --- force arrows (only when both charges are nonzero) ---
-  const bothNonZero = Math.abs(charge[0].q) > 1e-6 && Math.abs(charge[1].q) > 1e-6;
-  let clamped = false;
-  if (bothNonZero && distPx > 1) {
-    // Map F (N) to arrow length (px), log-scaled, clamped.
-    const maxLen = Math.min(CW, CH) * 0.32;
-    const minLen = 22;
-    // F can span many orders of magnitude; use log scaling.
-    let len = 36 * Math.log10(1 + F / 1e-3);
-    if (len > maxLen) { len = maxLen; clamped = true; }
-    if (len < minLen) len = minLen;
-
-    // direction of force ON charge 0:
-    //   repulsive (prod>0): away from charge1  => -u (u points 0->1)
-    //   attractive(prod<0): toward charge1     => +u
-    const sign0 = prod > 0 ? -1 : 1;   // along u (0->1) for force on charge0
-    // force on charge1 is exactly opposite => -sign0
-    // Newton's 3rd law: same |len|, opposite direction.
-
-    const f0x = sign0 * ux, f0y = sign0 * uy;
-    const f1x = -sign0 * ux, f1y = -sign0 * uy;
-
-    const r0 = chargeRadius(charge[0].q);
-    const r1 = chargeRadius(charge[1].q);
-
-    // arrow on charge 0 starts at its edge along the force direction
-    const a0sx = charge[0].x + f0x * (r0 + 2);
-    const a0sy = charge[0].y + f0y * (r0 + 2);
-    const a0ex = a0sx + f0x * len;
-    const a0ey = a0sy + f0y * len;
-
-    const a1sx = charge[1].x + f1x * (r1 + 2);
-    const a1sy = charge[1].y + f1y * (r1 + 2);
-    const a1ex = a1sx + f1x * len;
-    const a1ey = a1sy + f1y * len;
-
-    drawArrow(a0sx, a0sy, a0ex, a0ey, '#8B0029', 3);
-    drawArrow(a1sx, a1sy, a1ex, a1ey, '#8B0029', 3);
-
-    // store arrow tip positions for overlay labels
-    draw._lblF1 = { x: a0ex, y: a0ey, fx: f0x, fy: f0y };
-    draw._lblF2 = { x: a1ex, y: a1ey, fx: f1x, fy: f1y };
-  } else {
-    draw._lblF1 = null;
-    draw._lblF2 = null;
+  function tex(expression) {
+    const target = document.getElementById('formula');
+    if (window.katex) target.innerHTML = katex.renderToString(expression, { throwOnError:false });
+    else target.textContent = '|F| = k |q₁q₂| / r²';
   }
 
-  // --- charges ---
-  drawCharge(charge[0], 'q_1');
-  drawCharge(charge[1], 'q_2');
-
-  positionLabels(F, r, distPx, clamped, bothNonZero);
-  updateInfo(F, r, prod, bothNonZero, clamped);
-}
-
-function drawCharge(c, name) {
-  const r = chargeRadius(c.q);
-  const isPos = c.q > 1e-6;
-  const isNeg = c.q < -1e-6;
-
-  // glow
-  const grad = ctx.createRadialGradient(c.x, c.y, r * 0.2, c.x, c.y, r);
-  if (isPos) {
-    grad.addColorStop(0, '#c4234f');
-    grad.addColorStop(1, '#8B0029');
-  } else if (isNeg) {
-    grad.addColorStop(0, '#5b8cf5');
-    grad.addColorStop(1, '#2563EB');
-  } else {
-    grad.addColorStop(0, '#d1d5db');
-    grad.addColorStop(1, '#9ca3af');
-  }
-  ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.arc(c.x, c.y, r, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(0,0,0,0.18)';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  // sign symbol
-  ctx.fillStyle = '#fff';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  const sym = isPos ? '+' : (isNeg ? '−' : '0');
-  ctx.font = 'bold ' + Math.round(r * 1.25) + 'px sans-serif';
-  ctx.fillText(sym, c.x, c.y + 1);
-
-  // name label below
-  ctx.fillStyle = '#1a1a1a';
-  ctx.font = 'bold 13px sans-serif';
-  ctx.textBaseline = 'top';
-  ctx.fillText(name === 'q_1' ? 'q₁' : 'q₂', c.x, c.y + r + 5);
-  ctx.textBaseline = 'alphabetic';
-}
-
-// Place KaTeX labels (force magnitudes + r) avoiding overlap with charges & each other.
-function positionLabels(F, r, distPx, clamped, bothNonZero) {
-  const lblF1 = document.getElementById('lblF1');
-  const lblF2 = document.getElementById('lblF2');
-  const lblR = document.getElementById('lblR');
-
-  // r label: midpoint of connecting line, offset perpendicular (upward-ish)
-  if (bothNonZero || true) {
-    const mx = (charge[0].x + charge[1].x) / 2;
-    const my = (charge[0].y + charge[1].y) / 2;
-    // perpendicular offset to keep it off the line
-    let nx = -(charge[1].y - charge[0].y);
-    let ny = (charge[1].x - charge[0].x);
-    const nl = Math.hypot(nx, ny) || 1;
-    nx /= nl; ny /= nl;
-    const off = 20;
-    lblR.style.display = 'block';
-    lblR.style.left = (mx + nx * off) + 'px';
-    lblR.style.top = (my + ny * off) + 'px';
-    lblR.innerHTML = tex('r = ' + formatR(r));
-  } else {
-    lblR.style.display = 'none';
+  function forceMagnitudeSI(q1C, q2C, rMetres) {
+    if (rMetres <= 0) return Infinity;
+    return K * Math.abs(q1C*q2C) / (rMetres*rMetres);
   }
 
-  // Force magnitude labels near each arrow tip
-  if (draw._lblF1 && draw._lblF2) {
-    const fStr = formatF(F);
-    const html = tex('F = ' + fStr) + (clamped ? '' : '');
-    [ [lblF1, draw._lblF1], [lblF2, draw._lblF2] ].forEach(([el, info]) => {
-      el.style.display = 'block';
-      // push a bit beyond the tip along the force direction
-      let lx = info.x + info.fx * 16;
-      let ly = info.y + info.fy * 16;
-      // keep on screen
-      lx = Math.max(40, Math.min(CW - 40, lx));
-      ly = Math.max(16, Math.min(CH - 16, ly));
-      el.style.left = lx + 'px';
-      el.style.top = ly + 'px';
-      el.innerHTML = html + (clamped ? ' <span style="font-size:9px;color:#6B7280;">(화살표 길이 제한됨)</span>' : '');
+  function forceVectorSI(qSourceC, qTestC, source, test) {
+    const dx=test.x-source.x;
+    const dy=test.y-source.y;
+    const r=Math.hypot(dx,dy);
+    if (r===0) return {x:NaN,y:NaN,magnitude:Infinity};
+    const signed=K*qSourceC*qTestC/(r*r);
+    return {x:signed*dx/r,y:signed*dy/r,magnitude:Math.abs(signed)};
+  }
+
+  function forceMagnitude(q1Micro, q2Micro, rMetres) {
+    return forceMagnitudeSI(q1Micro*MICRO,q2Micro*MICRO,rMetres);
+  }
+
+  function separation() {
+    const [a,b] = state.charges;
+    return Math.hypot(b.x-a.x,b.y-a.y);
+  }
+
+  function diagramLayout() {
+    const top=34;
+    const split=Math.max(150,Math.round(state.height*.54));
+    const left=24;
+    const right=state.width-24;
+    const bottom=split-15;
+    const sx=(right-left)/(WORLD.xmax-WORLD.xmin);
+    const sy=(bottom-top)/(WORLD.ymax-WORLD.ymin);
+    const scale=Math.max(1,Math.min(sx,sy));
+    const usedW=scale*(WORLD.xmax-WORLD.xmin);
+    const usedH=scale*(WORLD.ymax-WORLD.ymin);
+    return {left:(left+right-usedW)/2,top:(top+bottom-usedH)/2,width:usedW,height:usedH,split};
+  }
+
+  function worldToScreen(x,y) {
+    return {
+      x:diagramRect.left+(x-WORLD.xmin)/(WORLD.xmax-WORLD.xmin)*diagramRect.width,
+      y:diagramRect.top+(WORLD.ymax-y)/(WORLD.ymax-WORLD.ymin)*diagramRect.height
+    };
+  }
+
+  function screenToWorld(x,y) {
+    return {
+      x:WORLD.xmin+(x-diagramRect.left)/diagramRect.width*(WORLD.xmax-WORLD.xmin),
+      y:WORLD.ymax-(y-diagramRect.top)/diagramRect.height*(WORLD.ymax-WORLD.ymin)
+    };
+  }
+
+  function chargeColor(q) { return q>=0?RED:BLUE; }
+  function chargeText(q) { return q>0?'+':q<0?'−':'0'; }
+
+  function line(x1,y1,x2,y2,color,width,dash=[]) {
+    ctx.save();
+    ctx.strokeStyle=color; ctx.lineWidth=width; ctx.setLineDash(dash);
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    ctx.restore();
+  }
+
+  function arrow(x1,y1,x2,y2,color,width=2.2) {
+    const angle=Math.atan2(y2-y1,x2-x1);
+    const head=10;
+    line(x1,y1,x2,y2,color,width);
+    ctx.fillStyle=color;
+    ctx.beginPath();
+    ctx.moveTo(x2,y2);
+    ctx.lineTo(x2-head*Math.cos(angle-.43),y2-head*Math.sin(angle-.43));
+    ctx.lineTo(x2-head*Math.cos(angle+.43),y2-head*Math.sin(angle+.43));
+    ctx.closePath(); ctx.fill();
+  }
+
+  function textWithBackground(text,x,y,options={}) {
+    const size=options.size||15;
+    ctx.save();
+    ctx.font=`${options.weight||500} ${size}px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif`;
+    ctx.textAlign=options.align||'center';
+    ctx.textBaseline='middle';
+    const m=ctx.measureText(text);
+    const pad=4;
+    let left=x-m.width/2-pad;
+    if (ctx.textAlign==='left') left=x-pad;
+    if (ctx.textAlign==='right') left=x-m.width-pad;
+    ctx.fillStyle='rgba(255,255,255,.92)';
+    ctx.fillRect(left,y-size*.62-pad/2,m.width+pad*2,size+pad);
+    ctx.fillStyle=options.color||INK;
+    ctx.fillText(text,x,y);
+    ctx.restore();
+  }
+
+  function drawCharges() {
+    const [a,b]=state.charges;
+    const pa=worldToScreen(a.x,a.y);
+    const pb=worldToScreen(b.x,b.y);
+    const r=separation();
+    line(pa.x,pa.y,pb.x,pb.y,GRAY,1,[5,5]);
+    textWithBackground(`r = ${r.toFixed(2)} m`,(pa.x+pb.x)/2,(pa.y+pb.y)/2+(state.width<440?23:-15),{size:15,color:GRAY});
+
+    const dx=b.x-a.x;
+    const dy=b.y-a.y;
+    const ux=dx/r;
+    const uy=-dy/r;
+    const magnitude=forceMagnitude(a.q,b.q,r);
+    if (magnitude>0&&Number.isFinite(magnitude)) {
+      const direction=a.q*b.q>0?-1:1;
+      const visualLength=28+62*Math.sqrt(Math.min(1,magnitude/PLOT.ymax));
+      const aDir={x:direction*ux,y:direction*uy};
+      const bDir={x:-aDir.x,y:-aDir.y};
+      const aStart={x:pa.x+aDir.x*25,y:pa.y+aDir.y*25};
+      const aEnd={x:pa.x+aDir.x*(25+visualLength),y:pa.y+aDir.y*(25+visualLength)};
+      const bStart={x:pb.x+bDir.x*25,y:pb.y+bDir.y*25};
+      const bEnd={x:pb.x+bDir.x*(25+visualLength),y:pb.y+bDir.y*(25+visualLength)};
+      arrow(aStart.x,aStart.y,aEnd.x,aEnd.y,RED);
+      arrow(bStart.x,bStart.y,bEnd.x,bEnd.y,RED);
+      if (state.width<440) {
+        textWithBackground('F₁₂',(aStart.x+aEnd.x)/2,(aStart.y+aEnd.y)/2-18,{size:15,color:RED,weight:650});
+        textWithBackground('F₂₁',(bStart.x+bEnd.x)/2,(bStart.y+bEnd.y)/2-18,{size:15,color:RED,weight:650});
+      } else {
+        const offsetA=aDir.y>.35?17:-17;
+        const offsetB=bDir.y>.35?17:-17;
+        textWithBackground('F₁₂',pa.x+aDir.x*(37+visualLength),pa.y+aDir.y*(37+visualLength)+offsetA,{size:15,color:RED,weight:650});
+        textWithBackground('F₂₁',pb.x+bDir.x*(37+visualLength),pb.y+bDir.y*(37+visualLength)+offsetB,{size:15,color:RED,weight:650});
+      }
+    }
+
+    state.charges.forEach((c,i) => {
+      const p=worldToScreen(c.x,c.y);
+      const radius=21;
+      ctx.save();
+      ctx.fillStyle=c.q===0?'#fff':chargeColor(c.q);
+      ctx.strokeStyle=c.q===0?GRAY:chargeColor(c.q);
+      ctx.lineWidth=state.hover===i||state.drag===i?3:2;
+      ctx.beginPath(); ctx.arc(p.x,p.y,radius,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle=c.q===0?GRAY:'#fff';
+      ctx.font='700 21px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(chargeText(c.q),p.x,p.y-1);
+      ctx.restore();
+      textWithBackground(`q${i+1}`,p.x,p.y+34,{size:15,color:chargeColor(c.q),weight:650});
     });
 
-    // overlap check between the two force labels: if too close, nudge vertically
-    const b1 = draw._lblF1, b2 = draw._lblF2;
-    const px1 = parseFloat(lblF1.style.left), py1 = parseFloat(lblF1.style.top);
-    const px2 = parseFloat(lblF2.style.left), py2 = parseFloat(lblF2.style.top);
-    if (Math.hypot(px1 - px2, py1 - py2) < 70) {
-      lblF1.style.top = (py1 - 16) + 'px';
-      lblF2.style.top = (py2 + 16) + 'px';
+    ctx.fillStyle=GRAY;
+    ctx.font='600 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
+    ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+    ctx.fillText('(a) 전하를 직접 끌어 이동',24,25);
+  }
+
+  function drawPlot() {
+    const split=diagramRect.split;
+    const left=state.width<440?58:66;
+    const right=state.width-24;
+    const top=split+28;
+    const bottom=state.height-48;
+    if (right-left<120||bottom-top<78) return;
+    const px=r=>left+(r-PLOT.xmin)/(PLOT.xmax-PLOT.xmin)*(right-left);
+    const py=f=>bottom-(f-PLOT.ymin)/(PLOT.ymax-PLOT.ymin)*(bottom-top);
+
+    ctx.save();
+    ctx.strokeStyle=INK; ctx.fillStyle=INK; ctx.lineWidth=1;
+    ctx.font='14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
+    ctx.textBaseline='middle';
+    line(left,top,left,bottom,INK,1);
+    line(left,bottom,right,bottom,INK,1);
+    const xTicks=state.width<440?[0.2,1.0,1.9,2.8]:[0.2,0.8,1.4,2.0,2.8];
+    ctx.textAlign='center';
+    xTicks.forEach(v=>{ const x=px(v); line(x,bottom,x,bottom+5,INK,1); ctx.fillText(v.toFixed(1),x,bottom+17); });
+    const yTicks=[0,2,4,6];
+    ctx.textAlign='right';
+    yTicks.forEach(v=>{ const y=py(v); line(left-5,y,left,y,INK,1); ctx.fillText(String(v),left-9,y); });
+    ctx.textAlign='center'; ctx.fillText('r (m)',(left+right)/2,state.height-15);
+    ctx.save(); ctx.translate(18,(top+bottom)/2); ctx.rotate(-Math.PI/2); ctx.fillText('|F| (N)',0,0); ctx.restore();
+
+    const a=state.charges[0],b=state.charges[1];
+    ctx.strokeStyle=RED; ctx.lineWidth=2; ctx.beginPath();
+    for (let i=0;i<=180;i++) {
+      const r=PLOT.xmin+(PLOT.xmax-PLOT.xmin)*i/180;
+      const f=Math.min(PLOT.ymax,forceMagnitude(a.q,b.q,r));
+      const x=px(r),y=py(f);
+      if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
     }
-  } else {
-    lblF1.style.display = 'none';
-    lblF2.style.display = 'none';
-  }
-}
+    ctx.stroke();
 
-function formatR(r) {
-  if (r >= 1) return r.toFixed(2) + '\\,\\text{m}';
-  return (r * 100).toFixed(1) + '\\,\\text{cm}';
-}
-
-function formatF(F) {
-  if (F === 0) return '0';
-  const exp = Math.floor(Math.log10(F));
-  if (F >= 1e-2 && F < 1e4) {
-    // plain decimal in a readable range
-    let v = F;
-    if (F >= 1000) return (F / 1000).toFixed(2) + '\\times 10^{3}\\,\\text{N}';
-    if (F >= 1) return F.toFixed(2) + '\\,\\text{N}';
-    return F.toFixed(3) + '\\,\\text{N}';
-  }
-  const mant = (F / Math.pow(10, exp)).toFixed(2);
-  return mant + '\\times 10^{' + exp + '}\\,\\text{N}';
-}
-
-function updateInfo(F, r, prod, bothNonZero, clamped) {
-  const box = document.getElementById('infoBox');
-  let kind, color;
-  if (!bothNonZero) {
-    kind = '전하 없음 (힘 = 0)'; color = '#6B7280';
-  } else if (prod > 0) {
-    kind = '척력 (서로 밀어냄)'; color = '#8B0029';
-  } else {
-    kind = '인력 (서로 끌어당김)'; color = '#2563EB';
+    const currentR=separation();
+    if (currentR>=PLOT.xmin&&currentR<=PLOT.xmax) {
+      const currentF=Math.min(PLOT.ymax,forceMagnitude(a.q,b.q,currentR));
+      const x=px(currentR),y=py(currentF);
+      line(x,bottom,x,y,LIGHT,1,[4,4]);
+      ctx.fillStyle=RED; ctx.beginPath(); ctx.arc(x,y,4.5,0,Math.PI*2); ctx.fill();
+    }
+    ctx.fillStyle=GRAY; ctx.font='600 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
+    ctx.textAlign='left'; ctx.textBaseline='alphabetic'; ctx.fillText('(b) 거리의 역제곱',left,top-10);
+    ctx.restore();
   }
 
-  let html = '';
-  html += '<span class="label">거리</span> ' +
-          '<span class="val">r = ' + (r >= 1 ? r.toFixed(3) + ' m' : (r * 100).toFixed(1) + ' cm') + '</span><br>';
-  html += '<span class="label">힘의 크기</span> ' +
-          '<span class="val">|F| = ' + sciN(F) + ' N</span><br>';
-  html += '<span class="label">종류</span> ' +
-          '<span class="val" style="color:' + color + '">' + kind + '</span>';
-  if (clamped) {
-    html += '<br><span style="font-size:10.5px;color:#6B7280">화살표는 최대 길이로 제한됨 (실제 |F|는 위 수치)</span>';
-  }
-  box.innerHTML = html;
-}
-
-// plain-text scientific notation for the info box "N" readout
-function sciN(F) {
-  if (F === 0) return '0';
-  if (F >= 1e-2 && F < 1e4) {
-    if (F >= 1) return F.toFixed(2);
-    return F.toFixed(3);
-  }
-  const exp = Math.floor(Math.log10(F));
-  const mant = (F / Math.pow(10, exp)).toFixed(2);
-  return mant + '×10' + superscript(exp);
-}
-function superscript(n) {
-  const map = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³',
-                '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
-  return String(n).split('').map(c => map[c] || c).join('');
-}
-
-function renderStatic() {
-  document.getElementById('canvasTitle').innerHTML =
-    '쿨롱 법칙: 같은 부호는 <span style="color:#8B0029">척력</span>, 반대 부호는 <span style="color:#2563EB">인력</span> &mdash; 힘은 거리의 제곱에 반비례';
-
-  document.getElementById('theoremBox').innerHTML =
-    '쿨롱 법칙<br>' +
-    tex('F = k\\dfrac{|q_1||q_2|}{r^2}') + '<br>' +
-    '<span style="font-size:11px;font-weight:400">' + tex('k = 8.99\\times10^{9}\\ \\text{N·m}^2/\\text{C}^2') + '</span>';
-
-  document.getElementById('formulaBox').innerHTML =
-    '<b>빨강 화살표:</b> 전하에 작용하는 정전기력 ' + tex('\\vec{F}') + '<br>' +
-    '<b>뉴턴 3법칙:</b> 두 힘은 크기 같고 방향 반대 ' + tex('\\vec{F}_{12} = -\\vec{F}_{21}') + '<br>' +
-    '점전하 크기 ' + tex('\\propto |q|') + ', 부호로 색 구분';
-}
-
-function renderRelation() {
-  // inverse-square intuition with the current state
-  const { F, r } = computeForce();
-  const box = document.getElementById('relationBox');
-  const Fhalf = F * 4;     // r/2 -> 4F
-  const Fdouble = F / 4;   // 2r  -> F/4
-  box.innerHTML =
-    '<b>거리의 제곱에 반비례</b><br>' +
-    tex('r \\to 2r \\;\\Rightarrow\\; F \\to \\tfrac{1}{4}F') + '<br>' +
-    tex('r \\to \\tfrac{1}{2}r \\;\\Rightarrow\\; F \\to 4F');
-  drawMiniPlot();
-}
-
-// --- small F-vs-r curve in a tiny offscreen-ish canvas drawn into the panel ---
-// We render it as an inline SVG-like canvas via the relation box image.
-let miniCanvas = null;
-function ensureMiniCanvas() {
-  if (miniCanvas) return;
-  miniCanvas = document.createElement('canvas');
-  miniCanvas.width = 220; miniCanvas.height = 90;
-  miniCanvas.style.width = '100%';
-  miniCanvas.style.maxWidth = '220px';
-  miniCanvas.style.display = 'block';
-  miniCanvas.style.marginTop = '6px';
-  document.getElementById('relationBox').appendChild(miniCanvas);
-}
-function drawMiniPlot() {
-  ensureMiniCanvas();
-  const mc = miniCanvas;
-  const g = mc.getContext('2d');
-  const W = mc.width, H = mc.height;
-  g.clearRect(0, 0, W, H);
-  const padL = 26, padR = 8, padT = 8, padB = 18;
-  const plotW = W - padL - padR, plotH = H - padT - padB;
-
-  // axes
-  g.strokeStyle = '#9ca3af'; g.lineWidth = 1;
-  g.beginPath();
-  g.moveTo(padL, padT); g.lineTo(padL, padT + plotH); g.lineTo(padL + plotW, padT + plotH);
-  g.stroke();
-
-  // F ~ 1/r^2 curve, normalized
-  const { r } = computeForce();
-  const rMaxView = Math.max(r * 2.2, 0.05);
-  const rMin = rMaxView * 0.12;
-  // value at rMin sets the top
-  const fAt = (rr) => 1 / (rr * rr);
-  const fTop = fAt(rMin);
-  g.strokeStyle = '#8B0029'; g.lineWidth = 2;
-  g.beginPath();
-  let first = true;
-  for (let i = 0; i <= 100; i++) {
-    const rr = rMin + (rMaxView - rMin) * (i / 100);
-    const px = padL + (rr / rMaxView) * plotW;
-    const py = padT + plotH - (fAt(rr) / fTop) * plotH;
-    if (first) { g.moveTo(px, py); first = false; } else g.lineTo(px, py);
-  }
-  g.stroke();
-
-  // current point marker
-  if (r >= rMin && r <= rMaxView) {
-    const px = padL + (r / rMaxView) * plotW;
-    const py = padT + plotH - (fAt(r) / fTop) * plotH;
-    g.fillStyle = '#2563EB';
-    g.beginPath(); g.arc(px, py, 4, 0, Math.PI * 2); g.fill();
-    g.strokeStyle = '#fff'; g.lineWidth = 1.5; g.stroke();
-    // dashed drop line
-    g.strokeStyle = 'rgba(37,99,235,0.5)'; g.lineWidth = 1;
-    g.setLineDash([3, 2]);
-    g.beginPath(); g.moveTo(px, py); g.lineTo(px, padT + plotH); g.stroke();
-    g.setLineDash([]);
+  function updateReadout() {
+    const [a,b]=state.charges;
+    const r=separation();
+    const f=forceMagnitude(a.q,b.q,r);
+    const signed=value=>`${value>0?'+':value<0?'−':''}${Math.abs(value).toFixed(1)} μC`;
+    document.getElementById('q1Out').textContent=signed(a.q);
+    document.getElementById('q2Out').textContent=signed(b.q);
+    document.getElementById('rOut').textContent=`${r.toFixed(2)} m`;
+    document.getElementById('fOut').textContent=f===0?'0 N':f<.01?`${f.toExponential(2)} N`:`${f.toFixed(3)} N`;
+    const type=a.q===0||b.q===0?'힘 없음':a.q*b.q<0?'인력':'척력';
+    document.getElementById('relation').textContent=`${type} · |F₁₂| = |F₂₁|`;
   }
 
-  // axis labels
-  g.fillStyle = '#6B7280'; g.font = '10px sans-serif';
-  g.textAlign = 'left'; g.textBaseline = 'top';
-  g.fillText('F', padL - 22, padT - 2);
-  g.textAlign = 'right'; g.textBaseline = 'bottom';
-  g.fillText('r', padL + plotW, H - 2);
-}
-
-// ---------- dragging ----------
-function eventToCanvas(e) {
-  const rect = canvas.getBoundingClientRect();
-  const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-  const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-  return { x: cx, y: cy };
-}
-
-function hitTest(x, y) {
-  for (let i = charge.length - 1; i >= 0; i--) {
-    const c = charge[i];
-    const r = chargeRadius(c.q);
-    if (Math.hypot(x - c.x, y - c.y) <= r + 6) return i;
+  function draw() {
+    if (!state.width||!state.height) return;
+    ctx.clearRect(0,0,state.width,state.height);
+    diagramRect=diagramLayout();
+    drawCharges();
+    drawPlot();
+    updateReadout();
   }
-  return -1;
-}
 
-function onDown(e) {
-  const p = eventToCanvas(e);
-  const idx = hitTest(p.x, p.y);
-  if (idx >= 0) {
-    dragIdx = idx;
-    canvas.style.cursor = 'grabbing';
-    e.preventDefault();
-  }
-}
-function onMove(e) {
-  const p = eventToCanvas(e);
-  if (dragIdx >= 0) {
-    charge[dragIdx].x = p.x;
-    charge[dragIdx].y = p.y;
-    clampInside();
+  function resize() {
+    const rect=stage.getBoundingClientRect();
+    if (!rect.width||!rect.height) return;
+    state.width=rect.width; state.height=rect.height; state.dpr=Math.max(1,window.devicePixelRatio||1);
+    canvas.width=Math.round(state.width*state.dpr);
+    canvas.height=Math.round(state.height*state.dpr);
+    canvas.style.width=`${state.width}px`; canvas.style.height=`${state.height}px`;
+    ctx.setTransform(state.dpr,0,0,state.dpr,0,0);
     draw();
-    renderRelation();
-    e.preventDefault();
-  } else {
-    canvas.style.cursor = hitTest(p.x, p.y) >= 0 ? 'grab' : 'default';
   }
-}
-function onUp() {
-  dragIdx = -1;
-  canvas.style.cursor = 'default';
-}
 
-canvas.addEventListener('mousedown', onDown);
-window.addEventListener('mousemove', onMove);
-window.addEventListener('mouseup', onUp);
-canvas.addEventListener('touchstart', onDown, { passive: false });
-canvas.addEventListener('touchmove', onMove, { passive: false });
-canvas.addEventListener('touchend', onUp);
+  function pointerPosition(event) {
+    const rect=canvas.getBoundingClientRect();
+    return {x:event.clientX-rect.left,y:event.clientY-rect.top};
+  }
 
-// ---------- sliders ----------
-function fmtCharge(v) { return (v >= 0 ? '+' : '') + v.toFixed(1); }
+  function hitCharge(p) {
+    let best=-1,distance=Infinity;
+    state.charges.forEach((c,i)=>{
+      const s=worldToScreen(c.x,c.y);
+      const d=Math.hypot(p.x-s.x,p.y-s.y);
+      if (d<30&&d<distance) {best=i; distance=d;}
+    });
+    return best;
+  }
 
-q1Slider.addEventListener('input', () => {
-  charge[0].q = parseFloat(q1Slider.value);
-  document.getElementById('q1Val').textContent = fmtCharge(charge[0].q);
-  clampInside();
-  draw(); renderRelation();
-});
-q2Slider.addEventListener('input', () => {
-  charge[1].q = parseFloat(q2Slider.value);
-  document.getElementById('q2Val').textContent = fmtCharge(charge[1].q);
-  clampInside();
-  draw(); renderRelation();
-});
+  function moveCharge(index,p) {
+    const world=screenToWorld(p.x,p.y);
+    const margin=.09;
+    let x=Math.max(WORLD.xmin+margin,Math.min(WORLD.xmax-margin,world.x));
+    let y=Math.max(WORLD.ymin+margin,Math.min(WORLD.ymax-margin,world.y));
+    const other=state.charges[1-index];
+    const dx=x-other.x,dy=y-other.y;
+    const r=Math.hypot(dx,dy);
+    if (r<MIN_R) {
+      const ux=r>1e-6?dx/r:(index===0?-1:1);
+      const uy=r>1e-6?dy/r:0;
+      x=other.x+ux*MIN_R; y=other.y+uy*MIN_R;
+    }
+    state.charges[index].x=x; state.charges[index].y=y;
+  }
 
-resetBtn.addEventListener('click', () => {
-  q1Slider.value = 3; q2Slider.value = -3;
-  charge[0].q = 3; charge[1].q = -3;
-  document.getElementById('q1Val').textContent = '+3.0';
-  document.getElementById('q2Val').textContent = '-3.0';
-  resetPositions();
-  clampInside();
-  draw(); renderRelation();
-});
+  canvas.addEventListener('pointerdown',event=>{
+    const hit=hitCharge(pointerPosition(event));
+    if (hit<0) return;
+    state.drag=hit; state.hover=hit; canvas.setPointerCapture(event.pointerId); canvas.style.cursor='grabbing';
+    event.preventDefault(); draw();
+  });
+  canvas.addEventListener('pointermove',event=>{
+    const p=pointerPosition(event);
+    if (state.drag>=0) {moveCharge(state.drag,p); draw(); return;}
+    state.hover=hitCharge(p); canvas.style.cursor=state.hover>=0?'grab':'default'; draw();
+  });
+  function endDrag(event) {
+    if (state.drag>=0&&canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+    state.drag=-1; canvas.style.cursor=state.hover>=0?'grab':'default'; draw();
+  }
+  canvas.addEventListener('pointerup',endDrag);
+  canvas.addEventListener('pointercancel',endDrag);
+  canvas.addEventListener('pointerleave',()=>{if(state.drag<0){state.hover=-1;canvas.style.cursor='default';draw();}});
 
-window.addEventListener('resize', resize);
+  function syncInputs() {
+    state.charges[0].q=Number(q1Input.value);
+    state.charges[1].q=Number(q2Input.value);
+    draw();
+  }
+  q1Input.addEventListener('input',syncInputs);
+  q2Input.addEventListener('input',syncInputs);
+  document.getElementById('reset').addEventListener('click',()=>{
+    state.charges[0]={x:-.55,y:0,q:3};
+    state.charges[1]={x:.55,y:0,q:-3};
+    q1Input.value='3'; q2Input.value='-3'; draw();
+  });
 
-renderStatic();
-document.getElementById('q1Val').textContent = fmtCharge(charge[0].q);
-document.getElementById('q2Val').textContent = fmtCharge(charge[1].q);
-resize();
-renderRelation();
+  function runValidation() {
+    const close=forceMagnitudeSI(3e-6,-3e-6,.5);
+    const far=forceMagnitudeSI(3e-6,-3e-6,1);
+    const checkpoint=forceMagnitudeSI(3e-6,-3e-6,.4);
+    const checkpointDoubledR=forceMagnitudeSI(3e-6,-3e-6,.8);
+    const checkpointDoubledQ=forceMagnitudeSI(6e-6,-3e-6,.4);
+    const f12=forceVectorSI(3e-6,-3e-6,{x:0,y:0},{x:.5,y:0});
+    const f21=forceVectorSI(-3e-6,3e-6,{x:.5,y:0},{x:0,y:0});
+    const tests={
+      reference_value:Math.abs(close-.32364)<1e-8,
+      checkpoint_r_0_4m:Math.abs(checkpoint-.5056875)<1e-12,
+      checkpoint_double_r:Math.abs(checkpointDoubledR-.126421875)<1e-12,
+      checkpoint_double_q:Math.abs(checkpointDoubledQ-1.011375)<1e-12,
+      inverse_square:Math.abs(close/far-4)<1e-12,
+      action_reaction:Math.hypot(f12.x+f21.x,f12.y+f21.y)<1e-12,
+      zero_charge:forceMagnitudeSI(0,5e-6,.4)===0
+    };
+    const pass=Object.values(tests).every(Boolean);
+    document.body.dataset.physicsValidated=pass?'pass':'fail';
+    return {pass,tests,reference:{q1_C:3e-6,q2_C:-3e-6,r_m:.4,F_N:checkpoint,double_r_F_N:checkpointDoubledR,double_q1_F_N:checkpointDoubledQ}};
+  }
+  window.__physicsValidation={
+    constants:{k_N_m2_per_C2:K},
+    forceMagnitude:forceMagnitudeSI,
+    forceVector:forceVectorSI,
+    run:runValidation
+  };
+  window.__simulationState=state;
+  tex(String.raw`|\vec F|=k\,\frac{|q_1q_2|}{r^2}`);
+  runValidation();
+  new ResizeObserver(resize).observe(stage);
+  window.addEventListener('load',resize,{once:true});
+})();
 </script>
 </body>
 </html>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 430" role="img" aria-labelledby="title desc">
+  <title id="title">Point-charge and dipole-field decay</title>
+  <desc id="desc">Log-log normalized electric fields with slopes minus two and minus three.</desc>
+  <rect width="760" height="430" fill="#fff"/>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#1a1a1a">
+    <line x1="100" y1="350" x2="700" y2="350" stroke="#111" stroke-width="1.5"/>
+    <line x1="100" y1="350" x2="100" y2="45" stroke="#111" stroke-width="1.5"/>
+    <g font-size="17" text-anchor="middle">
+      <line x1="100" y1="350" x2="100" y2="357" stroke="#111"/><text x="100" y="382">1</text>
+      <line x1="239" y1="350" x2="239" y2="357" stroke="#111"/><text x="239" y="382">2</text>
+      <line x1="423" y1="350" x2="423" y2="357" stroke="#111"/><text x="423" y="382">5</text>
+      <line x1="562" y1="350" x2="562" y2="357" stroke="#111"/><text x="562" y="382">10</text>
+      <line x1="700" y1="350" x2="700" y2="357" stroke="#111"/><text x="700" y="382">20</text>
+      <text x="400" y="405" font-size="19" font-style="italic">r/r₀</text>
+    </g>
+    <g font-size="17" text-anchor="end">
+      <line x1="93" y1="45" x2="100" y2="45" stroke="#111"/><text x="84" y="51">1</text>
+      <line x1="93" y1="121" x2="100" y2="121" stroke="#111"/><text x="84" y="127">10⁻¹</text>
+      <line x1="93" y1="198" x2="100" y2="198" stroke="#111"/><text x="84" y="204">10⁻²</text>
+      <line x1="93" y1="274" x2="100" y2="274" stroke="#111"/><text x="84" y="280">10⁻³</text>
+      <line x1="93" y1="350" x2="100" y2="350" stroke="#111"/><text x="84" y="356">10⁻⁴</text>
+    </g>
+    <text x="23" y="205" font-size="19" text-anchor="middle" transform="rotate(-90 23 205)">E/E(r₀)</text>
+    <path d="M100 45 L700 243" fill="none" stroke="#8B0029" stroke-width="3"/>
+    <path d="M100 45 L700 342" fill="none" stroke="#2563EB" stroke-width="3"/>
+    <text x="536" y="192" fill="#8B0029" font-size="21" font-weight="700">point: r⁻²</text>
+    <text x="520" y="318" fill="#2563EB" font-size="21" font-weight="700">dipole: r⁻³</text>
+  </g>
+</svg>

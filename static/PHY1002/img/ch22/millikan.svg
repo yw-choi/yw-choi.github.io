@@ -63,6 +63,6 @@
   <text x="624" y="320" font-size="13" fill="#1a1a1a">스위치 S</text>
 
   <!-- caption -->
-  <text x="350" y="446" font-size="14" fill="#1a1a1a" text-anchor="middle">스위치를 여닫으며 방울의 운동(낙하/상승)을 관찰한다</text>
-  <text x="350" y="470" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold">측정된 전하는 언제나 q = ne — 전하의 양자화를 직접 확인</text>
+  <text x="350" y="431" font-size="14" fill="#1a1a1a" text-anchor="middle">스위치를 여닫으며 방울의 운동(낙하/상승)을 관찰한다</text>
+  <text x="350" y="455" font-size="14" fill="#8B0029" text-anchor="middle" font-weight="bold">측정된 전하는 언제나 q = ne — 전하의 양자화를 직접 확인</text>
 </svg>

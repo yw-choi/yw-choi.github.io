@@ -1,500 +1,551 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>전기력선 놀이터</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>전기장: 중첩과 힘선</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; }
-.container { display: flex; height: 100vh; }
-.canvas-area { flex: 1; position: relative; background: #fafafa; touch-action: none; }
-canvas { display: block; width: 100%; height: 100%; }
-.controls { width: 260px; padding: 16px; border-left: 2px solid #eee; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
-.controls h2 { color: #8B0029; font-size: 15px; margin-bottom: 0; }
-.subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
-.control-group { display: flex; flex-direction: column; gap: 3px; }
-.control-group label { font-size: 12.5px; font-weight: 600; color: #444; }
-.control-group input[type="range"] { width: 100%; accent-color: #8B0029; }
-.preset-row { display: flex; gap: 6px; }
-.preset-row button {
-  flex: 1; background: #fff; color: #8B0029; border: 1.5px solid #8B0029;
-  border-radius: 6px; padding: 6px 2px; font-size: 11.5px; cursor: pointer; font-weight: 600;
+:root { --red:#8B0029; --blue:#2563EB; --ink:#171717; --gray:#6B7280; --line:#D1D5DB; }
+* { box-sizing:border-box; }
+html,body { width:100%; height:100%; margin:0; }
+body { overflow:hidden; background:#fff; color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+.app { display:flex; width:100%; height:100%; min-height:0; }
+.stage { position:relative; flex:1 1 auto; min-width:0; background:#fff; touch-action:none; }
+canvas { display:block; width:100%; height:100%; cursor:default; }
+.controls { flex:0 0 248px; width:248px; padding:20px 18px; border-left:1px solid var(--line); overflow:auto; }
+h1 { margin:0; color:var(--red); font-size:20px; line-height:1.25; letter-spacing:-.02em; }
+.formula { min-height:37px; margin:9px 0 18px; font-size:17px; line-height:1.5; white-space:nowrap; }
+.label { display:block; margin:0 0 7px; color:var(--gray); font-size:15px; font-weight:650; }
+.segmented { display:grid; grid-template-columns:1fr 1fr; margin:0 0 18px; border:1px solid var(--ink); }
+.segmented button { min-height:40px; padding:0 5px; border:0; border-right:1px solid var(--ink); border-radius:0; background:#fff; color:var(--ink); font:650 15px/1 inherit; cursor:pointer; }
+.segmented button:last-child { border-right:0; }
+.segmented button[aria-pressed="true"] { background:var(--ink); color:#fff; }
+.control { margin:0 0 17px; }
+.control label { display:flex; justify-content:space-between; gap:8px; margin-bottom:8px; font-size:15px; font-weight:650; }
+.control output { font-variant-numeric:tabular-nums; }
+input[type="range"] { display:block; width:100%; margin:0; accent-color:var(--red); }
+.readout { display:grid; grid-template-columns:auto 1fr; gap:8px 12px; margin:20px 0 11px; padding:14px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); font-size:15px; }
+.readout dt { color:var(--gray); }
+.readout dd { margin:0; text-align:right; font-weight:650; font-variant-numeric:tabular-nums; }
+.topology { min-height:42px; margin:0 0 15px; color:var(--gray); font-size:15px; line-height:1.45; }
+.reset { width:100%; min-height:42px; border:1px solid var(--ink); border-radius:2px; background:#fff; color:var(--ink); font:650 15px/1 inherit; cursor:pointer; }
+.reset:hover { border-color:var(--red); color:var(--red); }
+button:focus-visible,input:focus-visible { position:relative; z-index:1; outline:3px solid rgba(37,99,235,.28); outline-offset:2px; }
+.sr-only { position:absolute; width:1px; height:1px; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; }
+@media (max-width:700px) {
+  .app { flex-direction:column; }
+  .stage { flex:0 0 60%; min-height:275px; }
+  .controls { flex:1 1 auto; width:100%; padding:14px 18px 18px; border-left:0; border-top:1px solid var(--line); }
+  h1 { font-size:19px; }
+  .formula { margin:5px 0 10px; font-size:16px; }
+  .segmented { margin-bottom:11px; }
+  .control { margin-bottom:11px; }
+  .readout { margin:12px 0 8px; padding:9px 0; }
+  .topology { min-height:0; margin-bottom:9px; }
 }
-.preset-row button.active, .preset-row button:hover { background: #8B0029; color: #fff; }
-.check-row { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #444; font-weight: 600; }
-.check-row input { accent-color: #8B0029; }
-.info-box { background: #f8f0f2; border: 1px solid #e0c0c8; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.9; }
-.info-box .label { color: #8B0029; font-weight: 700; }
-.info-box .val { font-weight: 700; }
-.info-box .katex { font-size: 12px; }
-.theorem-box { background: #8B0029; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; text-align: center; font-weight: 700; line-height: 1.7; }
-.theorem-box .katex { color: #fff; font-size: 13px; }
-.formula-box { background: #f9f0f2; border: 1px solid rgba(139,0,41,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 1.9; color: #555; }
-.formula-box b { color: #8B0029; }
-.formula-box .katex { font-size: 12px; }
-.relation-box { background: #eef3fe; border: 1px solid #c3d4f5; border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 1.8; color: #2b4a8b; }
-.relation-box b { color: #1a3a7a; }
-button.reset-btn { background: #8B0029; color: #fff; border: none; border-radius: 6px; padding: 9px; font-size: 13px; cursor: pointer; font-weight: 600; }
-button.reset-btn:hover { background: #a3003a; }
-.canvas-title { position: absolute; top: 8px; left: 16px; right: 16px; pointer-events: none; font-size: 14px; font-weight: 700; color: #8B0029; line-height: 1.4; }
-.hint { position: absolute; bottom: 8px; left: 16px; pointer-events: none; font-size: 11px; color: #6B7280; }
-.canvas-overlay {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  pointer-events: none; overflow: hidden;
-}
-.canvas-overlay .katex-label {
-  position: absolute; white-space: nowrap; font-size: 13px; line-height: 1;
-  pointer-events: none; transform: translate(-50%, -50%);
-  background: rgba(255,255,255,0.85); padding: 1px 5px; border-radius: 4px;
-}
-.canvas-overlay .katex-label .katex { font-size: 0.95em; }
-@media (max-width: 700px) {
-  .container { flex-direction: column; }
-  .canvas-area { height: 55vh; }
-  .controls { width: 100%; height: 45vh; border-left: none; border-top: 2px solid #eee; }
+@media (max-width:390px) {
+  .stage { flex-basis:57%; min-height:250px; }
+  .segmented button { min-height:38px; }
 }
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="canvas-area">
-    <canvas id="canvas"></canvas>
-    <div class="canvas-overlay" id="overlay">
-      <div class="katex-label" id="lblE" style="color:#2563EB;font-weight:bold;"></div>
-    </div>
-    <div class="canvas-title" id="canvasTitle"></div>
-    <div class="hint">전하와 측정점 P를 드래그해 보세요</div>
-  </div>
-  <div class="controls">
-    <div>
-      <h2>전기력선 놀이터</h2>
-      <div class="subtitle">Electric Field Lines (Ch.22)</div>
-    </div>
+<main class="app">
+  <section class="stage" id="stage">
+    <canvas id="canvas" aria-label="두 점전하와 측정점 P를 직접 끌어 전기장 중첩과 전기력선을 확인하는 시뮬레이션"></canvas>
+    <span class="sr-only">기본 상태는 크기가 같은 양전하와 음전하로 이루어진 전기쌍극자임.</span>
+  </section>
+  <aside class="controls" aria-label="시뮬레이션 조절">
+    <h1>전기장: 중첩과 힘선</h1>
+    <div class="formula" id="formula"></div>
 
-    <div class="theorem-box" id="theoremBox"></div>
-
-    <div class="control-group">
-      <label>프리셋</label>
-      <div class="preset-row">
-        <button id="presetSingle">단일 전하</button>
-        <button id="presetDipole" class="active">쌍극자</button>
-        <button id="presetLike">같은 부호</button>
-      </div>
+    <span class="label">표시</span>
+    <div class="segmented" id="mode" role="group" aria-label="전기장 표시 방식">
+      <button type="button" data-value="lines" aria-pressed="true">힘선</button>
+      <button type="button" data-value="vectors" aria-pressed="false">벡터</button>
     </div>
 
-    <div class="control-group">
-      <label>전하 q<sub>1</sub> = <span id="q1Val">+3.0</span> μC</label>
-      <input type="range" id="q1Slider" min="-5" max="5" value="3" step="0.5">
+    <div class="control">
+      <label for="q1"><span>전하 <i>q</i><sub>1</sub></span><output id="q1Out">+3.0 μC</output></label>
+      <input id="q1" type="range" min="-5" max="5" step="0.5" value="3">
+    </div>
+    <div class="control">
+      <label for="q2"><span>전하 <i>q</i><sub>2</sub></span><output id="q2Out">−3.0 μC</output></label>
+      <input id="q2" type="range" min="-5" max="5" step="0.5" value="-3">
     </div>
 
-    <div class="control-group">
-      <label>전하 q<sub>2</sub> = <span id="q2Val">-3.0</span> μC</label>
-      <input type="range" id="q2Slider" min="-5" max="5" value="-3" step="0.5">
-    </div>
-
-    <div class="check-row"><input type="checkbox" id="chkLines" checked><label for="chkLines">전기력선 표시</label></div>
-    <div class="check-row"><input type="checkbox" id="chkVectors" checked><label for="chkVectors">벡터장 표시</label></div>
-
-    <div class="info-box" id="infoBox"></div>
-
-    <div class="relation-box" id="relationBox"></div>
-
-    <div class="formula-box" id="formulaBox"></div>
-
-    <button class="reset-btn" id="resetBtn">&#8635; 기본값 복원</button>
-  </div>
-</div>
+    <dl class="readout">
+      <dt><i>E</i><sub>x</sub></dt><dd id="exOut">0 N/C</dd>
+      <dt><i>E</i><sub>y</sub></dt><dd id="eyOut">0 N/C</dd>
+      <dt>|<i>E</i>|</dt><dd id="magOut">0 N/C</dd>
+    </dl>
+    <p class="topology" id="topology">총전하 0 · 힘선은 +에서 나와 −로 들어감</p>
+    <button class="reset" id="reset" type="button">기본 쌍극자</button>
+  </aside>
+</main>
 
 <script>
-function tex(expr) { return katex.renderToString(expr, { throwOnError: false, displayMode: false }); }
+(() => {
+  'use strict';
+  const K=8.99e9;
+  const MICRO=1e-6;
+  const RED='#8B0029';
+  const BLUE='#2563EB';
+  const INK='#171717';
+  const GRAY='#6B7280';
+  const LIGHT='#D1D5DB';
+  const WORLD={xmin:-1.6,xmax:1.6,ymin:-1.05,ymax:1.05};
+  const TRACE_LIMIT=6;
+  const canvas=document.getElementById('canvas');
+  const stage=document.getElementById('stage');
+  const ctx=canvas.getContext('2d');
+  const q1Input=document.getElementById('q1');
+  const q2Input=document.getElementById('q2');
+  const state={
+    charges:[{x:-.52,y:0,q:3},{x:.52,y:0,q:-3}],
+    probe:{x:0,y:.58},
+    mode:'lines',
+    drag:-1,
+    hover:-1,
+    width:0,
+    height:0,
+    dpr:1
+  };
+  let transform=null;
 
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-let dpr = window.devicePixelRatio || 1;
-let CW, CH;
-
-const q1Slider = document.getElementById('q1Slider');
-const q2Slider = document.getElementById('q2Slider');
-
-// Physics constants
-const k = 8.99e9;          // N·m²/C²
-const MICRO = 1e-6;        // μC -> C
-const M_PER_PX = 0.005;    // 1 canvas px = 5 mm  => 200 px = 1 m
-
-const charge = [
-  { x: 0, y: 0, q: parseFloat(q1Slider.value) },
-  { x: 0, y: 0, q: parseFloat(q2Slider.value) },
-];
-const probe = { x: 0, y: 0 };   // field measurement point P
-
-let dragIdx = -1;      // 0,1 = charges, 2 = probe
-let positionsInit = false;
-
-function chargeRadius(q) { return 15 + Math.abs(q) * 2.4; }
-
-function applyPreset(name) {
-  if (name === 'single') { charge[0].q = 3; charge[1].q = 0; }
-  if (name === 'dipole') { charge[0].q = 3; charge[1].q = -3; }
-  if (name === 'like')   { charge[0].q = 3; charge[1].q = 3; }
-  charge[0].x = CW * 0.36; charge[0].y = CH * 0.5;
-  charge[1].x = CW * 0.64; charge[1].y = CH * 0.5;
-  probe.x = CW * 0.5; probe.y = CH * 0.24;
-  q1Slider.value = charge[0].q; q2Slider.value = charge[1].q;
-  updateSliderLabels();
-  ['presetSingle','presetDipole','presetLike'].forEach(id => document.getElementById(id).classList.remove('active'));
-  const map = { single: 'presetSingle', dipole: 'presetDipole', like: 'presetLike' };
-  document.getElementById(map[name]).classList.add('active');
-  clampInside();
-  draw();
-}
-
-function clampInside() {
-  for (const c of charge) {
-    const r = chargeRadius(c.q);
-    c.x = Math.max(r + 6, Math.min(CW - r - 6, c.x));
-    c.y = Math.max(r + 6, Math.min(CH - r - 6, c.y));
+  function renderTex(expression) {
+    const target=document.getElementById('formula');
+    if (window.katex) target.innerHTML=katex.renderToString(expression,{throwOnError:false});
+    else target.textContent='E(r) = Σ Ei(r)';
   }
-  probe.x = Math.max(14, Math.min(CW - 14, probe.x));
-  probe.y = Math.max(14, Math.min(CH - 14, probe.y));
-}
 
-function resize() {
-  dpr = window.devicePixelRatio || 1;
-  const rect = canvas.parentElement.getBoundingClientRect();
-  const oldW = CW, oldH = CH;
-  CW = rect.width; CH = rect.height;
-  canvas.width = CW * dpr; canvas.height = CH * dpr;
-  canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  if (CW < 1 || CH < 1) return;   // layout not ready yet (e.g. hidden iframe) — retry later
-  if (!positionsInit) {
-    positionsInit = true;
-    const h = (location.hash || '').replace('#', '');
-    applyPreset(['single', 'like', 'dipole'].includes(h) ? h : 'dipole');
-    return;   // applyPreset already clamps and draws
-  }
-  if (oldW > 0 && oldH > 0 && (oldW !== CW || oldH !== CH)) {
-    // keep relative placement so charges never leave the canvas
-    for (const c of charge) { c.x *= CW / oldW; c.y *= CH / oldH; }
-    probe.x *= CW / oldW; probe.y *= CH / oldH;
-  }
-  clampInside();
-  draw();
-}
-
-// E field (N/C) at canvas point (px). Superposition of point-charge fields.
-function fieldAt(x, y) {
-  let Ex = 0, Ey = 0;
-  for (const c of charge) {
-    if (Math.abs(c.q) < 1e-9) continue;
-    const dx = (x - c.x) * M_PER_PX;
-    const dy = (y - c.y) * M_PER_PX;
-    const r2 = dx * dx + dy * dy;
-    if (r2 < 1e-8) continue;
-    const r = Math.sqrt(r2);
-    const E = k * c.q * MICRO / r2;   // signed magnitude
-    Ex += E * dx / r;
-    Ey += E * dy / r;
-  }
-  return { Ex, Ey, mag: Math.hypot(Ex, Ey) };
-}
-
-function drawArrowHead(x, y, ang, size, color) {
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.moveTo(x, y);
-  ctx.lineTo(x - size * Math.cos(ang - 0.42), y - size * Math.sin(ang - 0.42));
-  ctx.lineTo(x - size * Math.cos(ang + 0.42), y - size * Math.sin(ang + 0.42));
-  ctx.closePath(); ctx.fill();
-}
-
-function drawArrow(x1, y1, x2, y2, color, lw) {
-  const headLen = 9;
-  const angle = Math.atan2(y2 - y1, x2 - x1);
-  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
-  ctx.beginPath();
-  ctx.moveTo(x1, y1);
-  ctx.lineTo(x2 - (headLen - 2) * Math.cos(angle), y2 - (headLen - 2) * Math.sin(angle));
-  ctx.stroke();
-  drawArrowHead(x2, y2, angle, headLen, color);
-}
-
-// ---------- field line tracing ----------
-function traceFieldLine(x0, y0, dir) {
-  // dir = +1: follow E (from + charge), -1: follow -E (backward from - charge)
-  const pts = [[x0, y0]];
-  const heads = [];
-  let x = x0, y = y0, s = 0, sinceHead = 45;
-  const h = 3;
-  for (let i = 0; i < 1500; i++) {
-    const f1 = fieldAt(x, y);
-    if (f1.mag < 1e-6) break;
-    const u1x = dir * f1.Ex / f1.mag, u1y = dir * f1.Ey / f1.mag;
-    const mx = x + u1x * h * 0.5, my = y + u1y * h * 0.5;
-    const f2 = fieldAt(mx, my);
-    if (f2.mag < 1e-6) break;
-    const u2x = dir * f2.Ex / f2.mag, u2y = dir * f2.Ey / f2.mag;
-    x += u2x * h; y += u2y * h;
-    s += h; sinceHead += h;
-    pts.push([x, y]);
-    if (sinceHead >= 110) {
-      heads.push([x, y, Math.atan2(dir > 0 ? u2y : -u2y, dir > 0 ? u2x : -u2x)]);
-      sinceHead = 0;
+  function pointFieldSI(charges,point) {
+    let Ex=0,Ey=0;
+    for (const charge of charges) {
+      if (!charge.q_C) continue;
+      const dx=point.x_m-charge.x_m;
+      const dy=point.y_m-charge.y_m;
+      const r2=dx*dx+dy*dy;
+      if (r2===0) return {Ex:NaN,Ey:NaN,magnitude:Infinity};
+      const r=Math.sqrt(r2);
+      const scale=K*charge.q_C/(r2*r);
+      Ex+=scale*dx;
+      Ey+=scale*dy;
     }
-    // stop: out of canvas
-    if (x < -30 || x > CW + 30 || y < -30 || y > CH + 30) break;
-    // stop: entered a charge disk
-    let stopped = false;
-    for (const c of charge) {
-      if (Math.abs(c.q) < 1e-9) continue;
-      if (Math.hypot(x - c.x, y - c.y) < chargeRadius(c.q) + 2) { stopped = true; break; }
-    }
-    if (stopped) break;
+    return {Ex,Ey,magnitude:Math.hypot(Ex,Ey)};
   }
-  return { pts, heads };
-}
 
-function drawFieldLines() {
-  const havePos = charge.some(c => c.q > 1e-9);
-  const lines = [];
-  for (const c of charge) {
-    const seedFromPositive = c.q > 1e-9;
-    const seedFromNegative = c.q < -1e-9 && !havePos;   // only if no + charge exists
-    if (!seedFromPositive && !seedFromNegative) continue;
-    const n = Math.max(8, Math.min(20, Math.round(4 * Math.abs(c.q))));
-    const r0 = chargeRadius(c.q) + 3;
-    for (let j = 0; j < n; j++) {
-      const a = (2 * Math.PI * j) / n + 0.12;
-      const x0 = c.x + r0 * Math.cos(a);
-      const y0 = c.y + r0 * Math.sin(a);
-      lines.push(traceFieldLine(x0, y0, seedFromPositive ? 1 : -1));
-    }
+  function chargesSI() {
+    return state.charges.map(c=>({x_m:c.x,y_m:c.y,q_C:c.q*MICRO}));
   }
-  ctx.strokeStyle = '#2563EB';
-  ctx.lineWidth = 1.4;
-  for (const ln of lines) {
-    ctx.beginPath();
-    ctx.moveTo(ln.pts[0][0], ln.pts[0][1]);
-    for (let i = 1; i < ln.pts.length; i++) ctx.lineTo(ln.pts[i][0], ln.pts[i][1]);
-    ctx.stroke();
-    for (const [hx, hy, ha] of ln.heads) drawArrowHead(hx, hy, ha, 8, '#2563EB');
-  }
-}
 
-function drawVectorField() {
-  const step = 48;
-  for (let gx = step / 2; gx < CW; gx += step) {
-    for (let gy = step / 2; gy < CH; gy += step) {
-      let tooClose = false;
-      for (const c of charge) {
-        if (Math.hypot(gx - c.x, gy - c.y) < chargeRadius(c.q) + 16) { tooClose = true; break; }
+  function fieldAt(x,y) {
+    return pointFieldSI(chargesSI(),{x_m:x,y_m:y});
+  }
+
+  function fieldLineBudget(chargesMicro) {
+    const units=chargesMicro.map(q=>Math.round(Math.abs(q)*3));
+    let positive=0,negative=0;
+    chargesMicro.forEach((q,i)=>{if(q>0) positive+=units[i]; else if(q<0) negative+=units[i];});
+    return {
+      positive,
+      negative,
+      toInfinity:Math.max(0,positive-negative),
+      fromInfinity:Math.max(0,negative-positive)
+    };
+  }
+
+  function layout() {
+    const pad=26;
+    const sx=(state.width-pad*2)/(WORLD.xmax-WORLD.xmin);
+    const sy=(state.height-pad*2)/(WORLD.ymax-WORLD.ymin);
+    const scale=Math.max(1,Math.min(sx,sy));
+    const usedW=scale*(WORLD.xmax-WORLD.xmin);
+    const usedH=scale*(WORLD.ymax-WORLD.ymin);
+    transform={left:(state.width-usedW)/2,top:(state.height-usedH)/2,width:usedW,height:usedH};
+  }
+
+  function worldToScreen(x,y) {
+    return {
+      x:transform.left+(x-WORLD.xmin)/(WORLD.xmax-WORLD.xmin)*transform.width,
+      y:transform.top+(WORLD.ymax-y)/(WORLD.ymax-WORLD.ymin)*transform.height
+    };
+  }
+
+  function screenToWorld(x,y) {
+    return {
+      x:WORLD.xmin+(x-transform.left)/transform.width*(WORLD.xmax-WORLD.xmin),
+      y:WORLD.ymax-(y-transform.top)/transform.height*(WORLD.ymax-WORLD.ymin)
+    };
+  }
+
+  function line(x1,y1,x2,y2,color,width,dash=[]) {
+    ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=width; ctx.setLineDash(dash);
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore();
+  }
+
+  function arrowHead(x,y,angle,color,size=8) {
+    ctx.save(); ctx.fillStyle=color; ctx.beginPath();
+    ctx.moveTo(x,y);
+    ctx.lineTo(x-size*Math.cos(angle-.43),y-size*Math.sin(angle-.43));
+    ctx.lineTo(x-size*Math.cos(angle+.43),y-size*Math.sin(angle+.43));
+    ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+
+  function arrow(x1,y1,x2,y2,color,width=2) {
+    line(x1,y1,x2,y2,color,width);
+    arrowHead(x2,y2,Math.atan2(y2-y1,x2-x1),color,9);
+  }
+
+  function textBg(text,x,y,options={}) {
+    const size=options.size||15;
+    ctx.save();
+    ctx.font=`${options.weight||600} ${size}px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif`;
+    ctx.textAlign=options.align||'center'; ctx.textBaseline='middle';
+    const w=ctx.measureText(text).width;
+    let left=x-w/2-4;
+    if (ctx.textAlign==='left') left=x-4;
+    if (ctx.textAlign==='right') left=x-w-4;
+    ctx.fillStyle='rgba(255,255,255,.92)'; ctx.fillRect(left,y-size*.65-2,w+8,size+5);
+    ctx.fillStyle=options.color||INK; ctx.fillText(text,x,y); ctx.restore();
+  }
+
+  function insideWorld(p,margin=0) {
+    return p.x>=WORLD.xmin-margin&&p.x<=WORLD.xmax+margin&&p.y>=WORLD.ymin-margin&&p.y<=WORLD.ymax+margin;
+  }
+
+  function traceLine(start,direction,sourceIndex) {
+    const points=[{x:start.x,y:start.y}];
+    let x=start.x,y=start.y;
+    let ending='limit';
+    for (let step=0;step<2400;step++) {
+      const f1=fieldAt(x,y);
+      if (!Number.isFinite(f1.magnitude)||f1.magnitude<1e-7) break;
+      const ux=direction*f1.Ex/f1.magnitude;
+      const uy=direction*f1.Ey/f1.magnitude;
+      const h=.014;
+      const mid={x:x+ux*h*.5,y:y+uy*h*.5};
+      const fm=fieldAt(mid.x,mid.y);
+      if (!Number.isFinite(fm.magnitude)||fm.magnitude<1e-7) break;
+      x+=direction*fm.Ex/fm.magnitude*h;
+      y+=direction*fm.Ey/fm.magnitude*h;
+      points.push({x,y});
+      if (step>5) {
+        for (let i=0;i<state.charges.length;i++) {
+          if (i===sourceIndex) continue;
+          const c=state.charges[i];
+          if (c.q===0) continue;
+          if (Math.hypot(x-c.x,y-c.y)<.065) {ending='charge'; return {points,ending};}
+        }
       }
-      if (Math.hypot(gx - probe.x, gy - probe.y) < 26) tooClose = true;
-      if (tooClose) continue;
-      const f = fieldAt(gx, gy);
-      if (f.mag < 1) continue;
-      const len = Math.max(6, Math.min(20, 5 * Math.log10(1 + f.mag / 50)));
-      const ux = f.Ex / f.mag, uy = f.Ey / f.mag;
-      drawArrow(gx - ux * len / 2, gy - uy * len / 2, gx + ux * len / 2, gy + uy * len / 2, 'rgba(107,114,128,0.55)', 1.3);
+      if (Math.abs(x)>TRACE_LIMIT||Math.abs(y)>TRACE_LIMIT) {ending='infinity'; break;}
+    }
+    return {points,ending};
+  }
+
+  function fieldLines() {
+    const lines=[];
+    const budget=fieldLineBudget(state.charges.map(c=>c.q));
+    const positives=state.charges.map((charge,index)=>({...charge,index})).filter(charge=>charge.q>0);
+    let remainingCharge=Math.min(budget.positive,budget.negative);
+    let remainingInfinity=budget.toInfinity;
+    let remainingPositive=budget.positive;
+    positives.forEach((charge,sourceNumber)=>{
+      const count=Math.round(Math.abs(charge.q)*3);
+      let targetCharge=sourceNumber===positives.length-1
+        ? remainingCharge
+        : Math.min(count,Math.round(remainingCharge*count/Math.max(1,remainingPositive)));
+      let targetInfinity=count-targetCharge;
+      if (targetInfinity>remainingInfinity) {
+        const transfer=targetInfinity-remainingInfinity;
+        targetInfinity-=transfer;
+        targetCharge+=transfer;
+      }
+      let acceptedCharge=0,acceptedInfinity=0;
+      const maxAttempts=Math.max(36,count*48);
+      for (let attempt=0;attempt<maxAttempts&&(acceptedCharge<targetCharge||acceptedInfinity<targetInfinity);attempt++) {
+        const angle=(attempt*2.399963229728653+.19)%(2*Math.PI);
+        const start={x:charge.x+.07*Math.cos(angle),y:charge.y+.07*Math.sin(angle)};
+        const traced=traceLine(start,1,charge.index);
+        if (traced.ending==='charge'&&acceptedCharge<targetCharge) {
+          lines.push({points:traced.points,ending:'charge'}); acceptedCharge++;
+        } else if (traced.ending==='infinity'&&acceptedInfinity<targetInfinity) {
+          lines.push({points:traced.points,ending:'infinity'}); acceptedInfinity++;
+        }
+      }
+      remainingCharge-=acceptedCharge;
+      remainingInfinity-=acceptedInfinity;
+      remainingPositive-=count;
+    });
+    if (budget.fromInfinity>0) {
+      const negatives=state.charges.map((c,i)=>({...c,index:i})).filter(c=>c.q<0);
+      const totalWeight=negatives.reduce((sum,c)=>sum+Math.abs(c.q),0);
+      let remaining=budget.fromInfinity;
+      negatives.forEach((charge,j)=>{
+        const count=j===negatives.length-1?remaining:Math.round(budget.fromInfinity*Math.abs(charge.q)/totalWeight);
+        remaining-=count;
+        let accepted=0;
+        const maxAttempts=Math.max(24,count*24);
+        for (let attempt=0;attempt<maxAttempts&&accepted<count;attempt++) {
+          const angle=(attempt*2.399963229728653+.41)%(2*Math.PI);
+          const start={x:charge.x+.07*Math.cos(angle),y:charge.y+.07*Math.sin(angle)};
+          const traced=traceLine(start,-1,charge.index);
+          if (traced.ending!=='infinity') continue;
+          lines.push({points:traced.points.slice().reverse(),ending:'from-infinity'});
+          accepted++;
+        }
+      });
+    }
+    return lines;
+  }
+
+  function drawFieldLines() {
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(transform.left,transform.top,transform.width,transform.height);
+    ctx.clip();
+    for (const traced of fieldLines()) {
+      const visible=traced.points.filter(p=>insideWorld(p,.03));
+      if (visible.length<2) continue;
+      ctx.strokeStyle=INK; ctx.lineWidth=1.25; ctx.beginPath();
+      visible.forEach((p,i)=>{
+        const s=worldToScreen(p.x,p.y);
+        if (i===0) ctx.moveTo(s.x,s.y); else ctx.lineTo(s.x,s.y);
+      });
+      ctx.stroke();
+      const index=Math.min(visible.length-2,Math.max(1,Math.floor(visible.length*.55)));
+      const a=worldToScreen(visible[index-1].x,visible[index-1].y);
+      const b=worldToScreen(visible[index+1].x,visible[index+1].y);
+      arrowHead(b.x,b.y,Math.atan2(b.y-a.y,b.x-a.x),INK,7);
+    }
+    ctx.restore();
+  }
+
+  function drawVectorField() {
+    const nx=state.width<440?7:10;
+    const ny=state.height<400?5:7;
+    for (let iy=0;iy<ny;iy++) {
+      for (let ix=0;ix<nx;ix++) {
+        const x=WORLD.xmin+.12+(WORLD.xmax-WORLD.xmin-.24)*ix/(nx-1);
+        const y=WORLD.ymin+.12+(WORLD.ymax-WORLD.ymin-.24)*iy/(ny-1);
+        if (state.charges.some(c=>Math.hypot(x-c.x,y-c.y)<.18)) continue;
+        const f=fieldAt(x,y);
+        if (!Number.isFinite(f.magnitude)||f.magnitude===0) continue;
+        const p=worldToScreen(x,y);
+        const length=12+11*Math.min(1,Math.log10(1+f.magnitude)/6);
+        arrow(p.x,p.y,p.x+f.Ex/f.magnitude*length,p.y-f.Ey/f.magnitude*length,GRAY,1.25);
+      }
     }
   }
-}
 
-function drawCharge(c, name) {
-  const r = chargeRadius(c.q);
-  const isPos = c.q > 1e-6, isNeg = c.q < -1e-6;
-  const grad = ctx.createRadialGradient(c.x, c.y, r * 0.2, c.x, c.y, r);
-  if (isPos) { grad.addColorStop(0, '#c4234f'); grad.addColorStop(1, '#8B0029'); }
-  else if (isNeg) { grad.addColorStop(0, '#5b8cf5'); grad.addColorStop(1, '#2563EB'); }
-  else { grad.addColorStop(0, '#d1d5db'); grad.addColorStop(1, '#9ca3af'); }
-  ctx.fillStyle = grad;
-  ctx.beginPath(); ctx.arc(c.x, c.y, r, 0, Math.PI * 2); ctx.fill();
-  ctx.strokeStyle = 'rgba(0,0,0,0.18)'; ctx.lineWidth = 2; ctx.stroke();
-  ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.font = 'bold ' + Math.round(r * 1.2) + 'px sans-serif';
-  ctx.fillText(isPos ? '+' : (isNeg ? '−' : '0'), c.x, c.y + 1);
-  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 13px sans-serif'; ctx.textBaseline = 'top';
-  ctx.fillText(name, c.x, c.y + r + 5);
-  ctx.textBaseline = 'alphabetic';
-}
-
-function drawProbe() {
-  const f = fieldAt(probe.x, probe.y);
-  // E arrow at probe
-  let tip = null;
-  if (f.mag > 1) {
-    const len = Math.max(18, Math.min(80, 26 * Math.log10(1 + f.mag / 100)));
-    const ux = f.Ex / f.mag, uy = f.Ey / f.mag;
-    tip = { x: probe.x + ux * len, y: probe.y + uy * len, ux, uy };
-    drawArrow(probe.x, probe.y, tip.x, tip.y, '#2563EB', 3);
-  }
-  // probe marker (crosshair dot)
-  ctx.fillStyle = '#1a1a1a';
-  ctx.beginPath(); ctx.arc(probe.x, probe.y, 5, 0, Math.PI * 2); ctx.fill();
-  ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
-  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 13px sans-serif';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-  ctx.fillText('P', probe.x, probe.y + 9);
-  ctx.textBaseline = 'alphabetic';
-  return { f, tip };
-}
-
-function fmtE(E) {
-  if (E === 0) return '0';
-  const exp = Math.floor(Math.log10(E));
-  const mant = (E / Math.pow(10, exp)).toFixed(2);
-  return mant + '\\times 10^{' + exp + '}';
-}
-
-function draw() {
-  if (!positionsInit) return;
-  ctx.clearRect(0, 0, CW, CH);
-
-  if (document.getElementById('chkVectors').checked) drawVectorField();
-  if (document.getElementById('chkLines').checked) drawFieldLines();
-
-  drawCharge(charge[0], 'q₁');
-  drawCharge(charge[1], 'q₂');
-  const { f, tip } = drawProbe();
-
-  // KaTeX overlay label near probe arrow tip
-  const lblE = document.getElementById('lblE');
-  if (tip) {
-    let lx = tip.x + tip.ux * 22, ly = tip.y + tip.uy * 22;
-    lx = Math.max(70, Math.min(CW - 70, lx));
-    ly = Math.max(16, Math.min(CH - 16, ly));
-    // avoid covering the probe itself
-    if (Math.hypot(lx - probe.x, ly - probe.y) < 30) ly = probe.y - 30;
-    lblE.style.display = 'block';
-    lblE.style.left = lx + 'px';
-    lblE.style.top = ly + 'px';
-    lblE.innerHTML = tex('E_P = ' + fmtE(f.mag) + '\\,\\text{N/C}');
-  } else {
-    lblE.style.display = 'none';
+  function drawCharge(charge,index) {
+    const p=worldToScreen(charge.x,charge.y);
+    const radius=22;
+    const color=charge.q>=0?RED:BLUE;
+    ctx.save();
+    ctx.fillStyle=charge.q===0?'#fff':color; ctx.strokeStyle=charge.q===0?GRAY:color;
+    ctx.lineWidth=state.hover===index||state.drag===index?3:2;
+    ctx.beginPath(); ctx.arc(p.x,p.y,radius,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle=charge.q===0?GRAY:'#fff';
+    ctx.font='700 21px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(charge.q>0?'+':charge.q<0?'−':'0',p.x,p.y-1);
+    ctx.restore();
+    textBg(`q${index+1}`,p.x,p.y+35,{size:15,color,weight:700});
   }
 
-  updateInfo(f);
-}
-
-function updateInfo(f) {
-  const box = document.getElementById('infoBox');
-  // angle in physics convention (y up)
-  const ang = f.mag > 1 ? (Math.atan2(-f.Ey, f.Ex) * 180 / Math.PI) : null;
-  let html = '';
-  html += '<span class="label">측정점 P의 전기장</span><br>';
-  html += '<span class="val">|E| = ' + sciN(f.mag) + ' N/C</span><br>';
-  html += '<span class="label">방향</span> <span class="val">' +
-          (ang === null ? '—' : ang.toFixed(0) + '° (+x축 기준)') + '</span><br>';
-  html += '<span style="font-size:11px;color:#6B7280">P를 움직이면 알짜 장 ' +
-          tex('\\vec{E} = \\vec{E}_1 + \\vec{E}_2') + ' 이 실시간으로 갱신됩니다</span>';
-  box.innerHTML = html;
-}
-
-function sciN(v) {
-  if (v === 0) return '0';
-  if (v >= 1e-2 && v < 1e4) return v >= 1 ? v.toFixed(1) : v.toFixed(3);
-  const exp = Math.floor(Math.log10(v));
-  const mant = (v / Math.pow(10, exp)).toFixed(2);
-  return mant + '×10' + superscript(exp);
-}
-function superscript(n) {
-  const map = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³',
-                '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
-  return String(n).split('').map(c => map[c] || c).join('');
-}
-
-function renderStatic() {
-  document.getElementById('canvasTitle').innerHTML =
-    '전기장의 중첩: 전기력선은 <span style="color:#8B0029">양전하에서 나와</span> <span style="color:#2563EB">음전하에서 끝난다</span>';
-
-  document.getElementById('theoremBox').innerHTML =
-    '점전하의 전기장<br>' +
-    tex('E = \\dfrac{1}{4\\pi\\varepsilon_0}\\dfrac{|q|}{r^2}') + '<br>' +
-    '<span style="font-size:11px;font-weight:400">정의: ' + tex('\\vec{E} = \\vec{F}/q_0') + ' (단위 N/C)</span>';
-
-  document.getElementById('relationBox').innerHTML =
-    '<b>전기력선 규칙</b><br>' +
-    '① 각 점에서 선의 접선 = ' + tex('\\vec{E}') + ' 방향<br>' +
-    '② 선이 빽빽할수록 장이 강하다<br>' +
-    '③ (+)에서 나와 (−)에서 끝난다';
-
-  document.getElementById('formulaBox').innerHTML =
-    '<b>파란 곡선:</b> 전기력선<br>' +
-    '<b>회색 화살표:</b> 각 점의 장 벡터 ' + tex('\\vec{E}') + '<br>' +
-    '<b>파란 굵은 화살표:</b> 측정점 P의 알짜 장';
-}
-
-// ---------- dragging ----------
-function eventToCanvas(e) {
-  const rect = canvas.getBoundingClientRect();
-  const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-  const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-  return { x: cx, y: cy };
-}
-
-function hitTest(x, y) {
-  if (Math.hypot(x - probe.x, y - probe.y) <= 16) return 2;
-  for (let i = charge.length - 1; i >= 0; i--) {
-    if (Math.hypot(x - charge[i].x, y - charge[i].y) <= chargeRadius(charge[i].q) + 6) return i;
+  function drawProbe() {
+    const p=worldToScreen(state.probe.x,state.probe.y);
+    const f=fieldAt(state.probe.x,state.probe.y);
+    const nearCharge=state.charges.some(c=>Math.hypot(state.probe.x-c.x,state.probe.y-c.y)<.25);
+    ctx.save();
+    ctx.fillStyle='#fff'; ctx.strokeStyle=BLUE; ctx.lineWidth=state.hover===2||state.drag===2?3:2;
+    ctx.beginPath(); ctx.arc(p.x,p.y,8,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.restore();
+    textBg('P',p.x,p.y+(nearCharge?-22:22),{size:15,color:BLUE,weight:700});
+    if (Number.isFinite(f.magnitude)&&f.magnitude>0) {
+      const length=30+24*Math.min(1,Math.log10(1+f.magnitude)/6);
+      arrow(p.x,p.y,p.x+f.Ex/f.magnitude*length,p.y-f.Ey/f.magnitude*length,BLUE,2.5);
+    }
   }
-  return -1;
-}
 
-function onDown(e) {
-  const p = eventToCanvas(e);
-  const idx = hitTest(p.x, p.y);
-  if (idx >= 0) { dragIdx = idx; canvas.style.cursor = 'grabbing'; e.preventDefault(); }
-}
-function onMove(e) {
-  const p = eventToCanvas(e);
-  if (dragIdx >= 0) {
-    if (dragIdx === 2) { probe.x = p.x; probe.y = p.y; }
-    else { charge[dragIdx].x = p.x; charge[dragIdx].y = p.y; }
-    clampInside();
+  function drawScale() {
+    const a=worldToScreen(WORLD.xmin+.12,WORLD.ymin+.1);
+    const b=worldToScreen(WORLD.xmin+.62,WORLD.ymin+.1);
+    line(a.x,a.y,b.x,b.y,INK,2);
+    line(a.x,a.y-4,a.x,a.y+4,INK,1);
+    line(b.x,b.y-4,b.x,b.y+4,INK,1);
+    textBg('0.5 m',(a.x+b.x)/2,a.y-14,{size:15,color:GRAY});
+  }
+
+  function formatField(value) {
+    const absolute=Math.abs(value);
+    if (absolute===0) return '0 N/C';
+    if (absolute>=1e4||absolute<1) return `${value.toExponential(2)} N/C`;
+    return `${Math.round(value).toLocaleString('en-US')} N/C`;
+  }
+
+  function updateControls() {
+    const f=fieldAt(state.probe.x,state.probe.y);
+    const signed=value=>`${value>0?'+':value<0?'−':''}${Math.abs(value).toFixed(1)} μC`;
+    document.getElementById('q1Out').textContent=signed(state.charges[0].q);
+    document.getElementById('q2Out').textContent=signed(state.charges[1].q);
+    document.getElementById('exOut').textContent=formatField(f.Ex);
+    document.getElementById('eyOut').textContent=formatField(f.Ey);
+    document.getElementById('magOut').textContent=formatField(f.magnitude);
+    const total=state.charges[0].q+state.charges[1].q;
+    document.getElementById('topology').textContent=total===0
+      ? '총전하 0 · 힘선은 +에서 나와 −로 들어감'
+      : total>0
+        ? '총전하 > 0 · 남는 힘선은 무한대로 나감'
+        : '총전하 < 0 · 남는 힘선은 무한대에서 들어옴';
+  }
+
+  function draw() {
+    if (!state.width||!state.height) return;
+    ctx.clearRect(0,0,state.width,state.height);
+    layout();
+    if (state.mode==='lines') drawFieldLines(); else drawVectorField();
+    state.charges.forEach(drawCharge);
+    drawProbe();
+    drawScale();
+    updateControls();
+  }
+
+  let frame=0;
+  function requestDraw() {
+    if (frame) return;
+    frame=requestAnimationFrame(()=>{frame=0;draw();});
+  }
+
+  function resize() {
+    const rect=stage.getBoundingClientRect();
+    if (!rect.width||!rect.height) return;
+    state.width=rect.width; state.height=rect.height; state.dpr=Math.max(1,window.devicePixelRatio||1);
+    canvas.width=Math.round(state.width*state.dpr); canvas.height=Math.round(state.height*state.dpr);
+    canvas.style.width=`${state.width}px`; canvas.style.height=`${state.height}px`;
+    ctx.setTransform(state.dpr,0,0,state.dpr,0,0);
     draw();
-    e.preventDefault();
-  } else {
-    canvas.style.cursor = hitTest(p.x, p.y) >= 0 ? 'grab' : 'default';
   }
-}
-function onUp() { dragIdx = -1; canvas.style.cursor = 'default'; }
 
-canvas.addEventListener('mousedown', onDown);
-window.addEventListener('mousemove', onMove);
-window.addEventListener('mouseup', onUp);
-canvas.addEventListener('touchstart', onDown, { passive: false });
-canvas.addEventListener('touchmove', onMove, { passive: false });
-canvas.addEventListener('touchend', onUp);
+  function pointerPosition(event) {
+    const rect=canvas.getBoundingClientRect();
+    return {x:event.clientX-rect.left,y:event.clientY-rect.top};
+  }
 
-// ---------- controls ----------
-function fmtCharge(v) { return (v >= 0 ? '+' : '') + v.toFixed(1); }
-function updateSliderLabels() {
-  document.getElementById('q1Val').textContent = fmtCharge(parseFloat(q1Slider.value));
-  document.getElementById('q2Val').textContent = fmtCharge(parseFloat(q2Slider.value));
-}
+  function hitItem(p) {
+    const candidates=[
+      ...state.charges.map((c,i)=>({index:i,...worldToScreen(c.x,c.y)})),
+      {index:2,...worldToScreen(state.probe.x,state.probe.y)}
+    ];
+    let best=-1,distance=Infinity;
+    candidates.forEach(item=>{
+      const d=Math.hypot(p.x-item.x,p.y-item.y);
+      if (d<30&&d<distance) {best=item.index;distance=d;}
+    });
+    return best;
+  }
 
-q1Slider.addEventListener('input', () => { charge[0].q = parseFloat(q1Slider.value); updateSliderLabels(); clampInside(); draw(); });
-q2Slider.addEventListener('input', () => { charge[1].q = parseFloat(q2Slider.value); updateSliderLabels(); clampInside(); draw(); });
-document.getElementById('chkLines').addEventListener('change', draw);
-document.getElementById('chkVectors').addEventListener('change', draw);
-document.getElementById('presetSingle').addEventListener('click', () => applyPreset('single'));
-document.getElementById('presetDipole').addEventListener('click', () => applyPreset('dipole'));
-document.getElementById('presetLike').addEventListener('click', () => applyPreset('like'));
-document.getElementById('resetBtn').addEventListener('click', () => applyPreset('dipole'));
+  function moveItem(index,p) {
+    const world=screenToWorld(p.x,p.y);
+    const margin=.09;
+    let x=Math.max(WORLD.xmin+margin,Math.min(WORLD.xmax-margin,world.x));
+    let y=Math.max(WORLD.ymin+margin,Math.min(WORLD.ymax-margin,world.y));
+    if (index<2) {
+      const other=state.charges[1-index];
+      const dx=x-other.x,dy=y-other.y,r=Math.hypot(dx,dy);
+      if (r<.17) {
+        const ux=r>1e-6?dx/r:(index===0?-1:1),uy=r>1e-6?dy/r:0;
+        x=other.x+ux*.17; y=other.y+uy*.17;
+      }
+      state.charges[index].x=x; state.charges[index].y=y;
+    } else {
+      state.probe.x=x; state.probe.y=y;
+    }
+  }
 
-window.addEventListener('resize', resize);
+  canvas.addEventListener('pointerdown',event=>{
+    const hit=hitItem(pointerPosition(event));
+    if (hit<0) return;
+    state.drag=hit; state.hover=hit; canvas.setPointerCapture(event.pointerId); canvas.style.cursor='grabbing';
+    event.preventDefault(); requestDraw();
+  });
+  canvas.addEventListener('pointermove',event=>{
+    const p=pointerPosition(event);
+    if (state.drag>=0) {moveItem(state.drag,p);requestDraw();return;}
+    state.hover=hitItem(p); canvas.style.cursor=state.hover>=0?'grab':'default'; requestDraw();
+  });
+  function endDrag(event) {
+    if (state.drag>=0&&canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+    state.drag=-1; canvas.style.cursor=state.hover>=0?'grab':'default'; requestDraw();
+  }
+  canvas.addEventListener('pointerup',endDrag);
+  canvas.addEventListener('pointercancel',endDrag);
+  canvas.addEventListener('pointerleave',()=>{if(state.drag<0){state.hover=-1;canvas.style.cursor='default';requestDraw();}});
 
-renderStatic();
-updateSliderLabels();
-// Lazy init: in an iframe the canvas may have zero layout size when the script
-// runs (or while the iframe is display:none). Retry every frame until it is
-// laid out, then resize() performs the initial placement exactly once.
-(function initWhenVisible() {
-  resize();
-  if (!positionsInit) requestAnimationFrame(initWhenVisible);
+  document.getElementById('mode').addEventListener('click',event=>{
+    const button=event.target.closest('button[data-value]');
+    if (!button) return;
+    state.mode=button.dataset.value;
+    document.querySelectorAll('#mode button').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+    draw();
+  });
+  function syncCharges() {
+    state.charges[0].q=Number(q1Input.value);
+    state.charges[1].q=Number(q2Input.value);
+    draw();
+  }
+  q1Input.addEventListener('input',syncCharges);
+  q2Input.addEventListener('input',syncCharges);
+  document.getElementById('reset').addEventListener('click',()=>{
+    state.charges=[{x:-.52,y:0,q:3},{x:.52,y:0,q:-3}];
+    state.probe={x:0,y:.58}; state.mode='lines';
+    q1Input.value='3'; q2Input.value='-3';
+    document.querySelectorAll('#mode button').forEach(item=>item.setAttribute('aria-pressed',String(item.dataset.value==='lines')));
+    draw();
+  });
+
+  function runValidation() {
+    const single=pointFieldSI([{x_m:0,y_m:0,q_C:1e-6}],{x_m:1,y_m:0});
+    const checkpoint=pointFieldSI([{x_m:0,y_m:0,q_C:2e-6}],{x_m:.5,y_m:0});
+    const symmetricLike=pointFieldSI([{x_m:-.5,y_m:0,q_C:2e-6},{x_m:.5,y_m:0,q_C:2e-6}],{x_m:0,y_m:0});
+    const dipole=pointFieldSI([{x_m:-.5,y_m:0,q_C:3e-6},{x_m:.5,y_m:0,q_C:-3e-6}],{x_m:0,y_m:0});
+    const equalBudget=fieldLineBudget([3,-3]);
+    const positiveBudget=fieldLineBudget([3,-1]);
+    const negativeBudget=fieldLineBudget([1,-3]);
+    const originalCharges=state.charges.map(charge=>charge.q);
+    state.charges[0].q=3; state.charges[1].q=-1;
+    const actualPositiveInfinity=fieldLines().filter(line=>line.ending==='infinity').length;
+    state.charges[0].q=1; state.charges[1].q=-3;
+    const actualNegativeInfinity=fieldLines().filter(line=>line.ending==='from-infinity').length;
+    state.charges.forEach((charge,index)=>{charge.q=originalCharges[index];});
+    const tests={
+      single_charge_reference:Math.abs(single.Ex-8990)<1e-9&&Math.abs(single.Ey)<1e-12,
+      checkpoint_2uC_at_0_5m:Math.abs(checkpoint.Ex-71920)<1e-9&&Math.abs(checkpoint.Ey)<1e-12,
+      equal_like_midpoint_zero:Math.abs(symmetricLike.Ex)<1e-12&&Math.abs(symmetricLike.Ey)<1e-12,
+      dipole_midpoint_direction:dipole.Ex>0&&Math.abs(dipole.Ey)<1e-12,
+      neutral_topology:equalBudget.toInfinity===0&&equalBudget.fromInfinity===0,
+      positive_to_infinity:positiveBudget.toInfinity>0&&positiveBudget.fromInfinity===0,
+      negative_from_infinity:negativeBudget.fromInfinity>0&&negativeBudget.toInfinity===0,
+      traced_positive_surplus:actualPositiveInfinity>=positiveBudget.toInfinity,
+      traced_negative_surplus:actualNegativeInfinity===negativeBudget.fromInfinity
+    };
+    const pass=Object.values(tests).every(Boolean);
+    document.body.dataset.physicsValidated=pass?'pass':'fail';
+    return {pass,tests,reference:{q_2uC_r_0_5m_E_N_per_C:checkpoint.Ex,equal_like_midpoint_E_N_per_C:symmetricLike.magnitude,dipole_midpoint_Ex_N_per_C:dipole.Ex,traced_positive_to_infinity:actualPositiveInfinity,traced_negative_from_infinity:actualNegativeInfinity}};
+  }
+  window.__physicsValidation={
+    constants:{k_N_m2_per_C2:K},
+    pointField:pointFieldSI,
+    fieldLineBudget,
+    run:runValidation
+  };
+  window.__simulationState=state;
+  renderTex(String.raw`\vec E(\vec r)=k\sum_i q_i\frac{\vec r-\vec r_i}{|\vec r-\vec r_i|^3}`);
+  runValidation();
+  new ResizeObserver(resize).observe(stage);
+  window.addEventListener('load',resize,{once:true});
 })();
 </script>
 </body>

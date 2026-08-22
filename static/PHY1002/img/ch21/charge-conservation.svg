@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 430" role="img" aria-labelledby="title desc">
+  <title id="title">Charge transfer conserves total charge</title>
+  <desc id="desc">Charges of two bodies change by equal and opposite amounts while the total remains zero.</desc>
+  <rect width="760" height="430" fill="#fff"/>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#1a1a1a">
+    <line x1="105" y1="350" x2="700" y2="350" stroke="#111" stroke-width="1.5"/>
+    <line x1="105" y1="350" x2="105" y2="45" stroke="#111" stroke-width="1.5"/>
+    <line x1="105" y1="198" x2="700" y2="198" stroke="#6B7280" stroke-width="1" stroke-dasharray="5 5"/>
+    <g font-size="17" text-anchor="middle">
+      <line x1="105" y1="350" x2="105" y2="357" stroke="#111"/><text x="105" y="382">0</text>
+      <line x1="224" y1="350" x2="224" y2="357" stroke="#111"/><text x="224" y="382">1</text>
+      <line x1="343" y1="350" x2="343" y2="357" stroke="#111"/><text x="343" y="382">2</text>
+      <line x1="462" y1="350" x2="462" y2="357" stroke="#111"/><text x="462" y="382">3</text>
+      <line x1="581" y1="350" x2="581" y2="357" stroke="#111"/><text x="581" y="382">4</text>
+      <line x1="700" y1="350" x2="700" y2="357" stroke="#111"/><text x="700" y="382">5</text>
+      <text x="402" y="405" font-size="19" font-style="italic">transferred electrons, N</text>
+    </g>
+    <g font-size="17" text-anchor="end">
+      <text x="91" y="356">−5</text><text x="91" y="280">−2.5</text><text x="91" y="204">0</text><text x="91" y="127">+2.5</text><text x="91" y="51">+5</text>
+      <line x1="98" y1="350" x2="105" y2="350" stroke="#111"/><line x1="98" y1="274" x2="105" y2="274" stroke="#111"/><line x1="98" y1="198" x2="105" y2="198" stroke="#111"/><line x1="98" y1="121" x2="105" y2="121" stroke="#111"/><line x1="98" y1="45" x2="105" y2="45" stroke="#111"/>
+    </g>
+    <text x="24" y="205" font-size="19" text-anchor="middle" transform="rotate(-90 24 205)">charge / e</text>
+    <path d="M105 198 L700 45" fill="none" stroke="#8B0029" stroke-width="3"/>
+    <path d="M105 198 L700 350" fill="none" stroke="#2563EB" stroke-width="3"/>
+    <path d="M105 198 L700 198" fill="none" stroke="#111" stroke-width="2"/>
+    <text x="620" y="67" fill="#8B0029" font-size="21" font-weight="700">Q<tspan baseline-shift="sub" font-size="14">A</tspan> = +Ne</text>
+    <text x="620" y="335" fill="#2563EB" font-size="21" font-weight="700">Q<tspan baseline-shift="sub" font-size="14">B</tspan> = −Ne</text>
+    <text x="485" y="185" fill="#111" font-size="19" font-weight="700">Q<tspan baseline-shift="sub" font-size="13">A</tspan> + Q<tspan baseline-shift="sub" font-size="13">B</tspan> = 0</text>
+  </g>
+</svg>

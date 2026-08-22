@@ -48,7 +48,7 @@
   <circle cx="350" cy="222.5" r="9" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
   <text x="350" y="227.5" font-size="12" fill="white" text-anchor="middle" font-weight="bold">−</text>
   <line x1="350" y1="211" x2="350" y2="166" stroke="#8B0029" stroke-width="2.5" marker-end="url(#ufR)"/>
-  <text x="362" y="180" font-size="14" fill="#8B0029" font-style="italic" font-weight="bold">F = QE</text>
+  <text x="362" y="180" font-size="14" fill="#8B0029" font-style="italic" font-weight="bold">F = qE = −QE</text>
   <line x1="358.8" y1="220.7" x2="403.8" y2="211.2" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ufB)"/>
   <text x="414" y="216" font-size="14" fill="#2563EB" font-style="italic" font-weight="bold">v</text>
 
