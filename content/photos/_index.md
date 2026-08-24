@@ -5,6 +5,13 @@ layout: list
 # Define gallery items (order matters). You can also omit this list and the layout
 # will try to auto-discover image resources under photos/images/*.
 gallery:
+  - slides:
+      - "/photos/images/2026_08_berkeley_5.webp"
+      - "/photos/images/2026_08_berkeley_1.webp"
+      - "/photos/images/2026_08_berkeley_2.webp"
+      - "/photos/images/2026_08_berkeley_3.webp"
+      - "/photos/images/2026_08_berkeley_4.webp"
+    caption: "2026/08 <br> UC Berkeley visiting research (Dongsin, Chaewoon)"
   - src: "/photos/images/2026_07_electronic_structure_symposium.webp"
     caption: "2026/07 <br> 2nd Electronic Structure Symposium"
   - src: "/photos/images/2026_06_group_photo.webp"
