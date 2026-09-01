@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content="PHY1002 21장 쿨롱 법칙 강의 슬라이드" />
+    <title>21장 쿨롱 법칙 | PHY1002</title>
+    <style>
+      :root {
+        --canvas-width: 1600;
+        --canvas-height: 900;
+        --ink: #1d1d1f;
+        --soft: #f5f5f7;
+        --red: #8b0029;
+        --blue: #2563eb;
+        --neutral: #6b7280;
+        --white: #ffffff;
+      }
+
+      * { box-sizing: border-box; }
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: var(--soft);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      }
+      body { -webkit-font-smoothing: antialiased; }
+      #stage {
+        position: fixed;
+        width: 1600px;
+        height: 900px;
+        overflow: hidden;
+        transform-origin: top left;
+        background: var(--white);
+      }
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: none;
+        width: 1600px;
+        height: 900px;
+        padding: 68px 112px 72px;
+        overflow: hidden;
+        background: var(--white);
+      }
+      .slide.active { display: flex; flex-direction: column; }
+      h1, h2, p { margin-top: 0; }
+      h1 {
+        max-width: 1260px;
+        margin-bottom: 28px;
+        font-size: 84px;
+        font-weight: 650;
+        letter-spacing: -0.05em;
+        line-height: 1.03;
+      }
+      h2 {
+        max-width: 1300px;
+        margin-bottom: 40px;
+        font-size: 56px;
+        font-weight: 620;
+        letter-spacing: -0.04em;
+        line-height: 1.08;
+      }
+      p, li, th, td, figcaption {
+        color: var(--ink);
+        font-size: 30px;
+        line-height: 1.42;
+      }
+      .title-slide {
+        justify-content: flex-start;
+        padding-top: 160px;
+        padding-bottom: 110px;
+      }
+      .title-slide h1 { max-width: 1100px; }
+      .subhead { max-width: 1080px; font-size: 32px; line-height: 1.35; }
+      .title-slide .meta { margin-top: 34px; font-size: 24px; }
+      ul { max-width: 1240px; margin: 0; padding-left: 1.18em; }
+      li { margin-bottom: 22px; padding-left: 0.22em; }
+      li::marker { color: var(--red); }
+      .compact li { margin-bottom: 14px; }
+      .term { font-weight: 650; }
+
+      .math-block {
+        display: flex;
+        min-height: 520px;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      math {
+        color: var(--ink);
+        font-family: "STIX Two Math", "STIXGeneral", "Cambria Math", "Times New Roman", serif;
+        font-weight: 400;
+        letter-spacing: 0;
+        font-variant-numeric: lining-nums tabular-nums;
+      }
+      math[display="block"] { font-size: 68px; }
+      math[display="inline"] {
+        display: inline-block;
+        font-size: 1em;
+        line-height: 1;
+        vertical-align: -0.08em;
+      }
+      math mtext {
+        font-family: "Times New Roman", "STIX Two Text", serif;
+        font-size: 0.72em;
+        font-style: normal;
+      }
+      math mi[mathvariant="normal"] { font-style: normal; }
+      .math-medium math { font-size: 60px; }
+      .math-small math { font-size: 50px; }
+      .math-block.with-note { min-height: 450px; }
+      .math-note {
+        margin: 4px auto 0;
+        font-size: 30px;
+        text-align: center;
+      }
+      .math-note.scope-note { max-width: 1240px; font-size: 26px; }
+
+      figure { width: 100%; max-width: 1180px; margin: 0 auto; }
+      .wide-figure { max-width: 1320px; }
+      .figure-asset {
+        position: relative;
+        width: 780px;
+        height: 520px;
+        margin: 0 auto;
+      }
+      .figure-asset img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      .figure-asset.wide { width: 1120px; height: 500px; }
+      .plot {
+        display: block;
+        width: 100%;
+        height: 490px;
+        background: var(--white);
+      }
+      .plot text { fill: var(--ink); font-family: "Times New Roman", Times, serif; }
+      figcaption {
+        margin-top: 12px;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 23px;
+        line-height: 1.3;
+      }
+      .figure-label { font-weight: 700; }
+      iframe {
+        display: block;
+        width: 100%;
+        height: 604px;
+        border: 1px solid var(--ink);
+        background: #fff;
+      }
+
+      .overlay { position: absolute; inset: 0; pointer-events: none; }
+      .charge-mark {
+        position: absolute;
+        display: grid;
+        width: 42px;
+        height: 42px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--red);
+        color: #fff;
+        font-size: 29px;
+        font-weight: 720;
+        line-height: 1;
+      }
+      .charge-mark.blue { background: var(--blue); }
+      .charge-mark.neutral { background: var(--neutral); font-size: 19px; }
+      .overlay-label {
+        position: absolute;
+        padding: 3px 7px;
+        background: rgba(255,255,255,0.92);
+        color: var(--ink);
+        font-size: 24px;
+        font-weight: 640;
+        white-space: nowrap;
+      }
+      .thin-arrow {
+        position: absolute;
+        height: 4px;
+        background: var(--red);
+        transform-origin: left center;
+      }
+      .thin-arrow.blue { background: var(--blue); }
+      .thin-arrow::after {
+        content: "";
+        position: absolute;
+        right: -1px;
+        top: 50%;
+        width: 15px;
+        height: 15px;
+        border-top: 4px solid currentColor;
+        border-right: 4px solid currentColor;
+        color: var(--red);
+        transform: translateY(-50%) rotate(45deg);
+      }
+      .thin-arrow.blue::after { color: var(--blue); }
+
+      table {
+        width: max-content;
+        max-width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 22px;
+        table-layout: auto;
+      }
+      th, td { padding: 0 48px 0 0; text-align: left; vertical-align: top; }
+      tr > :last-child { padding-right: 0; }
+      thead th {
+        font-size: 21px;
+        font-weight: 650;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      td { font-size: 29px; line-height: 1.35; }
+      .footer {
+        position: absolute;
+        right: 112px;
+        bottom: 34px;
+        left: 112px;
+        display: flex;
+        justify-content: flex-end;
+        color: var(--ink);
+        font-size: 18px;
+      }
+      #progress {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        height: 5px;
+        background: var(--red);
+        transition: width 160ms ease-out;
+      }
+      #help {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        display: none;
+        padding: 16px 20px;
+        background: var(--ink);
+        color: var(--white);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      #help.visible { display: block; }
+      #geometry-report {
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 99;
+        max-width: 480px;
+        padding: 12px 16px;
+        background: rgba(29,29,31,0.94);
+        color: #fff;
+        font: 14px/1.4 ui-monospace, monospace;
+        white-space: pre-wrap;
+      }
+
+      @media print {
+        @page { size: 1600px 900px; margin: 0; }
+        html, body { width: auto; height: auto; overflow: visible; background: #fff; }
+        #stage { position: static; width: 1600px; height: auto; overflow: visible; transform: none !important; }
+        .slide, .slide.active { position: relative; display: flex; flex-direction: column; break-after: page; page-break-after: always; }
+        #progress, #help, #geometry-report { display: none !important; }
+      }
+      @media (prefers-reduced-motion: reduce) { #progress { transition: none; } }
+    </style>
+  </head>
+  <body>
+    <main id="stage" aria-live="polite">
+      <section class="slide title-slide" data-title="21장 쿨롱 법칙" data-layout="title">
+        <h1>21장 쿨롱 법칙</h1>
+        <p class="subhead">전하(Electric charge)와 전기력(Electric force)</p>
+        <p class="meta">PHY1002 · 일반물리 II</p>
+        <div class="footer"><span>1</span></div>
+      </section>
+
+      <section class="slide figure-slide" data-title="쿨롱 힘 탐색" data-layout="figure">
+        <h2>쿨롱 힘 탐색</h2>
+        <figure class="wide-figure">
+          <iframe src="../simulations/coulomb-explorer.html" title="두 점전하 쿨롱 힘 시뮬레이션"></iframe>
+          <figcaption><span class="figure-label">FIG. 1.</span> 전하를 드래그하고 부호·크기를 바꾸어 힘의 방향과 거리 의존성 탐색.</figcaption>
+        </figure>
+        <div class="footer"><span>2</span></div>
+      </section>
+
+      <section class="slide figure-slide" data-title="전하량·거리 의존성" data-layout="figure">
+        <h2>전하량·거리 의존성</h2>
+        <figure>
+          <svg class="plot" viewBox="0 0 1120 490" role="img" aria-label="전하량 곱이 두 배가 되면 힘이 두 배가 되고 거리가 두 배가 되면 힘이 사분의 일이 되는 역제곱 곡선">
+            <defs><clipPath id="dependency-clip"><rect x="112" y="28" width="940" height="356" /></clipPath></defs>
+            <rect x="112" y="28" width="940" height="356" fill="#fff" />
+            <path d="M112 384H1052 M112 28V384" fill="none" stroke="#1d1d1f" stroke-width="2.6" />
+            <g stroke="#1d1d1f" stroke-width="2">
+              <path d="M112 384v12 M321 384v12 M530 384v12 M739 384v12 M948 384v12" />
+              <path d="M100 384h12 M100 265h12 M100 147h12 M100 28h12" />
+            </g>
+            <path id="dependency-base" fill="none" stroke="#1d1d1f" stroke-width="5" clip-path="url(#dependency-clip)" />
+            <path id="dependency-double" fill="none" stroke="#8b0029" stroke-width="4" stroke-dasharray="13 10" clip-path="url(#dependency-clip)" />
+            <circle cx="216.4" cy="298.2" r="8" fill="#fff" stroke="#8b0029" stroke-width="4" />
+            <circle cx="425.3" cy="362.6" r="8" fill="#fff" stroke="#8b0029" stroke-width="4" />
+            <g font-size="23" text-anchor="middle">
+              <text x="112" y="425">0.2</text><text x="321" y="425">0.6</text><text x="530" y="425">1.0</text><text x="739" y="425">1.4</text><text x="948" y="425">1.8</text>
+            </g>
+            <g font-size="23" text-anchor="end">
+              <text x="90" y="392">0</text><text x="90" y="273">0.7</text><text x="90" y="155">1.4</text><text x="90" y="36">2.1</text>
+            </g>
+            <text x="582" y="472" font-size="28" text-anchor="middle"><tspan font-style="italic">r</tspan> (m)</text>
+            <text x="32" y="206" font-size="28" text-anchor="middle" transform="rotate(-90 32 206)">|<tspan font-style="italic">F</tspan>| (N)</text>
+            <text x="790" y="112" font-size="25">전하량 곱 2배</text>
+            <text x="790" y="152" font-size="25">기준</text>
+          </svg>
+          <figcaption><span class="figure-label">FIG. 2.</span> 기준값 0.506 N. 전하량 곱을 두 배로 하면 힘도 두 배, 거리를 두 배로 하면 힘은 사분의 일.</figcaption>
+        </figure>
+        <div class="footer"><span>3</span></div>
+      </section>
+
+      <section class="slide bullet-slide" data-title="전하의 두 종류" data-layout="bullet">
+        <h2>전하의 두 종류</h2>
+        <ul>
+          <li><span class="term">양전하(positive charge)</span>, <span class="term">음전하(negative charge)</span></li>
+          <li>같은 부호: 척력(repulsion)</li>
+          <li>다른 부호: 인력(attraction)</li>
+          <li>양·음 전하량의 합이 0: 중성(electrically neutral)</li>
+          <li>순전하(net charge): 양·음 전하량의 불균형</li>
+        </ul>
+        <div class="footer"><span>4</span></div>
+      </section>
+
+      <section class="slide bullet-slide" data-title="전자 이동과 대전" data-layout="bullet">
+        <h2>전자 이동과 대전</h2>
+        <ul>
+          <li>원자핵: 양성자(proton)와 중성자(neutron)</li>
+          <li>중성 원자: 양성자 수와 전자(electron) 수 동일</li>
+          <li>전자 획득: 음전하</li>
+          <li>전자 손실: 양전하</li>
+          <li>보통의 고체 마찰·접촉 대전(charging): 전자 이동</li>
+        </ul>
+        <div class="footer"><span>5</span></div>
+      </section>
+
+      <section class="slide table-slide" data-title="도체와 부도체" data-layout="table">
+        <h2>도체와 부도체</h2>
+        <table>
+          <thead><tr><th>물질</th><th>전하의 미시적 거동</th><th>대표 예</th></tr></thead>
+          <tbody>
+            <tr><td>도체(conductor)</td><td>전도 전자 이동·재배치</td><td>금속, 인체, 수돗물</td></tr>
+            <tr><td>부도체(insulator)</td><td>전하 이동 제한·국소화</td><td>고무, 플라스틱, 유리</td></tr>
+            <tr><td>반도체(semiconductor)</td><td>조건에 따라 전도성 변화</td><td>Si, Ge</td></tr>
+            <tr><td>초전도체(superconductor)</td><td>특정 저온에서 저항 0</td><td>초전도 자석</td></tr>
+          </tbody>
+        </table>
+        <div class="footer"><span>6</span></div>
+      </section>
+
+      <section class="slide figure-slide" data-title="접지" data-layout="figure">
+        <h2>접지(Grounding)</h2>
+        <figure>
+          <div class="figure-asset">
+            <img src="../img/ch21/grounding-path.png" alt="금속 구가 한 가닥의 전도성 선으로 지구에 이어지는 접지 경로" />
+            <div class="overlay">
+              <span class="overlay-label" style="left:31%;top:17%">도체(conductor)</span>
+              <span class="overlay-label" style="left:52%;top:50%">전도 경로</span>
+              <span class="overlay-label" style="left:64%;top:84%">지구(ground)</span>
+            </div>
+          </div>
+          <figcaption><span class="figure-label">FIG. 3.</span> 접지: 물체와 지구 사이의 전도 경로. 전기적 고립(isolation)에서는 이 경로 부재.</figcaption>
+        </figure>
+        <div class="footer"><span>7</span></div>
+      </section>
+
+      <section class="slide figure-slide" data-title="유도 전하" data-layout="figure">
+        <h2>유도 전하(Induced charge)</h2>
+        <figure class="wide-figure">
+          <iframe src="../simulations/induced-charge-explorer.html" title="유도 전하 탐색 시뮬레이션"></iframe>
+          <figcaption><span class="figure-label">FIG. 4.</span> 막대를 드래그하고 부호를 바꾸어 중성 도체의 전하 재배치 탐색.</figcaption>
+        </figure>
+        <div class="footer"><span>8</span></div>
+      </section>
+
+      <section class="slide figure-slide" data-title="중성 도체의 인력" data-layout="figure">
+        <h2>중성 도체의 인력</h2>
+        <figure>
+          <div class="figure-asset">
+            <img src="../img/ch21/induced-charge.png" alt="대전체와 중성 도체의 거리 차이에 따른 인력을 설명하기 위한 두 장면" />
+            <div class="overlay">
+              <span class="charge-mark blue" style="left:61%;top:39%">−</span>
+              <span class="charge-mark" style="left:72%;top:42%">+</span>
+              <span class="charge-mark blue" style="left:92%;top:42%">−</span>
+              <span class="thin-arrow" style="left:77%;top:57%;width:86px;transform:rotate(180deg)"></span>
+              <span class="thin-arrow blue" style="left:90%;top:65%;width:52px"></span>
+              <span class="overlay-label" style="left:63%;top:73%">가까운 인력 &gt; 먼 척력</span>
+            </div>
+          </div>
+          <figcaption><span class="figure-label">FIG. 5.</span> 순전하가 0이어도 전하 분리와 거리 차이 때문에 알짜 인력 존재.</figcaption>
+        </figure>
+        <div class="footer"><span>9</span></div>
+      </section>
+
+      <section class="slide figure-slide" data-title="힘 벡터의 방향" data-layout="figure">
+        <h2>힘 벡터의 방향</h2>
+        <figure>
+          <div class="figure-asset">
+            <img src="../img/ch21/charge-signs.png" alt="세 쌍의 점전하에서 힘 방향을 표시하기 위한 여섯 구" />
+            <div class="overlay">
+              <span class="charge-mark" style="left:33%;top:10%">+</span><span class="charge-mark" style="left:58%;top:10%">+</span>
+              <span class="charge-mark blue" style="left:28%;top:41%">−</span><span class="charge-mark blue" style="left:63%;top:41%">−</span>
+              <span class="charge-mark" style="left:22%;top:74%">+</span><span class="charge-mark blue" style="left:69%;top:74%">−</span>
+              <span class="thin-arrow" style="left:31%;top:18%;width:95px;transform:rotate(180deg)"></span>
+              <span class="thin-arrow blue" style="left:65%;top:18%;width:95px"></span>
+              <span class="thin-arrow" style="left:26%;top:49%;width:95px;transform:rotate(180deg)"></span>
+              <span class="thin-arrow blue" style="left:69%;top:49%;width:95px"></span>
+              <span class="thin-arrow" style="left:27%;top:82%;width:126px"></span>
+              <span class="thin-arrow blue" style="left:73%;top:82%;width:126px;transform:rotate(180deg)"></span>
+            </div>
+          </div>
+          <figcaption><span class="figure-label">FIG. 6.</span> 같은 부호는 서로 멀어지고, 다른 부호는 서로 가까워지는 방향. 두 힘은 크기가 같고 방향이 반대.</figcaption>
+        </figure>
+        <div class="footer"><span>10</span></div>
+      </section>
+
+      <section class="slide math-slide" data-title="쿨롱의 역제곱 법칙" data-layout="math">
+        <h2>쿨롱의 역제곱 법칙</h2>
+        <div class="math-block math-medium">
+          <math display="block" aria-label="힘의 크기는 k 곱하기 전하량 q1 q2 절댓값을 거리 r 제곱으로 나눈 값, k는 1 나누기 4 파이 입실론 제로이며 8.99 곱하기 10의 9승 뉴턴 미터 제곱 퍼 쿨롱 제곱">
+            <mtable columnalign="center">
+              <mtr><mtd><mrow><mo fence="true" stretchy="false">|</mo><mover><mi>F</mi><mo>→</mo></mover><mo fence="true" stretchy="false">|</mo><mo>=</mo><mi>k</mi><mfrac><mrow><mo fence="true" stretchy="false">|</mo><msub><mi>q</mi><mn>1</mn></msub><msub><mi>q</mi><mn>2</mn></msub><mo fence="true" stretchy="false">|</mo></mrow><msup><mi>r</mi><mn>2</mn></msup></mfrac></mrow></mtd></mtr>
+              <mtr><mtd><mrow><mi>k</mi><mo>=</mo><mfrac><mn>1</mn><mrow><mn>4</mn><mi>π</mi><msub><mi>ε</mi><mn>0</mn></msub></mrow></mfrac><mo>=</mo><mn>8.99</mn><mo>×</mo><msup><mn>10</mn><mn>9</mn></msup><mspace width="0.3em"/><mtext>N·m²/C²</mtext></mrow></mtd></mtr>
+            </mtable>
+          </math>
+        </div>
+        <div class="footer"><span>11</span></div>
+      </section>
+
+      <section class="slide math-slide" data-title="쿨롱 법칙의 벡터형" data-layout="math">
+        <h2>쿨롱 법칙의 벡터형</h2>
+        <div class="math-block math-medium">
+          <math display="block" aria-label="r12 벡터는 r1 벡터 빼기 r2 벡터, r12 단위벡터는 r12 벡터를 그 크기로 나눈 값, 입자 2가 입자 1에 주는 힘은 k q1 q2 나누기 r12 크기의 제곱 곱하기 r12 단위벡터">
+            <mtable columnalign="center">
+              <mtr><mtd><mrow><msub><mover><mi>r</mi><mo>→</mo></mover><mn>12</mn></msub><mo>=</mo><msub><mover><mi>r</mi><mo>→</mo></mover><mn>1</mn></msub><mo>−</mo><msub><mover><mi>r</mi><mo>→</mo></mover><mn>2</mn></msub></mrow></mtd></mtr>
+              <mtr><mtd><mrow><msub><mover><mi>r</mi><mo>^</mo></mover><mn>12</mn></msub><mo>=</mo><mfrac><msub><mover><mi>r</mi><mo>→</mo></mover><mn>12</mn></msub><mrow><mo fence="true" stretchy="false">|</mo><msub><mover><mi>r</mi><mo>→</mo></mover><mn>12</mn></msub><mo fence="true" stretchy="false">|</mo></mrow></mfrac></mrow></mtd></mtr>
+              <mtr><mtd><mrow><msub><mover><mi>F</mi><mo>→</mo></mover><mrow><mn>1</mn><mo>←</mo><mn>2</mn></mrow></msub><mo>=</mo><mi>k</mi><mfrac><mrow><msub><mi>q</mi><mn>1</mn></msub><msub><mi>q</mi><mn>2</mn></msub></mrow><msup><mrow><mo fence="true" stretchy="false">|</mo><msub><mover><mi>r</mi><mo>→</mo></mover><mn>12</mn></msub><mo fence="true" stretchy="false">|</mo></mrow><mn>2</mn></msup></mfrac><msub><mover><mi>r</mi><mo>^</mo></mover><mn>12</mn></msub></mrow></mtd></mtr>
+            </mtable>
+          </math>
+        </div>
+        <div class="footer"><span>12</span></div>
+      </section>
+
+      <section class="slide figure-slide" data-title="전기력과 중력" data-layout="figure">
+        <h2>전기력과 중력</h2>
+        <figure>
+          <svg class="plot" viewBox="0 0 1120 490" role="img" aria-label="두 양성자 사이 전기력과 중력이 모두 거리의 역제곱으로 감소하지만 전기력이 약 10의 36승 배 큰 로그 플롯">
+            <path d="M112 28V384H1052" fill="none" stroke="#1d1d1f" stroke-width="2.6" />
+            <g stroke="#1d1d1f" stroke-width="2">
+              <path d="M112 384v12 M347 384v12 M582 384v12 M817 384v12 M1052 384v12" />
+              <path d="M100 28h12 M100 99.2h12 M100 170.4h12 M100 241.6h12 M100 312.8h12 M100 384h12" />
+            </g>
+            <path d="M112 42.44 L1052 173.89" fill="none" stroke="#8b0029" stroke-width="5" />
+            <path d="M112 240.11 L1052 371.56" fill="none" stroke="#2563eb" stroke-width="5" />
+            <g font-size="23" text-anchor="middle"><text x="112" y="425">−15</text><text x="347" y="425">−12</text><text x="582" y="425">−9</text><text x="817" y="425">−6</text><text x="1052" y="425">−3</text></g>
+            <g font-size="23" text-anchor="end"><text x="90" y="36">+5</text><text x="90" y="107">−8</text><text x="90" y="178">−21</text><text x="90" y="250">−34</text><text x="90" y="321">−47</text><text x="90" y="392">−60</text></g>
+            <text x="582" y="472" font-size="28" text-anchor="middle">log<tspan baseline-shift="sub" font-size="18">10</tspan> <tspan font-style="italic">r</tspan> (m)</text>
+            <text x="31" y="206" font-size="28" text-anchor="middle" transform="rotate(-90 31 206)">log<tspan baseline-shift="sub" font-size="18">10</tspan> <tspan font-style="italic">F</tspan> (N)</text>
+            <text x="805" y="105" font-size="26" fill="#8b0029">전기력(electric)</text>
+            <text x="760" y="298" font-size="26" fill="#2563eb">중력(gravitational)</text>
+          </svg>
+          <figcaption><span class="figure-label">FIG. 7.</span> 두 힘 모두 <math display="inline" aria-label="r의 마이너스 2승"><mrow><msup><mi>r</mi><mrow><mo>−</mo><mn>2</mn></mrow></msup></mrow></math> 의존성. 전기력은 중력의 약 <math display="inline" aria-label="1.2 곱하기 10의 36승"><mrow><mn>1.2</mn><mo>×</mo><msup><mn>10</mn><mn>36</mn></msup></mrow></math>배.</figcaption>
+        </figure>
+        <div class="footer"><span>13</span></div>
+      </section>
+
+      <section class="slide math-slide" data-title="단위 분석" data-layout="math">
+        <h2>단위 분석(Dimensional analysis)</h2>
+        <div class="math-block math-medium">
+          <math display="block" aria-label="k의 단위 곱하기 q 제곱 단위를 r 제곱 단위로 나누면 뉴턴, 1 쿨롱은 1 암페어 곱하기 1 초">
+            <mtable columnalign="center">
+              <mtr><mtd><mrow><mo>[</mo><mi>k</mi><mo>]</mo><mfrac><msup><mrow><mo>[</mo><mi>q</mi><mo>]</mo></mrow><mn>2</mn></msup><msup><mrow><mo>[</mo><mi>r</mi><mo>]</mo></mrow><mn>2</mn></msup></mfrac><mo>=</mo><mfrac><mrow><mtext>N·m²</mtext></mrow><mtext>C²</mtext></mfrac><mfrac><mtext>C²</mtext><mtext>m²</mtext></mfrac><mo>=</mo><mtext>N</mtext></mrow></mtd></mtr>
+              <mtr><mtd><mrow><mn>1</mn><mspace width="0.2em"/><mtext>C</mtext><mo>=</mo><mo>(</mo><mn>1</mn><mspace width="0.2em"/><mtext>A</mtext><mo>)</mo><mo>(</mo><mn>1</mn><mspace width="0.2em"/><mtext>s</mtext><mo>)</mo></mrow></mtd></mtr>
+            </mtable>
+          </math>
+        </div>
+        <div class="footer"><span>14</span></div>
+      </section>
+
+      <section class="slide math-slide" data-title="두 점전하의 힘" data-layout="math">
+        <h2>두 점전하의 힘</h2>
+        <div class="math-block math-small with-note">
+          <math display="block" aria-label="q1은 양의 3 마이크로쿨롱, q2는 음의 3 마이크로쿨롱, 거리는 0.400 미터일 때 힘의 크기는 0.506 뉴턴이며 방향은 인력">
+            <mtable columnalign="center">
+              <mtr><mtd><mrow><msub><mi>q</mi><mn>1</mn></msub><mo>=</mo><mo>+</mo><mn>3.00</mn><mspace width="0.2em"/><mi>μ</mi><mtext>C</mtext><mo>,</mo><mspace width="0.5em"/><msub><mi>q</mi><mn>2</mn></msub><mo>=</mo><mo>−</mo><mn>3.00</mn><mspace width="0.2em"/><mi>μ</mi><mtext>C</mtext><mo>,</mo><mspace width="0.5em"/><mi>r</mi><mo>=</mo><mn>0.400</mn><mspace width="0.2em"/><mtext>m</mtext></mrow></mtd></mtr>
+              <mtr><mtd><mrow><mo fence="true" stretchy="false">|</mo><mi>F</mi><mo fence="true" stretchy="false">|</mo><mo>=</mo><mo>(</mo><mn>8.99</mn><mo>×</mo><msup><mn>10</mn><mn>9</mn></msup><mo>)</mo><mfrac><msup><mrow><mo>(</mo><mn>3.00</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>6</mn></mrow></msup><mo>)</mo></mrow><mn>2</mn></msup><msup><mn>0.400</mn><mn>2</mn></msup></mfrac><mo>=</mo><mn>0.506</mn><mspace width="0.2em"/><mtext>N</mtext></mrow></mtd></mtr>
+            </mtable>
+          </math>
+        </div>
+        <p class="math-note">서로 다른 부호 → 인력</p>
+        <div class="footer"><span>15</span></div>
+      </section>
+
+      <section class="slide math-slide" data-title="중첩 원리" data-layout="math">
+        <h2>중첩 원리(Superposition)</h2>
+        <div class="math-block math-medium">
+          <math display="block" aria-label="입자 1에 작용하는 알짜힘은 1을 제외한 모든 j에 대해 입자 j가 입자 1에 주는 힘 벡터의 합">
+            <mrow>
+              <msub><mover><mi>F</mi><mo>→</mo></mover><mrow><mn>1</mn><mo>,</mo><mi mathvariant="normal">net</mi></mrow></msub>
+              <mo>=</mo>
+              <munderover><mo>∑</mo><mrow><mi>j</mi><mo>≠</mo><mn>1</mn></mrow><mi>n</mi></munderover>
+              <msub><mover><mi>F</mi><mo>→</mo></mover><mrow><mn>1</mn><mo>←</mo><mi>j</mi></mrow></msub>
+            </mrow>
+          </math>
+        </div>
+        <div class="footer"><span>16</span></div>
+      </section>
+
+      <section class="slide figure-slide" data-title="2차원 자유물체도" data-layout="figure">
+        <h2>2차원 자유물체도</h2>
+        <figure>
+          <div class="figure-asset">
+            <img src="../img/ch21/superposition-example.png" alt="원점 전하와 오른쪽 전하, 위쪽 전하의 직각 배치" />
+            <div class="overlay">
+              <span class="charge-mark" style="left:36.5%;top:57%">+</span>
+              <span class="charge-mark" style="left:56.3%;top:57%">+</span>
+              <span class="charge-mark blue" style="left:36.5%;top:12.6%">−</span>
+              <span class="overlay-label" style="left:29%;top:69%"><math display="inline" aria-label="q0는 양의 2.00 마이크로쿨롱"><mrow><msub><mi>q</mi><mn>0</mn></msub><mo>=</mo><mo>+</mo><mn>2.00</mn><mspace width="0.15em"/><mi>μ</mi><mtext>C</mtext></mrow></math></span>
+              <span class="overlay-label" style="left:56%;top:69%"><math display="inline" aria-label="qA는 양의 3.00 마이크로쿨롱"><mrow><msub><mi>q</mi><mi>A</mi></msub><mo>=</mo><mo>+</mo><mn>3.00</mn><mspace width="0.15em"/><mi>μ</mi><mtext>C</mtext></mrow></math></span>
+              <span class="overlay-label" style="left:23%;top:2%"><math display="inline" aria-label="qB는 음의 4.00 마이크로쿨롱"><mrow><msub><mi>q</mi><mi>B</mi></msub><mo>=</mo><mo>−</mo><mn>4.00</mn><mspace width="0.15em"/><mi>μ</mi><mtext>C</mtext></mrow></math></span>
+              <span class="overlay-label" style="left:43%;top:52%"><math display="inline" aria-label="rA는 0.300 미터"><mrow><msub><mi>r</mi><mi>A</mi></msub><mo>=</mo><mn>0.300</mn><mspace width="0.15em"/><mtext>m</mtext></mrow></math></span>
+              <span class="overlay-label" style="left:40%;top:34%"><math display="inline" aria-label="rB는 0.400 미터"><mrow><msub><mi>r</mi><mi>B</mi></msub><mo>=</mo><mn>0.400</mn><mspace width="0.15em"/><mtext>m</mtext></mrow></math></span>
+              <span class="thin-arrow" style="left:38%;top:61%;width:120px;transform:rotate(180deg)"></span>
+              <span class="thin-arrow blue" style="left:39.2%;top:57%;width:90px;transform:rotate(-90deg)"></span>
+            </div>
+          </div>
+          <figcaption><span class="figure-label">FIG. 8.</span> q₀에 작용하는 힘: q<sub>A</sub>의 척력은 −x, q<sub>B</sub>의 인력은 +y 방향.</figcaption>
+        </figure>
+        <div class="footer"><span>17</span></div>
+      </section>
+
+      <section class="slide math-slide" data-title="힘의 성분 합" data-layout="math">
+        <h2>힘의 성분 합</h2>
+        <div class="math-block math-small with-note">
+          <math display="block" aria-label="힘 A는 0.599 뉴턴, 힘 B는 0.450 뉴턴, 알짜힘은 음의 0.599 i 더하기 0.450 j 뉴턴, 그 크기는 0.749 뉴턴이고 음의 x축 위로 36.9도">
+            <mtable columnalign="center">
+              <mtr><mtd><mrow><msub><mi>F</mi><mi>A</mi></msub><mo>=</mo><mn>0.599</mn><mspace width="0.2em"/><mtext>N</mtext><mo>,</mo><mspace width="0.7em"/><msub><mi>F</mi><mi>B</mi></msub><mo>=</mo><mn>0.450</mn><mspace width="0.2em"/><mtext>N</mtext></mrow></mtd></mtr>
+              <mtr><mtd><mrow><msub><mover><mi>F</mi><mo>→</mo></mover><mi mathvariant="normal">net</mi></msub><mo>=</mo><mo>(</mo><mo>−</mo><mn>0.599</mn><mover><mi>i</mi><mo>^</mo></mover><mo>+</mo><mn>0.450</mn><mover><mi>j</mi><mo>^</mo></mover><mo>)</mo><mspace width="0.2em"/><mtext>N</mtext></mrow></mtd></mtr>
+              <mtr><mtd><mrow><mo fence="true" stretchy="false">|</mo><msub><mover><mi>F</mi><mo>→</mo></mover><mi mathvariant="normal">net</mi></msub><mo fence="true" stretchy="false">|</mo><mo>=</mo><msqrt><mrow><msup><mn>0.599</mn><mn>2</mn></msup><mo>+</mo><msup><mn>0.450</mn><mn>2</mn></msup></mrow></msqrt><mo>=</mo><mn>0.749</mn><mspace width="0.2em"/><mtext>N</mtext></mrow></mtd></mtr>
+              <mtr><mtd><mrow><mi>θ</mi><mo>=</mo><msup><mi mathvariant="normal">tan</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>(</mo><mfrac><mn>0.450</mn><mn>0.599</mn></mfrac><mo>)</mo><mo>=</mo><mn>36.9</mn><mo>°</mo></mrow></mtd></mtr>
+            </mtable>
+          </math>
+        </div>
+        <p class="math-note">−x축에서 위쪽으로 36.9°</p>
+        <div class="footer"><span>18</span></div>
+      </section>
+
+      <section class="slide math-slide" data-title="정전기적 평형점" data-layout="math">
+        <h2>정전기적 평형점</h2>
+        <div class="math-block math-small with-note">
+          <math display="block" aria-label="양의 8q 전하가 x=0, 음의 2q 전하가 x=L에 있고 시험 전하는 양성자일 때 평형점은 작은 전하 오른쪽 x=2L이며 x축 변위에 대해 불안정">
+            <mtable columnalign="center">
+              <mtr><mtd><mrow><msub><mi>q</mi><mn>1</mn></msub><mo>=</mo><mo>+</mo><mn>8</mn><mi>q</mi><mspace width="0.3em"/><mtext>at</mtext><mspace width="0.3em"/><mi>x</mi><mo>=</mo><mn>0</mn><mo>,</mo><mspace width="0.7em"/><msub><mi>q</mi><mn>2</mn></msub><mo>=</mo><mo>−</mo><mn>2</mn><mi>q</mi><mspace width="0.3em"/><mtext>at</mtext><mspace width="0.3em"/><mi>x</mi><mo>=</mo><mi>L</mi></mrow></mtd></mtr>
+              <mtr><mtd><mrow><msub><mi>q</mi><mi>p</mi></msub><mo>=</mo><mo>+</mo><mi>e</mi><mspace width="0.4em"/><mtext>(proton)</mtext></mrow></mtd></mtr>
+              <mtr><mtd><mrow><mi>k</mi><mfrac><mrow><mn>8</mn><mi>q</mi><mo fence="true" stretchy="false">|</mo><msub><mi>q</mi><mi>p</mi></msub><mo fence="true" stretchy="false">|</mo></mrow><msup><mi>x</mi><mn>2</mn></msup></mfrac><mo>=</mo><mi>k</mi><mfrac><mrow><mn>2</mn><mi>q</mi><mo fence="true" stretchy="false">|</mo><msub><mi>q</mi><mi>p</mi></msub><mo fence="true" stretchy="false">|</mo></mrow><msup><mrow><mo>(</mo><mi>x</mi><mo>−</mo><mi>L</mi><mo>)</mo></mrow><mn>2</mn></msup></mfrac></mrow></mtd></mtr>
+              <mtr><mtd><mrow><mi>x</mi><mo>=</mo><mn>2</mn><mi>L</mi></mrow></mtd></mtr>
+            </mtable>
+          </math>
+        </div>
+        <p class="math-note">작은 전하 오른쪽 · x축 변위에 대해 불안정</p>
+        <div class="footer"><span>19</span></div>
+      </section>
+
+      <section class="slide figure-slide" data-title="구형 껍질 정리" data-layout="figure">
+        <h2>구형 껍질 정리(Shell theorem)</h2>
+        <figure>
+          <div class="figure-asset">
+            <img src="../img/ch21/shell-theorems.png" alt="균일한 구형 껍질 밖의 시험 전하와 중심에서 벗어난 껍질 안의 시험 전하" />
+            <div class="overlay">
+              <span class="charge-mark" style="left:5%;top:43%">q</span>
+              <span class="charge-mark" style="left:66%;top:43%">q</span>
+              <span class="overlay-label" style="left:17%;top:11%">외부: 중심의 점전하 Q와 동일</span>
+              <span class="overlay-label" style="left:59%;top:11%">내부: <math display="inline" aria-label="껍질이 주는 힘은 0"><mrow><msub><mi>F</mi><mi mathvariant="normal">shell</mi></msub><mo>=</mo><mn>0</mn></mrow></math></span>
+            </div>
+          </div>
+          <figcaption><span class="figure-label">FIG. 9.</span> 표면 전하가 균일한 구형 껍질. 내부 결론은 중심에서 벗어난 점에도 적용.</figcaption>
+        </figure>
+        <div class="footer"><span>20</span></div>
+      </section>
+
+      <section class="slide bullet-slide" data-title="구형 도체의 전하" data-layout="bullet">
+        <h2>구형 도체의 전하</h2>
+        <ul>
+          <li>정전기 평형(electrostatic equilibrium): 잉여 전하는 외부 표면</li>
+          <li>고립된 구형 도체 + 외부장 없음: 균일한 표면 분포</li>
+          <li>주변 전하 또는 외부장: 비균일한 표면 분포 가능</li>
+          <li>동일한 두 도체구를 접촉·전도 연결 후 평형: 대칭 환경에서 총전하의 절반씩 재분배</li>
+          <li>점전하 근사: 구의 크기보다 중심 간 거리가 충분히 큼</li>
+        </ul>
+        <div class="footer"><span>21</span></div>
+      </section>
+
+      <section class="slide math-slide" data-title="전류와 전하량" data-layout="math">
+        <h2>전류와 전하량</h2>
+        <div class="math-block math-medium with-note">
+          <math display="block" aria-label="전류 i는 dq 나누기 dt, 일정한 전류에서 이동 전하량 델타 q는 i 델타 t, 0.400 암페어가 120초 흐르면 48.0 쿨롱">
+            <mtable columnalign="center">
+              <mtr><mtd><mrow><mi>i</mi><mo>=</mo><mfrac><mrow><mi mathvariant="normal">d</mi><mi>q</mi></mrow><mrow><mi mathvariant="normal">d</mi><mi>t</mi></mrow></mfrac><mo>,</mo><mspace width="0.8em"/><mi>Δq</mi><mo>=</mo><mi>i</mi><mi>Δt</mi></mrow></mtd></mtr>
+              <mtr><mtd><mrow><mi>Δq</mi><mo>=</mo><mo>(</mo><mn>0.400</mn><mspace width="0.2em"/><mtext>A</mtext><mo>)</mo><mo>(</mo><mn>120</mn><mspace width="0.2em"/><mtext>s</mtext><mo>)</mo><mo>=</mo><mn>48.0</mn><mspace width="0.2em"/><mtext>C</mtext></mrow></mtd></mtr>
+            </mtable>
+          </math>
+        </div>
+        <p class="math-note">두 번째 식: 일정한 전류</p>
+        <div class="footer"><span>22</span></div>
+      </section>
+
+      <section class="slide math-slide" data-title="전하의 양자화" data-layout="math">
+        <h2>전하의 양자화(Quantization)</h2>
+        <div class="math-block math-medium with-note">
+          <math display="block" aria-label="전하 q는 정수 n 곱하기 기본전하 e, n은 0을 포함한 정수, e는 정확히 1.602176634 곱하기 10의 마이너스 19승 쿨롱">
+            <mtable columnalign="center">
+              <mtr><mtd><mrow><mi>q</mi><mo>=</mo><mi>n</mi><mi>e</mi><mo>,</mo><mspace width="0.8em"/><mi>n</mi><mo>∈</mo><mi>ℤ</mi></mrow></mtd></mtr>
+              <mtr><mtd><mrow><mi>e</mi><mo>=</mo><mn>1.602176634</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>19</mn></mrow></msup><mspace width="0.2em"/><mtext>C</mtext></mrow></mtd></mtr>
+              <mtr><mtd><mrow><msub><mi>q</mi><mi mathvariant="normal">electron</mi></msub><mo>=</mo><mo>−</mo><mi>e</mi><mo>,</mo><mspace width="0.8em"/><msub><mi>q</mi><mi mathvariant="normal">proton</mi></msub><mo>=</mo><mo>+</mo><mi>e</mi></mrow></mtd></mtr>
+            </mtable>
+          </math>
+        </div>
+        <p class="math-note scope-note">적용 범위: 고립해 관측되는 보통 입자·거시 전하. 쿼크는 <math display="inline" aria-label="플러스마이너스 e 나누기 3과 플러스마이너스 2e 나누기 3"><mrow><mo>±</mo><mfrac><mi>e</mi><mn>3</mn></mfrac><mo>,</mo><mspace width="0.25em"/><mo>±</mo><mfrac><mrow><mn>2</mn><mi>e</mi></mrow><mn>3</mn></mfrac></mrow></math>이지만 단독 관측되지 않음.</p>
+        <div class="footer"><span>23</span></div>
+      </section>
+
+      <section class="slide math-slide" data-title="전자 수 계산" data-layout="math">
+        <h2>전자 수 계산</h2>
+        <div class="math-block math-medium with-note">
+          <math display="block" aria-label="물체의 전하가 양의 2 곱하기 10의 마이너스 8승 쿨롱이면 전자 수 변화 N은 전하량 절댓값을 기본전하로 나누어 1.25 곱하기 10의 11승이며 양전하이므로 전자가 제거됨">
+            <mtable columnalign="center">
+              <mtr><mtd><mrow><mi>q</mi><mo>=</mo><mo>+</mo><mn>2.00</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>8</mn></mrow></msup><mspace width="0.2em"/><mtext>C</mtext></mrow></mtd></mtr>
+              <mtr><mtd><mrow><mi>N</mi><mo>=</mo><mfrac><mrow><mo fence="true" stretchy="false">|</mo><mi>q</mi><mo fence="true" stretchy="false">|</mo></mrow><mi>e</mi></mfrac><mo>=</mo><mn>1.25</mn><mo>×</mo><msup><mn>10</mn><mn>11</mn></msup></mrow></mtd></mtr>
+            </mtable>
+          </math>
+        </div>
+        <p class="math-note">양전하 → 전자 <math display="inline" aria-label="1.25 곱하기 10의 11승"><mrow><mn>1.25</mn><mo>×</mo><msup><mn>10</mn><mn>11</mn></msup></mrow></math>개 제거</p>
+        <div class="footer"><span>24</span></div>
+      </section>
+
+      <section class="slide math-slide" data-title="접촉과 재분배" data-layout="math">
+        <h2>접촉과 재분배</h2>
+        <div class="math-block math-medium with-note">
+          <math display="block" aria-label="동일한 두 도체의 초기 전하가 A는 마이너스 50e, B는 플러스 20e이면 전체 전하는 마이너스 30e, 대칭적 환경에서 접촉 후 각각 마이너스 15e">
+            <mtable columnalign="center">
+              <mtr><mtd><mrow><msub><mi>Q</mi><mi>A</mi></msub><mo>=</mo><mo>−</mo><mn>50</mn><mi>e</mi><mo>,</mo><mspace width="0.8em"/><msub><mi>Q</mi><mi>B</mi></msub><mo>=</mo><mo>+</mo><mn>20</mn><mi>e</mi></mrow></mtd></mtr>
+              <mtr><mtd><mrow><msub><mi>Q</mi><mi mathvariant="normal">tot</mi></msub><mo>=</mo><mo>−</mo><mn>30</mn><mi>e</mi></mrow></mtd></mtr>
+              <mtr><mtd><mrow><msup><msub><mi>Q</mi><mi>A</mi></msub><mo>′</mo></msup><mo>=</mo><msup><msub><mi>Q</mi><mi>B</mi></msub><mo>′</mo></msup><mo>=</mo><mfrac><mrow><mo>−</mo><mn>30</mn><mi>e</mi></mrow><mn>2</mn></mfrac><mo>=</mo><mo>−</mo><mn>15</mn><mi>e</mi></mrow></mtd></mtr>
+            </mtable>
+          </math>
+        </div>
+        <p class="math-note">조건: 동일한 두 도체구 · 접촉/전도 연결 · 대칭 환경</p>
+        <div class="footer"><span>25</span></div>
+      </section>
+
+      <section class="slide math-slide" data-title="전하 보존" data-layout="math">
+        <h2>전하 보존(Conservation)</h2>
+        <div class="math-block math-medium with-note">
+          <math display="block" aria-label="고립계의 초기 총전하는 최종 총전하와 같다. 막대와 천의 총전하는 플러스 Q와 마이너스 Q의 합으로 0이다. 접지에서는 물체와 지구를 하나의 계로 본다">
+            <mtable columnalign="center">
+              <mtr><mtd><mrow><msub><mi>Q</mi><mi mathvariant="normal">initial</mi></msub><mo>=</mo><msub><mi>Q</mi><mi mathvariant="normal">final</mi></msub></mrow></mtd></mtr>
+              <mtr><mtd><mrow><msub><mi>Q</mi><mi mathvariant="normal">rod</mi></msub><mo>+</mo><msub><mi>Q</mi><mi mathvariant="normal">cloth</mi></msub><mo>=</mo><mo>(</mo><mo>+</mo><mi>Q</mi><mo>)</mo><mo>+</mo><mo>(</mo><mo>−</mo><mi>Q</mi><mo>)</mo><mo>=</mo><mn>0</mn></mrow></mtd></mtr>
+            </mtable>
+          </math>
+        </div>
+        <p class="math-note">접지: 물체 + 지구를 하나의 계로 설정</p>
+        <div class="footer"><span>26</span></div>
+      </section>
+
+      <section class="slide figure-slide" data-title="입자 반응과 PET" data-layout="figure">
+        <h2>입자 반응과 PET</h2>
+        <figure>
+          <div class="figure-asset">
+            <img src="../img/ch21/pet-annihilation.png" alt="전자 양전자 소멸점에서 반대 방향으로 나가는 두 감마선을 검출하는 원형 PET 검출기" />
+            <div class="overlay">
+              <span class="overlay-label" style="left:34%;top:42%"><math display="inline" aria-label="전자와 양전자"><mrow><msup><mi>e</mi><mo>−</mo></msup><mo>+</mo><msup><mi>e</mi><mo>+</mo></msup></mrow></math></span>
+              <span class="overlay-label" style="left:10%;top:47%">γ</span>
+              <span class="overlay-label" style="left:84%;top:47%">γ</span>
+            </div>
+          </div>
+          <figcaption><span class="figure-label">FIG. 10.</span> <math display="inline" aria-label="전자와 양전자가 두 감마선으로 소멸"><mrow><msup><mi>e</mi><mo>−</mo></msup><mo>+</mo><msup><mi>e</mi><mo>+</mo></msup><mo>→</mo><mi>γ</mi><mo>+</mo><mi>γ</mi></mrow></math>. 소멸 직전 총운동량이 거의 0이면 두 감마선은 반대 방향.</figcaption>
+        </figure>
+        <div class="footer"><span>27</span></div>
+      </section>
+
+      <section class="slide bullet-slide" data-title="핵심 정리" data-layout="bullet">
+        <h2>핵심 정리</h2>
+        <ul>
+          <li>전하의 부호: 같은 부호 척력, 다른 부호 인력</li>
+          <li>점전하의 힘: <math display="inline" aria-label="힘의 크기는 전하량 곱의 절댓값에 비례하고 거리 제곱에 반비례"><mrow><mo fence="true" stretchy="false">|</mo><mi>F</mi><mo fence="true" stretchy="false">|</mo><mo>∝</mo><mfrac><mrow><mo fence="true" stretchy="false">|</mo><msub><mi>q</mi><mn>1</mn></msub><msub><mi>q</mi><mn>2</mn></msub><mo fence="true" stretchy="false">|</mo></mrow><msup><mi>r</mi><mn>2</mn></msup></mfrac></mrow></math></li>
+          <li>여러 전하: 힘 벡터의 중첩(superposition)</li>
+          <li>전하의 양자화: <math display="inline" aria-label="q는 n 곱하기 e"><mrow><mi>q</mi><mo>=</mo><mi>n</mi><mi>e</mi></mrow></math></li>
+          <li>고립계의 총전하 보존</li>
+        </ul>
+        <div class="footer"><span>28</span></div>
+      </section>
+    </main>
+
+    <div id="progress" aria-hidden="true"></div>
+    <div id="help" role="status">←/→ 이동 · Space 다음 · Home/End 처음/끝 · ? 도움말 · P 인쇄</div>
+
+    <script>
+      /* Harness plumbing for snap.sh — do not remove.
+       * ?slide=N isolates slide N for screenshots.
+       * ?check=1 replaces the page with a fixed-canvas geometry report. */
+      (function configureQaHarness() {
+        const query = new URLSearchParams(window.location.search);
+        const isolated = Number.parseInt(query.get('slide'), 10);
+
+        if (Number.isFinite(isolated)) {
+          document.querySelectorAll('.slide').forEach((slide, index) => {
+            if (index + 1 !== isolated) slide.remove();
+          });
+        }
+
+        if (query.get('check') === '1') {
+          window.addEventListener('load', () => {
+            const lines = [];
+            const qaStage = document.getElementById('stage');
+            qaStage.style.transform = 'none';
+            qaStage.style.left = '0';
+            qaStage.style.top = '0';
+
+            document.querySelectorAll('.slide').forEach((slide, index) => {
+              slide.classList.add('active');
+              slide.setAttribute('aria-hidden', 'false');
+              const id = 'slide ' + (index + 1);
+              const slideRect = slide.getBoundingClientRect();
+
+              if (slide.scrollWidth > slide.clientWidth + 1 || slide.scrollHeight > slide.clientHeight + 1) {
+                lines.push(id + ': OVERFLOW content ' + slide.scrollWidth + 'x' + slide.scrollHeight +
+                  ' exceeds canvas ' + slide.clientWidth + 'x' + slide.clientHeight);
+              }
+
+              Array.from(slide.children).forEach((element) => {
+                const rect = element.getBoundingClientRect();
+                if (rect.width === 0 && rect.height === 0) return;
+                if (rect.right > slideRect.right + 1 || rect.bottom > slideRect.bottom + 1 ||
+                    rect.left < slideRect.left - 1 || rect.top < slideRect.top - 1) {
+                  lines.push(id + ': OUT-OF-BOUNDS <' + element.tagName.toLowerCase() + '> "' +
+                    (element.textContent || '').trim().slice(0, 40) + '"');
+                }
+              });
+
+              slide.querySelectorAll('h1, h2, p, li, th, td, figcaption, pre, .footer').forEach((element) => {
+                const fontSize = Number.parseFloat(getComputedStyle(element).fontSize);
+                if ((element.textContent || '').trim() && fontSize < 18) {
+                  lines.push(id + ': TYPE-FLOOR ' + fontSize + 'px < 18px "' +
+                    (element.textContent || '').trim().slice(0, 40) + '"');
+                }
+              });
+            });
+
+            const report = lines.length ? lines.join('\n') : 'CLEAN';
+            document.body.innerHTML = '<pre id="bounds-report">BOUNDS-REPORT\n' +
+              report.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '\nEND-REPORT</pre>';
+          });
+        }
+      })();
+
+      const stage = document.getElementById('stage');
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const progress = document.getElementById('progress');
+      const help = document.getElementById('help');
+      let current = 0;
+
+      function styleMathTables() {
+        document.querySelectorAll('math[display="block"] mtable').forEach(table => {
+          if (!table.hasAttribute('rowspacing')) table.setAttribute('rowspacing', '0.48em');
+        });
+      }
+
+      function drawDependencyPlot() {
+        const base = document.getElementById('dependency-base');
+        const doubled = document.getElementById('dependency-double');
+        if (!base || !doubled) return;
+        const x = r => 112 + (r - 0.2) / 1.8 * 940;
+        const y = force => 384 - force / 2.1 * 356;
+        const path = coefficient => {
+          const points = [];
+          for (let i = 0; i <= 180; i += 1) {
+            const r = 0.2 + i / 180 * 1.8;
+            points.push((i ? 'L' : 'M') + x(r).toFixed(2) + ',' + y(coefficient / (r * r)).toFixed(2));
+          }
+          return points.join(' ');
+        };
+        base.setAttribute('d', path(8.99e9 * 9e-12));
+        doubled.setAttribute('d', path(2 * 8.99e9 * 9e-12));
+      }
+
+      function fitStage() {
+        const scale = Math.min(window.innerWidth / 1600, window.innerHeight / 900);
+        stage.style.transform = 'scale(' + scale + ')';
+        stage.style.left = Math.max(0, (window.innerWidth - 1600 * scale) / 2) + 'px';
+        stage.style.top = Math.max(0, (window.innerHeight - 900 * scale) / 2) + 'px';
+      }
+
+      function indexFromHash() {
+        const value = Number.parseInt(window.location.hash.slice(1), 10);
+        return Number.isFinite(value) ? Math.min(slides.length - 1, Math.max(0, value - 1)) : 0;
+      }
+
+      function showSlide(index, updateHash = true) {
+        current = Math.min(slides.length - 1, Math.max(0, index));
+        slides.forEach((slide, i) => {
+          const active = i === current;
+          slide.classList.toggle('active', active);
+          slide.setAttribute('aria-hidden', String(!active));
+        });
+        progress.style.width = ((current + 1) / slides.length) * 100 + '%';
+        document.title = current + 1 + '/' + slides.length + ' · ' + slides[current].dataset.title;
+        if (updateHash && window.location.hash !== '#' + (current + 1)) {
+          history.replaceState(null, '', '#' + (current + 1));
+        }
+      }
+
+      function move(delta) { showSlide(current + delta); }
+      window.addEventListener('resize', fitStage);
+      window.addEventListener('hashchange', () => showSlide(indexFromHash(), false));
+      window.addEventListener('keydown', (event) => {
+        if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(event.key)) {
+          event.preventDefault(); move(1);
+        } else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(event.key)) {
+          event.preventDefault(); move(-1);
+        } else if (event.key === 'Home') {
+          event.preventDefault(); showSlide(0);
+        } else if (event.key === 'End') {
+          event.preventDefault(); showSlide(slides.length - 1);
+        } else if (event.key === '?') {
+          help.classList.toggle('visible');
+        } else if (event.key.toLowerCase() === 'p') {
+          window.print();
+        }
+      });
+      stage.addEventListener('click', (event) => {
+        if (event.target.closest('iframe')) return;
+        if (event.clientX > window.innerWidth / 2) move(1); else move(-1);
+      });
+
+      styleMathTables();
+      drawDependencyPlot();
+      fitStage();
+      showSlide(indexFromHash(), false);
+    </script>
+  </body>
+</html>

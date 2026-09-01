@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>쿨롱 힘 탐색</title>
+    <style>
+      :root {
+        --ink: #1d1d1f;
+        --red: #8b0029;
+        --blue: #2563eb;
+        --line: #d2d2d7;
+        --soft: #f5f5f7;
+      }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; min-height: 100%; background: #fff; color: var(--ink); }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+        padding: 18px 22px 14px;
+      }
+
+      main { max-width: 1220px; margin: 0 auto; }
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(0, 1.14fr) minmax(390px, 0.86fr);
+        gap: 32px;
+        align-items: stretch;
+      }
+      .panel { min-width: 0; }
+      .panel-title {
+        margin: 0 0 7px;
+        font-size: 17px;
+        font-weight: 650;
+        letter-spacing: -0.01em;
+      }
+      svg {
+        display: block;
+        width: 100%;
+        height: auto;
+        background: #fff;
+      }
+      #scene { touch-action: none; cursor: grab; }
+      #scene.dragging { cursor: grabbing; }
+      .axis, .tick { stroke: var(--ink); stroke-width: 1.8; }
+      .tick-label, .axis-label {
+        fill: var(--ink);
+        font-family: "Times New Roman", Times, serif;
+      }
+      .tick-label { font-size: 15px; }
+      .axis-label { font-size: 18px; }
+      .charge-symbol {
+        fill: #fff;
+        font-size: 24px;
+        font-weight: 700;
+        text-anchor: middle;
+        dominant-baseline: central;
+        pointer-events: none;
+      }
+      .charge-name {
+        fill: var(--ink);
+        font-size: 17px;
+        font-weight: 650;
+        text-anchor: middle;
+        pointer-events: none;
+      }
+      .distance-label {
+        fill: var(--ink);
+        font-family: "Times New Roman", Times, serif;
+        font-size: 18px;
+        text-anchor: middle;
+      }
+      .force-label {
+        fill: var(--ink);
+        font-size: 15px;
+        font-weight: 650;
+        text-anchor: middle;
+      }
+      .curve { fill: none; stroke: var(--ink); stroke-width: 3.5; }
+      .guide { stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 4 5; }
+      .current { fill: #fff; stroke: var(--red); stroke-width: 3; }
+
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 18px;
+        align-items: end;
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
+      }
+      .control { min-width: 0; }
+      label {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 5px;
+        font-size: 16px;
+        font-weight: 620;
+      }
+      input[type="range"] { width: 100%; accent-color: var(--red); }
+      button {
+        border: 1px solid var(--ink);
+        border-radius: 0;
+        background: #fff;
+        color: var(--ink);
+        min-height: 38px;
+        padding: 0 16px;
+        font: inherit;
+        font-size: 15px;
+        font-weight: 650;
+        cursor: pointer;
+      }
+      button:hover { background: var(--soft); }
+      .readout {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 32px;
+        margin-top: 10px;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 19px;
+      }
+      .readout strong { font-weight: 700; }
+      .law {
+        margin: 9px 0 0;
+        font-size: 18px;
+      }
+      math {
+        font-family: "STIX Two Math", "STIXGeneral", "Cambria Math", "Times New Roman", serif;
+        font-weight: 400;
+      }
+      math[display="inline"] { display: inline-block; font-size: 1em; vertical-align: -0.08em; }
+      math mtext { font-family: "Times New Roman", serif; font-size: 0.72em; font-style: normal; }
+
+      @media (max-width: 760px) {
+        body { padding: 14px; }
+        .workspace { grid-template-columns: 1fr; gap: 18px; }
+        .controls { grid-template-columns: 1fr 1fr; }
+        .controls button { grid-column: 1 / -1; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="workspace">
+        <section class="panel" aria-label="두 점전하">
+          <h1 class="panel-title">두 점전하</h1>
+          <svg id="scene" viewBox="0 0 650 380" role="img" aria-label="드래그 가능한 두 점전하와 크기가 같고 방향이 반대인 힘 벡터">
+            <defs>
+              <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#8b0029" />
+              </marker>
+              <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#2563eb" />
+              </marker>
+            </defs>
+            <line x1="75" y1="190" x2="575" y2="190" stroke="#d2d2d7" stroke-width="1.5" />
+            <line id="distance-line" x1="225" y1="270" x2="425" y2="270" stroke="#1d1d1f" stroke-width="1.6" />
+            <line id="distance-left" x1="225" y1="262" x2="225" y2="278" stroke="#1d1d1f" stroke-width="1.6" />
+            <line id="distance-right" x1="425" y1="262" x2="425" y2="278" stroke="#1d1d1f" stroke-width="1.6" />
+            <text id="distance-text" class="distance-label" x="325" y="302">거리 0.400 m</text>
+            <line id="force1" stroke="#8b0029" stroke-width="4" marker-end="url(#arrow-red)" />
+            <line id="force2" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow-blue)" />
+            <text id="force1-label" class="force-label">F₁←₂</text>
+            <text id="force2-label" class="force-label">F₂←₁</text>
+            <circle id="charge1" r="31" fill="#8b0029" />
+            <circle id="charge2" r="31" fill="#2563eb" />
+            <text id="symbol1" class="charge-symbol">+</text>
+            <text id="symbol2" class="charge-symbol">−</text>
+            <text id="name1" class="charge-name">q₁</text>
+            <text id="name2" class="charge-name">q₂</text>
+          </svg>
+        </section>
+
+        <section class="panel" aria-label="힘과 거리의 관계">
+          <h2 class="panel-title">힘–거리 관계</h2>
+          <svg id="plot" viewBox="0 0 520 380" role="img" aria-label="점전하 사이 거리와 쿨롱 힘 크기의 관계">
+            <defs>
+              <clipPath id="plot-clip"><rect x="68" y="28" width="420" height="295" /></clipPath>
+            </defs>
+            <line class="axis" x1="68" y1="323" x2="488" y2="323" />
+            <line class="axis" x1="68" y1="28" x2="68" y2="323" />
+            <g id="ticks"></g>
+            <path id="curve" class="curve" clip-path="url(#plot-clip)" />
+            <line id="guide-x" class="guide" />
+            <line id="guide-y" class="guide" />
+            <circle id="current" class="current" r="6" />
+            <text class="axis-label" x="278" y="368" text-anchor="middle"><tspan font-style="italic">r</tspan> (m)</text>
+            <text class="axis-label" x="20" y="176" text-anchor="middle" transform="rotate(-90 20 176)">|<tspan font-style="italic">F</tspan>| (N)</text>
+          </svg>
+        </section>
+      </div>
+
+      <div class="controls">
+        <div class="control">
+          <label for="q1">q₁ <output id="q1-value">+3.0 μC</output></label>
+          <input id="q1" type="range" min="-6" max="6" step="0.5" value="3" />
+        </div>
+        <div class="control">
+          <label for="q2">q₂ <output id="q2-value">−3.0 μC</output></label>
+          <input id="q2" type="range" min="-6" max="6" step="0.5" value="-3" />
+        </div>
+        <button id="reset" type="button">초기화</button>
+      </div>
+      <div class="readout" aria-live="polite">
+        <span>거리 <strong id="r-value">0.400</strong> m</span>
+        <span>힘 <strong id="f-value">0.506</strong> N</span>
+        <span id="interaction">인력</span>
+      </div>
+      <p class="law"><math display="inline" aria-label="힘의 크기는 k 곱하기 q1 q2 절댓값을 거리 제곱으로 나눈 값"><mrow><mo fence="true" stretchy="false">|</mo><mi>F</mi><mo fence="true" stretchy="false">|</mo><mo>=</mo><mi>k</mi><mfrac><mrow><mo fence="true" stretchy="false">|</mo><msub><mi>q</mi><mn>1</mn></msub><msub><mi>q</mi><mn>2</mn></msub><mo fence="true" stretchy="false">|</mo></mrow><msup><mi>r</mi><mn>2</mn></msup></mfrac></mrow></math></p>
+    </main>
+
+    <script>
+      (() => {
+        const K = 8.99e9;
+        const scene = document.querySelector('#scene');
+        const q1Slider = document.querySelector('#q1');
+        const q2Slider = document.querySelector('#q2');
+        const reset = document.querySelector('#reset');
+        const charge1 = document.querySelector('#charge1');
+        const charge2 = document.querySelector('#charge2');
+        const symbol1 = document.querySelector('#symbol1');
+        const symbol2 = document.querySelector('#symbol2');
+        const name1 = document.querySelector('#name1');
+        const name2 = document.querySelector('#name2');
+        const distanceLine = document.querySelector('#distance-line');
+        const distanceLeft = document.querySelector('#distance-left');
+        const distanceRight = document.querySelector('#distance-right');
+        const distanceText = document.querySelector('#distance-text');
+        const force1 = document.querySelector('#force1');
+        const force2 = document.querySelector('#force2');
+        const force1Label = document.querySelector('#force1-label');
+        const force2Label = document.querySelector('#force2-label');
+        const curve = document.querySelector('#curve');
+        const current = document.querySelector('#current');
+        const guideX = document.querySelector('#guide-x');
+        const guideY = document.querySelector('#guide-y');
+        const ticks = document.querySelector('#ticks');
+
+        const bounds = { min: 100, max: 550, y: 190 };
+        const plot = { left: 68, right: 488, top: 28, bottom: 323, rMin: 0.0, rMax: 2.0, curveMin: 0.02, fMax: 9.0 };
+        let state = { q1: 3, q2: -3, x1: 225, x2: 425, dragging: null };
+
+        const separation = () => Math.abs(state.x2 - state.x1) / 500;
+        const forceMagnitude = (q1MicroC, q2MicroC, r) => K * Math.abs(q1MicroC * 1e-6 * q2MicroC * 1e-6) / (r * r);
+        const forceVector = (qTargetMicroC, qSourceMicroC, xTarget, xSource) => {
+          const dx = xTarget - xSource;
+          const r = Math.abs(dx);
+          if (r === 0) return NaN;
+          return K * qTargetMicroC * 1e-6 * qSourceMicroC * 1e-6 / (r * r) * Math.sign(dx);
+        };
+        const xPlot = r => plot.left + (r - plot.rMin) / (plot.rMax - plot.rMin) * (plot.right - plot.left);
+        const yPlot = f => plot.bottom - Math.min(f, plot.fMax) / plot.fMax * (plot.bottom - plot.top);
+        const yPlotRaw = f => plot.bottom - f / plot.fMax * (plot.bottom - plot.top);
+        const signed = value => `${value > 0 ? '+' : value < 0 ? '−' : ''}${Math.abs(value).toFixed(1)} μC`;
+
+        function chargeSymbol(q) { return q > 0 ? '+' : q < 0 ? '−' : '0'; }
+        function interaction() {
+          if (state.q1 === 0 || state.q2 === 0) return '힘 0';
+          return state.q1 * state.q2 < 0 ? '인력' : '척력';
+        }
+
+        function setChargePosition(circle, symbol, name, x) {
+          circle.setAttribute('cx', x);
+          circle.setAttribute('cy', bounds.y);
+          symbol.setAttribute('x', x);
+          symbol.setAttribute('y', bounds.y + 1);
+          name.setAttribute('x', x);
+          name.setAttribute('y', bounds.y - 52);
+        }
+
+        function updateScene() {
+          const r = separation();
+          const f = forceMagnitude(state.q1, state.q2, r);
+          const attractive = state.q1 * state.q2 < 0;
+          const nonzero = state.q1 !== 0 && state.q2 !== 0;
+
+          setChargePosition(charge1, symbol1, name1, state.x1);
+          setChargePosition(charge2, symbol2, name2, state.x2);
+          symbol1.textContent = chargeSymbol(state.q1);
+          symbol2.textContent = chargeSymbol(state.q2);
+
+          const lower = Math.min(state.x1, state.x2);
+          const upper = Math.max(state.x1, state.x2);
+          distanceLine.setAttribute('x1', lower);
+          distanceLine.setAttribute('x2', upper);
+          distanceLeft.setAttribute('x1', lower);
+          distanceLeft.setAttribute('x2', lower);
+          distanceRight.setAttribute('x1', upper);
+          distanceRight.setAttribute('x2', upper);
+          distanceText.setAttribute('x', (lower + upper) / 2);
+          distanceText.textContent = `거리 ${r.toFixed(3)} m`;
+
+          const desiredArrowLength = nonzero ? 48 + 58 * (1 - Math.exp(-f / 0.8)) : 0;
+          const arrowLength = Math.min(desiredArrowLength, Math.max(0, (upper - lower) / 2 - 18));
+          const dir12 = state.x2 > state.x1 ? 1 : -1;
+          const force1Dir = attractive ? dir12 : -dir12;
+          const force2Dir = -force1Dir;
+          const startOffset = 0;
+          const setForce = (line, label, x, dir) => {
+            const xStart = x + dir * startOffset;
+            const xEnd = x + dir * (startOffset + arrowLength);
+            line.setAttribute('x1', xStart);
+            line.setAttribute('x2', xEnd);
+            line.setAttribute('y1', bounds.y);
+            line.setAttribute('y2', bounds.y);
+            line.style.display = nonzero ? '' : 'none';
+            label.setAttribute('x', x + dir * (startOffset + arrowLength / 2));
+            label.setAttribute('y', bounds.y + 45);
+            label.style.display = nonzero ? '' : 'none';
+          };
+          setForce(force1, force1Label, state.x1, force1Dir);
+          setForce(force2, force2Label, state.x2, force2Dir);
+
+          document.querySelector('#q1-value').textContent = signed(state.q1);
+          document.querySelector('#q2-value').textContent = signed(state.q2);
+          document.querySelector('#r-value').textContent = r.toFixed(3);
+          document.querySelector('#f-value').textContent = f.toFixed(3);
+          document.querySelector('#interaction').textContent = interaction();
+        }
+
+        function updatePlot() {
+          const points = [];
+          for (let i = 0; i <= 180; i++) {
+            const r = plot.curveMin + i / 180 * (plot.rMax - plot.curveMin);
+            points.push(`${i ? 'L' : 'M'}${xPlot(r).toFixed(2)},${yPlotRaw(forceMagnitude(state.q1, state.q2, r)).toFixed(2)}`);
+          }
+          curve.setAttribute('d', points.join(' '));
+          const r = separation();
+          const f = forceMagnitude(state.q1, state.q2, r);
+          const cx = xPlot(Math.max(plot.rMin, Math.min(plot.rMax, r)));
+          const cy = yPlot(f);
+          current.setAttribute('cx', cx);
+          current.setAttribute('cy', cy);
+          guideX.setAttribute('x1', plot.left);
+          guideX.setAttribute('x2', cx);
+          guideX.setAttribute('y1', cy);
+          guideX.setAttribute('y2', cy);
+          guideY.setAttribute('x1', cx);
+          guideY.setAttribute('x2', cx);
+          guideY.setAttribute('y1', cy);
+          guideY.setAttribute('y2', plot.bottom);
+        }
+
+        function drawTicks() {
+          const xValues = [0.0, 0.4, 0.8, 1.2, 1.6, 2.0];
+          const yValues = [0, 3, 6, 9];
+          const parts = [];
+          xValues.forEach(value => {
+            const x = xPlot(value);
+            parts.push(`<line class="tick" x1="${x}" y1="323" x2="${x}" y2="331" />`);
+            parts.push(`<text class="tick-label" x="${x}" y="350" text-anchor="middle">${value.toFixed(1)}</text>`);
+          });
+          yValues.forEach(value => {
+            const y = yPlot(value);
+            parts.push(`<line class="tick" x1="60" y1="${y}" x2="68" y2="${y}" />`);
+            parts.push(`<text class="tick-label" x="52" y="${y + 5}" text-anchor="end">${value}</text>`);
+          });
+          ticks.innerHTML = parts.join('');
+        }
+
+        function render() { updateScene(); updatePlot(); }
+
+        function svgPoint(event) {
+          const point = scene.createSVGPoint();
+          point.x = event.clientX;
+          point.y = event.clientY;
+          return point.matrixTransform(scene.getScreenCTM().inverse());
+        }
+
+        function beginDrag(which, event) {
+          state.dragging = which;
+          scene.classList.add('dragging');
+          scene.setPointerCapture(event.pointerId);
+          event.preventDefault();
+        }
+        charge1.addEventListener('pointerdown', event => beginDrag('q1', event));
+        charge2.addEventListener('pointerdown', event => beginDrag('q2', event));
+        scene.addEventListener('pointermove', event => {
+          if (!state.dragging) return;
+          const x = Math.max(bounds.min, Math.min(bounds.max, svgPoint(event).x));
+          if (state.dragging === 'q1') state.x1 = Math.min(x, state.x2 - 100);
+          else state.x2 = Math.max(x, state.x1 + 100);
+          render();
+        });
+        const endDrag = () => { state.dragging = null; scene.classList.remove('dragging'); };
+        scene.addEventListener('pointerup', endDrag);
+        scene.addEventListener('pointercancel', endDrag);
+
+        q1Slider.addEventListener('input', () => { state.q1 = Number(q1Slider.value); render(); });
+        q2Slider.addEventListener('input', () => { state.q2 = Number(q2Slider.value); render(); });
+        reset.addEventListener('click', () => {
+          state = { q1: 3, q2: -3, x1: 225, x2: 425, dragging: null };
+          q1Slider.value = '3';
+          q2Slider.value = '-3';
+          render();
+        });
+
+        drawTicks();
+        render();
+
+        function runValidation() {
+          const checkpoints = {
+            baseline: forceMagnitude(3, -3, 0.4),
+            doubleDistance: forceMagnitude(3, -3, 0.8),
+            doubleCharge: forceMagnitude(6, -3, 0.4),
+          };
+          const f12 = forceVector(3, -3, 0, 0.4);
+          const f21 = forceVector(-3, 3, 0.4, 0);
+          const close = (a, b, tolerance = 1e-12) => Math.abs(a - b) <= tolerance;
+          const assertions = {
+            baseline: close(checkpoints.baseline, 0.5056875),
+            inverseSquare: close(checkpoints.doubleDistance, checkpoints.baseline / 4),
+            linearCharge: close(checkpoints.doubleCharge, checkpoints.baseline * 2),
+            actionReaction: close(f12 + f21, 0),
+          };
+          return { checkpoints, forces: { f12, f21 }, assertions, pass: Object.values(assertions).every(Boolean) };
+        }
+
+        const validation = runValidation();
+        document.documentElement.dataset.physicsValidated = String(validation.pass);
+        window.__physicsValidation = { forceMagnitude, forceVector, runValidation, ...validation };
+      })();
+    </script>
+  </body>
+</html>

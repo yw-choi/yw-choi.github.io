@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>유도 전하 탐색</title>
+    <style>
+      :root {
+        --ink: #1d1d1f;
+        --red: #8b0029;
+        --blue: #2563eb;
+        --neutral: #6b7280;
+        --line: #d1d5db;
+        --soft: #f5f5f7;
+      }
+      * { box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+      body {
+        background: #fff;
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      main {
+        display: grid;
+        width: 100%;
+        height: 100%;
+        grid-template-rows: minmax(0, 1fr) auto auto;
+      }
+      .scene { min-height: 0; padding: 10px 18px 0; }
+      svg { display: block; width: 100%; height: 100%; touch-action: none; }
+      .conductor { fill: var(--soft); stroke: var(--ink); stroke-width: 2.4; }
+      .rod { fill: #2f3136; stroke: var(--ink); stroke-width: 2; }
+      .rod-group { cursor: grab; }
+      .rod-group.dragging { cursor: grabbing; }
+      .charge circle { stroke: #fff; stroke-width: 2; }
+      .positive circle { fill: var(--red); }
+      .negative circle { fill: var(--blue); }
+      .charge text {
+        fill: #fff;
+        font-size: 23px;
+        font-weight: 750;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        pointer-events: none;
+      }
+      .label { fill: var(--ink); font-size: 21px; font-weight: 650; }
+      .minor { fill: var(--neutral); font-size: 18px; }
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 22px;
+        border-top: 1px solid var(--line);
+      }
+      .control-label { margin-right: 4px; font-size: 17px; font-weight: 650; }
+      button {
+        min-width: 78px;
+        min-height: 38px;
+        border: 1px solid var(--ink);
+        background: #fff;
+        color: var(--ink);
+        font: inherit;
+        font-size: 16px;
+        font-weight: 650;
+        cursor: pointer;
+      }
+      button.active { background: var(--ink); color: #fff; }
+      #reset { margin-left: auto; min-width: 64px; }
+      .readout {
+        display: flex;
+        min-height: 44px;
+        align-items: center;
+        gap: 28px;
+        padding: 0 22px;
+        border-top: 1px solid var(--line);
+        font-size: 18px;
+      }
+      .readout strong { font-weight: 720; }
+      math {
+        font-family: "STIX Two Math", "STIXGeneral", "Cambria Math", "Times New Roman", serif;
+        font-weight: 400;
+      }
+      math[display="inline"] { display: inline-block; font-size: 1em; vertical-align: -0.08em; }
+      math mi[mathvariant="normal"] { font-style: normal; }
+      @media (max-width: 700px) {
+        .scene { padding-inline: 8px; }
+        .controls { padding-inline: 12px; }
+        .readout { gap: 12px; padding-inline: 12px; font-size: 15px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="scene" aria-label="대전체와 중성 도체의 유도 전하">
+        <svg id="scene" viewBox="0 0 1000 430" role="img" aria-label="대전된 막대를 도체에 가까이 가져갈 때 도체의 양전하와 음전하가 반대쪽으로 재배치되는 모습">
+          <text class="minor" x="24" y="34">막대를 좌우로 드래그</text>
+
+          <g id="rod" class="rod-group" tabindex="0" role="slider" aria-label="막대 위치" aria-valuemin="0" aria-valuemax="100" aria-valuenow="70">
+            <rect class="rod" x="0" y="105" width="44" height="220" rx="20" />
+            <circle id="rod-sign-disc" cx="22" cy="215" r="24" fill="#2563eb" stroke="#fff" stroke-width="2" />
+            <text id="rod-sign" x="22" y="217" fill="#fff" font-size="28" font-weight="760" text-anchor="middle" dominant-baseline="middle">−</text>
+          </g>
+
+          <rect class="conductor" x="480" y="155" width="420" height="130" rx="65" />
+          <text class="label" x="690" y="130" text-anchor="middle">중성 도체</text>
+          <text class="minor" x="520" y="322" text-anchor="middle">가까운 쪽</text>
+          <text class="minor" x="860" y="322" text-anchor="middle">먼 쪽</text>
+
+          <g id="positive-charges" class="positive"></g>
+          <g id="negative-charges" class="negative"></g>
+        </svg>
+      </section>
+
+      <div class="controls" aria-label="막대 부호 선택">
+        <span class="control-label">막대 부호</span>
+        <button type="button" data-sign="-1" class="active" aria-pressed="true">− 막대</button>
+        <button type="button" data-sign="1" aria-pressed="false">+ 막대</button>
+        <button id="reset" type="button">초기화</button>
+      </div>
+
+      <div class="readout" aria-live="polite">
+        <span><strong><math display="inline" aria-label="도체의 순전하는 0"><mrow><msub><mi>Q</mi><mi mathvariant="normal">net</mi></msub><mo>=</mo><mn>0</mn></mrow></math></strong></span>
+        <span id="near-readout">가까운 쪽 +</span>
+        <span id="far-readout">먼 쪽 −</span>
+      </div>
+    </main>
+
+    <script>
+      (() => {
+        const svg = document.querySelector('#scene');
+        const rod = document.querySelector('#rod');
+        const rodSign = document.querySelector('#rod-sign');
+        const rodSignDisc = document.querySelector('#rod-sign-disc');
+        const positiveLayer = document.querySelector('#positive-charges');
+        const negativeLayer = document.querySelector('#negative-charges');
+        const signButtons = [...document.querySelectorAll('[data-sign]')];
+        const reset = document.querySelector('#reset');
+        const nearReadout = document.querySelector('#near-readout');
+        const farReadout = document.querySelector('#far-readout');
+
+        const bounds = { minX: 60, maxX: 390, conductorLeft: 480, rodWidth: 44 };
+        const chargeXs = {
+          uniform: [555, 645, 735, 825],
+          near: [515, 560, 605, 650],
+          far: [730, 775, 820, 865],
+        };
+        let state = { rodX: 310, rodSign: -1, dragging: false };
+
+        const lerp = (a, b, t) => a + (b - a) * t;
+        const gapAt = x => bounds.conductorLeft - (x + bounds.rodWidth);
+        const minGap = gapAt(bounds.maxX);
+        const maxGap = gapAt(bounds.minX);
+
+        function modelState(rodSignValue, gap) {
+          const strength = Math.max(0, Math.min(1, (maxGap - gap) / (maxGap - minGap)));
+          return {
+            strength,
+            nearSign: rodSignValue < 0 ? 1 : -1,
+            farSign: rodSignValue,
+            netCharge: 0,
+          };
+        }
+
+        function chargeMarkup(sign, index) {
+          const symbol = sign > 0 ? '+' : '−';
+          return `<g class="charge ${sign > 0 ? 'positive' : 'negative'}" data-index="${index}"><circle r="22"/><text y="1">${symbol}</text></g>`;
+        }
+
+        positiveLayer.innerHTML = chargeXs.uniform.map((_, i) => chargeMarkup(1, i)).join('');
+        negativeLayer.innerHTML = chargeXs.uniform.map((_, i) => chargeMarkup(-1, i)).join('');
+
+        function positionCharges(layer, targetName, y, strength) {
+          [...layer.children].forEach((charge, i) => {
+            const x = lerp(chargeXs.uniform[i], chargeXs[targetName][i], strength);
+            charge.setAttribute('transform', `translate(${x} ${y})`);
+          });
+        }
+
+        function render() {
+          const model = modelState(state.rodSign, gapAt(state.rodX));
+          rod.setAttribute('transform', `translate(${state.rodX} 0)`);
+          rod.setAttribute('aria-valuenow', String(Math.round(model.strength * 100)));
+          rodSign.textContent = state.rodSign < 0 ? '−' : '+';
+          rodSignDisc.setAttribute('fill', state.rodSign < 0 ? '#2563eb' : '#8b0029');
+
+          const positiveTarget = state.rodSign < 0 ? 'near' : 'far';
+          const negativeTarget = state.rodSign < 0 ? 'far' : 'near';
+          positionCharges(positiveLayer, positiveTarget, 202, model.strength);
+          positionCharges(negativeLayer, negativeTarget, 248, model.strength);
+
+          nearReadout.textContent = `가까운 쪽 ${model.nearSign > 0 ? '+' : '−'}`;
+          farReadout.textContent = `먼 쪽 ${model.farSign > 0 ? '+' : '−'}`;
+          signButtons.forEach(button => {
+            const active = Number(button.dataset.sign) === state.rodSign;
+            button.classList.toggle('active', active);
+            button.setAttribute('aria-pressed', String(active));
+          });
+        }
+
+        function svgPoint(event) {
+          const point = svg.createSVGPoint();
+          point.x = event.clientX;
+          point.y = event.clientY;
+          return point.matrixTransform(svg.getScreenCTM().inverse());
+        }
+
+        rod.addEventListener('pointerdown', event => {
+          state.dragging = true;
+          rod.classList.add('dragging');
+          rod.setPointerCapture(event.pointerId);
+          event.preventDefault();
+        });
+        rod.addEventListener('pointermove', event => {
+          if (!state.dragging) return;
+          state.rodX = Math.max(bounds.minX, Math.min(bounds.maxX, svgPoint(event).x - bounds.rodWidth / 2));
+          render();
+        });
+        const endDrag = () => { state.dragging = false; rod.classList.remove('dragging'); };
+        rod.addEventListener('pointerup', endDrag);
+        rod.addEventListener('pointercancel', endDrag);
+        rod.addEventListener('keydown', event => {
+          if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+          event.preventDefault();
+          state.rodX = Math.max(bounds.minX, Math.min(bounds.maxX, state.rodX + (event.key === 'ArrowRight' ? 12 : -12)));
+          render();
+        });
+
+        signButtons.forEach(button => button.addEventListener('click', () => {
+          state.rodSign = Number(button.dataset.sign);
+          render();
+        }));
+        reset.addEventListener('click', () => {
+          state = { rodX: 310, rodSign: -1, dragging: false };
+          render();
+        });
+
+        function runValidation() {
+          const negativeNear = modelState(-1, minGap);
+          const negativeFar = modelState(-1, maxGap);
+          const positiveNear = modelState(1, minGap);
+          const assertions = {
+            conductorNeutral: negativeNear.netCharge === 0 && positiveNear.netCharge === 0,
+            negativeRodPolarizesPositiveNear: negativeNear.nearSign === 1 && negativeNear.farSign === -1,
+            positiveRodPolarizesNegativeNear: positiveNear.nearSign === -1 && positiveNear.farSign === 1,
+            approachStrengthensPolarization: negativeNear.strength > negativeFar.strength,
+          };
+          return { assertions, pass: Object.values(assertions).every(Boolean) };
+        }
+
+        const validation = runValidation();
+        document.documentElement.dataset.physicsValidated = String(validation.pass);
+        window.__physicsValidation = { modelState, runValidation, ...validation };
+        window.__inductionControls = {
+          setRodX(x) { state.rodX = Math.max(bounds.minX, Math.min(bounds.maxX, x)); render(); },
+          setRodSign(sign) { state.rodSign = sign < 0 ? -1 : 1; render(); },
+        };
+        render();
+      })();
+    </script>
+  </body>
+</html>
