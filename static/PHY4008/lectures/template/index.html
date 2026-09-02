@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta
+      name="description"
+      content="Minimal HTML slide template for Computational Physics II"
+    />
+    <title>Slide Template · Computational Physics II</title>
+    <style>
+      :root {
+        --canvas-width: 1600;
+        --canvas-height: 900;
+        --ink: #1d1d1f;
+        --soft: #f5f5f7;
+        --red: #8b0029;
+        --white: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: var(--soft);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      }
+
+      body {
+        -webkit-font-smoothing: antialiased;
+      }
+
+      #stage {
+        position: fixed;
+        width: 1600px;
+        height: 900px;
+        overflow: hidden;
+        transform-origin: top left;
+        background: var(--white);
+      }
+
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: none;
+        width: 1600px;
+        height: 900px;
+        padding: 76px 112px 72px;
+        overflow: hidden;
+        background: var(--white);
+      }
+
+      .slide.active {
+        display: flex;
+        flex-direction: column;
+      }
+
+      h1,
+      h2,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 1220px;
+        margin-bottom: 30px;
+        font-size: 84px;
+        font-weight: 650;
+        letter-spacing: -0.045em;
+        line-height: 1.02;
+      }
+
+      h2 {
+        max-width: 1280px;
+        margin-bottom: 48px;
+        font-size: 58px;
+        font-weight: 620;
+        letter-spacing: -0.035em;
+        line-height: 1.08;
+      }
+
+      p,
+      li,
+      th,
+      td,
+      figcaption {
+        color: var(--ink);
+        font-size: 30px;
+        line-height: 1.42;
+      }
+
+      .title-slide {
+        justify-content: flex-start;
+        padding-top: 156px;
+        padding-bottom: 110px;
+      }
+
+      .subhead {
+        max-width: 1080px;
+        font-size: 31px;
+        line-height: 1.35;
+      }
+
+      .title-slide .meta {
+        margin-top: 34px;
+        font-size: 24px;
+      }
+
+      ul {
+        max-width: 1220px;
+        margin: 0;
+        padding-left: 1.2em;
+      }
+
+      li {
+        margin-bottom: 22px;
+        padding-left: 0.2em;
+      }
+
+      li::marker {
+        color: var(--red);
+      }
+
+      .compact li {
+        margin-bottom: 14px;
+      }
+
+      pre {
+        width: 100%;
+        max-width: 1280px;
+        margin: 0;
+        padding: 28px 32px;
+        overflow: hidden;
+        background: var(--soft);
+        color: var(--ink);
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 25px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+      }
+
+      code {
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      }
+
+      .token.keyword,
+      .token.command {
+        color: var(--red);
+        font-weight: 650;
+      }
+
+      .token.function,
+      .token.option {
+        color: #0057b8;
+      }
+
+      .token.string {
+        color: #0b6e4f;
+      }
+
+      .token.number {
+        color: #7a3e00;
+      }
+
+      .token.comment {
+        color: #6b4f00;
+        font-style: italic;
+      }
+
+      .math-block {
+        display: flex;
+        min-height: 430px;
+        align-items: center;
+        justify-content: center;
+      }
+
+      math {
+        color: var(--ink);
+        font-family: "STIX Two Math", "Times New Roman", serif;
+        font-size: 78px;
+      }
+
+      figure {
+        width: 100%;
+        max-width: 1120px;
+        margin: 0 auto;
+      }
+
+      .plot {
+        display: block;
+        width: 100%;
+        height: 470px;
+        background: var(--white);
+      }
+
+      .plot text {
+        fill: var(--ink);
+        font-family: "Times New Roman", Times, serif;
+      }
+
+      figcaption {
+        margin-top: 12px;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 24px;
+        line-height: 1.3;
+      }
+
+      .figure-label {
+        font-weight: 700;
+      }
+
+      table {
+        width: auto;
+        min-width: 900px;
+        max-width: 1100px;
+        border-collapse: separate;
+        border-spacing: 0 22px;
+        table-layout: auto;
+      }
+
+      table col {
+        width: auto !important;
+      }
+
+      th,
+      td {
+        padding: 0 72px 0 0;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      tr > :last-child {
+        padding-right: 0;
+      }
+
+      thead th,
+      tbody th {
+        font-size: 21px;
+        font-weight: 650;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      td {
+        font-size: 28px;
+        line-height: 1.35;
+      }
+
+      .footer {
+        position: absolute;
+        right: 112px;
+        bottom: 34px;
+        left: 112px;
+        display: flex;
+        justify-content: flex-end;
+        color: var(--ink);
+        font-size: 17px;
+        letter-spacing: 0.01em;
+      }
+
+      #progress {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        height: 5px;
+        background: var(--red);
+        transition: width 160ms ease-out;
+      }
+
+      #help {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        display: none;
+        padding: 16px 20px;
+        background: var(--ink);
+        color: var(--white);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      #help.visible {
+        display: block;
+      }
+
+      @media print {
+        @page {
+          size: 1600px 900px;
+          margin: 0;
+        }
+
+        html,
+        body {
+          width: auto;
+          height: auto;
+          overflow: visible;
+          background: var(--white);
+        }
+
+        #stage {
+          position: static;
+          width: 1600px;
+          height: auto;
+          overflow: visible;
+          transform: none !important;
+        }
+
+        .slide,
+        .slide.active {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          break-after: page;
+          page-break-after: always;
+        }
+
+        #progress,
+        #help {
+          display: none !important;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #progress {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="stage" aria-live="polite">
+      <section class="slide title-slide" data-title="Slide Template" data-layout="title">
+        <h1>Slide Template</h1>
+        <p class="subhead">Computational Physics II</p>
+        <p class="meta">PHY4008</p>
+        <div class="footer"><span>1</span></div>
+      </section>
+
+      <section class="slide bullet-slide" data-title="Learning Goals" data-layout="bullet">
+        <h2>Learning Goals</h2>
+        <ul>
+          <li>Define the physical model.</li>
+          <li>Implement one numerical method.</li>
+          <li>Check the result against a known limit.</li>
+        </ul>
+        <div class="footer"><span>2</span></div>
+      </section>
+
+      <section class="slide bullet-slide" data-title="Key Assumptions" data-layout="bullet">
+        <h2>Key Assumptions</h2>
+        <ul class="compact">
+          <li>One spatial dimension</li>
+          <li>Uniform grid spacing</li>
+          <li>Fixed boundary values</li>
+          <li>Time-independent parameters</li>
+          <li>Double-precision arithmetic</li>
+        </ul>
+        <div class="footer"><span>3</span></div>
+      </section>
+
+      <section class="slide bullet-slide" data-title="Validation Checklist" data-layout="bullet">
+        <h2>Validation Checklist</h2>
+        <ul>
+          <li>Test a case with an exact solution.</li>
+          <li>Repeat the calculation on a finer grid.</li>
+          <li>Check units and conserved quantities.</li>
+          <li>Record the code version and parameters.</li>
+        </ul>
+        <div class="footer"><span>4</span></div>
+      </section>
+
+      <section class="slide code-slide" data-title="Python Function" data-layout="code">
+        <h2>Python Function</h2>
+        <pre><code data-language="python"># scalar input
+def kinetic_energy(mass, velocity):
+    return 0.5 * mass * velocity**2
+
+energy = kinetic_energy(2.0, 3.0)
+print("Energy:", energy)</code></pre>
+        <div class="footer"><span>5</span></div>
+      </section>
+
+      <section class="slide code-slide" data-title="Vectorized Calculation" data-layout="code">
+        <h2>Vectorized Calculation</h2>
+        <pre><code data-language="python">import numpy as np
+
+x = np.linspace(0.0, 2.0 * np.pi, 200)
+y = np.sin(x)
+
+assert np.isclose(y[0], 0.0)</code></pre>
+        <div class="footer"><span>6</span></div>
+      </section>
+
+      <section class="slide code-slide" data-title="Command Line" data-layout="code">
+        <h2>Command Line</h2>
+        <pre><code data-language="shell">python run.py --steps 1000 --dt 0.01
+
+git status
+git diff
+
+python -m pytest</code></pre>
+        <div class="footer"><span>7</span></div>
+      </section>
+
+      <section class="slide math-slide" data-title="Harmonic Oscillator" data-layout="math">
+        <h2>Harmonic Oscillator</h2>
+        <div class="math-block">
+          <math display="block" aria-label="m x double dot plus k x equals zero">
+            <mrow>
+              <mi>m</mi>
+              <mover><mi>x</mi><mo>¨</mo></mover>
+              <mo>+</mo>
+              <mi>k</mi><mi>x</mi>
+              <mo>=</mo>
+              <mn>0</mn>
+            </mrow>
+          </math>
+        </div>
+        <div class="footer"><span>8</span></div>
+      </section>
+
+      <section class="slide math-slide" data-title="Finite Difference" data-layout="math">
+        <h2>Finite Difference</h2>
+        <div class="math-block">
+          <math display="block" aria-label="second derivative of f at x sub i is approximately f i plus one minus two f i plus f i minus one over delta x squared">
+            <mrow>
+              <msup>
+                <mi>f</mi>
+                <mo>″</mo>
+              </msup>
+              <mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>)</mo>
+              <mo>≈</mo>
+              <mfrac>
+                <mrow>
+                  <msub><mi>f</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub>
+                  <mo>−</mo>
+                  <mn>2</mn><msub><mi>f</mi><mi>i</mi></msub>
+                  <mo>+</mo>
+                  <msub><mi>f</mi><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub>
+                </mrow>
+                <msup><mrow><mi>Δx</mi></mrow><mn>2</mn></msup>
+              </mfrac>
+            </mrow>
+          </math>
+        </div>
+        <div class="footer"><span>9</span></div>
+      </section>
+
+      <section class="slide math-slide" data-title="Eigenvalue Problem" data-layout="math">
+        <h2>Eigenvalue Problem</h2>
+        <div class="math-block">
+          <math display="block" aria-label="H psi sub n equals E sub n psi sub n">
+            <mrow>
+              <mi>H</mi>
+              <msub><mi>ψ</mi><mi>n</mi></msub>
+              <mo>=</mo>
+              <msub><mi>E</mi><mi>n</mi></msub>
+              <msub><mi>ψ</mi><mi>n</mi></msub>
+            </mrow>
+          </math>
+        </div>
+        <div class="footer"><span>10</span></div>
+      </section>
+
+      <section class="slide figure-slide" data-title="Trajectory" data-layout="figure">
+        <h2>Trajectory</h2>
+        <figure>
+          <svg class="plot" viewBox="0 0 1120 470" role="img" aria-label="Position as a function of time">
+            <rect x="115" y="35" width="930" height="340" fill="#ffffff" stroke="#1d1d1f" stroke-width="2.5" />
+
+            <g stroke="#1d1d1f" stroke-width="2.5">
+              <path d="M115 375v13 M301 375v13 M487 375v13 M673 375v13 M859 375v13 M1045 375v13" />
+              <path d="M115 65h-13 M115 205h-13 M115 345h-13" />
+            </g>
+
+            <path
+              d="M115 205 C193 65, 270 65, 348 205 S503 345, 580 205 S735 65, 813 205 S968 345, 1045 205"
+              fill="none"
+              stroke="#1d1d1f"
+              stroke-width="5.5"
+            />
+
+            <g font-size="22" text-anchor="middle">
+              <text x="115" y="411">0</text>
+              <text x="301" y="411">2</text>
+              <text x="487" y="411">4</text>
+              <text x="673" y="411">6</text>
+              <text x="859" y="411">8</text>
+              <text x="1045" y="411">10</text>
+            </g>
+            <g font-size="22" text-anchor="end">
+              <text x="91" y="352">−1</text>
+              <text x="91" y="212">0</text>
+              <text x="91" y="72">1</text>
+            </g>
+            <text x="580" y="451" font-size="26" text-anchor="middle"><tspan font-style="italic">t</tspan> (s)</text>
+            <text x="34" y="205" font-size="26" text-anchor="middle" transform="rotate(-90 34 205)"><tspan font-style="italic">x</tspan> (m)</text>
+          </svg>
+          <figcaption><span class="figure-label">FIG. 1.</span> Position <i>x</i>(<i>t</i>) for a harmonic oscillator.</figcaption>
+        </figure>
+        <div class="footer"><span>11</span></div>
+      </section>
+
+      <section class="slide figure-slide" data-title="Phase Space" data-layout="figure">
+        <h2>Phase Space</h2>
+        <figure>
+          <svg class="plot" viewBox="0 0 1120 470" role="img" aria-label="Closed phase-space trajectory">
+            <rect x="115" y="35" width="930" height="340" fill="#ffffff" stroke="#1d1d1f" stroke-width="2.5" />
+
+            <g stroke="#1d1d1f" stroke-width="2.5">
+              <path d="M250 375v13 M580 375v13 M910 375v13" />
+              <path d="M115 85h-13 M115 205h-13 M115 325h-13" />
+            </g>
+
+            <ellipse
+              cx="580"
+              cy="205"
+              rx="330"
+              ry="120"
+              fill="none"
+              stroke="#1d1d1f"
+              stroke-width="5.5"
+            />
+            <circle cx="868" cy="146" r="9" fill="#ffffff" stroke="#1d1d1f" stroke-width="4" />
+
+            <g font-size="22" text-anchor="middle">
+              <text x="250" y="411">−1</text>
+              <text x="580" y="411">0</text>
+              <text x="910" y="411">1</text>
+            </g>
+            <g font-size="22" text-anchor="end">
+              <text x="91" y="332">−1</text>
+              <text x="91" y="212">0</text>
+              <text x="91" y="92">1</text>
+            </g>
+            <text x="580" y="451" font-size="26" text-anchor="middle"><tspan font-style="italic">x</tspan> (m)</text>
+            <text x="34" y="205" font-size="26" text-anchor="middle" transform="rotate(-90 34 205)"><tspan font-style="italic">p</tspan> (kg m s⁻¹)</text>
+          </svg>
+          <figcaption><span class="figure-label">FIG. 2.</span> Phase-space orbit for the same oscillator. The open circle marks one state.</figcaption>
+        </figure>
+        <div class="footer"><span>12</span></div>
+      </section>
+
+      <section class="slide table-slide" data-title="Model Parameters" data-layout="table">
+        <h2>Model Parameters</h2>
+        <table>
+          <colgroup>
+            <col style="width: 34%" />
+            <col style="width: 22%" />
+            <col />
+          </colgroup>
+          <thead>
+            <tr><th>Parameter</th><th>Value</th><th>Unit</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Mass</td><td>1.0</td><td>kg</td></tr>
+            <tr><td>Spring constant</td><td>4.0</td><td>N m⁻¹</td></tr>
+            <tr><td>Time step</td><td>0.01</td><td>s</td></tr>
+            <tr><td>Total time</td><td>10.0</td><td>s</td></tr>
+          </tbody>
+        </table>
+        <div class="footer"><span>13</span></div>
+      </section>
+
+      <section class="slide table-slide" data-title="Grid Convergence" data-layout="table">
+        <h2>Grid Convergence</h2>
+        <table>
+          <colgroup>
+            <col style="width: 30%" />
+            <col style="width: 34%" />
+            <col />
+          </colgroup>
+          <thead>
+            <tr><th>Grid points</th><th>Energy</th><th>Relative error</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>50</td><td>0.487</td><td>2.6%</td></tr>
+            <tr><td>100</td><td>0.497</td><td>0.6%</td></tr>
+            <tr><td>200</td><td>0.499</td><td>0.2%</td></tr>
+            <tr><td>400</td><td>0.500</td><td>&lt; 0.1%</td></tr>
+          </tbody>
+        </table>
+        <div class="footer"><span>14</span></div>
+      </section>
+
+      <section class="slide table-slide" data-title="Method Comparison" data-layout="table">
+        <h2>Method Comparison</h2>
+        <table>
+          <colgroup>
+            <col style="width: 30%" />
+            <col style="width: 30%" />
+            <col />
+          </colgroup>
+          <thead>
+            <tr><th>Method</th><th>Order</th><th>Use</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Euler</td><td>First</td><td>Baseline checks</td></tr>
+            <tr><td>Midpoint</td><td>Second</td><td>Moderate accuracy</td></tr>
+            <tr><td>Runge–Kutta</td><td>Fourth</td><td>General integration</td></tr>
+          </tbody>
+        </table>
+        <div class="footer"><span>15</span></div>
+      </section>
+    </main>
+
+    <div id="progress" aria-hidden="true"></div>
+    <div id="help" role="status">←/→ or Space: move · Home/End: jump · ?: help · P: print</div>
+
+    <script>
+      const stage = document.getElementById('stage');
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const progress = document.getElementById('progress');
+      const help = document.getElementById('help');
+      let current = 0;
+
+      const syntaxPatterns = {
+        python:
+          /(?<comment>#.*$)|(?<string>"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(?<keyword>\b(?:and|as|assert|break|class|continue|def|elif|else|except|False|finally|for|from|if|import|in|is|lambda|None|not|or|pass|raise|return|True|try|while|with|yield)\b)|(?<number>\b\d+(?:\.\d+)?\b)|(?<function>\b[A-Za-z_]\w*(?=\s*\())/gm,
+        shell:
+          /(?<comment>#.*$)|(?<string>"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(?<option>--?[A-Za-z][\w-]*)|(?<number>\b\d+(?:\.\d+)?\b)|(?<command>\b(?:git|python|pytest)\b)/gm,
+      };
+
+      function escapeHtml(value) {
+        return value.replace(
+          /[&<>]/g,
+          (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[character],
+        );
+      }
+
+      function highlightCode() {
+        document.querySelectorAll('code[data-language]').forEach((block) => {
+          const pattern = syntaxPatterns[block.dataset.language];
+          if (!pattern) return;
+
+          const source = block.textContent;
+          let result = '';
+          let cursor = 0;
+
+          for (const match of source.matchAll(pattern)) {
+            const type = Object.keys(match.groups).find((key) => match.groups[key] !== undefined);
+            result += escapeHtml(source.slice(cursor, match.index));
+            result += '<span class="token ' + type + '">' + escapeHtml(match[0]) + '</span>';
+            cursor = match.index + match[0].length;
+          }
+
+          block.innerHTML = result + escapeHtml(source.slice(cursor));
+        });
+      }
+
+      function fitStage() {
+        const scale = Math.min(window.innerWidth / 1600, window.innerHeight / 900);
+        stage.style.transform = 'scale(' + scale + ')';
+        stage.style.left = Math.max(0, (window.innerWidth - 1600 * scale) / 2) + 'px';
+        stage.style.top = Math.max(0, (window.innerHeight - 900 * scale) / 2) + 'px';
+      }
+
+      function indexFromHash() {
+        const value = Number.parseInt(window.location.hash.slice(1), 10);
+        return Number.isFinite(value)
+          ? Math.min(slides.length - 1, Math.max(0, value - 1))
+          : 0;
+      }
+
+      function showSlide(index, updateHash = true) {
+        current = Math.min(slides.length - 1, Math.max(0, index));
+        slides.forEach((slide, i) => {
+          const active = i === current;
+          slide.classList.toggle('active', active);
+          slide.setAttribute('aria-hidden', String(!active));
+        });
+        progress.style.width = ((current + 1) / slides.length) * 100 + '%';
+        document.title =
+          current + 1 + '/' + slides.length + ' · ' + slides[current].dataset.title + ' · PHY4008';
+        if (updateHash && window.location.hash !== '#' + (current + 1)) {
+          history.replaceState(null, '', '#' + (current + 1));
+        }
+      }
+
+      function move(delta) {
+        showSlide(current + delta);
+      }
+
+      window.addEventListener('resize', fitStage);
+      window.addEventListener('hashchange', () => showSlide(indexFromHash(), false));
+      window.addEventListener('keydown', (event) => {
+        if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(event.key)) {
+          event.preventDefault();
+          move(1);
+        } else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(event.key)) {
+          event.preventDefault();
+          move(-1);
+        } else if (event.key === 'Home') {
+          event.preventDefault();
+          showSlide(0);
+        } else if (event.key === 'End') {
+          event.preventDefault();
+          showSlide(slides.length - 1);
+        } else if (event.key === '?') {
+          help.classList.toggle('visible');
+        } else if (event.key.toLowerCase() === 'p') {
+          window.print();
+        }
+      });
+
+      stage.addEventListener('click', (event) => {
+        if (event.clientX > window.innerWidth / 2) move(1);
+        else move(-1);
+      });
+
+      highlightCode();
+      fitStage();
+      showSlide(indexFromHash(), false);
+    </script>
+  </body>
+</html>
