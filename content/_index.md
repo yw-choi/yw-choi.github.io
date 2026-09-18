@@ -76,7 +76,7 @@ title: "Home"
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/09</span>
         <span class="home-news-category home-news-paper">[Paper]</span>
-        <span class="home-news-copy"><a href="/publications/#publication-19">ACS Nano: anisotropic Γ-valley interlayer excitonic emission in ReS<sub>2</sub>/WS<sub>2</sub> heterostructures (accepted).</a></span>
+        <span class="home-news-copy"><a href="/publications/#publication-19">ACS Nano: anisotropic Γ-valley interlayer excitonic emission in ReS<sub>2</sub>/WS<sub>2</sub> heterostructures (published, open access).</a></span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/08</span>
