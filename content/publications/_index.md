@@ -16,6 +16,10 @@ title: Publications
 .publication-citation { color: var(--bs-link-color, #0d6efd); }
 </style>
 
+20. Yuanyuan Qiu†, Bin Hua†, Zhenping Wang†, Fei Hu†, Dong Zhang, Yang Lu, Marvin L. Cohen, Alex Zettl, Kecheng Cao, Cong Su\*, **Young Woo Choi**\*, and Qingqing Ji\*,<br>
+<span id="publication-20" class="publication-title">Boltzmann Sigmoidal Modulation of Vanadium Doping in Monolayer MoS<sub>2</sub> by Potassium Iodide</span>,<br>
+<span class="publication-citation">Nano Letters (accepted, 2026).</span>
+
 19. Tae Keun Yun†, **Byeongchan Lee**†, Soyeong Kwon, Jieun Yeon, Doohee Cho, **Young Woo Choi**\*, Kwanpyo Kim\*, and SungWoo Nam\*,<br>
 <a id="publication-19" class="publication-title" href="https://doi.org/10.1021/acsnano.6c11574" target="_blank" rel="noopener noreferrer">Anisotropic Γ-valley interlayer excitonic emission in anisotropic-isotropic 2D heterostructures</a>,<br>
 <span class="publication-citation">ACS Nano (2026). DOI: 10.1021/acsnano.6c11574.</span>
