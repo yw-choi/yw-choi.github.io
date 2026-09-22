@@ -86,7 +86,7 @@ title: "Home"
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/08</span>
         <span class="home-news-category home-news-paper">[Paper]</span>
-        <span class="home-news-copy"><a href="/publications/#publication-18">Nature Communications: single-<em>q</em> charge density wave in pristine 1<em>T</em>-TiSe<sub>2</sub> (accepted).</a></span>
+        <span class="home-news-copy"><a href="/publications/#publication-18">Nature Communications: single-<em>q</em> charge density wave in pristine 1<em>T</em>-TiSe<sub>2</sub>.</a></span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date"><span class="visually-hidden">2026/08</span></span>
