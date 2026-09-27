@@ -30,7 +30,7 @@ title: Publications
 
 18. Byoungkyu Kim, Younsung Chang, Changjun Lee, **Young Woo Choi**, and Soyeun Kim\*,<br>
 <a id="publication-rese2-2026" class="publication-title" href="https://doi.org/10.1016/j.cap.2026.08.011" target="_blank" rel="noopener noreferrer">Temperature-dependent spectroscopic ellipsometry study of exciton–phonon coupling in bulk ReSe<sub>2</sub></a>,<br>
-<span class="publication-citation">Current Applied Physics **92**, 37–43 (2026).</span>
+<span class="publication-citation">Current Applied Physics **92**, 37 (2026).</span>
 
 17. Byunghyun Kim†, Ayoung Yuk†, Yunyeong Chang†, **Dongsin Kim**†, Daesung Park, **Young Woo Choi**\*, Miyoung Kim\*, Moon Sung Kang\*, and Hyobin Yoo\*,  
 <a id="publication-17" class="publication-title" href="https://doi.org/10.1021/acsmaterialslett.5c01692" target="_blank" rel="noopener noreferrer">Dislocation Networks in Marginally Twisted Bilayer MoS<sub>2</sub></a>,<br>
