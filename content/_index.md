@@ -90,6 +90,11 @@ title: "Home"
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date"><span class="visually-hidden">2026/08</span></span>
+        <span class="home-news-category home-news-paper">[Paper]</span>
+        <span class="home-news-copy"><a href="/publications/#publication-rese2-2026">Current Applied Physics: exciton–phonon coupling in bulk ReSe<sub>2</sub>.</a></span>
+    </div>
+    <div class="home-news-item" role="listitem">
+        <span class="home-news-date"><span class="visually-hidden">2026/08</span></span>
         <span class="home-news-category home-news-member">[Member]</span>
         <span class="home-news-copy">Chaewoon Hong: Outstanding Poster Award, CCP2026.</span>
     </div>

@@ -16,17 +16,21 @@ title: Publications
 .publication-citation { color: var(--bs-link-color, #0d6efd); }
 </style>
 
-20. Yuanyuan Qiu†, Bin Hua†, Zhenping Wang†, Fei Hu†, Dong Zhang, Yang Lu, Marvin L. Cohen, Alex Zettl, Kecheng Cao, Cong Su\*, **Young Woo Choi**\*, and Qingqing Ji\*,<br>
+21. Yuanyuan Qiu†, Bin Hua†, Zhenping Wang†, Fei Hu†, Dong Zhang, Yang Lu, Marvin L. Cohen, Alex Zettl, Kecheng Cao, Cong Su\*, **Young Woo Choi**\*, and Qingqing Ji\*,<br>
 <span id="publication-20" class="publication-title">Boltzmann Sigmoidal Modulation of Vanadium Doping in Monolayer MoS<sub>2</sub> by Potassium Iodide</span>,<br>
 <span class="publication-citation">Nano Letters (accepted, 2026).</span>
 
-19. Tae Keun Yun†, **Byeongchan Lee**†, Soyeong Kwon, Jieun Yeon, Doohee Cho, **Young Woo Choi**\*, Kwanpyo Kim\*, and SungWoo Nam\*,<br>
+20. Tae Keun Yun†, **Byeongchan Lee**†, Soyeong Kwon, Jieun Yeon, Doohee Cho, **Young Woo Choi**\*, Kwanpyo Kim\*, and SungWoo Nam\*,<br>
 <a id="publication-19" class="publication-title" href="https://doi.org/10.1021/acsnano.6c11574" target="_blank" rel="noopener noreferrer">Anisotropic Γ-valley interlayer excitonic emission in anisotropic-isotropic 2D heterostructures</a>,<br>
 <span class="publication-citation">ACS Nano (2026).</span>
 
-18. Kimoon Higashihira Han†, Dongju Hwang†, **Dongsin Kim**†, Yeojin Ahn, Jaehun Cha, Seonggeon Gim, Gyubin Lee, Mingi Jho, Chan-young Lim, Sae Hee Ryu, Chris Jozwiak, Aaron Bostwick, Eli Rotenberg, Jonathan D. Denlinger, Makoto Hashimoto, Donghui Lu, **Young Woo Choi**\*, Gil Young Cho\*, and Yeongkwan Kim\*,<br>
+19. Kimoon Higashihira Han†, Dongju Hwang†, **Dongsin Kim**†, Yeojin Ahn, Jaehun Cha, Seonggeon Gim, Gyubin Lee, Mingi Jho, Chan-young Lim, Sae Hee Ryu, Chris Jozwiak, Aaron Bostwick, Eli Rotenberg, Jonathan D. Denlinger, Makoto Hashimoto, Donghui Lu, **Young Woo Choi**\*, Gil Young Cho\*, and Yeongkwan Kim\*,<br>
 <span id="publication-18" class="publication-title">Unexpected stabilization of a single-*q* charge density wave in pristine 1*T*-TiSe<sub>2</sub></span>,<br>
 <span class="publication-citation">Nature Communications (accepted, 2026).</span>
+
+18. Byoungkyu Kim, Younsung Chang, Changjun Lee, **Young Woo Choi**, and Soyeun Kim\*,<br>
+<a id="publication-rese2-2026" class="publication-title" href="https://doi.org/10.1016/j.cap.2026.08.011" target="_blank" rel="noopener noreferrer">Temperature-dependent spectroscopic ellipsometry study of exciton–phonon coupling in bulk ReSe<sub>2</sub></a>,<br>
+<span class="publication-citation">Current Applied Physics **92**, 37–43 (2026).</span>
 
 17. Byunghyun Kim†, Ayoung Yuk†, Yunyeong Chang†, **Dongsin Kim**†, Daesung Park, **Young Woo Choi**\*, Miyoung Kim\*, Moon Sung Kang\*, and Hyobin Yoo\*,  
 <a id="publication-17" class="publication-title" href="https://doi.org/10.1021/acsmaterialslett.5c01692" target="_blank" rel="noopener noreferrer">Dislocation Networks in Marginally Twisted Bilayer MoS<sub>2</sub></a>,<br>
