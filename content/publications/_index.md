@@ -16,6 +16,10 @@ title: Publications
 .publication-citation { color: var(--bs-link-color, #0d6efd); }
 </style>
 
+22. Sahiba Bano, Ghita Khatiri, Mitisha Jain, Prince Sharma, Saurabh Saini, **Byeongchan Lee**, **Young Woo Choi**, Zhenglu Li, Rajiv Kumar Singh, Soumitra Satapathi, Satoshi Ishii, Marios Zacharias, and Francisco Palazon,<br>
+<a id="preprint-chemrxiv-15008906-v1" class="publication-title" href="https://chemrxiv.org/doi/full/10.26434/chemrxiv.15008906/v1" target="_blank" rel="noopener noreferrer">Polymorphous Structural Landscapes Drive Broadband Optical Response in Water-Stable Mixed-Halide Antiperovskites</a>,<br>
+<span class="publication-citation">ChemRxiv 15008906 (2026).</span>
+
 21. Yuanyuan Qiu†, Bin Hua†, Zhenping Wang†, Fei Hu†, Dong Zhang, Yang Lu, Marvin L. Cohen, Alex Zettl, Kecheng Cao, Cong Su\*, **Young Woo Choi**\*, and Qingqing Ji\*,<br>
 <span id="publication-20" class="publication-title">Boltzmann Sigmoidal Modulation of Vanadium Doping in Monolayer MoS<sub>2</sub> by Potassium Iodide</span>,<br>
 <span class="publication-citation">Nano Letters (accepted, 2026).</span>
@@ -100,9 +104,3 @@ title: Publications
 <a class="publication-title" href="https://doi.org/10.1103/physrevb.98.241412" target="_blank" rel="noopener noreferrer">Strong electron-phonon coupling, electron-hole asymmetry, and nonadiabaticity in magic-angle twisted bilayer graphene</a>,<br>
 <span class="publication-citation">Physical Review B **98**, 241412(R) (2018)</span> <a href="https://arxiv.org/abs/1809.08407" target="_blank" rel="noopener noreferrer">[arXiv:1809.08407]</a>.
 {reversed="reversed"}
-
-### Preprints
-
-1. Sahiba Bano, Ghita Khatiri, Mitisha Jain, Prince Sharma, Saurabh Saini, **Byeongchan Lee**, **Young Woo Choi**, Zhenglu Li, Rajiv Kumar Singh, Soumitra Satapathi, Satoshi Ishii, Marios Zacharias, and Francisco Palazon,<br>
-<a id="preprint-chemrxiv-15008906-v1" class="publication-title" href="https://chemrxiv.org/doi/full/10.26434/chemrxiv.15008906/v1" target="_blank" rel="noopener noreferrer">Polymorphous Structural Landscapes Drive Broadband Optical Response in Water-Stable Mixed-Halide Antiperovskites</a>,<br>
-<span class="publication-citation">ChemRxiv (preprint, v1, September 16, 2026). DOI: 10.26434/chemrxiv.15008906/v1.</span>
