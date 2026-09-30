@@ -18,7 +18,7 @@ title: Publications
 
 22. Sahiba Bano, Ghita Khatiri, Mitisha Jain, Prince Sharma, Saurabh Saini, **Byeongchan Lee**, **Young Woo Choi**, Zhenglu Li, Rajiv Kumar Singh, Soumitra Satapathi, Satoshi Ishii, Marios Zacharias, and Francisco Palazon,<br>
 <a id="preprint-chemrxiv-15008906-v1" class="publication-title" href="https://chemrxiv.org/doi/full/10.26434/chemrxiv.15008906/v1" target="_blank" rel="noopener noreferrer">Polymorphous Structural Landscapes Drive Broadband Optical Response in Water-Stable Mixed-Halide Antiperovskites</a>,<br>
-<span class="publication-citation"><em>chemRxiv</em>. (2026) <em>preprint: chemrxiv.15008906/v1</em></span>
+<span class="publication-citation"><em>chemRxiv</em> (2026). <a href="https://chemrxiv.org/doi/full/10.26434/chemrxiv.15008906/v1" target="_blank" rel="noopener noreferrer"><em>[chemrxiv.15008906/v1]</em></a></span>
 
 21. Yuanyuan Qiu†, Bin Hua†, Zhenping Wang†, Fei Hu†, Dong Zhang, Yang Lu, Marvin L. Cohen, Alex Zettl, Kecheng Cao, Cong Su\*, **Young Woo Choi**\*, and Qingqing Ji\*,<br>
 <span id="publication-20" class="publication-title">Boltzmann Sigmoidal Modulation of Vanadium Doping in Monolayer MoS<sub>2</sub> by Potassium Iodide</span>,<br>
