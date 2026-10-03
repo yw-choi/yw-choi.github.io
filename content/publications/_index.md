@@ -26,7 +26,7 @@ title: Publications
 
 20. Tae Keun Yun†, **Byeongchan Lee**†, Soyeong Kwon, Jieun Yeon, Doohee Cho, **Young Woo Choi**\*, Kwanpyo Kim\*, and SungWoo Nam\*,<br>
 <a id="publication-19" class="publication-title" href="https://doi.org/10.1021/acsnano.6c11574" target="_blank" rel="noopener noreferrer">Anisotropic Γ-valley interlayer excitonic emission in anisotropic-isotropic 2D heterostructures</a>,<br>
-<span class="publication-citation">ACS Nano (in press, 2026).</span>
+<span class="publication-citation">ACS Nano **20**, 26215 (2026).</span>
 
 19. Kimoon Higashihira Han†, Dongju Hwang†, **Dongsin Kim**†, Yeojin Ahn, Jaehun Cha, Seonggeon Gim, Gyubin Lee, Mingi Jho, Chan-young Lim, Sae Hee Ryu, Chris Jozwiak, Aaron Bostwick, Eli Rotenberg, Jonathan D. Denlinger, Makoto Hashimoto, Donghui Lu, **Young Woo Choi**\*, Gil Young Cho\*, and Yeongkwan Kim\*,<br>
 <a id="publication-18" class="publication-title" href="https://doi.org/10.1038/s41467-026-78072-0" target="_blank" rel="noopener noreferrer">Unexpected stabilization of a single-*q* charge density wave in pristine 1*T*-TiSe<sub>2</sub></a>,<br>
