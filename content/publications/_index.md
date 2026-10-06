@@ -21,8 +21,8 @@ title: Publications
 <span class="publication-citation"><em>chemRxiv</em> (2026). <a href="https://chemrxiv.org/doi/full/10.26434/chemrxiv.15008906/v1" target="_blank" rel="noopener noreferrer"><em>[chemrxiv.15008906/v1]</em></a></span>
 
 21. Yuanyuan Qiu†, Bin Hua†, Zhenping Wang†, Fei Hu†, Dong Zhang, Yang Lu, Marvin L. Cohen, Alex Zettl, Kecheng Cao, Cong Su\*, **Young Woo Choi**\*, and Qingqing Ji\*,<br>
-<span id="publication-20" class="publication-title">Boltzmann Sigmoidal Modulation of Vanadium Doping in Monolayer MoS<sub>2</sub> by Potassium Iodide</span>,<br>
-<span class="publication-citation">Nano Letters (accepted, 2026).</span>
+<a id="publication-20" class="publication-title" href="https://doi.org/10.1021/acs.nanolett.6c03019" target="_blank" rel="noopener noreferrer">Boltzmann Sigmoidal Modulation of Vanadium Doping in Monolayer MoS<sub>2</sub> by Potassium Iodide</a>,<br>
+<span class="publication-citation">Nano Letters (2026).</span>
 
 20. Tae Keun Yun†, **Byeongchan Lee**†, Soyeong Kwon, Jieun Yeon, Doohee Cho, **Young Woo Choi**\*, Kwanpyo Kim\*, and SungWoo Nam\*,<br>
 <a id="publication-19" class="publication-title" href="https://doi.org/10.1021/acsnano.6c11574" target="_blank" rel="noopener noreferrer">Anisotropic Γ-valley interlayer excitonic emission in anisotropic-isotropic 2D heterostructures</a>,<br>
