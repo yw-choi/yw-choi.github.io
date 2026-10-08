@@ -16,7 +16,7 @@ title: Publications
 .publication-citation { color: var(--bs-link-color, #0d6efd); }
 </style>
 
-23. YoungJu Park†, Taegil Kim†, Jonghyeok Baek†, Seongbin Park, Daeho Kim, ChaeHo Shin, Sam Sokhuoy, Wonyoung Kim, Sun Dongbang, Doseok Kim, **Young Woo Choi**\*, and Junwoo Park\*,<br>
+23. YoungJu Park†, Taegil Kim†, Jonghyeok Baek†, **Seongbin Park**, Daeho Kim, ChaeHo Shin, Sam Sokhuoy, Wonyoung Kim, Sun Dongbang, Doseok Kim, **Young Woo Choi**\*, and Junwoo Park\*,<br>
 <span id="publication-non-equilibrium-2026" class="publication-title">Non-equilibrium Resonance Scattering in Intramolecular Charge Transport Drives Conformational Changes</span>,<br>
 <span class="publication-citation">Nature Communications (accepted, 2026).</span>
 
