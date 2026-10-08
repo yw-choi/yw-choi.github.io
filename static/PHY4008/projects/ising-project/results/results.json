@@ -1,0 +1,43 @@
+{
+  "parameters": [
+    4,
+    8000,
+    16000,
+    5
+  ],
+  "crossings": [
+    {
+      "sizes": [
+        8,
+        16
+      ],
+      "candidates": [
+        [
+          2.25,
+          2.3,
+          2.259990383382623
+        ]
+      ]
+    },
+    {
+      "sizes": [
+        16,
+        32
+      ],
+      "candidates": [
+        [
+          2.25,
+          2.3,
+          2.259920100443414
+        ]
+      ]
+    }
+  ],
+  "uncertainty": "SE across four independent run estimates; not a confidence interval.",
+  "validation": {
+    "data_sha256": "082bb7a6329a1ed3afb902447a41786425555507ade237cc5e59a9d4bfaf3094",
+    "mean_and_se_match": true,
+    "max_mean_difference": 0.0,
+    "max_se_difference": 0.0
+  }
+}

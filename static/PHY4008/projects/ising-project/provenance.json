@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-08",
+  "presentation_url": "https://docs.google.com/presentation/d/1KAFb_y9PtoIpSW4TPFgb8FJGoKyu-NY-hI6zPfiZNhQ/edit",
+  "original_sources": {
+    "scripts/notebooks/ising_project.py": "project.py",
+    "scripts/notebooks/ising_kernel.py": "ising_kernel.py",
+    "notebooks/03_ising_model_2_data.npz": "03_ising_model_2_data.npz",
+    "slides/06_Ising_Project_Example/build/data-summary.json": "reference_summary.json",
+    "qa/notebooks/03_ising_model_2/physics.json": "benchmark_reference.json",
+    "slides/06_Ising_Project_Example/build/ising_I_replay.npz": "illustration_reference.npz",
+    "slides/06_Ising_Project_Example/speaker_notes.md": "speaker_notes.md"
+  },
+  "production_scan_regenerated": false,
+  "kernel_modified": false,
+  "presentation_revision": 5,
+  "main_slides": 15,
+  "backup_slides": 7,
+  "latest_change": "Conference-style main talk; explicit exact enumeration; response-function and spin-correlation outlook; Summary placed last. Instructor edits retained. Computational code and executed outputs unchanged.",
+  "native_revision": "JlfHqGHg7Tu6BA"
+}
