@@ -16,6 +16,10 @@ title: Publications
 .publication-citation { color: var(--bs-link-color, #0d6efd); }
 </style>
 
+23. YoungJu Park†, Taegil Kim†, Jonghyeok Baek†, Seongbin Park, Daeho Kim, ChaeHo Shin, Sam Sokhuoy, Wonyoung Kim, Sun Dongbang, Doseok Kim, **Young Woo Choi**\*, and Junwoo Park\*,<br>
+<span id="publication-non-equilibrium-2026" class="publication-title">Non-equilibrium Resonance Scattering in Intramolecular Charge Transport Drives Conformational Changes</span>,<br>
+<span class="publication-citation">Nature Communications (accepted, 2026).</span>
+
 22. Sahiba Bano, Ghita Khatiri, Mitisha Jain, Prince Sharma, Saurabh Saini, **Byeongchan Lee**, **Young Woo Choi**, Zhenglu Li, Rajiv Kumar Singh, Soumitra Satapathi, Satoshi Ishii, Marios Zacharias, and Francisco Palazon,<br>
 <a id="preprint-chemrxiv-15008906-v1" class="publication-title" href="https://chemrxiv.org/doi/full/10.26434/chemrxiv.15008906/v1" target="_blank" rel="noopener noreferrer">Polymorphous Structural Landscapes Drive Broadband Optical Response in Water-Stable Mixed-Halide Antiperovskites</a>,<br>
 <span class="publication-citation"><em>chemRxiv</em> (2026). <a href="https://chemrxiv.org/doi/full/10.26434/chemrxiv.15008906/v1" target="_blank" rel="noopener noreferrer"><em>[chemrxiv.15008906/v1]</em></a></span>
