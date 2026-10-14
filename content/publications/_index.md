@@ -16,6 +16,10 @@ title: Publications
 .publication-citation { color: var(--bs-link-color, #0d6efd); }
 </style>
 
+24. Yoonseok Oh†, Changmo Kang†, **Min Chul Choi**†, Jaewoo Choi, Sung Won Jung, Timur K. Kim, Cephise Cacho, Makoto Hashimoto, Donghui Lu, Patrick S. Kirchmann, Jonathan A. Sobota, Zhi-Xun Shen, **Young Woo Choi**\*, and Keun Su Kim\*,<br>
+<span id="publication-multivalley-polarons-2026" class="publication-title">Multivalley polarons at the onset of a Lifshitz transition in doped WS<sub>2</sub></span>,<br>
+<span class="publication-citation">Nature Communications (accepted, 2026).</span>
+
 23. YoungJu Park†, Taegil Kim†, Jonghyeok Baek†, **Seongbin Park**, Daeho Kim, ChaeHo Shin, Sam Sokhuoy, Wonyoung Kim, Sun Dongbang, Doseok Kim, **Young Woo Choi**\*, and Junwoo Park\*,<br>
 <span id="publication-non-equilibrium-2026" class="publication-title">Non-equilibrium Resonance Scattering in Intramolecular Charge Transport Drives Conformational Changes</span>,<br>
 <span class="publication-citation">Nature Communications (accepted, 2026).</span>
