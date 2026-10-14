@@ -74,7 +74,7 @@ title: "Home"
 
 <div class="home-news" role="list" aria-label="News">
     <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2026/10/14</span>
+        <span class="home-news-date">2026/10</span>
         <span class="home-news-category home-news-paper">[Paper]</span>
         <span class="home-news-copy"><a href="/publications/#publication-multivalley-polarons-2026">Nature Communications: multivalley polarons at the onset of a Lifshitz transition in doped WS<sub>2</sub>.</a></span>
     </div>
