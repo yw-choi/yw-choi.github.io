@@ -16,37 +16,41 @@ title: Publications
 .publication-citation { color: var(--bs-link-color, #0d6efd); }
 </style>
 
-25. Benran Zhang, **Byeongchan Lee**, Zien Zhu, Chih-En Hsu, Zhenfa Zheng, Hung-Chung Hsueh, **Young Woo Choi**, Mauro Del Ben, and Zhenglu Li\*,<br>
+26. Benran Zhang, **Byeongchan Lee**, Zien Zhu, Chih-En Hsu, Zhenfa Zheng, Hung-Chung Hsueh, **Young Woo Choi**, Mauro Del Ben, and Zhenglu Li\*,<br>
 <a id="preprint-arxiv-2610-20779" class="publication-title" href="https://arxiv.org/abs/2610.20779" target="_blank" rel="noopener noreferrer">Enabling large language model agents for high-fidelity many-body perturbation theory calculations</a>,<br>
 <span class="publication-citation"><em>arXiv</em> (2026). <a href="https://arxiv.org/abs/2610.20779" target="_blank" rel="noopener noreferrer"><em>[arXiv:2610.20779]</em></a></span>
 
-24. Yoonseok Oh†, Changmo Kang†, **Min Chul Choi**†, Jaewoo Choi, Sung Won Jung, Timur K. Kim, Cephise Cacho, Makoto Hashimoto, Donghui Lu, Patrick S. Kirchmann, Jonathan A. Sobota, Zhi-Xun Shen, **Young Woo Choi**\*, and Keun Su Kim\*,<br>
+25. Yoonseok Oh†, Changmo Kang†, **Min Chul Choi**†, Jaewoo Choi, Sung Won Jung, Timur K. Kim, Cephise Cacho, Makoto Hashimoto, Donghui Lu, Patrick S. Kirchmann, Jonathan A. Sobota, Zhi-Xun Shen, **Young Woo Choi**\*, and Keun Su Kim\*,<br>
 <span id="publication-multivalley-polarons-2026" class="publication-title">Multivalley polarons at the onset of a Lifshitz transition in doped WS<sub>2</sub></span>,<br>
 <span class="publication-citation">Nature Communications (accepted, 2026).</span>
 
-23. YoungJu Park†, Taegil Kim†, Jonghyeok Baek†, **Seongbin Park**, Daeho Kim, ChaeHo Shin, Sam Sokhuoy, Wonyoung Kim, Sun Dongbang, Doseok Kim, **Young Woo Choi**\*, and Junwoo Park\*,<br>
+24. YoungJu Park†, Taegil Kim†, Jonghyeok Baek†, **Seongbin Park**, Daeho Kim, ChaeHo Shin, Sam Sokhuoy, Wonyoung Kim, Sun Dongbang, Doseok Kim, **Young Woo Choi**\*, and Junwoo Park\*,<br>
 <span id="publication-non-equilibrium-2026" class="publication-title">Non-equilibrium Resonance Scattering in Intramolecular Charge Transport Drives Conformational Changes</span>,<br>
 <span class="publication-citation">Nature Communications (accepted, 2026).</span>
 
-22. Sahiba Bano, Ghita Khatiri, Mitisha Jain, Prince Sharma, Saurabh Saini, **Byeongchan Lee**, **Young Woo Choi**, Zhenglu Li, Rajiv Kumar Singh, Soumitra Satapathi, Satoshi Ishii, Marios Zacharias, and Francisco Palazon,<br>
+23. Sahiba Bano, Ghita Khatiri, Mitisha Jain, Prince Sharma, Saurabh Saini, **Byeongchan Lee**, **Young Woo Choi**, Zhenglu Li, Rajiv Kumar Singh, Soumitra Satapathi, Satoshi Ishii, Marios Zacharias, and Francisco Palazon,<br>
 <a id="preprint-chemrxiv-15008906-v1" class="publication-title" href="https://chemrxiv.org/doi/full/10.26434/chemrxiv.15008906/v1" target="_blank" rel="noopener noreferrer">Polymorphous Structural Landscapes Drive Broadband Optical Response in Water-Stable Mixed-Halide Antiperovskites</a>,<br>
 <span class="publication-citation"><em>chemRxiv</em> (2026). <a href="https://chemrxiv.org/doi/full/10.26434/chemrxiv.15008906/v1" target="_blank" rel="noopener noreferrer"><em>[chemrxiv.15008906/v1]</em></a></span>
 
-21. Yuanyuan Qiu†, Bin Hua†, Zhenping Wang†, Fei Hu†, Dong Zhang, Yang Lu, Marvin L. Cohen, Alex Zettl, Kecheng Cao, Cong Su\*, **Young Woo Choi**\*, and Qingqing Ji\*,<br>
+22. Yuanyuan Qiu†, Bin Hua†, Zhenping Wang†, Fei Hu†, Dong Zhang, Yang Lu, Marvin L. Cohen, Alex Zettl, Kecheng Cao, Cong Su\*, **Young Woo Choi**\*, and Qingqing Ji\*,<br>
 <a id="publication-20" class="publication-title" href="https://doi.org/10.1021/acs.nanolett.6c03019" target="_blank" rel="noopener noreferrer">Boltzmann Sigmoidal Modulation of Vanadium Doping in Monolayer MoS<sub>2</sub> by Potassium Iodide</a>,<br>
 <span class="publication-citation">Nano Letters **26**, 13836 (2026).</span>
 
-20. Tae Keun Yun†, **Byeongchan Lee**†, Soyeong Kwon, Jieun Yeon, Doohee Cho, **Young Woo Choi**\*, Kwanpyo Kim\*, and SungWoo Nam\*,<br>
+21. Tae Keun Yun†, **Byeongchan Lee**†, Soyeong Kwon, Jieun Yeon, Doohee Cho, **Young Woo Choi**\*, Kwanpyo Kim\*, and SungWoo Nam\*,<br>
 <a id="publication-19" class="publication-title" href="https://doi.org/10.1021/acsnano.6c11574" target="_blank" rel="noopener noreferrer">Anisotropic Γ-valley interlayer excitonic emission in anisotropic-isotropic 2D heterostructures</a>,<br>
 <span class="publication-citation">ACS Nano **20**, 26215 (2026).</span>
 
-19. Kimoon Higashihira Han†, Dongju Hwang†, **Dongsin Kim**†, Yeojin Ahn, Jaehun Cha, Seonggeon Gim, Gyubin Lee, Mingi Jho, Chan-young Lim, Sae Hee Ryu, Chris Jozwiak, Aaron Bostwick, Eli Rotenberg, Jonathan D. Denlinger, Makoto Hashimoto, Donghui Lu, **Young Woo Choi**\*, Gil Young Cho\*, and Yeongkwan Kim\*,<br>
+20. Kimoon Higashihira Han†, Dongju Hwang†, **Dongsin Kim**†, Yeojin Ahn, Jaehun Cha, Seonggeon Gim, Gyubin Lee, Mingi Jho, Chan-young Lim, Sae Hee Ryu, Chris Jozwiak, Aaron Bostwick, Eli Rotenberg, Jonathan D. Denlinger, Makoto Hashimoto, Donghui Lu, **Young Woo Choi**\*, Gil Young Cho\*, and Yeongkwan Kim\*,<br>
 <a id="publication-18" class="publication-title" href="https://doi.org/10.1038/s41467-026-78072-0" target="_blank" rel="noopener noreferrer">Unexpected stabilization of a single-*q* charge density wave in pristine 1*T*-TiSe<sub>2</sub></a>,<br>
 <span class="publication-citation">Nature Communications (in press, 2026).</span>
 
-18. Byoungkyu Kim, Younsung Chang, Changjun Lee, **Young Woo Choi**, and Soyeun Kim\*,<br>
+19. Byoungkyu Kim, Younsung Chang, Changjun Lee, **Young Woo Choi**, and Soyeun Kim\*,<br>
 <a id="publication-rese2-2026" class="publication-title" href="https://doi.org/10.1016/j.cap.2026.08.011" target="_blank" rel="noopener noreferrer">Temperature-dependent spectroscopic ellipsometry study of exciton–phonon coupling in bulk ReSe<sub>2</sub></a>,<br>
 <span class="publication-citation">Current Applied Physics **92**, 37 (2026).</span>
+
+18. Kawon Lee, Sangeun Oh, **Young Woo Choi**\*, and Jeong-Hyuck Park\*,<br>
+<a id="preprint-arxiv-2605-12043" class="publication-title" href="https://arxiv.org/abs/2605.12043" target="_blank" rel="noopener noreferrer">Attractive statistical forces and Pauli crystal formation in trapped Fermi gases</a>,<br>
+<span class="publication-citation"><em>arXiv</em> (2026). <a href="https://arxiv.org/abs/2605.12043" target="_blank" rel="noopener noreferrer"><em>[arXiv:2605.12043]</em></a></span>
 
 17. Byunghyun Kim†, Ayoung Yuk†, Yunyeong Chang†, **Dongsin Kim**†, Daesung Park, **Young Woo Choi**\*, Miyoung Kim\*, Moon Sung Kang\*, and Hyobin Yoo\*,  
 <a id="publication-17" class="publication-title" href="https://doi.org/10.1021/acsmaterialslett.5c01692" target="_blank" rel="noopener noreferrer">Dislocation Networks in Marginally Twisted Bilayer MoS<sub>2</sub></a>,<br>
