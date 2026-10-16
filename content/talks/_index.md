@@ -17,6 +17,14 @@ title: Talks
 
 <li>
 <span class="talk-title">
+Quantum materials from first principles
+</span><br>
+<span class="talk-type">Colloquium of Young Woo Choi</span><br>
+<span class="talk-venue">Department of Physics, KAIST, Daejeon, Korea, Nov 30, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
 Sequential charge density wave transitions in 1T-TiSe<sub>2</sub> driven by vibrational free energy
 </span><br>
 <span class="talk-type">Contributed talk of Dongsin Kim</span><br>
@@ -45,6 +53,14 @@ Phonon-limited mobility of Bi<sub>2</sub>O<sub>2</sub>Se from first-principles G
 </span><br>
 <span class="talk-type">Contributed talk of Byeongchan Lee</span><br>
 <span class="talk-venue">Korean Physical Society Fall Meeting, ICC Jeju, Jeju, Korea, Oct 21, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
+Polarons in low-dimensional multivalley materials
+</span><br>
+<span class="talk-type">Invited talk of Young Woo Choi</span><br>
+<span class="talk-venue">ASG Meeting, Jeonbuk National University, Jeonju, Korea, Aug 24, 2026</span>
 </li>
 
 <li>
@@ -93,6 +109,14 @@ Structural Relaxation and Phonons in Moiré Materials from an Atomistic Approach
 </span><br>
 <span class="talk-type">Poster of Dongsin Kim</span><br>
 <span class="talk-venue">CCP2026, Sejong University Convention Center, Seoul, Korea, Aug 9-14, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
+Polarons in Low-Dimensional Materials from First Principles
+</span><br>
+<span class="talk-type">Invited talk of Young Woo Choi</span><br>
+<span class="talk-venue">University of Southern California, Los Angeles, CA, USA, Jul 15, 2026</span>
 </li>
 
 <li>
