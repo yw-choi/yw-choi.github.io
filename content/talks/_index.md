@@ -17,6 +17,38 @@ title: Talks
 
 <li>
 <span class="talk-title">
+Sequential charge density wave transitions in 1T-TiSe<sub>2</sub> driven by vibrational free energy
+</span><br>
+<span class="talk-type">Contributed talk of Dongsin Kim</span><br>
+<span class="talk-venue">Korean Physical Society Fall Meeting, ICC Jeju, Jeju, Korea, Oct 23, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
+First-principles study of electron-phonon spectral functions in doped WS<sub>2</sub>
+</span><br>
+<span class="talk-type">Contributed talk of Minchul Choi</span><br>
+<span class="talk-venue">Korean Physical Society Fall Meeting, ICC Jeju, Jeju, Korea, Oct 23, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
+Topological electronic structure of 2D electride Ti<sub>2</sub>O
+</span><br>
+<span class="talk-type">Poster of Sreang Sokly</span><br>
+<span class="talk-venue">Korean Physical Society Fall Meeting, ICC Jeju, Jeju, Korea, Oct 22, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
+Phonon-limited mobility of Bi<sub>2</sub>O<sub>2</sub>Se from first-principles GW perturbation theory
+</span><br>
+<span class="talk-type">Contributed talk of Byeongchan Lee</span><br>
+<span class="talk-venue">Korean Physical Society Fall Meeting, ICC Jeju, Jeju, Korea, Oct 21, 2026</span>
+</li>
+
+<li>
+<span class="talk-title">
 Polarons and Excitons in Low-Dimensional Materials from First Principles
 </span><br>
 <span class="talk-type">Invited talk of Young Woo Choi</span><br>
