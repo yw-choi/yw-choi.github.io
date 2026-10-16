@@ -16,6 +16,10 @@ title: Publications
 .publication-citation { color: var(--bs-link-color, #0d6efd); }
 </style>
 
+25. Benran Zhang, **Byeongchan Lee**, Zien Zhu, Chih-En Hsu, Zhenfa Zheng, Hung-Chung Hsueh, **Young Woo Choi**, Mauro Del Ben, and Zhenglu Li\*,<br>
+<a id="preprint-arxiv-2610-20779" class="publication-title" href="https://arxiv.org/abs/2610.20779" target="_blank" rel="noopener noreferrer">Enabling large language model agents for high-fidelity many-body perturbation theory calculations</a>,<br>
+<span class="publication-citation"><em>arXiv</em> (2026). <a href="https://arxiv.org/abs/2610.20779" target="_blank" rel="noopener noreferrer"><em>[arXiv:2610.20779]</em></a></span>
+
 24. Yoonseok Oh†, Changmo Kang†, **Min Chul Choi**†, Jaewoo Choi, Sung Won Jung, Timur K. Kim, Cephise Cacho, Makoto Hashimoto, Donghui Lu, Patrick S. Kirchmann, Jonathan A. Sobota, Zhi-Xun Shen, **Young Woo Choi**\*, and Keun Su Kim\*,<br>
 <span id="publication-multivalley-polarons-2026" class="publication-title">Multivalley polarons at the onset of a Lifshitz transition in doped WS<sub>2</sub></span>,<br>
 <span class="publication-citation">Nature Communications (accepted, 2026).</span>
