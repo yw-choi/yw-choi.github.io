@@ -16,21 +16,6 @@ title: Publications
 .publication-citation { color: var(--bs-link-color, #0d6efd); }
 </style>
 
-#### Preprints
-
-3. <span id="preprint-arxiv-2610-20779" class="publication-title">Enabling large language model agents for high-fidelity many-body perturbation theory calculations</span><br>
-Benran Zhang, **Byeongchan Lee**, Zien Zhu, Chih-En Hsu, Zhenfa Zheng, Hung-Chung Hsueh, **Young Woo Choi**, Mauro Del Ben, and Zhenglu Li\*<br>
-<span class="publication-citation"><a href="https://arxiv.org/abs/2610.20779" target="_blank" rel="noopener noreferrer"><em>arXiv:2610.20779</em></a>.</span>
-
-2. <span id="preprint-chemrxiv-15008906-v1" class="publication-title">Polymorphous Structural Landscapes Drive Broadband Optical Response in Water-Stable Mixed-Halide Antiperovskites</span><br>
-Sahiba Bano, Ghita Khatiri, Mitisha Jain, Prince Sharma, Saurabh Saini, **Byeongchan Lee**, **Young Woo Choi**, Zhenglu Li, Rajiv Kumar Singh, Soumitra Satapathi, Satoshi Ishii, Marios Zacharias, and Francisco Palazon<br>
-<span class="publication-citation"><a href="https://chemrxiv.org/doi/full/10.26434/chemrxiv.15008906/v1" target="_blank" rel="noopener noreferrer"><em>chemRxiv:15008906/v1</em></a>.</span>
-
-1. <span id="preprint-arxiv-2605-12043" class="publication-title">Attractive statistical forces and Pauli crystal formation in trapped Fermi gases</span><br>
-Kawon Lee, Sangeun Oh, **Young Woo Choi**\*, and Jeong-Hyuck Park\*<br>
-<span class="publication-citation"><a href="https://arxiv.org/abs/2605.12043" target="_blank" rel="noopener noreferrer"><em>arXiv:2605.12043</em></a>.</span>
-{reversed="reversed"}
-
 #### Journal Articles
 
 24. <span id="publication-single-electrons-2026" class="publication-title">Real-space imaging and manipulation of single electrons on a solid surface</span><br>
