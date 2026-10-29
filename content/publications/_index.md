@@ -40,7 +40,7 @@ Tae Keun Yun†, **Byeongchan Lee**†, Soyeong Kwon, Jieun Yeon, Doohee Cho, **
 
 19. <span id="publication-18" class="publication-title">Unexpected stabilization of a single-*q* charge density wave in pristine 1*T*-TiSe<sub>2</sub></span><br>
 Kimoon Higashihira Han†, Dongju Hwang†, **Dongsin Kim**†, Yeojin Ahn, Jaehun Cha, Seonggeon Gim, Gyubin Lee, Mingi Jho, Chan-young Lim, Sae Hee Ryu, Chris Jozwiak, Aaron Bostwick, Eli Rotenberg, Jonathan D. Denlinger, Makoto Hashimoto, Donghui Lu, **Young Woo Choi**\*, Gil Young Cho\*, and Yeongkwan Kim\*<br>
-<span class="publication-citation"><a href="https://doi.org/10.1038/s41467-026-78072-0" target="_blank" rel="noopener noreferrer">Nature Communications (in press, 2026)</a>.</span>
+<span class="publication-citation"><a href="https://doi.org/10.1038/s41467-026-78072-0" target="_blank" rel="noopener noreferrer">Nature Communications **17**, 11220 (2026)</a>.</span>
 
 18. <span id="publication-rese2-2026" class="publication-title">Temperature-dependent spectroscopic ellipsometry study of exciton–phonon coupling in bulk ReSe<sub>2</sub></span><br>
 Byoungkyu Kim, Younsung Chang, Changjun Lee, **Young Woo Choi**, and Soyeun Kim\*<br>
