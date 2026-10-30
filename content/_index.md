@@ -75,6 +75,11 @@ title: "Home"
 <div class="home-news" role="list" aria-label="News">
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/10</span>
+        <span class="home-news-category home-news-member">[Member]</span>
+        <span class="home-news-copy">Byeongchan Lee and Minchul Choi: Outstanding Presentation Awards (Oral), KPS Fall Meeting.</span>
+    </div>
+    <div class="home-news-item" role="listitem">
+        <span class="home-news-date">2026/10</span>
         <span class="home-news-category home-news-paper">[Paper]</span>
         <span class="home-news-copy"><a href="/publications/#publication-multivalley-polarons-2026">Nature Communications: multivalley polarons at the onset of a Lifshitz transition in doped WS<sub>2</sub>.</a></span>
     </div>
@@ -82,11 +87,6 @@ title: "Home"
         <span class="home-news-date">2026/10</span>
         <span class="home-news-category home-news-paper">[Paper]</span>
         <span class="home-news-copy"><a href="/publications/#publication-non-equilibrium-2026">Nature Communications: non-equilibrium resonance scattering drives conformational changes.</a></span>
-    </div>
-    <div class="home-news-item" role="listitem">
-        <span class="home-news-date"><span class="visually-hidden">2026/10</span></span>
-        <span class="home-news-category home-news-member">[Member]</span>
-        <span class="home-news-copy">Byeongchan Lee and Minchul Choi: Outstanding Presentation Awards (Oral), KPS Fall Meeting.</span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/09</span>
