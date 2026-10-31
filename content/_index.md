@@ -75,8 +75,23 @@ title: "Home"
 <div class="home-news" role="list" aria-label="News">
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/10</span>
+        <span class="home-news-category home-news-paper">[Paper]</span>
+        <span class="home-news-copy">Our paper has been accepted for publication in <strong>Science</strong>.</span>
+    </div>
+    <div class="home-news-item" role="listitem">
+        <span class="home-news-date">2026/10</span>
         <span class="home-news-category home-news-member">[Member]</span>
         <span class="home-news-copy">Byeongchan Lee and Minchul Choi: Outstanding Presentation Awards (Oral), KPS Fall Meeting.</span>
+    </div>
+    <div class="home-news-item" role="listitem">
+        <span class="home-news-date">2026/10</span>
+        <span class="home-news-category home-news-paper">[Paper]</span>
+        <span class="home-news-copy"><a href="/publications/#publication-18">Nature Communications (published): single-<em>q</em> charge density wave in pristine 1<em>T</em>-TiSe<sub>2</sub>.</a></span>
+    </div>
+    <div class="home-news-item" role="listitem">
+        <span class="home-news-date">2026/10</span>
+        <span class="home-news-category home-news-member">[Member]</span>
+        <span class="home-news-copy">Dongsin Kim and Byeongchan Lee: selected as outstanding graduate students, Department of Physics, Sogang University.</span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/10</span>
@@ -87,6 +102,11 @@ title: "Home"
         <span class="home-news-date">2026/10</span>
         <span class="home-news-category home-news-paper">[Paper]</span>
         <span class="home-news-copy"><a href="/publications/#publication-non-equilibrium-2026">Nature Communications: non-equilibrium resonance scattering drives conformational changes.</a></span>
+    </div>
+    <div class="home-news-item" role="listitem">
+        <span class="home-news-date">2026/10</span>
+        <span class="home-news-category home-news-events">[Events]</span>
+        <span class="home-news-copy"><a href="/talks/">Korean Physical Society Fall Meeting, Jeju: three contributed talks and one poster.</a></span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/09</span>
@@ -100,11 +120,6 @@ title: "Home"
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/08</span>
-        <span class="home-news-category home-news-paper">[Paper]</span>
-        <span class="home-news-copy"><a href="/publications/#publication-18">Nature Communications: single-<em>q</em> charge density wave in pristine 1<em>T</em>-TiSe<sub>2</sub>.</a></span>
-    </div>
-    <div class="home-news-item" role="listitem">
-        <span class="home-news-date"><span class="visually-hidden">2026/08</span></span>
         <span class="home-news-category home-news-paper">[Paper]</span>
         <span class="home-news-copy"><a href="/publications/#publication-rese2-2026">Current Applied Physics: exciton–phonon coupling in bulk ReSe<sub>2</sub>.</a></span>
     </div>
