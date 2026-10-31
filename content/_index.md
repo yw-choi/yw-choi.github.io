@@ -76,7 +76,7 @@ title: "Home"
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/10</span>
         <span class="home-news-category home-news-paper">[Paper]</span>
-        <span class="home-news-copy"><a href="/publications/#publication-single-electrons-2026">Science (accepted): real-space imaging and manipulation of single electrons on a solid surface.</a></span>
+        <span class="home-news-copy"><a href="/publications/#publication-single-electrons-2026">Science: real-space imaging and manipulation of single electrons on a solid surface.</a></span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date"><span class="visually-hidden">2026/10</span></span>
