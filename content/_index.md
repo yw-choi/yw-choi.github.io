@@ -85,11 +85,6 @@ title: "Home"
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/10</span>
-        <span class="home-news-category home-news-paper">[Paper]</span>
-        <span class="home-news-copy"><a href="/publications/#publication-18">Nature Communications (published): single-<em>q</em> charge density wave in pristine 1<em>T</em>-TiSe<sub>2</sub>.</a></span>
-    </div>
-    <div class="home-news-item" role="listitem">
-        <span class="home-news-date">2026/10</span>
         <span class="home-news-category home-news-member">[Member]</span>
         <span class="home-news-copy">Dongsin Kim and Byeongchan Lee: selected as outstanding graduate students, Department of Physics, Sogang University.</span>
     </div>
@@ -107,6 +102,11 @@ title: "Home"
         <span class="home-news-date">2026/10</span>
         <span class="home-news-category home-news-events">[Events]</span>
         <span class="home-news-copy"><a href="/talks/">Korean Physical Society Fall Meeting, Jeju: three contributed talks and one poster.</a></span>
+    </div>
+    <div class="home-news-item" role="listitem">
+        <span class="home-news-date">2026/09</span>
+        <span class="home-news-category home-news-paper">[Paper]</span>
+        <span class="home-news-copy"><a href="/publications/#publication-18">Nature Communications (published): single-<em>q</em> charge density wave in pristine 1<em>T</em>-TiSe<sub>2</sub>.</a></span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/09</span>
