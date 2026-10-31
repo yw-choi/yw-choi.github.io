@@ -101,7 +101,7 @@ title: "Home"
     <div class="home-news-item" role="listitem">
         <span class="home-news-date"><span class="visually-hidden">2026/10</span></span>
         <span class="home-news-category home-news-events">[Events]</span>
-        <span class="home-news-copy"><a href="/talks/">Korean Physical Society Fall Meeting, Jeju: three contributed talks and one poster.</a></span>
+        <span class="home-news-copy">Korean Physical Society Fall Meeting, Jeju.</span>
     </div>
     <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/09</span>
