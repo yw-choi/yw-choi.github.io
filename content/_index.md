@@ -74,6 +74,11 @@ title: "Home"
 
 <div class="home-news" role="list" aria-label="News">
     <div class="home-news-item" role="listitem">
+        <span class="home-news-date">2026/11</span>
+        <span class="home-news-category home-news-paper">[Paper]</span>
+        <span class="home-news-copy"><a href="/publications/#publication-gdnibi2-2026">Journal of Alloys and Compounds: anisotropic superconductivity intertwined with localized antiferromagnetism in GdNi<sub>0.7</sub>Bi<sub>2</sub>.</a></span>
+    </div>
+    <div class="home-news-item" role="listitem">
         <span class="home-news-date">2026/10</span>
         <span class="home-news-category home-news-paper">[Paper]</span>
         <span class="home-news-copy"><a href="/publications/#publication-single-electrons-2026">Science: real-space imaging and manipulation of single electrons on a solid surface.</a></span>
