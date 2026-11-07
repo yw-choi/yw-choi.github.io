@@ -1,0 +1,28 @@
+{{/* Both the homepage and archive consume this validated, date-ordered feed. */}}
+{{ $items := slice }}
+{{ $ids := slice }}
+{{ range $index, $item := site.Data.news }}
+  {{ if or (not $item.id) (not (findRE `^[a-z0-9][a-z0-9-]*$` $item.id)) (in $ids $item.id) }}
+    {{ errorf "News post %d needs a unique id" $index }}
+  {{ end }}
+  {{ $ids = $ids | append $item.id }}
+  {{ if not (findRE `^\d{4}-(0[1-9]|1[0-2])(-(0[1-9]|[12]\d|3[01]))?$` $item.date) }}
+    {{ errorf "News %s needs an ISO date (YYYY-MM or YYYY-MM-DD)" $item.id }}
+  {{ end }}
+  {{ if not $item.comment }}{{ errorf "News %s needs a comment" $item.id }}{{ end }}
+  {{ if not $item.images }}{{ errorf "News %s needs at least one image" $item.id }}{{ end }}
+  {{ range $item.images }}
+    {{ if or (not (hasPrefix . "/")) (not (or (fileExists (printf "static%s" .)) (fileExists (printf "content%s" .)))) }}
+      {{ errorf "News %s has a missing local image: %s" $item.id . }}
+    {{ end }}
+  {{ end }}
+  {{ $label := $item.title | default $item.comment }}
+  {{/* Preserve editorial order when the recorded date has only month precision. */}}
+  {{ $sortDate := $item.date }}
+  {{ if eq (len $sortDate) 7 }}{{ $sortDate = printf "%s-00" $sortDate }}{{ else }}
+    {{ $parsedDate := time.AsTime $sortDate }}
+  {{ end }}
+  {{ $key := printf "%s-%05d" $sortDate (sub 99999 $index) }}
+  {{ $items = $items | append (merge $item (dict "label" $label "sortKey" $key "displayDate" (replace $item.date "-" "/"))) }}
+{{ end }}
+{{ return (sort $items "sortKey" "desc") }}
