@@ -1,0 +1,436 @@
+# One feed for /news/ and the five most recent homepage posts.
+- id: 2026-11-gdnibi2-accepted
+  date: 2026-11
+  category: Paper
+  comment: 'Journal of Alloys and Compounds: anisotropic superconductivity intertwined with localized
+    antiferromagnetism in GdNi₀.₇Bi₂.'
+  kind: icon
+  images:
+  - /images/news/accepted.svg
+  title: GdNi₀.₇Bi₂ paper accepted in Journal of Alloys and Compounds
+  status: accepted
+  link: /publications/#publication-gdnibi2-2026
+- id: 2026-10-single-electrons-accepted
+  date: 2026-10
+  category: Paper
+  comment: 'Science: real-space imaging and manipulation of single electrons on a solid surface.'
+  kind: icon
+  images:
+  - /images/news/accepted.svg
+  title: Single-electron imaging paper accepted in Science
+  status: accepted
+  link: /publications/#publication-single-electrons-2026
+- id: 2026-10-kps-presentation-awards
+  date: 2026-10
+  category: Member
+  comment: 'Byeongchan Lee and Minchul Choi: Outstanding Presentation Awards (Oral), KPS Fall Meeting.'
+  kind: icon
+  images:
+  - /images/news/award.svg
+- id: 2026-10-outstanding-graduate-students
+  date: 2026-10
+  category: Member
+  comment: 'Dongsin Kim and Byeongchan Lee: selected as outstanding graduate students, Department of Physics,
+    Sogang University.'
+  kind: icon
+  images:
+  - /images/news/award.svg
+- id: 2026-10-multivalley-polarons-accepted
+  date: 2026-10
+  category: Paper
+  comment: 'Nature Communications: multivalley polarons at the onset of a Lifshitz transition in doped
+    WS₂.'
+  kind: icon
+  images:
+  - /images/news/accepted.svg
+  title: Multivalley polaron paper accepted in Nature Communications
+  status: accepted
+  link: /publications/#publication-multivalley-polarons-2026
+- id: 2026-10-resonance-scattering-accepted
+  date: 2026-10
+  category: Paper
+  comment: 'Nature Communications: non-equilibrium resonance scattering drives conformational changes.'
+  kind: icon
+  images:
+  - /images/news/accepted.svg
+  title: Resonance scattering paper accepted in Nature Communications
+  status: accepted
+  link: /publications/#publication-non-equilibrium-2026
+- id: 2026-10-kps-fall
+  date: 2026-10
+  category: Events
+  comment: Korean Physical Society Fall Meeting, Jeju.
+  kind: poster
+  images:
+  - /images/news/kps2026fall.webp
+  link: https://www.kps.or.kr/conference/event/index.php?cfrid=27
+- id: 2026-09-tise2-published
+  date: 2026-09
+  category: Paper
+  comment: 'Nature Communications: single-q charge density wave in pristine 1T-TiSe₂.'
+  kind: document
+  images:
+  - /images/news/tise2.webp
+  status: published
+  link: /publications/#publication-18
+- id: 2026-09-vanadium-mos2-published
+  date: 2026-09
+  category: Paper
+  comment: 'Nano Letters: potassium iodide modulation of vanadium doping in monolayer MoS₂.'
+  kind: document
+  images:
+  - /images/news/vanadium.webp
+  status: published
+  link: /publications/#publication-20
+- id: 2026-09-interlayer-excitons-published
+  date: 2026-09
+  category: Paper
+  comment: 'ACS Nano: anisotropic Γ-valley interlayer excitonic emission in ReS₂/WS₂ heterostructures.'
+  kind: document
+  images:
+  - /images/news/interlayer.webp
+  status: published
+  link: /publications/#publication-19
+- id: 2026-08-rese2-published
+  date: 2026-08
+  category: Paper
+  comment: 'Current Applied Physics: exciton–phonon coupling in bulk ReSe₂.'
+  kind: icon
+  images:
+  # Replace this temporary document icon with the published first-page preview.
+  - /images/news/published.svg
+  status: published
+  link: /publications/#publication-rese2-2026
+- id: 2026-08-ccp-poster-award
+  date: 2026-08
+  category: Member
+  comment: 'Chaewoon Hong: Outstanding Poster Award, CCP2026.'
+  kind: icon
+  images:
+  - /images/news/award.svg
+- id: 2026-08-ccp
+  date: 2026-08
+  category: Events
+  comment: Conference on Computational Physics 2026 (CCP2026), Seoul.
+  kind: banner
+  images:
+  - /images/news/ccp2026.webp
+  link: https://ccp2026.kr/
+- id: 2026-08-photo-1
+  date: 2026-08
+  category: Photos
+  comment: UC Berkeley visiting research (Dongsin, Chaewoon)
+  kind: photo
+  images:
+  - /photos/images/2026_08_berkeley_5.webp
+  - /photos/images/2026_08_berkeley_1.webp
+  - /photos/images/2026_08_berkeley_2.webp
+  - /photos/images/2026_08_berkeley_3.webp
+  - /photos/images/2026_08_berkeley_4.webp
+- id: 2026-07-kias-poster-award
+  date: 2026-07
+  category: Member
+  comment: 'Dongsin Kim: Outstanding Poster Award, KIAS ESCW.'
+  kind: icon
+  images:
+  - /images/news/award.svg
+- id: 2026-07-electronic-structure-symposium
+  date: 2026-07
+  category: Events
+  comment: 22nd KIAS Electronic Structure Calculation Workshop and 2nd Electronic Structure Symposium,
+    Seoul.
+  kind: photo
+  images:
+  - /photos/images/2026_07_electronic_structure_symposium.webp
+- id: 2026-06-ispsa
+  date: 2026-06
+  category: Events
+  comment: ISPSA 2026, Jeju.
+  kind: poster
+  images:
+  - /images/news/ispsa2026.webp
+  link: https://ispsa.or.kr/
+- id: 2026-06-photo-3
+  date: 2026-06
+  category: Photos
+  comment: Our group photo
+  kind: photo
+  images:
+  - /photos/images/2026_06_group_photo.webp
+- id: 2026-04-dislocation-networks-published
+  date: 2026-04
+  category: Paper
+  comment: 'ACS Materials Letters: dislocation networks in marginally twisted bilayer MoS₂.'
+  kind: document
+  images:
+  - /images/news/dislocations.webp
+  status: published
+  link: /publications/#publication-17
+- id: 2026-04-byeongchan-usc-visit
+  date: 2026-04
+  category: Member
+  comment: 'Byeongchan Lee: six-month visit to Zhenglu Li''s group, USC.'
+  kind: photo
+  images:
+  - /photos/images/2026_04_usc_1.jpg
+  - /photos/images/2026_04_usc_2.jpg
+  - /photos/images/2026_04_usc_3.jpg
+  - /photos/images/2026_04_usc_4.jpg
+  - /photos/images/2026_04_usc_5.jpg
+- id: 2026-04-kps-spring
+  date: 2026-04
+  category: Events
+  comment: Korean Physical Society Spring Meeting, Daejeon.
+  kind: poster
+  images:
+  - /images/news/kps2026springbook.webp
+  link: https://www.kps.or.kr/conference/event/index.php?cfrid=26
+- id: 2026-04-usc-workshop
+  date: 2026-04
+  category: Events
+  comment: Workshop on CMS and HPC, University of Southern California. Byeongchan gave a talk at the workshop.
+  kind: photo
+  images:
+  - /photos/images/2026_04_usc_workshop_1.jpg
+  - /photos/images/2026_04_usc_workshop_2.jpg
+  - /photos/images/2026_04_usc_workshop_3.jpg
+  - /photos/images/2026_04_usc_workshop_4.jpg
+- id: 2026-03-glamp-award
+  date: 2026-03
+  category: Member
+  comment: 'Dongsin Kim: G-LAMP Undergraduate Research Presentation Award.'
+  kind: photo
+  images:
+  - /photos/images/2026_glamp_presentation.webp
+  - /photos/images/2026_glamp_award.webp
+  - /photos/images/2026_glamp_group.webp
+- id: 2026-03-glamp-presentations
+  date: 2026-03
+  category: Events
+  comment: G-LAMP Undergraduate Research Presentation, Sogang University.
+  kind: photo
+  images:
+  - /photos/images/2026_glamp_presentation.webp
+  - /photos/images/2026_glamp_award.webp
+  - /photos/images/2026_glamp_group.webp
+- id: 2026-01-black-phosphorus-published
+  date: 2026-01
+  category: Paper
+  comment: 'Physical Review B: impurity-induced charge modulations in black phosphorus.'
+  kind: document
+  images:
+  - /images/news/paper-28.webp
+  status: published
+  link: /publications/#publication-16
+- id: 2026-01-photo-7
+  date: 2026-01
+  category: Photos
+  comment: Our first group photo
+  kind: photo
+  images:
+  - /photos/images/2026_group_photo_1.webp
+- id: 2025-12-nanomaterials-symposium
+  date: 2025-12
+  category: Events
+  comment: Organized the 1st International Nanomaterials Symposium in Busan.
+  kind: photo
+  images:
+  - /photos/images/2025_icamd_group_photo.webp
+  link: /2025_1st_INS
+- id: 2025-12-icamd
+  date: 2025-12
+  category: Events
+  comment: Dongsin, Byeongchan, and Sungbin at ICAMD 2025 in Busan.
+  kind: photo
+  images:
+  - /photos/images/2025_dongsin_icamd.webp
+  - /photos/images/2025_bc_icamd.webp
+  - /photos/images/2025_sungbin_icamd.webp
+- id: 2025-12-glamp-workshop
+  date: 2025-12
+  category: Events
+  comment: Sogang G-LAMP Workshop, Busan.
+  kind: photo
+  images:
+  - /photos/images/2025_glamp_workshop_1.webp
+  - /photos/images/2025_glamp_workshop.webp
+- id: 2025-12-photo-14
+  date: 2025-12
+  category: Photos
+  comment: Prof. Diana Qiu (Yale) visiting
+  kind: photo
+  images:
+  - /photos/images/2025_12_Diana.webp
+- id: 2025-11-nanotube-transistors-published
+  date: 2025-11
+  category: Paper
+  comment: 'ACS Nano: p-doping of carbon nanotube transistors.'
+  kind: document
+  images:
+  - /images/news/paper-29.webp
+  status: published
+  link: /publications/#publication-15
+- id: 2025-10-kps-fall
+  date: 2025-10
+  category: Events
+  comment: Korean Physical Society Fall Meeting, Gwangju.
+  kind: poster
+  images:
+  - /images/news/kps2025fall.webp
+  link: https://www.kps.or.kr/conference/event/index.php?cfrid=25
+- id: 2025-10-electronic-structure-workshop
+  date: 2025-10
+  category: Events
+  comment: Electronic Structure Workshop.
+  kind: photo
+  images:
+  - /photos/images/2025_10_Electronic Structure Workshop.webp
+- id: 2025-08-applied-physics-symposium
+  date: 2025-08
+  category: Events
+  comment: 16th Applied Physics Symposium, Busan.
+  kind: poster
+  images:
+  - /images/news/ap2025.webp
+  link: https://ap.kps.or.kr/03web05.php
+- id: 2025-08-photo-16
+  date: 2025-08
+  category: Photos
+  comment: With Prof. Marvin L. Cohen
+  kind: photo
+  images:
+  - /photos/images/2025_08_marvin.webp
+- id: 2025-08-photo-17
+  date: 2025-08
+  category: Photos
+  comment: 병찬, 승우, 성빈 with Louie group students
+  kind: photo
+  images:
+  - /photos/images/2025_08_berkeley_students_2.webp
+- id: 2025-08-photo-18
+  date: 2025-08
+  category: Photos
+  comment: UC Berkeley Physics Building
+  kind: photo
+  images:
+  - /photos/images/2025_08_berkeley_students_1.webp
+- id: 2025-08-photo-19
+  date: 2025-08
+  category: Photos
+  comment: UC Berkeley visiting research (병찬, 승우, 성빈)
+  kind: photo
+  images:
+  - /photos/images/2025_08_berkeley.webp
+- id: 2025-07-kias-escw
+  date: 2025-07
+  category: Events
+  comment: 21st KIAS Electronic Structure Calculation Workshop, Seoul.
+  kind: poster
+  images:
+  - /images/news/kias2025.webp
+  link: https://events.kias.re.kr/h/ESCW2025/
+- id: 2025-06-glamp-kickoff
+  date: 2025-06
+  category: Events
+  comment: Sogang G-LAMP Kick-off Meeting, Seoul.
+  kind: poster
+  images:
+  - /images/news/glamp2025.webp
+- id: 2025-06-photo-20
+  date: 2025-06
+  category: Photos
+  comment: Prof. Zhenglu Li (USC) visiting
+  kind: photo
+  images:
+  - /photos/images/2025_05_zhenglu2.webp
+- id: 2025-06-photo-21
+  date: 2025-06
+  category: Photos
+  comment: Prof. Zhenglu Li (USC) visiting
+  kind: photo
+  images:
+  - /photos/images/2025_05_zhenglu1.webp
+- id: 2025-05-photo-22
+  date: 2025-05
+  category: Photos
+  comment: Our new office has been set up!
+  kind: photo
+  images:
+  - /photos/images/2025_05_office2.webp
+- id: 2025-05-photo-23
+  date: 2025-05
+  category: Photos
+  comment: Our new office has been set up!
+  kind: photo
+  images:
+  - /photos/images/2025_05_office1.webp
+- id: 2025-04-kps-spring
+  date: 2025-04
+  category: Events
+  comment: Korean Physical Society Spring Meeting, Daejeon.
+  kind: poster
+  images:
+  - /images/news/kps2025springbook.webp
+  link: https://www.kps.or.kr/conference/event/index.php?cfrid=24
+- id: 2025-03-phosphorus-nanostructures-published
+  date: 2025-03
+  category: Paper
+  comment: 'ACS Nano: 1D phosphorus nanostructures.'
+  kind: document
+  images:
+  - /images/news/paper-30.webp
+  status: published
+  link: /publications/#publication-14
+- id: 2025-03-aps-summit
+  date: 2025-03
+  category: Events
+  comment: APS Global Physics Summit, Anaheim.
+  kind: poster
+  images:
+  - /images/news/aps2025.webp
+  link: https://summit.aps.org/
+- id: 2025-02-kssc
+  date: 2025-02
+  category: Events
+  comment: Korean Society of Superconductivity and Cryogenics Meeting, Muju.
+  kind: poster
+  images:
+  - /images/news/kssc2025.webp
+- id: 2025-02-quantum-materials-symposium
+  date: 2025-02
+  category: Events
+  comment: Quantum Materials Symposium 2025, Busan.
+  kind: poster
+  images:
+  - /images/news/qms2025.webp
+- id: 2024-10-demon-modes-published
+  date: 2024-10
+  category: Paper
+  comment: 'Physical Review B: pairing interaction from demon modes (published).'
+  kind: document
+  images:
+  - /images/news/paper-31.webp
+  status: published
+  link: /publications/#publication-13
+- id: 2024-10-asian-25
+  date: 2024-10
+  category: Events
+  comment: 25th Asian Workshop on First-Principles Electronic Structure Calculations, Ulsan.
+  kind: poster
+  images:
+  - /images/news/asian2024.webp
+  link: https://sites.google.com/view/asian-25/
+- id: 2024-10-kps-fall
+  date: 2024-10
+  category: Events
+  comment: Korean Physical Society Fall Meeting, Yeosu.
+  kind: poster
+  images:
+  - /images/news/kps2024fall.webp
+- id: 2024-09-lab-opened
+  date: 2024-09
+  category: Lab
+  comment: Sogang QMP lab opened.
+  kind: icon
+  images:
+  - /images/logo-sogang-qmp.svg

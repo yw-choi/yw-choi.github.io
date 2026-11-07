@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title">
+<title id="title">Celebratory fireworks for an accepted paper</title>
+<rect width="600" height="600" fill="#f7f3ed"/>
+<g fill="none" stroke-linecap="round" stroke-width="9">
+<g stroke="#8b0029" transform="translate(290 250)">
+<path d="M0-43v-66M30-30l48-48M43 0h66M30 30l48 48M0 43v66M-30 30l-48 48M-43 0h-66M-30-30l-48-48"/>
+</g>
+<g stroke="#be954d" transform="translate(420 350) scale(.55)">
+<path d="M0-43v-66M30-30l48-48M43 0h66M30 30l48 48M0 43v66M-30 30l-48 48M-43 0h-66M-30-30l-48-48"/>
+</g>
+<path d="M295 405v46M402 450v21M181 367l-17 26" stroke="#be954d" stroke-width="5"/>
+</g>
+<g fill="#be954d"><circle cx="159" cy="184" r="5"/><circle cx="420" cy="165" r="6"/><circle cx="142" cy="309" r="5"/><circle cx="354" cy="111" r="4"/></g>
+</svg>

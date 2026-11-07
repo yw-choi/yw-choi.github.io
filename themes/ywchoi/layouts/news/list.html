@@ -1,0 +1,26 @@
+{{ define "main" }}
+{{ $items := partialCached "news/items.html" . }}
+<section aria-labelledby="news-title">
+  <div class="news-section-heading news-archive-heading">
+    <h1 id="news-title">{{ .Title }}</h1>
+    <span class="news-post-count">{{ len $items }} posts</span>
+  </div>
+  <div class="news-grid">
+    {{ range $items }}
+    <article class="news-post" id="{{ .id }}">
+      <a class="news-card" href="#{{ .id }}" data-news-id="{{ .id }}" aria-haspopup="dialog" aria-label="{{ .label }} — {{ .displayDate }}">
+        <div class="news-thumbnail news-kind-{{ .kind | default "photo" }}">
+          <img src="{{ index .images 0 | relURL }}" alt="{{ .image_alt | default .label }}" loading="lazy" decoding="async" width="600" height="600">
+          {{ if gt (len .images) 1 }}<span class="news-image-count" aria-label="{{ len .images }} photos"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3" y="6" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M7 3h8a2 2 0 0 1 2 2v8" stroke="currentColor" stroke-width="1.7"/></svg>{{ len .images }}</span>{{ end }}
+        </div>
+        <div class="news-card-copy">
+          <span class="news-card-label">{{ .label }}</span>
+          <time datetime="{{ .date }}">{{ .displayDate }}</time>
+        </div>
+      </a>
+    </article>
+    {{ end }}
+  </div>
+</section>
+{{ partial "news/modal.html" (dict "items" $items) }}
+{{ end }}

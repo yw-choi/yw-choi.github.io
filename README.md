@@ -8,7 +8,7 @@ The website showcases:
 - Research interests and activities
 - Group members and alumni
 - Publications and talks
-- Photo gallery
+- News and group photos
 - Contact information
 
 ## Technology Stack
@@ -60,7 +60,9 @@ The built site will be in the `public/` directory.
 │   ├── research/     # Research page
 │   ├── publications/ # Publications page
 │   ├── talks/        # Talks page
-│   └── photos/       # Photo gallery
+│   ├── news/         # News archive
+│   └── photos/       # Original photo assets and legacy redirect
+├── data/news.yaml    # Shared News / Recent News feed
 ├── static/           # Static files (images, PDFs, etc.)
 ├── themes/           # Hugo theme
 │   └── ywchoi/      # Custom theme
@@ -119,19 +121,51 @@ The site is automatically deployed to GitHub Pages via GitHub Actions when chang
 
 Edit `content/publications/_index.md` and add new publications in the numbered list format.
 
-### Adding Photos
+### Adding News and Photos
 
-1. Upload images to `content/photos/images/`
-2. Edit `content/photos/_index.md`
-3. Add new entries to the `gallery` array with `src` and `caption`
+Both `/news/` and the homepage's five **Recent News** entries use `data/news.yaml`.
+Add new images under `static/images/news/`, then add a post:
+
+```yaml
+- id: 2026-11-example
+  date: "2026-11-08"
+  title: Optional short title
+  comment: A short description of the news.
+  kind: photo
+  images:
+    - /images/news/example.webp
+    - /images/news/example-2.webp
+```
+
+`id`, `date`, `comment`, and at least one local image are required. The build
+rejects duplicate IDs and missing images. `title`, `image_alt`, `category`,
+`status`, and `link` are optional. Omit `title` to use the comment as the card
+and homepage label; long labels are visually truncated without shortening the
+modal text. Use plain text for titles and comments.
+
+Posts are sorted newest first. Dates can be `YYYY-MM-DD` or, for older records
+without a known day, `YYYY-MM`. Equal dates retain their order in the YAML file.
+A known day sorts ahead of a month-only date in the same month. The migration
+preserves the original news dates rather than inventing days.
+
+Use `kind: photo` for photographs, `document` for a published paper's first-page
+capture, `poster` for official event posters/program covers, and `icon` for
+announcements. `banner` gives transparent white event artwork a dark background.
+Accepted papers use `/images/news/accepted.svg` (fireworks).
+Keep a published paper's full PDF outside this repository; only its first-page
+preview is needed. Existing photos remain at `/photos/images/` so old image URLs
+continue to work. `/photos/` redirects to `/news/`.
+
+Each card opens the shared modal, with a fixed image viewport, optional title,
+comment and date. Multiple images support buttons, arrow keys and touch swipes.
+Link directly to a post with `/news/#<id>`.
+
+Image provenance and the one outstanding PDF preview are documented in
+[`static/images/news/README.md`](static/images/news/README.md).
 
 ### Updating People
 
 Edit `content/people/index.html` to add or update group members and alumni.
-
-### Adding News
-
-Edit `content/_index.md` and add new items to the "News" section.
 
 ## Contributing
 

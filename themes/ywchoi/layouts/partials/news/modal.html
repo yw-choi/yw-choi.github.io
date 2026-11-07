@@ -1,0 +1,21 @@
+<dialog id="news-dialog" class="news-dialog" aria-label="News post" aria-describedby="news-dialog-comment">
+  <div class="news-dialog-inner">
+    <div class="news-media">
+      <img id="news-dialog-image" alt="" width="1200" height="1200">
+      <button class="news-icon-button news-close" type="button" aria-label="Close news post" autofocus><span aria-hidden="true">×</span></button>
+      <button class="news-icon-button news-previous" type="button" aria-label="Previous photo" hidden><span aria-hidden="true">‹</span></button>
+      <button class="news-icon-button news-next" type="button" aria-label="Next photo" hidden><span aria-hidden="true">›</span></button>
+      <span class="news-slide-count" aria-live="polite" hidden></span>
+    </div>
+    <div class="news-dialog-copy">
+      <h2 id="news-dialog-title" hidden></h2>
+      <p id="news-dialog-comment"></p>
+      <div class="news-dialog-footer">
+        <time id="news-dialog-date"></time>
+        <a id="news-dialog-link" hidden>Learn more <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </div>
+</dialog>
+<script id="news-data" type="application/json">{{ .items | jsonify | safeJS }}</script>
+<script src="{{ "/js/news.js" | relURL }}" defer></script>

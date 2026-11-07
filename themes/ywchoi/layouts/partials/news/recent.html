@@ -1,0 +1,20 @@
+{{ $items := first 5 (partialCached "news/items.html" .) }}
+<section class="recent-news" aria-labelledby="recent-news-title">
+  <div class="news-section-heading">
+    <h2 id="recent-news-title">Recent News</h2>
+    <a class="news-all-link" href="{{ "/news/" | relURL }}">All news <span aria-hidden="true">↗</span></a>
+  </div>
+  <ul class="recent-news-list">
+    {{ range $items }}
+    <li>
+      <a class="recent-news-link" href="{{ "/news/" | relURL }}#{{ .id }}" data-news-id="{{ .id }}" aria-haspopup="dialog">
+        <span class="recent-news-thumb news-kind-{{ .kind | default "photo" }}"><img src="{{ index .images 0 | relURL }}" alt="" width="64" height="64" loading="lazy"></span>
+        <span class="recent-news-label">{{ .label }}</span>
+        <time datetime="{{ .date }}">{{ .displayDate }}</time>
+        <span class="recent-news-arrow" aria-hidden="true">↗</span>
+      </a>
+    </li>
+    {{ end }}
+  </ul>
+</section>
+{{ partial "news/modal.html" (dict "items" $items) }}
