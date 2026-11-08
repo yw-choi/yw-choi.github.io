@@ -1,0 +1,5 @@
+.publication-title {
+  color: #003377;
+  font-weight: 700;
+}
+.publication-citation { color: var(--bs-link-color, #0d6efd); }
