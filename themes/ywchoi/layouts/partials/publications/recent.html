@@ -1,17 +1,37 @@
-{{/* Reuse the Publications list markup, numbering, and links without reformatting. */}}
+{{/* Keep the existing Publications page as the source, including its editorial order. */}}
 {{ with site.GetPage "/publications" }}
-{{ $lists := findRE `(?s)<ol\b[^>]*>.*?</ol>` .Content 1 }}
-{{ if not $lists }}{{ errorf "Recent Papers requires the Publications ordered list" }}{{ end }}
-{{ $list := index $lists 0 }}
-{{ $opening := index (findRE `<ol\b[^>]*>` $list 1) 0 }}
-{{ $entries := findRE `(?s)<li(?:\s[^>]*)?>.*?</li>` $list 5 }}
+{{ $publications := . }}
+{{ $entries := findRE `(?s)<li(?:\s[^>]*)?>.*?</li>` .Content 5 }}
 <section class="recent-papers" aria-labelledby="recent-papers-title">
   <div class="news-section-heading">
     <h2 id="recent-papers-title">Recent Papers</h2>
     <a class="news-all-link" href="{{ .RelPermalink }}">All publications</a>
   </div>
-  <div class="recent-papers-list">
-    {{ printf "%s%s</ol>" $opening (delimit $entries "") | safeHTML }}
-  </div>
+  <ul class="recent-papers-list">
+    {{ range $entries }}
+      {{ $titles := findRE `(?s)<span\b[^>]*class="publication-title"[^>]*>.*?</span>` . 1 }}
+      {{ $citations := findRE `(?s)<span\b[^>]*class="publication-citation"[^>]*>.*?</span>` . 1 }}
+      {{ if and $titles $citations }}
+        {{ $titleSpan := index $titles 0 }}
+        {{ $title := replaceRE `(?s)^<span\b[^>]*>(.*?)</span>$` "$1" $titleSpan }}
+        {{ $citation := replaceRE `(?s)^<span\b[^>]*>(.*?)</span>$` "$1" (index $citations 0) }}
+        {{/* The whole row links to Publications, so remove any nested citation link. */}}
+        {{ $citation = replaceRE `</?a\b[^>]*>` "" $citation }}
+        {{ $href := $publications.RelPermalink }}
+        {{ with findRE `\bid="[^"]+"` $titleSpan 1 }}
+          {{ $id := replaceRE `^id="([^"]+)"$` "$1" (index . 0) }}
+          {{ $href = printf "%s#%s" $href $id }}
+        {{ end }}
+        <li>
+          <a class="recent-paper-link" href="{{ $href }}">
+            <span class="recent-paper-title">{{ $title | safeHTML }}</span>
+            <span class="recent-paper-citation">{{ $citation | safeHTML }}</span>
+          </a>
+        </li>
+      {{ else }}
+        {{ errorf "Recent Papers requires publication-title and publication-citation spans in each Publications entry" }}
+      {{ end }}
+    {{ end }}
+  </ul>
 </section>
 {{ end }}
