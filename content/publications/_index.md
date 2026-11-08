@@ -8,14 +8,6 @@ title: Publications
 
 † Equal Contributions, * Corresponding Author
 
-<style>
-.publication-title {
-  color: #003377;
-  font-weight: 700;
-}
-.publication-citation { color: var(--bs-link-color, #0d6efd); }
-</style>
-
 #### Journal Articles
 
 25. <span id="publication-gdnibi2-2026" class="publication-title">Anisotropic Superconductivity Intertwined with Localized Antiferromagnetism in GdNi<sub>0.7</sub>Bi<sub>2</sub></span><br>
