@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title">
 <title id="title">An award celebrating our lab members</title>
-<rect width="600" height="600" fill="#f7f3ed"/>
-<g fill="none" stroke="#b38a43" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
-<path d="M223 202h154v72c0 57-34 89-77 89s-77-32-77-89z" fill="#ead9b6"/>
+<rect width="600" height="600" fill="#fafafa"/>
+<g fill="none" stroke="#444444" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+<path d="M223 202h154v72c0 57-34 89-77 89s-77-32-77-89z" fill="#eeeeee"/>
 <path d="M223 219h-41v39c0 35 25 52 54 53M377 219h41v39c0 35-25 52-54 53M300 365v54M253 421h94M235 442h130"/>
 </g>
-<path d="m300 235 13 27 30 4-22 21 5 30-26-14-26 14 5-30-22-21 30-4z" fill="#8b0029"/>
-<g stroke="#8b0029" stroke-width="6" stroke-linecap="round"><path d="m194 147 11 13m190-13-11 13M300 132v20"/></g>
+<path d="m300 235 13 27 30 4-22 21 5 30-26-14-26 14 5-30-22-21 30-4z" fill="#222222"/>
+<g stroke="#222222" stroke-width="6" stroke-linecap="round"><path d="m194 147 11 13m190-13-11 13M300 132v20"/></g>
 </svg>
