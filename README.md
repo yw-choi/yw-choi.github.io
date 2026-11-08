@@ -120,6 +120,9 @@ The site is automatically deployed to GitHub Pages via GitHub Actions when chang
 ### Adding Publications
 
 Edit `content/publications/_index.md` and add new publications in the numbered list format.
+The homepage's **Recent Papers** section automatically uses the first five entries,
+in the same order. Keep the `publication-title` and `publication-citation` spans;
+give each title a stable `id` so its homepage link opens the matching entry.
 
 ### Adding News and Photos
 
