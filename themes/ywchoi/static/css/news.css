@@ -27,6 +27,15 @@
 .recent-news-link time { color: #333; font-size: .8125rem; font-variant-numeric: tabular-nums; }
 .recent-news-link:hover { color: #111; }
 .recent-news-link:hover .recent-news-label { text-decoration: underline; text-underline-offset: 2px; }
+.recent-papers { margin: 1.75rem 0; }
+.recent-papers-list { list-style: none; padding: 0; margin: 0; }
+.recent-paper-link { display: block; padding: .3rem 0; color: #111; text-decoration: none; }
+.recent-paper-title { display: block; font-size: .875rem; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.recent-paper-citation { display: block; margin-top: .1rem; font-size: .75rem; line-height: 1.4; color: #444; }
+.recent-paper-citation strong { font-weight: 400; }
+.recent-paper-link:hover { color: #111; }
+.recent-paper-link:hover .recent-paper-title { text-decoration: underline; text-underline-offset: 2px; }
+.recent-paper-link:focus-visible { outline: 2px solid #111; outline-offset: 3px; }
 .news-dialog { width: min(520px, calc(100vw - 2rem)); max-width: none; max-height: calc(100dvh - 2rem); padding: 0; margin: auto; border: 1px solid #ddd; border-radius: 0; background: #fff; color: #111; overflow-y: auto; overscroll-behavior: contain; }
 .news-dialog::backdrop { background: #0009; }
 .news-media { position: relative; width: 100%; height: min(520px, calc(100vw - 2rem), 65dvh); background: #f5f5f5; overflow: hidden; }
@@ -54,6 +63,7 @@
   .news-card-label { font-size: .75rem; }
   .recent-news-link { grid-template-columns: 4.5rem minmax(0, 1fr); gap: .35rem; }
   .recent-news-label { font-size: .8125rem; }
+  .recent-paper-title { font-size: .8125rem; }
   .recent-news-link time { font-size: .75rem; }
   .news-dialog-copy { padding: .75rem .85rem .85rem; }
 }
