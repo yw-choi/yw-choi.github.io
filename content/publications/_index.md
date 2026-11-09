@@ -18,13 +18,9 @@ title: Publications
 
 #### Journal Articles
 
-25. <span id="publication-gdnibi2-2026" class="publication-title">Anisotropic Superconductivity Intertwined with Localized Antiferromagnetism in GdNi<sub>0.7</sub>Bi<sub>2</sub></span><br>
+24. <span id="publication-gdnibi2-2026" class="publication-title">Anisotropic Superconductivity Intertwined with Localized Antiferromagnetism in GdNi<sub>0.7</sub>Bi<sub>2</sub></span><br>
 Ji Heon Moon, **Min Chul Choi**, Saqlain Yousuf, Tuson Park, **Young Woo Choi**\*, and Myung-Hwa Jung\*<br>
 <span class="publication-citation">Journal of Alloys and Compounds (accepted, 2026).</span>
-
-24. <span id="publication-single-electrons-2026" class="publication-title">Real-space imaging and manipulation of single electrons on a solid surface</span><br>
-Min-Seok Kim†, Dong Cheol Lim†, Woo-Yong Kim, Sang Yong Song, Heejeong Koo, Moon-Ho Jo, **Young Woo Choi**\*, Yeongkwan Kim\*, Jungpil Seo\*, and Sung Wng Kim\*<br>
-<span class="publication-citation">Science (accepted, 2026).</span>
 
 23. <span id="publication-multivalley-polarons-2026" class="publication-title">Multivalley polarons at the onset of a Lifshitz transition in doped WS<sub>2</sub></span><br>
 Yoonseok Oh†, Changmo Kang†, **Min Chul Choi**†, Jaewoo Choi, Sung Won Jung, Timur K. Kim, Cephise Cacho, Makoto Hashimoto, Donghui Lu, Patrick S. Kirchmann, Jonathan A. Sobota, Zhi-Xun Shen, **Young Woo Choi**\*, and Keun Su Kim\*<br>
