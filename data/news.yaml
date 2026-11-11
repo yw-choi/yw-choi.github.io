@@ -25,17 +25,6 @@
   kind: icon
   images:
   - /images/news/award.svg
-- id: 2026-10-multivalley-polarons-accepted
-  date: 2026-10
-  category: Paper
-  comment: 'Nature Communications: multivalley polarons at the onset of a Lifshitz transition in doped
-    WS₂.'
-  kind: icon
-  images:
-  - /images/news/accepted.svg
-  title: Multivalley polaron paper accepted in Nature Communications
-  status: accepted
-  link: /publications/#publication-multivalley-polarons-2026
 - id: 2026-10-resonance-scattering-accepted
   date: 2026-10
   category: Paper
