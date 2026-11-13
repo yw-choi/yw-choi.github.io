@@ -24,7 +24,7 @@ Ji Heon Moon, **Min Chul Choi**, Saqlain Yousuf, Tuson Park, **Young Woo Choi**\
 
 22. <span id="publication-non-equilibrium-2026" class="publication-title">Non-equilibrium Resonance Scattering in Intramolecular Charge Transport Drives Conformational Changes</span><br>
 YoungJu Park†, Taegil Kim†, Jonghyeok Baek†, **Seongbin Park**, Daeho Kim, ChaeHo Shin, Sam Sokhuoy, Wonyoung Kim, Sun Dongbang, Doseok Kim, **Young Woo Choi**\*, and Junwoo Park\*<br>
-<span class="publication-citation">Nature Communications (accepted, 2026).</span>
+<span class="publication-citation"><a href="https://doi.org/10.1038/s41467-026-79555-w" target="_blank" rel="noopener noreferrer">Nature Communications (In Press, 2026)</a>.</span>
 
 21. <span id="publication-20" class="publication-title">Boltzmann Sigmoidal Modulation of Vanadium Doping in Monolayer MoS<sub>2</sub> by Potassium Iodide</span><br>
 Yuanyuan Qiu†, Bin Hua†, Zhenping Wang†, Fei Hu†, Dong Zhang, Yang Lu, Marvin L. Cohen, Alex Zettl, Kecheng Cao, Cong Su\*, **Young Woo Choi**\*, and Qingqing Ji\*<br>
