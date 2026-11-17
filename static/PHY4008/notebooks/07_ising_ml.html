@@ -747,7 +747,7 @@ $$\operatorname{sigmoid}(z)=\frac{1}{1+e^{-z}},\qquad
 </div>
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=2fbeef0d"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="3.2-Loss:-how-wrong-is-the-prediction?">3.2 Loss: how wrong is the prediction?</h3><p>$$\mathcal L_{\mathrm{CE}}=-\frac1B\sum_{i=1}^{B}\sum_c y_{ic}\log p_{ic},
+<h3 id="3.2-Cross-entropy-loss">3.2 Cross-entropy loss</h3><p>$$\mathcal L_{\mathrm{CE}}=-\frac1B\sum_{i=1}^{B}\sum_c y_{ic}\log p_{ic},
 \qquad \ell_i=-\log p_{i,\mathrm{correct}}.$$</p>
 <div class="table-wrap"><table>
 <thead>
@@ -801,7 +801,7 @@ The curve shows one picture's loss.</p>
 </div>
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=64753a4c"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="3.3-One-score-moves-downhill">3.3 One score moves downhill</h3><p>$$\theta_{\mathrm{new}}=\theta-\eta\nabla_\theta\mathcal L,
+<h3 id="3.3-Gradient-descent:-one-score-update">3.3 Gradient descent: one score update</h3><p>$$\theta_{\mathrm{new}}=\theta-\eta\nabla_\theta\mathcal L,
 \qquad \theta=\{W_1,b_1,W_2,b_2\}.$$</p>
 <div class="table-wrap"><table>
 <thead>
@@ -860,7 +860,7 @@ The target is low T, so the desired probability is 1.</p>
 </div>
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=fe7e630c"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="3.4-Repeat-on-real-spin-pictures">3.4 Repeat on real spin pictures</h3><p><strong>Backpropagation</strong> applies the chain rule to a batch:</p>
+<h3 id="3.4-Backpropagation-and-repeated-updates">3.4 Backpropagation and repeated updates</h3><p><strong>Backpropagation</strong> applies the chain rule to a batch:</p>
 <p>$$D_2=\frac{P-Y}{B},\qquad D_1=(D_2W_2^{\mathsf T})\odot H\odot(1-H),$$
 $$\nabla_{W_2}\mathcal L_{\mathrm{CE}}=H^{\mathsf T}D_2,
 \qquad \nabla_{W_1}\mathcal L_{\mathrm{CE}}=X^{\mathsf T}D_1.$$</p>
