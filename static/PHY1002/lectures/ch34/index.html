@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PHY1002 · Chapter 34 Images</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#fff;color:#1d1d1f;
+  font:18px/1.6 -apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
+main{width:min(460px,92vw);padding:28px}
+.ch{color:#8b0029;font-weight:650;margin:0}
+h1{font-size:34px;line-height:1.15;margin:2px 0 18px}
+p{margin:0 0 14px}
+form{display:flex;gap:8px;margin:18px 0 10px}
+input{flex:1;min-width:0;font:inherit;padding:10px 12px;border:1px solid #1d1d1f;border-radius:8px}
+button{font:inherit;padding:10px 18px;border:1px solid #8b0029;background:#8b0029;color:#fff;border-radius:8px;cursor:pointer}
+button:disabled{opacity:.5}
+#msg{min-height:1.6em;color:#8b0029;font-size:16px}
+a{color:#8b0029}
+.s{font-size:15px}
+input:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid #8b0029;outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+<p class="ch">PHY1002 일반물리 II · Chapter 34</p>
+<h1>Images</h1>
+<p>수강생용 강의자료입니다. 접근 비밀번호를 입력하세요.<br><span class="s">Lecture slides for enrolled students. Enter the access password.</span></p>
+<form id="f" autocomplete="off">
+<input id="pw" type="password" aria-label="접근 비밀번호 (access password)" placeholder="비밀번호 / password" required>
+<button id="go" type="submit">열기</button>
+</form>
+<p id="msg" role="status"></p>
+<p class="s">비밀번호는 eclass 공지에 있습니다. · <a href="ch34_slides.pdf">PDF</a> (같은 비밀번호) · <a href="../../">강의 홈</a></p>
+</main>
+<script>
+const ITER=250000,KEY='phy1002-access';
+const msg=document.getElementById('msg'),go=document.getElementById('go'),pw=document.getElementById('pw'),form=document.getElementById('f');
+async function unlock(password,quiet){
+  go.disabled=true;msg.textContent='여는 중… (loading)';if(quiet)form.hidden=true;
+  try{
+    const buf=new Uint8Array(await (await fetch('deck.enc',{cache:'no-cache'})).arrayBuffer());
+    const km=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveKey']);
+    const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:buf.slice(0,16),iterations:ITER,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
+    const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:buf.slice(16,28)},key,buf.slice(28));
+    try{localStorage.setItem(KEY,password)}catch(e){}
+    const html=new TextDecoder().decode(plain);
+    document.open();document.write(html);document.close();
+  }catch(e){
+    go.disabled=false;
+    form.hidden=false;
+    if(quiet){try{localStorage.removeItem(KEY)}catch(e2){}msg.textContent='';pw.focus();return}
+    msg.textContent=(e&&e.name==='OperationError')?'비밀번호가 올바르지 않습니다. (wrong password)':'자료를 불러오지 못했습니다. 잠시 후 다시 시도하세요. (could not load)';
+    pw.select();
+  }
+}
+form.addEventListener('submit',e=>{e.preventDefault();unlock(pw.value.trim(),false)});
+let saved=null;try{saved=localStorage.getItem(KEY)}catch(e){}
+if(saved)unlock(saved,true);else pw.focus();
+</script>
+</body>
+</html>
