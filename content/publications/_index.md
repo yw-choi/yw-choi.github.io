@@ -18,9 +18,13 @@ title: Publications
 
 #### Journal Articles
 
-23. <span id="publication-gdnibi2-2026" class="publication-title">Anisotropic Superconductivity Intertwined with Localized Antiferromagnetism in GdNi<sub>0.7</sub>Bi<sub>2</sub></span><br>
+24. <span id="publication-gdnibi2-2026" class="publication-title">Anisotropic Superconductivity Intertwined with Localized Antiferromagnetism in GdNi<sub>0.7</sub>Bi<sub>2</sub></span><br>
 Ji Heon Moon, **Min Chul Choi**, Saqlain Yousuf, Tuson Park, **Young Woo Choi**\*, and Myung-Hwa Jung\*<br>
 <span class="publication-citation"><a href="https://doi.org/10.1016/j.jallcom.2026.192275" target="_blank" rel="noopener noreferrer">Journal of Alloys and Compounds **1086**, 192275 (2026)</a>.</span>
+
+23. <span id="publication-single-electrons-2026" class="publication-title">Real-space imaging and manipulation of single electrons on a solid surface</span><br>
+Min-Seok Kim†, Dong Cheol Lim†, Woo-Yong Kim, Sang Yong Song, Heejeong Koo, Moon-Ho Jo, **Young Woo Choi**\*, Yeongkwan Kim\*, Jungpil Seo\*, and Sung Wng Kim\*<br>
+<span class="publication-citation">Science (accepted, 2026).</span>
 
 22. <span id="publication-non-equilibrium-2026" class="publication-title">Non-equilibrium Resonance Scattering in Intramolecular Charge Transport Drives Conformational Changes</span><br>
 YoungJu Park†, Taegil Kim†, Jonghyeok Baek†, **Seongbin Park**, Daeho Kim, ChaeHo Shin, Sam Sokhuoy, Wonyoung Kim, Sun Dongbang, Doseok Kim, **Young Woo Choi**\*, and Junwoo Park\*<br>
