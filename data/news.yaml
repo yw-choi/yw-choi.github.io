@@ -1,4 +1,14 @@
 # One feed for /news/ and the five most recent homepage posts.
+- id: 2026-11-multivalley-polarons-accepted
+  date: "2026-11-24"
+  category: Paper
+  comment: 'Nature Communications: multivalley polarons at the onset of a Lifshitz transition in doped WS₂.'
+  kind: icon
+  images:
+  - /images/news/accepted.svg
+  title: WS₂ multivalley polaron paper accepted in Nature Communications
+  status: accepted
+  link: /publications/#publication-multivalley-polarons-2026
 - id: 2026-11-gdnibi2-accepted
   date: 2026-11
   category: Paper
