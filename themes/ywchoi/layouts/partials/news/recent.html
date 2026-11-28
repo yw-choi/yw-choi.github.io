@@ -8,7 +8,7 @@
     {{ range $items }}
     <li>
       <a class="recent-news-link" href="{{ "/news/" | relURL }}#{{ .id }}" data-news-id="{{ .id }}" aria-haspopup="dialog">
-        <time datetime="{{ .date }}">{{ .displayDate }}</time>
+        <time datetime="{{ .date }}">{{ replace .month "-" "/" }}</time>
         <span class="recent-news-label">{{ .label }}</span>
       </a>
     </li>
