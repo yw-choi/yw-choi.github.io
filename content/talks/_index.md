@@ -1,19 +1,10 @@
----  
-title: Talks  
----  
+---
+title: Talks
+---
 
-<style>
-    .talk-list li {
-        margin-bottom: 0.5em;
-    }
-    .talk-title {
-        color: var(--bs-link-color);
-    }
-</style>
-  
-### Talks  
+<h1>Talks</h1>
 
-<ol reversed class="talk-list">
+<ol reversed>
 
 <li>
 <span class="talk-title">

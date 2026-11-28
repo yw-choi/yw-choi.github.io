@@ -2,20 +2,12 @@
 title: Publications
 ---
 
-### Publications
-
-<a href="https://scholar.google.com/citations?user=Qv4pipEAAAAJ" target="_blank" rel="noopener noreferrer">Google Scholar</a>
-
-† Equal Contributions, * Corresponding Author
-
-<style>
-.publication-title {
-  color: var(--bs-link-color);
-  font-weight: 700;
-}
-</style>
-
-#### Journal Articles
+<h1>Publications</h1>
+<div class="intro">
+  <p><a href="https://scholar.google.com/citations?user=Qv4pipEAAAAJ" target="_blank" rel="noopener noreferrer">Google Scholar</a></p>
+  <p>† Equal Contributions, * Corresponding Author</p>
+</div>
+<h2>Journal articles</h2>
 
 25. <span id="publication-multivalley-polarons-2026" class="publication-title">Multivalley polarons at the onset of a Lifshitz transition in doped WS<sub>2</sub></span><br>
 Yoonseok Oh†, Changmo Kang†, **Min Chul Choi**†, Jaewoo Choi, Sung Won Jung, Timur K. Kim, Cephise Cacho, Makoto Hashimoto, Donghui Lu, Patrick S. Kirchmann, Jonathan A. Sobota, Zhi-Xun Shen, **Young Woo Choi**\*, and Keun Su Kim\*<br>

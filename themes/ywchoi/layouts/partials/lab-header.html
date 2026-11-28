@@ -1,0 +1,24 @@
+<div class="masthead">
+  <p class="site-name"><a href="{{ site.Home.RelPermalink }}">{{ site.Title }}</a></p>
+  <a class="university-logo" href="https://www.sogang.ac.kr/">
+    <img src="{{ "images/logo-sogang.png" | relURL }}" width="300" height="93" alt="Sogang University">
+  </a>
+</div>
+<nav aria-label="Main navigation">
+  {{ template "lab-nav-links" . }}
+  <details>
+    <summary aria-label="Main menu">
+      <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </summary>
+    {{ template "lab-nav-links" . }}
+  </details>
+</nav>
+
+{{ define "lab-nav-links" }}
+  {{ $page := . }}
+  <div class="nav-links">
+    {{ range site.Menus.main }}
+      <a href="{{ .URL }}"{{ if $page.IsMenuCurrent .Menu . }} aria-current="page"{{ end }}>{{ .Name }}</a>
+    {{ end }}
+  </div>
+{{ end }}

@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+{{ $labPage := or .IsHome (in (slice "/people" "/research" "/publications" "/talks" "/lectures" "/news") .Path) }}
 
 <head>
-  {{ partial "head.html" . }}
+  {{ partial "head.html" (dict "page" . "labPage" $labPage) }}
 </head>
 
-<body class="bg-white mx-auto px-3">
+<body{{ if not $labPage }} class="bg-white mx-auto px-3"{{ end }}>
 
-  <header class="mb-5">
-    {{ partial "header.html" . }}
+  <header{{ if not $labPage }} class="mb-5"{{ end }}>
+    {{ if $labPage }}{{ partial "lab-header.html" . }}{{ else }}{{ partial "header.html" . }}{{ end }}
   </header>
   <main>
     {{ block "main" . }}{{ end }}
   </main>
+  {{ if not $labPage }}
   <footer class="mt-5 mb-3 text-center text-muted small">
     {{ partial "footer.html" . }}
   </footer>
@@ -20,6 +22,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+  {{ end }}
   {{ $gtag := .Site.Params.google_analytics_tag }}
   {{ if $gtag }}
   <!-- Google tag (gtag.js) -->

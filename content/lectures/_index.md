@@ -1,19 +1,11 @@
----  
-title: Lectures  
----  
+---
+title: Lectures
+---
 
-<style>
-    .lecture-list li {
-        margin-bottom: 0.5em;
-    }
-    .lecture-semester {
-        color: var(--bs-link-color);
-    }
-</style>
-  
-### Lectures  
-
-<ul reversed class="lecture-list">
+<h1>Lectures</h1>
+<section class="background">
+<h2>Sogang University</h2>
+<ul class="semesters">
 <li>
     <span class="lecture-semester">
     2026 Fall
@@ -79,3 +71,4 @@ title: Lectures
     </ul>
 </li>
 </ul>
+</section>

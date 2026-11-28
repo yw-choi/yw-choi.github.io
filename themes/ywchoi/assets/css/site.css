@@ -1,0 +1,87 @@
+@font-face { font-family: Jost; src: url("fonts/jost-regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+
+:root { color-scheme: light; --blue: #003876; --display: 2rem; --heading: 1.25rem; --body: 1rem; }
+body { max-width: 65rem; margin: auto; padding: 2.5rem clamp(1rem, 3vw, 2.25rem); background: white; color: black; font: var(--body)/1.5 Helvetica, "Helvetica Neue", Arial, sans-serif; }
+h1, h2, h3, p, ul, ol { margin: 0; }
+h1, h2, .site-name, #profile-name { color: var(--blue); font-weight: 400; line-height: 1.2; letter-spacing: -.025em; text-wrap: balance; }
+.site-name, .home-intro h1 { font-size: var(--display); }
+h1, h2, #profile-name { font-size: var(--heading); font-weight: bold; }
+h3 { font-size: var(--body); }
+a { color: var(--blue); text-underline-offset: .2em; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+img { display: block; max-width: 100%; height: auto; }
+ul { padding: 0; list-style: none; }
+ol { padding-left: 2rem; }
+sub, sup { line-height: 0; }
+
+.masthead { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.site-name { font-family: Jost, "Avenir Next", Helvetica, sans-serif; letter-spacing: .06em; text-transform: uppercase; }
+.site-name a { color: inherit; text-decoration: none; }
+.university-logo { flex: none; width: clamp(5.5rem, 16vw, 9.875rem); }
+nav { margin-top: 1.5rem; }
+.nav-links { display: flex; justify-content: flex-end; gap: 1rem; }
+nav a { color: inherit; text-decoration: none; }
+nav a:hover, nav a[aria-current] { text-decoration: underline; }
+nav details { display: none; }
+
+main { margin-top: 2.5rem; }
+.home-intro { text-align: center; }
+.home-intro h1 { color: inherit; line-height: 1.5; letter-spacing: normal; }
+.home-intro p { margin-bottom: 1rem; }
+.people-heading { display: flex; align-items: baseline; gap: .65rem; margin-bottom: 1.75rem; }
+.people-heading p { white-space: nowrap; }
+.profile { display: grid; grid-template-columns: 10rem minmax(0, 1fr); gap: 2rem; margin-bottom: 1rem; }
+.profile-photo { position: relative; }
+.profile-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: left top; }
+.profile-text { display: flex; flex-direction: column; gap: .5rem; }
+#pi { margin-bottom: 1rem; }
+#profile-name span { white-space: nowrap; }
+.contact, .profile-links { display: flex; flex-wrap: wrap; gap: .15rem 1rem; }
+.contact { overflow-wrap: anywhere; }
+.people-section { margin-top: 1.5rem; }
+.background { margin-top: 1.5rem; border-top: 1px solid #0003; padding-top: 1.5rem; }
+.topic { margin-top: 1.5rem; }
+.topic h2 { color: inherit; font: inherit; font-weight: bold; letter-spacing: normal; }
+.topic ul { margin-top: .5rem; }
+.topic li + li { margin-top: .25rem; }
+.history, .roster, main > ol, .semesters { margin-top: 1rem; }
+.history li { display: grid; grid-template-columns: 9.75rem 1fr; gap: 1rem; padding: .25rem 0; }
+.date { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.roster li, .semesters li { margin-top: .45rem; }
+main > ol li + li, .semesters > li + li { margin-top: 1.25rem; }
+.publication-title, .talk-title, .lecture-semester { font-weight: bold; }
+.intro { margin: .6rem 0 1.25rem; }
+
+@media (min-width: 62rem) {
+  .home-intro { padding-top: 3rem; margin-bottom: 3rem; }
+}
+@media (max-width: 61.99rem) {
+  nav > .nav-links { display: none; }
+  nav details { display: block; }
+  nav summary { list-style: none; width: 2.75rem; line-height: 2.75rem; margin-left: auto; text-align: center; cursor: pointer; }
+  nav summary::-webkit-details-marker { display: none; }
+  nav summary svg { vertical-align: middle; }
+  .nav-links { flex-direction: column; gap: 0; }
+  nav a { padding: .5rem; }
+}
+@media (max-width: 47.5rem) {
+  :root { --display: var(--heading); }
+  body { padding-top: 1.5rem; }
+  .site-name { letter-spacing: .035em; }
+  main { margin-top: 1.75rem; }
+  .profile { grid-template-columns: min(34%, 11rem) minmax(0, 1fr); gap: 1rem; }
+}
+@media (max-width: 36rem) {
+  .profile { grid-template-columns: 1fr; gap: .75rem; }
+  .profile-photo img { position: static; width: 11rem; height: auto; margin-inline: auto; }
+  .contact { flex-direction: column; }
+}
+@media (max-width: 32rem) {
+  .profile-links { column-gap: .5rem; }
+  .history li { grid-template-columns: 1fr; gap: 0; }
+}
+@media (max-width: 26.75rem) {
+  .masthead { gap: .5rem; }
+  /* Leave room for “Research Group” to fit on the second line. */
+  .university-logo { width: clamp(5.5rem, calc(100% - 11.75rem), calc(var(--display) * 2.4 * 300 / 93)); }
+}
