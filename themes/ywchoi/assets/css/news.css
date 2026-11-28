@@ -54,3 +54,7 @@
 @media (max-width: 32rem) {
   .news-month { grid-template-columns: 1fr; gap: .375rem; }
 }
+@media (min-width: 48rem) {
+  .news-post:has(> .news-thumbnails) { display: grid; grid-template-columns: minmax(0, 1fr) fit-content(45%); align-items: start; gap: 1.25rem; }
+  .news-thumbnails { margin-top: 0; }
+}
