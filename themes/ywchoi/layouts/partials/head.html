@@ -80,7 +80,7 @@
 
 <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 {{ if $labPage }}
-{{ with resources.Get "css/site.css" | fingerprint }}<link rel="stylesheet" href="{{ .RelPermalink }}">{{ end }}
+{{ with resources.Get "css/site.css" | resources.ExecuteAsTemplate "css/site.css" . | fingerprint }}<link rel="stylesheet" href="{{ .RelPermalink }}">{{ end }}
 {{ if or .IsHome (eq .Section "news") }}
 {{ with resources.Get "css/news.css" | fingerprint }}<link rel="stylesheet" href="{{ .RelPermalink }}">{{ end }}
 {{ end }}

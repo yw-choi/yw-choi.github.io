@@ -1,5 +1,6 @@
 <div class="masthead">
-  <p class="site-name"><a href="{{ site.Home.RelPermalink }}">{{ site.Title }}</a></p>
+  {{ $name := strings.TrimSuffix " Research Group" site.Title }}
+  <p class="site-name"><a href="{{ site.Home.RelPermalink }}">{{ $name }}{{ if ne $name site.Title }} <span>Research Group</span>{{ end }}</a></p>
   <a class="university-logo" href="https://www.sogang.ac.kr/">
     <img src="{{ "images/logo-sogang.png" | relURL }}" width="300" height="93" alt="Sogang University">
   </a>

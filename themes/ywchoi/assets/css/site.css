@@ -1,4 +1,4 @@
-@font-face { font-family: Jost; src: url("fonts/jost-regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: Jost; src: url("data:font/woff2;base64,{{ readFile "themes/ywchoi/static/css/fonts/jost-regular.woff2" | base64Encode }}") format("woff2"); font-weight: 400; font-display: block; }
 
 :root { color-scheme: light; --blue: #003876; --display: 2rem; --heading: 1.25rem; --body: 1rem; }
 body { max-width: 65rem; margin: auto; padding: 2.5rem clamp(1rem, 3vw, 2.25rem); background: white; color: black; font: var(--body)/1.5 Helvetica, "Helvetica Neue", Arial, sans-serif; }
@@ -15,7 +15,7 @@ ol { padding-left: 2rem; }
 sub, sup { line-height: 0; }
 
 .masthead { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-.site-name { font-family: Jost, "Avenir Next", Helvetica, sans-serif; letter-spacing: .06em; text-transform: uppercase; }
+.site-name { flex: 1; min-width: 0; font-family: Jost, "Avenir Next", Helvetica, sans-serif; letter-spacing: .06em; text-transform: uppercase; }
 .site-name a { color: inherit; text-decoration: none; }
 .university-logo { flex: none; width: clamp(5.5rem, 16vw, 9.875rem); }
 nav { margin-top: 1.5rem; }
@@ -82,6 +82,10 @@ main > ol li + li, .semesters > li + li { margin-top: 1.25rem; }
 }
 @media (max-width: 26.75rem) {
   .masthead { gap: .5rem; }
+  .site-name span { display: block; }
   /* Leave room for “Research Group” to fit on the second line. */
   .university-logo { width: clamp(5.5rem, calc(100% - 11.75rem), calc(var(--display) * 2.4 * 300 / 93)); }
+}
+@media (min-width: 20rem) {
+  .site-name a { white-space: nowrap; }
 }
