@@ -8,12 +8,3 @@ title: "Home"
         Department of Physics, Sogang University, Seoul, Korea
     </p>
 </div>
-
-<div class="mb-lg-5">
-    <p class="fs-6 fw-normal">
-        Our group studies emergent phenomena in correlated and low-dimensional quantum materials, designs novel
-        quantum materials and nanostructures, and develops first-principles electronic-structure methods. We combine
-        quantum physics, many-body theory, machine learning, and high-performance computing to understand and predict
-        material properties from the atomic scale upward.
-    </p>
-</div>
