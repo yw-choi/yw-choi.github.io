@@ -1,6 +1,6 @@
 .research-row {
   display: grid;
-  grid-template-columns: minmax(0, 1.7fr) minmax(20.5rem, 1fr);
+  grid-template-columns: minmax(0, 1fr) min(36%, 21rem);
   align-items: start;
   gap: 1rem clamp(1.5rem, 3vw, 2.5rem);
 }
@@ -11,21 +11,59 @@
   gap: .8rem;
 }
 .research-overview figure, .research-result { margin: 0; }
-.research-overview .many-body { width: min(100%, 14rem); }
-.research-overview .diagram-pair {
+.research-overview .many-body, .diagram-pair, .research-result { width: min(100%, 21rem); }
+.diagram-pair {
   display: grid;
   grid-template-columns: minmax(0, 9fr) minmax(0, 5.5fr);
   align-items: center;
   gap: 1.25rem;
-  width: min(100%, 20.5rem);
 }
 .research-overview img, .research-result img { width: 100%; height: auto; }
-.research-result { width: min(100%, 24rem); justify-self: center; }
-.research-result.relaxation { max-width: 22rem; }
+.research-result { justify-self: center; }
 .research-result figcaption { margin-top: .35rem; font-size: .8rem; line-height: 1.4; text-align: center; }
 .research-result figcaption a { color: #444; text-decoration-color: #aaa; }
 
+.topic { position: relative; margin-top: 2.25rem; }
+.topic::before {
+  content: "";
+  position: absolute;
+  inset: -.625rem clamp(-1rem, -1.3vw, -.5rem);
+  border: 1px solid #bcbcbc;
+  pointer-events: none;
+}
+
+.figure-preview { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.figure-preview:focus-visible, .dialog-close:focus-visible { outline: 2px solid #003876; outline-offset: 3px; }
+.full-figure {
+  box-sizing: border-box;
+  max-width: min(93vw, 68rem);
+  max-height: 95dvh;
+  margin: auto;
+  padding: .8rem 1rem 1rem;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  background: white;
+}
+.full-figure::backdrop { background: rgba(20, 27, 34, .52); }
+.full-figure .dialog-close {
+  display: block;
+  margin-left: auto;
+  padding: .25rem .15rem .65rem;
+  border: 0;
+  background: white;
+  color: #003876;
+  cursor: pointer;
+  font: inherit;
+}
+.full-figure img { width: auto; height: auto; max-width: 100%; max-height: 77dvh; margin: auto; object-fit: contain; }
+.full-figure .citation { margin-top: .55rem; font-size: .85rem; text-align: center; }
+
+@media (46rem < width <= 67.5rem) {
+  main > .research-row { row-gap: .6rem; }
+  main > .research-row > .research-copy { display: contents; }
+  main > .research-row h1 { grid-column: 1 / -1; }
+  main > .research-row .intro { margin: 0; }
+}
 @media (max-width: 46rem) {
   .research-row { grid-template-columns: minmax(0, 1fr); }
-  .research-result.magnetic-chain { width: min(100%, 35rem); }
 }

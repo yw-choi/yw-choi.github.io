@@ -29,7 +29,9 @@ description: First-principles research on quantum materials, low-dimensional nan
       <p>We use density functional theory and quantum many-body theory to study electronic structure, electron–phonon interactions, and electron–electron interactions in quantum materials. We investigate the microscopic mechanisms behind superconductivity and other ordered phases, and predict the properties and experimental signatures of quasiparticles and collective excitations.</p>
     </div>
     <figure class="research-result spectral-function">
-      <img src="/images/research/spectral-function.webp" alt="ARPES spectra and calculated spectral functions at the K valley of doped WS₂, shown at four carrier densities." width="1180" height="1035">
+      <button class="figure-preview" type="button" aria-haspopup="dialog" aria-label="View full figure: WS₂ spectral functions" aria-controls="spectral-function-full" title="View full figure">
+        <img src="/images/research/spectral-function-preview.webp" alt="ARPES and calculated spectra at the highest and lowest carrier densities shown in the original figure." width="1240" height="507">
+      </button>
       <figcaption>
         <a href="/publications/#publication-multivalley-polarons-2026">Y. Oh et al., Nat. Commun. (accepted, 2026)</a>
       </figcaption>
@@ -68,7 +70,9 @@ description: First-principles research on quantum materials, low-dimensional nan
       <p>We develop first-principles methods based on density functional theory and quantum many-body theory. We also explore compressed representations of electronic states and interactions.</p>
     </div>
     <figure class="research-result relaxation">
-      <img src="/images/research/relaxation.webp" alt="Layer-resolved vertical displacements in four twisted graphene stacks, on a common color scale in ångströms." width="869" height="812">
+      <button class="figure-preview" type="button" aria-haspopup="dialog" aria-label="View full figure: Moiré lattice relaxations" aria-controls="relaxation-full" title="View full figure">
+        <img src="/images/research/relaxation-preview.webp" alt="Vertical lattice relaxation in twisted bilayer and trilayer graphene, panels (a) and (b)." width="869" height="385">
+      </button>
       <figcaption>
         <a href="https://doi.org/10.1103/PhysRevLett.127.167001">Y. W. Choi and H. J. Choi, Phys. Rev. Lett. 127, 167001 (2021)</a>
       </figcaption>
@@ -80,3 +84,19 @@ description: First-principles research on quantum materials, low-dimensional nan
     <li><a href="https://arxiv.org/abs/2610.20779">Enabling large language model agents for high-fidelity many-body perturbation theory calculations</a> · arXiv:2610.20779 (2026)</li>
   </ul>
 </section>
+
+<dialog class="full-figure" id="spectral-function-full" aria-label="WS₂ spectral functions">
+  <button type="button" class="dialog-close" autofocus="autofocus">Close</button>
+  <img src="/images/research/spectral-function.webp" alt="ARPES spectra and calculated spectral functions at the K valley of doped WS₂, shown at four carrier densities." loading="lazy">
+  <div class="citation">
+    <a href="/publications/#publication-multivalley-polarons-2026">Y. Oh et al., Nat. Commun. (accepted, 2026)</a>
+  </div>
+</dialog>
+
+<dialog class="full-figure" id="relaxation-full" aria-label="Moiré lattice relaxations">
+  <button type="button" class="dialog-close" autofocus="autofocus">Close</button>
+  <img src="/images/research/relaxation.webp" alt="Layer-resolved vertical displacements in four twisted graphene stacks, on a common color scale in ångströms." loading="lazy">
+  <div class="citation">
+    <a href="https://doi.org/10.1103/PhysRevLett.127.167001">Y. W. Choi and H. J. Choi, Phys. Rev. Lett. 127, 167001 (2021)</a>
+  </div>
+</dialog>
