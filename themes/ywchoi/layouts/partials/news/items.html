@@ -22,6 +22,7 @@
     {{ $parsedDate := time.AsTime $sortDate }}
   {{ end }}
   {{ $key := printf "%s-%05d" $sortDate (sub 99999 $index) }}
-  {{ $items = $items | append (merge $item (dict "label" $label "sortKey" $key "displayDate" (replace $item.date "-" "/"))) }}
+  {{ $month := substr $item.date 0 7 }}
+  {{ $items = $items | append (merge $item (dict "label" $label "sortKey" $key "month" $month "displayDate" (replace $item.date "-" "/"))) }}
 {{ end }}
 {{ return (sort $items "sortKey" "desc") }}
