@@ -3,9 +3,6 @@
   date: "2026-11-24"
   category: Paper
   comment: 'Nature Communications: multivalley polarons at the onset of a Lifshitz transition in doped WS₂.'
-  kind: icon
-  images:
-  - /images/news/accepted.svg
   title: WS₂ multivalley polaron paper accepted in Nature Communications
   status: accepted
   link: /publications/#publication-multivalley-polarons-2026
@@ -14,9 +11,6 @@
   category: Paper
   comment: 'Journal of Alloys and Compounds: anisotropic superconductivity intertwined with localized
     antiferromagnetism in GdNi₀.₇Bi₂.'
-  kind: icon
-  images:
-  - /images/news/accepted.svg
   title: GdNi₀.₇Bi₂ paper accepted in Journal of Alloys and Compounds
   status: accepted
   link: /publications/#publication-gdnibi2-2026
@@ -24,9 +18,6 @@
   date: 2026-10
   category: Paper
   comment: 'Science: real-space imaging and manipulation of single electrons on a solid surface.'
-  kind: icon
-  images:
-  - /images/news/accepted.svg
   title: Single-electron imaging paper accepted in Science
   status: accepted
   link: /publications/#publication-single-electrons-2026
@@ -34,24 +25,15 @@
   date: 2026-10
   category: Member
   comment: 'Byeongchan Lee and Minchul Choi: Outstanding Presentation Awards (Oral), KPS Fall Meeting.'
-  kind: icon
-  images:
-  - /images/news/award.svg
 - id: 2026-10-outstanding-graduate-students
   date: 2026-10
   category: Member
   comment: 'Dongsin Kim and Byeongchan Lee: selected as outstanding graduate students, Department of Physics,
     Sogang University.'
-  kind: icon
-  images:
-  - /images/news/award.svg
 - id: 2026-10-resonance-scattering-accepted
   date: 2026-10
   category: Paper
   comment: 'Nature Communications: non-equilibrium resonance scattering drives conformational changes.'
-  kind: icon
-  images:
-  - /images/news/accepted.svg
   title: Resonance scattering paper accepted in Nature Communications
   status: accepted
   link: /publications/#publication-non-equilibrium-2026
@@ -94,19 +76,12 @@
   date: 2026-08
   category: Paper
   comment: 'Current Applied Physics: exciton–phonon coupling in bulk ReSe₂.'
-  kind: icon
-  images:
-  # Replace this temporary document icon with the published first-page preview.
-  - /images/news/published.svg
   status: published
   link: /publications/#publication-rese2-2026
 - id: 2026-08-ccp-poster-award
   date: 2026-08
   category: Member
   comment: 'Chaewoon Hong: Outstanding Poster Award, CCP2026.'
-  kind: icon
-  images:
-  - /images/news/award.svg
 - id: 2026-08-ccp
   date: 2026-08
   category: Events
@@ -130,9 +105,6 @@
   date: 2026-07
   category: Member
   comment: 'Dongsin Kim: Outstanding Poster Award, KIAS ESCW.'
-  kind: icon
-  images:
-  - /images/news/award.svg
 - id: 2026-07-electronic-structure-symposium
   date: 2026-07
   category: Events
@@ -430,6 +402,3 @@
   date: 2024-09
   category: Lab
   comment: Sogang QMP lab opened.
-  kind: icon
-  images:
-  - /images/logo-sogang-qmp.svg

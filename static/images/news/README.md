@@ -17,10 +17,8 @@ No full paper PDFs, correspondence, or private document links are published here
 | `paper-30.webp` | [Atomic and Electronic Structures of 1D Phosphorus Nanoring and Nanohelix](https://doi.org/10.1021/acsnano.5c00034), author's published PDF |
 | `paper-31.webp` | [Physical Review B 110, 155127 (2024)](https://doi.org/10.1103/PhysRevB.110.155127), author's published PDF |
 
-**Pending:** the ReSe₂ paper ([Current Applied Physics](https://doi.org/10.1016/j.cap.2026.08.011))
-uses `published.svg` temporarily. Its published PDF was not accessible during
-the migration. Replace the icon with a first-page capture and set `kind: document`
-when the PDF becomes available. The publication status remains `published`.
+The ReSe₂ paper ([Current Applied Physics](https://doi.org/10.1016/j.cap.2026.08.011))
+has a text-only announcement. The `images` field in `data/news.yaml` is optional.
 
 ## Conferences and events
 
@@ -45,5 +43,4 @@ or an archived capture of the official event notice/schedule is used.
 | `asian2024.webp` | [ASIAN-25](https://sites.google.com/view/asian-25/), archived official homepage capture |
 
 `accepted.svg` (fireworks), `award.svg` (trophy), and `published.svg` (document)
-are original vector icons. Accepted papers and awards without an existing photo
-use these icons.
+are original vector icons from the earlier News layout.

@@ -4,6 +4,7 @@
   if (!dialog || !data || typeof dialog.showModal !== 'function') return;
   const posts = new Map(JSON.parse(data.textContent).map(post => [post.id, post]));
   const image = document.getElementById('news-dialog-image');
+  const media = dialog.querySelector('.news-media');
   const title = document.getElementById('news-dialog-title');
   const comment = document.getElementById('news-dialog-comment');
   const date = document.getElementById('news-dialog-date');
@@ -31,11 +32,9 @@
       priorURL = location.pathname + location.search + (location.hash === `#${id}` ? '' : location.hash);
     }
     post = selected;
-    image.parentElement.dataset.kind = post.kind || 'photo';
-    title.hidden = !post.title;
-    title.textContent = post.title || '';
-    dialog.setAttribute('aria-label', post.title || 'News post');
+    title.textContent = post.label;
     comment.textContent = post.comment;
+    comment.hidden = post.comment === post.label;
     date.dateTime = post.date;
     date.textContent = post.displayDate;
     link.hidden = !post.link;
@@ -45,7 +44,13 @@
     } else {
       link.removeAttribute('href');
     }
-    showPhoto(0);
+    media.hidden = !post.images?.length;
+    if (media.hidden) {
+      image.removeAttribute('src');
+    } else {
+      media.dataset.kind = post.kind || 'photo';
+      showPhoto(0);
+    }
     document.documentElement.style.overflow = 'hidden';
     if (!dialog.open) dialog.showModal();
     dialog.scrollTop = 0;
@@ -71,7 +76,7 @@
   previous.addEventListener('click', () => showPhoto(current - 1));
   next.addEventListener('click', () => showPhoto(current + 1));
   dialog.addEventListener('keydown', event => {
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    if (!next.hidden && !media.hidden && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
       event.preventDefault();
       showPhoto(current + (event.key === 'ArrowLeft' ? -1 : 1));
     }
