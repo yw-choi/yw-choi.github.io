@@ -5,13 +5,23 @@
     <h1 id="news-title">{{ .Title }}</h1>
     <span class="news-post-count">{{ len $items }} posts</span>
   </div>
-  <ul class="news-board">
+  <ul class="news-feed">
     {{ range $items }}
-    <li class="news-post" id="{{ .id }}">
-      <a class="news-row" href="#{{ .id }}" data-news-id="{{ .id }}" aria-haspopup="dialog">
-        <time datetime="{{ .date }}">{{ .displayDate }}</time>
-        <span class="news-row-title">{{ .label }}</span>
+    {{ $post := . }}
+    <li class="news-card" id="{{ .id }}">
+      <time datetime="{{ .date }}">{{ .displayDate }}</time>
+      <a class="news-card-title" href="#{{ .id }}" data-news-id="{{ .id }}" aria-haspopup="dialog">
+        {{ .label }}
       </a>
+      {{ with .images }}
+      <div class="news-thumbnails" data-kind="{{ $post.kind | default "photo" }}">
+        {{ range $index, $src := . }}
+        <a class="news-thumb" href="{{ $src | relURL }}" data-news-id="{{ $post.id }}" data-news-photo="{{ $index }}" aria-haspopup="dialog" aria-label="Image {{ add $index 1 }} of {{ len $post.images }}: {{ $post.label }}">
+          <img src="{{ partial "news/thumbnail.html" $src }}" alt="" width="48" height="48" loading="lazy" decoding="async">
+        </a>
+        {{ end }}
+      </div>
+      {{ end }}
     </li>
     {{ end }}
   </ul>

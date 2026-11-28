@@ -49,7 +49,7 @@
       image.removeAttribute('src');
     } else {
       media.dataset.kind = post.kind || 'photo';
-      showPhoto(0);
+      showPhoto(Number(trigger?.dataset.newsPhoto ?? 0));
     }
     document.documentElement.style.overflow = 'hidden';
     if (!dialog.open) dialog.showModal();

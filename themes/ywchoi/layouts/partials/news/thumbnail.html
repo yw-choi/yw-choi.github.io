@@ -1,0 +1,8 @@
+{{ $thumbnail := . | relURL }}
+{{ if in (slice ".jpg" ".jpeg" ".png" ".webp" ".gif") (lower (path.Ext .)) }}
+  {{ $source := printf "static%s" . }}
+  {{ if not (fileExists $source) }}{{ $source = printf "content%s" . }}{{ end }}
+  {{ $image := resources.FromString (printf "news-thumbnails%s" .) (readFile $source) }}
+  {{ $thumbnail = ($image.Fit "144x144 webp q75").RelPermalink }}
+{{ end }}
+{{ return $thumbnail }}
