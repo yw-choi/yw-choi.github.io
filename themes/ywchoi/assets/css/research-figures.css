@@ -1,23 +1,31 @@
-.research-overview {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem clamp(1.25rem, 4vw, 3rem);
-  margin: 1.25rem auto 1.75rem;
+.research-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(20.5rem, 1fr);
+  align-items: start;
+  gap: 1rem clamp(1.5rem, 3vw, 2.5rem);
 }
-.research-overview figure { margin: 0; }
-.research-overview .many-body { width: min(100%, 17rem); }
+.research-copy .intro { margin-bottom: 0; }
+.research-overview {
+  display: grid;
+  justify-items: center;
+  gap: .8rem;
+}
+.research-overview figure, .research-result { margin: 0; }
+.research-overview .many-body { width: min(100%, 14rem); }
 .research-overview .diagram-pair {
   display: grid;
   grid-template-columns: minmax(0, 9fr) minmax(0, 5.5fr);
   align-items: center;
   gap: 1.25rem;
-  width: min(100%, 17rem);
+  width: min(100%, 20.5rem);
 }
 .research-overview img, .research-result img { width: 100%; height: auto; }
-.research-result { width: min(100%, 24rem); margin: 1.15rem auto; }
-.research-result.magnetic-chain { width: min(100%, 35rem); }
-.research-result.relaxation { width: min(100%, 22rem); }
+.research-result { width: min(100%, 24rem); justify-self: center; }
+.research-result.relaxation { max-width: 22rem; }
 .research-result figcaption { margin-top: .35rem; font-size: .8rem; line-height: 1.4; text-align: center; }
 .research-result figcaption a { color: #444; text-decoration-color: #aaa; }
+
+@media (max-width: 46rem) {
+  .research-row { grid-template-columns: minmax(0, 1fr); }
+  .research-result.magnetic-chain { width: min(100%, 35rem); }
+}
