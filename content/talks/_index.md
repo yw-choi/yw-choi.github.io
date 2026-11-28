@@ -7,7 +7,7 @@ title: Talks
         margin-bottom: 0.5em;
     }
     .talk-title {
-        color: #0d6efd;
+        color: var(--bs-link-color);
     }
 </style>
   

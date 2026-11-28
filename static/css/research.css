@@ -1,8 +1,8 @@
-.research-content { max-width: 52rem; color: #000; font: 1rem/1.5 Helvetica, "Helvetica Neue", Arial, sans-serif; }
-.research-content h1 { margin: 0; color: #003876; font-size: 1.5rem; font-weight: 400; line-height: 1.2; letter-spacing: -.025em; text-wrap: balance; }
-.research-content h2 { margin: 0; color: #000; font: inherit; font-weight: bold; }
+.research-content { max-width: 52rem; color: var(--bs-body-color); font: 1rem/1.5 Helvetica, "Helvetica Neue", Arial, sans-serif; }
+.research-content h1 { margin: 0; color: var(--bs-heading-color); font-size: 1.5rem; font-weight: 400; line-height: 1.2; letter-spacing: -.025em; text-wrap: balance; }
+.research-content h2 { margin: 0; color: var(--bs-body-color); font: inherit; font-weight: bold; }
 .research-content p { margin: 0; }
-.research-content a { color: #003876; text-underline-offset: .2em; }
+.research-content a { color: var(--bs-link-color); text-underline-offset: .2em; }
 .research-content .intro { margin: .6rem 0 1.25rem; }
 .research-content .topic { margin-top: 1.5rem; }
 .research-content ul { margin: .5rem 0 0; padding: 0; list-style: none; }

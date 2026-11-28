@@ -10,10 +10,9 @@ title: Publications
 
 <style>
 .publication-title {
-  color: #003377;
+  color: var(--bs-link-color);
   font-weight: 700;
 }
-.publication-citation { color: var(--bs-link-color, #0d6efd); }
 </style>
 
 #### Journal Articles

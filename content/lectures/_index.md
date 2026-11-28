@@ -7,7 +7,7 @@ title: Lectures
         margin-bottom: 0.5em;
     }
     .lecture-semester {
-        color: #0d6efd;
+        color: var(--bs-link-color);
     }
 </style>
   
