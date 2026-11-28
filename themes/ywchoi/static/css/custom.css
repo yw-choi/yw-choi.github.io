@@ -4,8 +4,8 @@
     --bs-heading-color: var(--bs-body-color);
     --bs-secondary-color: var(--bs-body-color);
     --bs-dark-rgb: 0, 0, 0;
-    --bs-link-color: #0d6efd;
-    --bs-link-color-rgb: 13, 110, 253;
+    --bs-link-color: #003876;
+    --bs-link-color-rgb: 0, 56, 118;
     --bs-link-hover-color: var(--bs-link-color);
     --bs-link-hover-color-rgb: var(--bs-link-color-rgb);
     --bs-code-color: var(--bs-body-color);
