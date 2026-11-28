@@ -1,0 +1,23 @@
+.research-overview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem clamp(1.25rem, 4vw, 3rem);
+  margin: 1.25rem auto 1.75rem;
+}
+.research-overview figure { margin: 0; }
+.research-overview .many-body { width: min(100%, 17rem); }
+.research-overview .diagram-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 9fr) minmax(0, 5.5fr);
+  align-items: center;
+  gap: 1.25rem;
+  width: min(100%, 17rem);
+}
+.research-overview img, .research-result img { width: 100%; height: auto; }
+.research-result { width: min(100%, 24rem); margin: 1.15rem auto; }
+.research-result.magnetic-chain { width: min(100%, 35rem); }
+.research-result.relaxation { width: min(100%, 22rem); }
+.research-result figcaption { margin-top: .35rem; font-size: .8rem; line-height: 1.4; text-align: center; }
+.research-result figcaption a { color: #444; text-decoration-color: #aaa; }
